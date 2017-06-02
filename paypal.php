@@ -328,25 +328,6 @@ class PayPal extends PaymentModule
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->l('Enabled shortcut'),
-                    'name' => 'paypal_express_checkout_shortcut',
-                    'is_bool' => true,
-                    'hint' => $this->l('qgsdfggh'),
-                    'values' => array(
-                        array(
-                            'id' => 'paypal_express_checkout_shortcut_on',
-                            'value' => 1,
-                            'label' => $this->l('Enabled'),
-                        ),
-                        array(
-                            'id' => 'paypal_express_checkout_shortcut_off',
-                            'value' => 0,
-                            'label' => $this->l('Disabled'),
-                        )
-                    ),
-                ),
-                array(
-                    'type' => 'switch',
                     'label' => $this->l('Show PayPal benefits to your customers'),
                     'name' => 'paypal_show_advantage',
                     'desc' => $this->l(''),
@@ -411,9 +392,6 @@ class PayPal extends PaymentModule
         if (Configuration::get('PS_ROUND_TYPE') != Order::ROUND_ITEM) {
             $block_info = $this->display(__FILE__, 'views/templates/admin/block_info.tpl');
         }
-       /* Configuration::updateValue('PAYPAL_USERNAME_SANDBOX', 'claloum-facilitator_api1.202-ecommerce.com');
-        Configuration::updateValue('PAYPAL_PSWD_SANDBOX', '2NRPZ3FZQXN9LY2N');
-        Configuration::updateValue('PAYPAL_SIGNATURE_SANDBOX', 'AFcWxV21C7fd0v3bYYYRCpSSRl31Am6xsFqhy1VTTuSmPwEstqKmFDaX');*/
         return $this->message.$block_info.$this->display(__FILE__, 'views/templates/admin/configuration.tpl').$form;
     }
 
