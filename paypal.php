@@ -157,7 +157,6 @@ class PayPal extends PaymentModule
             || !$this->registerHook('actionOrderStatusPostUpdate')
             || !$this->registerHook('actionValidateOrder')
             || !$this->registerHook('actionOrderStatusUpdate')
-            || !$this->registerHook('displayFooterProduct')
         ) {
             return false;
         }
@@ -234,16 +233,7 @@ class PayPal extends PaymentModule
     {
         $this->_postProcess();
         $return_url = $this->context->link->getAdminLink('AdminModules', true).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
-        /*
-        $PartnerboardingURL = "";
-        if ((Configuration::get('PAYPAL_SANDBOX') && !Configuration::get('PAYPAL_LIVE_ACCESS'))
-        || (!Configuration::get('PAYPAL_SANDBOX') && !Configuration::get('PAYPAL_SANDBOX_ACCESS'))) {
-            $partner_info = $this->getUrlOnboarding(Configuration::get('PAYPAL_METHOD'));
-            if (!$partner_info->error) {
-                $PartnerboardingURL = $partner_info->data->link;
-            }
-        }
-        */
+
 
         if (Configuration::get('PAYPAL_LIVE_ACCESS') || Configuration::get('PAYPAL_SANDBOX_ACCESS')) {
             $ec_card_active = Configuration::get('PAYPAL_API_CARD');
@@ -301,7 +291,7 @@ class PayPal extends PaymentModule
                     'label' => $this->l('Payment action'),
                     'name' => 'paypal_intent',
                     'desc' => $this->l(''),
-                    'hint' => $this->l('Sale: the money moves instantly from the buyer�s account to the seller�s account at the time of payment. Authorization/capture: The authorized mode is a deferred mode of payment that requires the funds to be collected manually when you want to transfer the money. This mode is used if you want to ensure that you have the merchandise before depositing the money, for example. Be careful, you have 29 days to collect the funds.'),
+                    'hint' => $this->l('Sale: the money moves instantly from the buyer\'s account to the seller\'s account at the time of payment. Authorization/capture: The authorized mode is a deferred mode of payment that requires the funds to be collected manually when you want to transfer the money. This mode is used if you want to ensure that you have the merchandise before depositing the money, for example. Be careful, you have 29 days to collect the funds.'),
                     'options' => array(
                         'query' => array(
                             array(
@@ -480,6 +470,7 @@ class PayPal extends PaymentModule
 
     public function hookPaymentOptions($params)
     {
+
         $not_refunded = 0;
         foreach ($params['cart']->getProducts() as $key => $product) {
             if ($product['is_virtual']) {
@@ -536,12 +527,6 @@ class PayPal extends PaymentModule
         return $this->context->smarty->fetch('module:paypal/views/templates/hook/order_confirmation.tpl');
     }
 
-    public function hookDisplayFooterProduct($params)
-    {
-        $method = AbstractMethodPaypal::load('EC');
-        return $method->renderExpressCheckout($this->context, 'EC');
-    }
-
     public function validateOrder($id_cart, $id_order_state, $amount_paid, $payment_method = 'Unknown', $message = null, $transaction = array(), $currency_special = null, $dont_touch_amount = false, $secure_key = false, Shop $shop = null)
     {
         $this->amount_paid_paypal = (float)$amount_paid;
@@ -574,7 +559,7 @@ class PayPal extends PaymentModule
         $paypal_order->total_prestashop = (float) $total_ps;
         $paypal_order->save();
 
-        if ($transaction['PAYMENTINFO_0_PAYMENTSTATUS'] = "Pending" && $transaction['PAYMENTINFO_0_PENDINGREASON'] == "authorization") {
+        if ($transaction['PAYMENTINFO_0_PAYMENTSTATUS'] == "Pending" && $transaction['PAYMENTINFO_0_PENDINGREASON'] == "authorization") {
             $paypal_capture = new PaypalCapture();
             $paypal_capture->id_paypal_order = $paypal_order->id;
             $paypal_capture->save();
@@ -743,7 +728,7 @@ class PayPal extends PaymentModule
 
             $orderMessage->save();
 
-            if (!isset($capture_response['AUTHORIZATIONID']) && $capture_response['L_ERRORCODE0'] != "10602 ") {
+            if (!isset($capture_response['AUTHORIZATIONID']) && $capture_response['L_ERRORCODE0'] != "10602") {
                 Tools::redirect($_SERVER['HTTP_REFERER'].'&error_capture=1');
             }
 
@@ -762,16 +747,19 @@ class PayPal extends PaymentModule
 
         $partner_info = array(
             'email' => Configuration::get('PS_SHOP_EMAIL'),
-            'shop_url' => $return_url,
-            'address1' => Configuration::get('PS_SHOP_ADDR1'),
-            'city' => Configuration::get('PS_SHOP_CITY'),
+            'shop_url' => Tools::getShopDomainSsl(true),
+            'address1' => Configuration::get('PS_SHOP_ADDR1',null, null, null, ''),
+            'address2' => Configuration::get('PS_SHOP_ADDR2',null, null, null, ''),
+            'city' => Configuration::get('PS_SHOP_CITY',null, null, null, ''),
             'country_code' => Tools::strtoupper($this->context->country->iso_code),
-            'postal_code' => Configuration::get('PS_SHOP_CODE'),
+            'postal_code' => Configuration::get('PS_SHOP_CODE',null, null, null, ''),
+            'state' => Configuration::get('PS_SHOP_STATE_ID',null, null, null, ''),
+            'return_url' => $return_url,
+            'first_name' => $this->context->employee->firstname,
+            'last_name' => $this->context->employee->lastname,
         );
-
         $sdk = new PaypalSDK(Configuration::get('PAYPAL_SANDBOX'));
         $response = $sdk->getUrlOnboarding($partner_info);
-        // print_r($response);die;
         return $response;
     }
 }

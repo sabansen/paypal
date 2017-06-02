@@ -36,7 +36,7 @@ class PaypalEcInitModuleFrontController extends ModuleFrontController
         if (!isset($response['L_ERRORCODE0'])) {
             Tools::redirect($response);
         } else {
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('L_ERRORCODE0' => $response['L_ERRORCODE0'])));
+            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_code' => $response['L_ERRORCODE0'])));
         }
     }
 }

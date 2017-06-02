@@ -44,6 +44,7 @@ class MethodEC extends AbstractMethodPaypal
             'LANDINGPAGE' => $data['use_card'] ? 'Billing' : 'Login',
             'RETURNURL' => Context::getContext()->link->getModuleLink($this->name, 'ecValidation', array(), true),
         );
+
         $this->_getCredentialsInfo($params);
         $this->_getPaymentInfo($params);
         $params = $this->_setPaymentDetails($params);
@@ -313,13 +314,11 @@ class MethodEC extends AbstractMethodPaypal
         );
         $this->_getCredentialsInfo($params);
         $this->_getPaymentInfo($params);
-       /* echo '<pre>';
-        print_r($this->makeCallPaypal($params));
-        echo '<pre>';
-        die;*/
+
+
         $exec_payment = $sdk->doExpressCheckout($params);
         if (isset($exec_payment['L_ERRORCODE0'])) {
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('L_ERRORCODE0' => $exec_payment['L_ERRORCODE0'])));
+            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_code' => $exec_payment['L_ERRORCODE0'])));
         }
 
         $cart = Context::getContext()->cart;
@@ -428,7 +427,7 @@ class MethodEC extends AbstractMethodPaypal
             'PayPal_payment_type' => $type,
             'PayPal_tracking_code' => 'PRESTASHOP_ECM',
             'PayPal_lang_code' => str_replace('-','_' , $lang['locale']),
-            'action_url' => $context->link->getModuleLink('paypal','ecScPayment',array(),true)
+            'action_url' => $context->link->getModuleLink('paypal','ecScInit',array(),true)
         ));
         $context->controller->registerJavascript($this->name.'-order_confirmation_js', 'modules/paypal/views/js/ec_shortcut.js');
 
