@@ -123,7 +123,7 @@ class MethodEC extends AbstractMethodPaypal
                 $fields['L_PAYMENTREQUEST_0_NAME'.$index] .= ' - '.$product['attributes'];
             }
 
-            $fields['L_PAYMENTREQUEST_0_DESC'.$index] = substr(strip_tags($product['description_short']), 0, 50).'...';
+            $fields['L_PAYMENTREQUEST_0_DESC'.$index] = Tools::substr(strip_tags($product['description_short']), 0, 50).'...';
 
             $fields['L_PAYMENTREQUEST_0_AMT'.$index] = number_format($product['price'], 2);
             $fields['L_PAYMENTREQUEST_0_TAXAMT'.$index] = number_format($product['price_wt'] - $product['price'], 2);
@@ -141,7 +141,7 @@ class MethodEC extends AbstractMethodPaypal
                 $fields['L_PAYMENTREQUEST_0_NUMBER'.++$index] = $discount['id_discount'];
                 $fields['L_PAYMENTREQUEST_0_NAME'.$index] = $discount['name'];
                 if (isset($discount['description']) && !empty($discount['description'])) {
-                    $fields['L_PAYMENTREQUEST_0_DESC'.$index] = substr(strip_tags($discount['description']), 0, 50).'...';
+                    $fields['L_PAYMENTREQUEST_0_DESC'.$index] = Tools::substr(strip_tags($discount['description']), 0, 50).'...';
                 }
 
                 /* It is a discount so we store a negative value */
@@ -345,7 +345,7 @@ class MethodEC extends AbstractMethodPaypal
 
         $paypal_order = PaypalOrder::loadByOrderId(Tools::getValue('id_order'));
         $id_paypal_order = $paypal_order->id;
-
+        $params = array();
         $params['AMT'] = $paypal_order->total_paid;
         $params['AUTHORIZATIONID'] = $paypal_order->id_transaction;
         $params['CURRENCYCODE'] = $paypal_order->currency;
