@@ -37,10 +37,10 @@ class PaypalSDK
         $this->action = 'POST';
         if ($sandbox) {
             $this->urlAPI = 'https://api-3t.sandbox.paypal.com/nvp';
-            $this->urlSI = 'http://137.74.166.211/';
+            $this->urlSI = 'http://paypal-sandbox.pp-ps-auth.com/';
         } else {
             $this->urlAPI = 'https://api-3t.paypal.com/nvp';
-            $this->urlSI = 'http://137.74.166.211/';
+            $this->urlSI = 'http://paypal-live.pp-ps-auth.com/'; 
         }
     }
 
