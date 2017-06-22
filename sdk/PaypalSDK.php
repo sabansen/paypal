@@ -74,19 +74,11 @@ class PaypalSDK
 
     public function doExpressCheckout($params)
     {
-        $fields = array();
-        // Seller informations
-        $this->_setUserCredentials($fields, $params);
 
-        $fields['METHOD'] = 'DoExpressCheckoutPayment';
-        $fields['VERSION'] = $this->version;
-        $fields['TOKEN'] = $params['TOKEN'];
-        $fields['PAYERID'] = $params['PAYERID'];
-
-        // Set payment details
-        //$this->_setPaymentDetails($fields, $params);
-
-        return $this->makeCallPaypal($fields);
+        $params['METHOD'] = 'DoExpressCheckoutPayment';
+        $params['VERSION'] = $this->version;
+        $return = $this->makeCallPaypal($params);
+        return $return;
     }
 
     public function doVoid($params)
