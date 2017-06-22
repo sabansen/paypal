@@ -293,7 +293,7 @@ class MethodEC extends AbstractMethodPaypal
     {
         switch (Configuration::get('PAYPAL_SANDBOX')) {
             case 0:
-                $params['USER'] = Configuration::get('PAYPAL_USERNAME_LIVE');
+                $params['USER'] =  Configuration::get('PAYPAL_USERNAME_LIVE');
                 $params['PWD'] = Configuration::get('PAYPAL_PSWD_LIVE');
                 $params['SIGNATURE'] = Configuration::get('PAYPAL_SIGNATURE_LIVE');
                 break;

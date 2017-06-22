@@ -56,7 +56,7 @@ class PaypalSDK
 
     private function _setUserCredentials(&$fields, $params)
     {
-        $fields['USER'] =  $params['USER'];
+        $fields['USER'] =  str_replace(' ','%2B',$params['USER']); // FIX for + in email
         $fields['PWD'] = $params['PWD'];
         $fields['SIGNATURE'] = $params['SIGNATURE'];
     }
@@ -84,12 +84,8 @@ class PaypalSDK
         $fields['PAYERID'] = $params['PAYERID'];
 
         // Set payment details
-        $this->_setPaymentDetails($fields, $params);
+        //$this->_setPaymentDetails($fields, $params);
 
-        /* echo '<pre>';
-        print_r($this->makeCallPaypal($fields));
-        echo '<pre>';
-        die;*/
         return $this->makeCallPaypal($fields);
     }
 
@@ -146,6 +142,7 @@ class PaypalSDK
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_URL, $this->urlSI.$this->endpoint.'?'.$body );
         $response = curl_exec($curl);
+
         return $response;
     }
 
@@ -180,7 +177,7 @@ class PaypalSDK
         }
 
         if (curl_errno($curl)) {
-            die('error occured during curl exec. Additioanl info: ' . curl_errno($curl).':'. curl_error($curl));
+            die('error occured during curl exec. Additional info: ' . curl_errno($curl).':'. curl_error($curl));
         }
         return $return;
     }

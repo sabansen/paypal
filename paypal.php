@@ -231,7 +231,7 @@ class PayPal extends PaymentModule
 
     public function getContent()
     {
-        $this->_postProcess();
+        $update_conf = $this->_postProcess();
         $return_url = $this->context->link->getAdminLink('AdminModules', true).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
 
 
@@ -245,7 +245,6 @@ class PayPal extends PaymentModule
 
         $this->context->smarty->assign(array(
             'path' => $this->_path,
-            //'path_ajax_sandbox' => $this->context->link->getAdminLink('AdminModules',true,array(),array('configure'=>'paypal')),
             'country' => Country::getNameById($this->context->language->id, $this->context->country->id),
             'localization' => $this->context->link->getAdminLink('AdminLocalization', true),
             'preference' => $this->context->link->getAdminLink('AdminPreferences', true),
@@ -383,11 +382,14 @@ class PayPal extends PaymentModule
         $form = $helper->generateForm($fields_form);
         if (count($this->_errors)) {
             $this->message .= $this->displayError($this->_errors);
-        } elseif (Configuration::get('PAYPAL_SANDBOX') == 1) {
-            $this->message .= $this->displayWarning($this->l('Your PayPal account is currently configured to accept payments on the Sandbox (test environment). Any transaction will be fictitious. Disable the option, to accept actual payments (production environment) and log in with your PayPal credentials'));
-        } elseif (Configuration::get('PAYPAL_SANDBOX') == 0) {
-            $this->message .= $this->displayConfirmation($this->l('Your PayPal account is properly connected, you can now receive payments'));
+        } elseif ($update_conf) {
+            if (Configuration::get('PAYPAL_SANDBOX') == 1) {
+                $this->message .= $this->displayWarning($this->l('Your PayPal account is currently configured to accept payments on the Sandbox (test environment). Any transaction will be fictitious. Disable the option, to accept actual payments (production environment) and log in with your PayPal credentials'));
+            } elseif (Configuration::get('PAYPAL_SANDBOX') == 0) {
+                $this->message .= $this->displayConfirmation($this->l('Your PayPal account is properly connected, you can now receive payments'));
+            }
         }
+
         $block_info = '';
         if (Configuration::get('PS_ROUND_TYPE') != Order::ROUND_ITEM) {
             $block_info = $this->display(__FILE__, 'views/templates/admin/block_info.tpl');
@@ -397,16 +399,18 @@ class PayPal extends PaymentModule
 
     private function _postProcess()
     {
-
+        $update_conf = false;
         if (Tools::isSubmit('paypal_config')) {
             Configuration::updateValue('PAYPAL_SANDBOX', Tools::getValue('paypal_sandbox'));
             Configuration::updateValue('PAYPAL_API_INTENT', Tools::getValue('paypal_intent'));
             Configuration::updateValue('PAYPAL_API_CARD', Tools::getValue('paypal_card'));
             Configuration::updateValue('PAYPAL_API_ADVANTAGES', Tools::getValue('paypal_show_advantage'));
             Configuration::updateValue('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT', Tools::getValue('paypal_express_checkout_shortcut'));
+            $update_conf = true;
         }
 
         if (Tools::getValue('api_username') && Tools::getValue('api_password') && Tools::getValue('api_signature')) {
+
             switch (Configuration::get('PAYPAL_SANDBOX')) {
                 case 0:
                     Configuration::updateValue('PAYPAL_USERNAME_LIVE', Tools::getValue('api_username'));
@@ -421,6 +425,7 @@ class PayPal extends PaymentModule
                     Configuration::updateValue('PAYPAL_SANDBOX_ACCESS', 1);
                     break;
             }
+            $update_conf = true;
         }
 
         if (Tools::isSubmit('save_rounding_settings')) {
@@ -444,10 +449,15 @@ class PayPal extends PaymentModule
                 Tools::redirectLink( $result->data->url);
             }
         }
+        return $update_conf;
     }
 
     public function hookPaymentOptions($params)
     {
+        if(!Configuration::get('PAYPAL_SANDBOX') && !(Configuration::get('PAYPAL_USERNAME_LIVE') && Configuration::get('PAYPAL_PSWD_LIVE') && Configuration::get('PAYPAL_PSWD_LIVE'))
+            || Configuration::get('PAYPAL_SANDBOX') && !(Configuration::get('PAYPAL_USERNAME_SANDBOX') && Configuration::get('PAYPAL_PSWD_SANDBOX') && Configuration::get('PAYPAL_SIGNATURE_SANDBOX'))){
+            return false;
+        }
 
         $not_refunded = 0;
         foreach ($params['cart']->getProducts() as $key => $product) {
@@ -481,6 +491,7 @@ class PayPal extends PaymentModule
             $payment_options->setLogo(Media::getMediaPath(_PS_MODULE_DIR_.$this->name.'/views/img/logo_card.png'));
             $payment_options->setCallToActionText($action_text);
             $payment_options->setAction($this->context->link->getModuleLink($this->name, 'ecInit', array('credit_card'=>'1'), true));
+            $payment_options->setModuleName($this->name);
             $payment_options->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_infos_card.tpl'));
             $payments_options[] = $payment_options;
         }
@@ -724,17 +735,19 @@ class PayPal extends PaymentModule
         }
 
         $partner_info = array(
-            'email' => Configuration::get('PS_SHOP_EMAIL'),
-            'shop_url' => Tools::getShopDomainSsl(true),
-            'address1' => Configuration::get('PS_SHOP_ADDR1',null, null, null, ''),
-            'address2' => Configuration::get('PS_SHOP_ADDR2',null, null, null, ''),
-            'city' => Configuration::get('PS_SHOP_CITY',null, null, null, ''),
-            'country_code' => Tools::strtoupper($this->context->country->iso_code),
-            'postal_code' => Configuration::get('PS_SHOP_CODE',null, null, null, ''),
-            'state' => Configuration::get('PS_SHOP_STATE_ID',null, null, null, ''),
-            'return_url' => $return_url,
-            'first_name' => $this->context->employee->firstname,
-            'last_name' => $this->context->employee->lastname,
+            'email'         => $this->context->employee->email,
+            'shop_url'      => Tools::getShopDomainSsl(true),
+            'address1'      => Configuration::get('PS_SHOP_ADDR1',null, null, null, ''),
+            'address2'      => Configuration::get('PS_SHOP_ADDR2',null, null, null, ''),
+            'city'          => Configuration::get('PS_SHOP_CITY',null, null, null, ''),
+            'country_code'  => Tools::strtoupper($this->context->country->iso_code),
+            'postal_code'   => Configuration::get('PS_SHOP_CODE',null, null, null, ''),
+            'state'         => Configuration::get('PS_SHOP_STATE_ID',null, null, null, ''),
+            'return_url'    => $return_url,
+            'first_name'    => $this->context->employee->firstname,
+            'last_name'     => $this->context->employee->lastname,
+            'shop_name'     => Configuration::get('PS_SHOP_NAME',null, null, null, ''),
+            'ref_merchant'  => 'prestashop_'._PS_VERSION_.'_'.$this->version,
         );
         $sdk = new PaypalSDK(Configuration::get('PAYPAL_SANDBOX'));
         $response = $sdk->getUrlOnboarding($partner_info);
