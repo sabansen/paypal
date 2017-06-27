@@ -129,7 +129,6 @@ class PaypalSDK
 
     private function makeCallSI($body = null)
     {
-        die($this->urlSI.$this->endpoint.'?'.$body);
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_URL, $this->urlSI.$this->endpoint.'?'.$body );
