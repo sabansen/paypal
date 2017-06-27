@@ -74,6 +74,7 @@ class MethodEC extends AbstractMethodPaypal
 
     private function _setPaymentDetails($params)
     {
+
         // Products
         $tax = $total_products = 0;
         $index = -1;
@@ -81,9 +82,19 @@ class MethodEC extends AbstractMethodPaypal
         $fields['USER'] =  $params['USER'];
         $fields['PWD'] = $params['PWD'];
         $fields['SIGNATURE'] = $params['SIGNATURE'];
-        $fields['CANCELURL'] = $params['CANCELURL'];
-        $fields['LANDINGPAGE'] = $params['LANDINGPAGE'];
-        $fields['RETURNURL'] = $params['RETURNURL'];
+        if(isset($params['CANCELURL']))
+        {
+            $fields['CANCELURL'] = $params['CANCELURL'];
+        }
+        if(isset($params['LANDINGPAGE']))
+        {
+            $fields['LANDINGPAGE'] = $params['LANDINGPAGE'];
+        }
+        if(isset($params['RETURNURL']))
+        {
+            $fields['RETURNURL'] = $params['RETURNURL'];
+        }
+
 
         // Set cart products list
         $this->setProductsList($fields, $params['PAYMENT_LIST']['PRODUCTS'], $index, $total_products, $tax);
@@ -334,7 +345,7 @@ class MethodEC extends AbstractMethodPaypal
         if (Configuration::get('PAYPAL_API_INTENT') == "sale") {
             $order_state = Configuration::get('PS_OS_PAYMENT');
         } else {
-            $order_state = Configuration::get('PS_OS_PAYPAL');
+            $order_state = Configuration::get('PAYPAL_OS_WAITING');
         }
 
         $paypal->validateOrder($cart->id, $order_state, $total, 'paypal', null, $exec_payment, (int)$currency->id, false, $customer->secure_key);

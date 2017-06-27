@@ -79,6 +79,10 @@ class PayPal extends PaymentModule
             return false;
         }
 
+        if(!$this->installOrderState()) {
+            return false;
+        }
+
         if (!Configuration::updateValue('PAYPAL_MERCHANT_ID', '')
             || !Configuration::updateValue('PAYPAL_USERNAME_SANDBOX', '')
             || !Configuration::updateValue('PAYPAL_PSWD_SANDBOX', '')
@@ -100,7 +104,37 @@ class PayPal extends PaymentModule
 
         return true;
     }
-    
+
+    public function installOrderState()
+    {
+        if (!Configuration::get('PAYPAL_OS_WAITING')
+            || !Validate::isLoadedObject(new OrderState(Configuration::get('PAYPAL_OS_WAITING')))) {
+            $order_state = new OrderState();
+            $order_state->name = array();
+            foreach (Language::getLanguages() as $language) {
+                if (Tools::strtolower($language['iso_code']) == 'fr') {
+                    $order_state->name[$language['id_lang']] = 'En attente de paiement PayPal';
+                } else {
+                    $order_state->name[$language['id_lang']] = 'Awaiting for PayPal payment';
+                }
+            }
+            $order_state->send_email = false;
+            $order_state->color = '#4169E1';
+            $order_state->hidden = false;
+            $order_state->delivery = false;
+            $order_state->logable = false;
+            $order_state->invoice = false;
+            if ($order_state->add()) {
+                $source = _PS_MODULE_DIR_.'paypal/views/img/os_paypal.png';
+                $destination = _PS_ROOT_DIR_.'/img/os/'.(int) $order_state->id.'.gif';
+                copy($source, $destination);
+            }
+
+            Configuration::updateValue('PAYPAL_OS_WAITING', (int) $order_state->id);
+        }
+        return true;
+    }
+
     /**
      * Install DataBase table
      * @return boolean if install was successfull
@@ -250,9 +284,9 @@ class PayPal extends PaymentModule
             'preference' => $this->context->link->getAdminLink('AdminPreferences', true),
             'active_products' => $this->express_checkout,
             'return_url' => $return_url,
-            'access_token_sandbox' => Configuration::get('PAYPAL_SANDBOX_ACCESS'),
-            'access_token_live' => Configuration::get('PAYPAL_LIVE_ACCESS'),
             'paypal_card' => Configuration::get('PAYPAL_API_CARD'),
+            'api_user_name_sandbox' => Configuration::get('PAYPAL_USERNAME_SANDBOX'),
+            'api_user_name_live' => Configuration::get('PAYPAL_USERNAME_LIVE'),
             'ec_card_active' => $ec_card_active,
             'ec_paypal_active' => $ec_paypal_active,
             'need_rounding' => Configuration::get('PS_ROUND_TYPE') == Order::ROUND_ITEM ? 0 : 1,
