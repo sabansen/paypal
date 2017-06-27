@@ -348,7 +348,7 @@ class MethodEC extends AbstractMethodPaypal
             $order_state = Configuration::get('PAYPAL_OS_WAITING');
         }
 
-        $paypal->validateOrder($cart->id, $order_state, $total, 'paypal', null, $exec_payment, (int)$currency->id, false, $customer->secure_key);
+        $paypal->validateOrder($cart->id, $order_state, $total, 'PayPal', null, $exec_payment, (int)$currency->id, false, $customer->secure_key);
     }
 
 
