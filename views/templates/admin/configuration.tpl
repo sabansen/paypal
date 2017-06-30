@@ -144,10 +144,10 @@
                             <a target="_blank" href="https://www.paypal.com/webapps/mpp/contact-us">{l s='Contact us' mod='paypal'}</a>
                         </p>
                         <p>
-                            {l s='API user name SandBox' mod='paypal'} : {if $api_user_name_sandbox == ''}{l s='not specified'}{else}{$api_user_name_sandbox}{/if}
+                            {l s='API user name SandBox' mod='paypal'} : {if $api_user_name_sandbox == ''}{l s='not specified' mod='paypal'}{else}{$api_user_name_sandbox|escape:'htmlall':'UTF-8'}{/if}
                         </p>
                         <p>
-                            {l s='API user name Live' mod='paypal'} : {if $api_user_name_live == ''}{l s='not specified'}{else}{$api_user_name_live}{/if}
+                            {l s='API user name Live' mod='paypal'} : {if $api_user_name_live == ''}{l s='not specified' mod='paypal'}{else}{$api_user_name_live|escape:'htmlall':'UTF-8'}{/if}
                         </p>
                     </div>
                 </div>

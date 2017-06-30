@@ -52,7 +52,7 @@
 
                     <div class="table-responsive-row clearfix">
                         <p>
-                            {$error_paypal}
+                            {$error_paypal|escape:'htmlall':'UTF-8'}
                         </p>
                     </div>
 
