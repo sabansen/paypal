@@ -444,7 +444,7 @@ class PayPal extends PaymentModule
         }
 
         if (Tools::getValue('api_username') && Tools::getValue('api_password') && Tools::getValue('api_signature')) {
-
+            $this->message .= $this->displayWarning($this->l('If you created your PayPal merchant account, please make sure you validate your email address in order to process payments.'));
             switch (Configuration::get('PAYPAL_SANDBOX')) {
                 case 0:
                     Configuration::updateValue('PAYPAL_USERNAME_LIVE', Tools::getValue('api_username'));
