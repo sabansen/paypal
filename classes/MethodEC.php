@@ -423,7 +423,7 @@ class MethodEC extends AbstractMethodPaypal
     public function void($authorization)
     {
         $params = array();
-        $params['AUTHORIZATIONID'] = $authorization['authorization_id'];
+        $params['authorization_id'] = $authorization['authorization_id'];
         $this->_getCredentialsInfo($params);
         $sdk = new PaypalSDK(Configuration::get('PAYPAL_SANDBOX'));
         return $sdk->doVoid($params);
