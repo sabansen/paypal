@@ -52,7 +52,7 @@ class PayPal extends PaymentModule
         $this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_);
         $this->controllers = array('payment', 'validation');
         $this->bootstrap = true;
-
+        $this->module_key = '336225a5988ad434b782f2d868d7bfcd';
         $this->currencies = true;
         $this->currencies_mode = 'radio';
 
