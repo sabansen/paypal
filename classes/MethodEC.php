@@ -261,7 +261,6 @@ class MethodEC extends AbstractMethodPaypal
         $params = $this->_getPaymentDetails($params);
 
         $payment = $sdk->setExpressCheckout($params);
-
         $return = false;
         if (isset($payment['TOKEN'])) {
             $this->token = $payment['TOKEN'];
@@ -441,8 +440,8 @@ class MethodEC extends AbstractMethodPaypal
         );
         $this->_getCredentialsInfo($params);
         $params = $this->_getPaymentDetails($params);
-        $exec_payment = $sdk->doExpressCheckout($params);
 
+        $exec_payment = $sdk->doExpressCheckout($params);
         if (isset($exec_payment['L_ERRORCODE0'])) {
             Tools::redirect($context->link->getModuleLink('paypal', 'error', array('error_code' => $exec_payment['L_ERRORCODE0'])));
         }

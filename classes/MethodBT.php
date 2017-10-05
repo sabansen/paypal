@@ -425,7 +425,6 @@ class MethodBT extends AbstractMethodPaypal
             ];
 
             $result = $this->gateway->transaction()->sale($data);
-           // print_r("result");echo'<pre>';print_r($result);echo'<pre>';die;
             if (($result instanceof Braintree_Result_Successful) && $result->success && $this->isValidStatus($result->transaction->status)) {
                 return $result->transaction;
             } else {
