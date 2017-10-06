@@ -60,7 +60,6 @@ class PaypalErrorModuleFrontController extends ModuleFrontController
             '81503' => $module->l('Amount is an invalid format.'),
             '81501' => $module->l('Amount cannot be negative.'),
             '81509' => $module->l('Credit card type is not accepted by this merchant account.'),
-            '10417' => $module->l('The customer credit card failed bank authorization.'),
         );
         return isset($errors[$error_code])?$errors[$error_code]:$errors['00000'];
     }
