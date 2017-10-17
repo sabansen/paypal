@@ -247,7 +247,6 @@ class PayPal extends PaymentModule
             || !$this->registerHook('displayOrderConfirmation')
             || !$this->registerHook('displayAdminOrder')
             || !$this->registerHook('actionOrderStatusPostUpdate')
-            || !$this->registerHook('actionValidateOrder')
             || !$this->registerHook('actionOrderStatusUpdate')
             || !$this->registerHook('header')
             || !$this->registerHook('actionObjectCurrencyAddAfter')
@@ -758,9 +757,15 @@ class PayPal extends PaymentModule
 
     public function validateOrder($id_cart, $id_order_state, $amount_paid, $payment_method = 'Unknown', $message = null, $transaction = array(), $currency_special = null, $dont_touch_amount = false, $secure_key = false, Shop $shop = null)
     {
-        $this->amount_paid_paypal = (float)$amount_paid;
         $cart = new Cart((int) $id_cart);
         $total_ps = (float)$cart->getOrderTotal(true, Cart::BOTH);
+
+        // hack for wrong rounding -> order failed
+        if($amount_paid > $total_ps+0.10 || $amount_paid < $total_ps-0.10)
+        {
+            $total_ps = $amount_paid;
+        }
+
         parent::validateOrder(
             (int) $id_cart,
             (int) $id_order_state,
@@ -774,6 +779,20 @@ class PayPal extends PaymentModule
             $shop
         );
 
+
+        $id_order = Order::getIdByCartId($id_cart);
+        $order = new Order($id_order);
+        if (isset($amount_paid) && $amount_paid != 0 && $order->total_paid != $amount_paid) {
+            $order->total_paid = $amount_paid;
+            $order->total_paid_real = $amount_paid;
+            $order->total_paid_tax_incl = $amount_paid;
+            $order->update();
+
+            $sql = 'UPDATE `'._DB_PREFIX_.'order_payment`
+		    SET `amount` = '.(float)$amount_paid.'
+		    WHERE  `order_reference` = "'.pSQL($order->reference).'"';
+            Db::getInstance()->execute($sql);
+        }
 
         $paypal_order = new PaypalOrder();
         $paypal_order->id_order = $this->currentOrder;
@@ -795,23 +814,6 @@ class PayPal extends PaymentModule
             $paypal_capture = new PaypalCapture();
             $paypal_capture->id_paypal_order = $paypal_order->id;
             $paypal_capture->save();
-        }
-    }
-
-    public function hookActionValidateOrder($params)
-    {
-        $order = $params['order'];
-        $amount_paid = (float) $this->amount_paid_paypal;
-        if (isset($amount_paid) && $amount_paid != 0 && $order->total_paid != $amount_paid) {
-            $order->total_paid = $amount_paid;
-            $order->total_paid_real = $amount_paid;
-            $order->total_paid_tax_incl = $amount_paid;
-            $order->update();
-
-            $sql = 'UPDATE `'._DB_PREFIX_.'order_payment`
-		    SET `amount` = '.(float)$amount_paid.'
-		    WHERE  `order_reference` = "'.pSQL($order->reference).'"';
-            Db::getInstance()->execute($sql);
         }
     }
 
