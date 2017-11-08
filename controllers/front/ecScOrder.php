@@ -85,8 +85,7 @@ class PaypalEcScOrderModuleFrontController extends ModuleFrontController
                 }
             }
         }
-        //echo '<pre>';print_r($addresses);echo '<pre>';;print_r($info);die;
-       // echo '<pre>';print_r($count+1);echo '<pre>';die;
+
         if (!$address_exist) {
             $orderAddress = new Address();
             $separated_name = explode(" ", $info['SHIPTONAME']);
