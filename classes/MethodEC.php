@@ -141,7 +141,7 @@ class MethodEC extends AbstractMethodPaypal
             'ec_active' => Configuration::get('PAYPAL_EXPRESS_CHECKOUT'),
         ));
 
-        if (Configuration::get('PS_ROUND_TYPE') != Order::ROUND_ITEM) {
+        if (Configuration::get('PS_ROUND_TYPE') != Order::ROUND_ITEM || Configuration::get('PS_PRICE_ROUND_MODE') != PS_ROUND_HALF_DOWN)  {
             $params['block_info'] = $module->display(_PS_MODULE_DIR_.$module->name, 'views/templates/admin/block_info.tpl');
         }
 
