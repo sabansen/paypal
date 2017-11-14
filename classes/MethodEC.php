@@ -432,11 +432,12 @@ class MethodEC extends AbstractMethodPaypal
     public function validation()
     {
         $sdk = new PaypalSDK(Configuration::get('PAYPAL_SANDBOX'));
+        $paypal = Module::getInstanceByName('paypal');
         $context = Context::getContext();
         $params = array(
             'token' => Tools::getValue('shortcut') ? $context->cookie->paypal_ecs : Tools::getValue('token'),
             'payer_id' => Tools::getValue('shortcut') ? $context->cookie->paypal_ecs_payerid : Tools::getValue('PayerID'),
-            'button_source' => (defined('PLATEFORM') && PLATEFORM == 'PSREAD')?'PrestaShop_Cart_Presto':'PrestaShop_Cart_EC',
+            'button_source' => 'PrestaShop_Cart_'.(defined('PLATEFORM') && PLATEFORM == 'PSREADY' ? 'Ready_':'').'EC_'._PS_VERSION_.'_'.$paypal->version,
         );
         $this->_getCredentialsInfo($params);
         $params = $this->_getPaymentDetails($params);
@@ -453,7 +454,7 @@ class MethodEC extends AbstractMethodPaypal
         }
         $currency = $context->currency;
         $total = (float)$exec_payment['PAYMENTINFO_0_AMT'];
-        $paypal = Module::getInstanceByName('paypal');
+
         if (Configuration::get('PAYPAL_API_INTENT') == "sale") {
             $order_state = Configuration::get('PS_OS_PAYMENT');
         } else {
