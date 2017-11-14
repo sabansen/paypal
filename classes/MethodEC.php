@@ -328,7 +328,7 @@ class MethodEC extends AbstractMethodPaypal
         $params = $this->_setPaymentDetails($params);
         $params['TOKEN'] = Tools::getValue('token');
         $params['PAYERID'] = Tools::getValue('PayerID');
-        $params['BUTTONSOURCE'] = 'PrestaShop_Cart_EC';
+        $params['BUTTONSOURCE'] = 'PrestaShop_Cart_'.(defined(PLATEFORM) && PLATEFORM == 'PSREADY' ? 'Ready_':'').'EC_'._PS_VERSION_.'_'.$this->version;
         
         $exec_payment = $sdk->doExpressCheckout($params);
         if (isset($exec_payment['L_ERRORCODE0'])) {
