@@ -319,6 +319,7 @@ class MethodEC extends AbstractMethodPaypal
     public function validation()
     {
         $sdk = new PaypalSDK(Configuration::get('PAYPAL_SANDBOX'));
+        $paypal = Module::getInstanceByName('paypal');
         $params = array(
             'TOKEN' => Tools::getValue('token'),
             'PAYERID' => Tools::getValue('PayerID'),
@@ -328,8 +329,7 @@ class MethodEC extends AbstractMethodPaypal
         $params = $this->_setPaymentDetails($params);
         $params['TOKEN'] = Tools::getValue('token');
         $params['PAYERID'] = Tools::getValue('PayerID');
-        $params['BUTTONSOURCE'] = 'PrestaShop_Cart_'.(defined(PLATEFORM) && PLATEFORM == 'PSREADY' ? 'Ready_':'').'EC_'._PS_VERSION_.'_'.$this->version;
-        
+        $params['BUTTONSOURCE'] = 'PrestaShop_Cart_'.(defined('PLATEFORM') && PLATEFORM == 'PSREADY' ? 'Ready_':'').'EC_'._PS_VERSION_.'_'.$paypal->version;
         $exec_payment = $sdk->doExpressCheckout($params);
         if (isset($exec_payment['L_ERRORCODE0'])) {
             Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_code' => $exec_payment['L_ERRORCODE0'])));
@@ -342,7 +342,7 @@ class MethodEC extends AbstractMethodPaypal
         }
         $currency = Context::getContext()->currency;
         $total = (float)$exec_payment['PAYMENTINFO_0_AMT'];
-        $paypal = Module::getInstanceByName('paypal');
+
         if (Configuration::get('PAYPAL_API_INTENT') == "sale") {
             $order_state = Configuration::get('PS_OS_PAYMENT');
         } else {
