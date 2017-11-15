@@ -392,7 +392,6 @@ class MethodBT extends AbstractMethodPaypal
         $address_shipping = new Address($cart->id_address_delivery);
         $country_shipping = new Country($address_shipping->id_country);
         $current_currency = context::getContext()->currency->iso_code;
-        $paypal = Module::getInstanceByName('paypal');
 
         try {
             $data = [
@@ -400,7 +399,7 @@ class MethodBT extends AbstractMethodPaypal
                 'paymentMethodNonce'    => $token_payment,
                 'merchantAccountId'     => $merchant_accounts->$current_currency,
                 'orderId'               => $cart->id,
-                'channel'               => 'PrestaShop_Cart_'.(defined('PLATEFORM') && PLATEFORM == 'PSREADY' ? 'Ready_':'').'Braintree_'._PS_VERSION_.'_'.$paypal->version,
+                'channel'               => 'PrestaShop_Cart_'.(defined('PLATEFORM') && PLATEFORM == 'PSREADY' ? 'Ready_':'').'Braintree',
                 'billing' => [
                     'firstName'         => $address_billing->firstname,
                     'lastName'          => $address_billing->lastname,

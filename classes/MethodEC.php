@@ -437,7 +437,7 @@ class MethodEC extends AbstractMethodPaypal
         $params = array(
             'token' => Tools::getValue('shortcut') ? $context->cookie->paypal_ecs : Tools::getValue('token'),
             'payer_id' => Tools::getValue('shortcut') ? $context->cookie->paypal_ecs_payerid : Tools::getValue('PayerID'),
-            'button_source' => 'PrestaShop_Cart_'.(defined('PLATEFORM') && PLATEFORM == 'PSREADY' ? 'Ready_':'').'EC_'._PS_VERSION_.'_'.$paypal->version,
+            'button_source' => 'PrestaShop_Cart_'.(defined('PLATEFORM') && PLATEFORM == 'PSREADY' ? 'Ready_':'').'EC',
         );
         $this->_getCredentialsInfo($params);
         $params = $this->_getPaymentDetails($params);
