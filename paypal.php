@@ -210,7 +210,11 @@ class PayPal extends PaymentModule
             $order_state->delivery = false;
             $order_state->logable = false;
             $order_state->invoice = false;
-            $order_state->add();
+            if ($order_state->add()) {
+                $source = _PS_MODULE_DIR_.'paypal/views/img/os_braintree.png';
+                $destination = _PS_ROOT_DIR_.'/img/os/'.(int) $order_state->id.'.gif';
+                copy($source, $destination);
+            }
             Configuration::updateValue('PAYPAL_BRAINTREE_OS_AWAITING', (int) $order_state->id);
         }
         if (!Configuration::get('PAYPAL_BRAINTREE_OS_AWAITING_VALIDATION')
@@ -230,7 +234,11 @@ class PayPal extends PaymentModule
             $order_state->delivery = false;
             $order_state->logable = false;
             $order_state->invoice = false;
-            $order_state->add();
+            if ($order_state->add()) {
+                $source = _PS_MODULE_DIR_.'paypal/views/img/os_braintree.png';
+                $destination = _PS_ROOT_DIR_.'/img/os/'.(int) $order_state->id.'.gif';
+                copy($source, $destination);
+            }
             Configuration::updateValue('PAYPAL_BRAINTREE_OS_AWAITING_VALIDATION', (int) $order_state->id);
         }
         return true;
@@ -582,6 +590,7 @@ class PayPal extends PaymentModule
                         if (Configuration::get('PAYPAL_API_ADVANTAGES')) {
                             $action_text .= ' | '.$this->l('It\'s easy, simple and secure');
                         }
+                        $embeddedOption->setLogo(Media::getMediaPath(_PS_MODULE_DIR_.$this->name.'/views/img/paypal_sm.png'));
                         $embeddedOption->setCallToActionText($action_text)
                             ->setForm($this->generateFormPaypalBt());
                         $embeddedOption->setModuleName('braintree');
