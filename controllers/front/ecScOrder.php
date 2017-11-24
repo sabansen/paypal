@@ -33,35 +33,19 @@ class PaypalEcScOrderModuleFrontController extends ModuleFrontController
     public function postProcess()
     {
         $method = AbstractMethodPaypal::load('EC');
-        $paypal = Module::getInstanceByName('paypal');
-
-        try {
-            $info = $method->getInfo(array('token'=>Tools::getValue('token')));
-        } catch (PayPal\Exception\PPConnectionException $e) {
-            $ex_detailed_message = $paypal->l('Error connecting to ') . $e->getUrl();
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $ex_detailed_message)));
-        } catch (PayPal\Exception\PPMissingCredentialException $e) {
-            $ex_detailed_message = $e->errorMessage();
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $ex_detailed_message)));
-        } catch (PayPal\Exception\PPConfigurationException $e) {
-            $ex_detailed_message = $paypal->l('Invalid configuration. Please check your configuration file');
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $ex_detailed_message)));
-        } catch (Exception $e) {
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_code' => $e->getCode())));
+        $info = $method->getInfo(array('token'=>Tools::getValue('token')));
+        if ($info['ACK'] != 'Success') {
+            Tools::redirect($this->context->link->getModuleLink('paypal', 'error', array('error_code'=>$info['L_ERRORCODE0'])));
         }
-
-        $payer_info = $info->GetExpressCheckoutDetailsResponseDetails->PayerInfo;
-        $ship_addr = $info->GetExpressCheckoutDetailsResponseDetails->PaymentDetails[0]->ShipToAddress;
-
         if ($this->context->cookie->logged) {
             $customer = $this->context->customer;
-        } elseif ($id_customer = Customer::customerExists($payer_info->Payer, true)) {
+        } elseif ($id_customer = Customer::customerExists($info['EMAIL'], true)) {
             $customer = new Customer($id_customer);
         } else {
             $customer = new Customer();
-            $customer->email = $payer_info->Payer;
-            $customer->firstname = $payer_info->PayerName->FirstName;
-            $customer->lastname = $payer_info->PayerName->LastName;
+            $customer->email = $info['EMAIL'];
+            $customer->firstname = $info['FIRSTNAME'];
+            $customer->lastname = $info['LASTNAME'];
             $customer->passwd = Tools::encrypt(Tools::passwdGen());
 
             $customer->add();
@@ -75,67 +59,62 @@ class PaypalEcScOrderModuleFrontController extends ModuleFrontController
         $this->context->cart->id_customer = $customer->id;
         $this->context->cart->update();
 
-        Hook::exec('actionAuthentication', array('customer' => $this->context->customer));
+        Hook::exec('actionAuthentication', ['customer' => $this->context->customer]);
         // Login information have changed, so we check if the cart rules still apply
         CartRule::autoRemoveFromCart($this->context);
         CartRule::autoAddToCart($this->context);
         // END Login
-        $addresses = $this->context->customer->getAddresses($this->context->language->id);
+        $addresses = $customer->getAddresses($this->context->language->id);
         $address_exist = false;
         $count = 1;
-        $id_address = 0;
-        foreach ($addresses as $address) {
 
-            if ($address['firstname'].' '.$address['lastname'] == $ship_addr->Name
-                && $address['address1'] == $ship_addr->Street1
-                && (empty($ship_addr->Street2) || $address['address2'] == $ship_addr->Street2)
-                && $address['id_country'] == Country::getByIso($ship_addr->Country)
-                && $address['city'] == $ship_addr->CityName
-                && (empty($ship_addr->StateOrProvince) || $address['id_state'] == State::getIdByName($ship_addr->StateOrProvince))
-                && $address['postcode'] == $ship_addr->PostalCode
-                && (empty($ship_addr->Phone) || $address['phone'] == $ship_addr->Phone)
+        foreach ($addresses as $address) {
+            if($address['firstname'].' '.$address['lastname'] == $info['SHIPTONAME']
+                && $address['address1'] == $info['PAYMENTREQUEST_0_SHIPTOSTREET']
+                && (isset($info['PAYMENTREQUEST_0_SHIPTOSTREET2'])?$address['address2'] == $info['PAYMENTREQUEST_0_SHIPTOSTREET2']:true)
+                && $address['id_country'] == Country::getByIso($info['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE'])
+                && $address['city'] == $info['PAYMENTREQUEST_0_SHIPTOCITY']
+                && (isset($info['PAYMENTREQUEST_0_SHIPTOSTATE'])?$address['id_state'] == $info['PAYMENTREQUEST_0_SHIPTOSTATE']:true)
+                && $address['postcode'] == $info['PAYMENTREQUEST_0_SHIPTOZIP']
+                && (isset($info['PAYMENTREQUEST_0_SHIPTOPHONENUM'])?$address['phone'] == $info['PAYMENTREQUEST_0_SHIPTOPHONENUM']:true)
             ) {
                 $address_exist = true;
-                $id_address = $address['id_address'];
-                break;
             } else {
                 if ((strrpos($address['alias'], 'Paypal_Address')) !== false) {
                     $count = (int)(Tools::substr($address['alias'], -1)) + 1;
                 }
             }
         }
+
         if (!$address_exist) {
             $orderAddress = new Address();
-            $pos_separator = strpos($ship_addr->Name,' ');
-            $orderAddress->firstname = Tools::substr($ship_addr->Name,0,$pos_separator);
-            $orderAddress->lastname = Tools::substr($ship_addr->Name,$pos_separator+1);
-            $orderAddress->address1 = $ship_addr->Street1;
-            if (isset($ship_addr->Street2)) {
-                $orderAddress->address2 = $ship_addr->Street2;
+            $separated_name = explode(" ", $info['SHIPTONAME']);
+            $orderAddress->firstname = $separated_name[0];
+            $orderAddress->lastname = $separated_name[1];
+            $orderAddress->address1 = $info['PAYMENTREQUEST_0_SHIPTOSTREET'];
+            if (isset($info['PAYMENTREQUEST_0_SHIPTOSTREET2'])) {
+                $orderAddress->address2 = $info['PAYMENTREQUEST_0_SHIPTOSTREET2'];
             }
-            $orderAddress->id_country = Country::getByIso($ship_addr->Country);
-            $orderAddress->city = $ship_addr->CityName;
+            $orderAddress->id_country = Country::getByIso($info['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE']);
+            $orderAddress->city = $info['PAYMENTREQUEST_0_SHIPTOCITY'];
             if (Country::containsStates($orderAddress->id_country)) {
-                $orderAddress->id_state = (int) State::getIdByName($ship_addr->StateOrProvince);
+                $orderAddress->id_state = (int) State::getIdByIso($info['PAYMENTREQUEST_0_SHIPTOSTATE'], $address->id_country);
             }
 
-            $orderAddress->postcode = $ship_addr->PostalCode;
-            if (isset($ship_addr->Phone)) {
-                $orderAddress->phone = $ship_addr->Phone;
+            $orderAddress->postcode = $info['PAYMENTREQUEST_0_SHIPTOZIP'];
+            if (isset($info['PAYMENTREQUEST_0_SHIPTOPHONENUM'])) {
+                $orderAddress->phone = $info['PAYMENTREQUEST_0_SHIPTOPHONENUM'];
             }
 
             $orderAddress->id_customer = $customer->id;
             $orderAddress->alias = 'Paypal_Address '.($count);
+
             $orderAddress->save();
-            $id_address = $orderAddress->id;
         }
 
-        $this->context->cart->id_address_delivery = $id_address;
-        $this->context->cart->id_address_invoice = $id_address;
-        $this->context->cart->save();
 
-        $this->context->cookie->__set('paypal_ecs', $info->GetExpressCheckoutDetailsResponseDetails->Token);
-        $this->context->cookie->__set('paypal_ecs_payerid', $info->GetExpressCheckoutDetailsResponseDetails->PayerInfo->PayerID);
+        $this->context->cookie->__set('paypal_ecs', $info['TOKEN']);
+        $this->context->cookie->__set('paypal_ecs_payerid', $info['PAYERID']);
         Tools::redirect($this->context->link->getPageLink('order', null, null, array('step'=>2)));
     }
 }

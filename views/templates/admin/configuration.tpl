@@ -36,12 +36,12 @@
 </div>
 
 <div class="container-fluid paypal-nav">
-    <ul class="nav nav-pills navbar-separator">
-        <li {if !isset($ec_paypal_active) && !isset($ec_card_active) && !isset($bt_active) && !isset($ppp_active)}class="active"{/if}><a data-toggle="pill" href="#paypal_conf"><span>{l s='Products' mod='paypal'}</span></a></li>
-        <li {if isset($ec_paypal_active) || isset($ec_card_active) || isset($bt_active) || isset($ppp_active)}class="active"{/if}><a data-toggle="pill" href="#paypal_params"><span>{l s='Settings' mod='paypal'}</span></a></li>
-    </ul>
+<ul class="nav nav-pills navbar-separator">
+    <li {if !isset($ec_paypal_active) && !isset($ec_card_active) && !isset($bt_active)}class="active"{/if}><a data-toggle="pill" href="#paypal_conf"><span>{l s='Products' mod='paypal'}</span></a></li>
+    <li {if isset($ec_paypal_active) || isset($ec_card_active) || isset($bt_active)}class="active"{/if}><a data-toggle="pill" href="#paypal_params"><span>{l s='Settings' mod='paypal'}</span></a></li>
+</ul>
     <div class="tab-content">
-        <div id="paypal_conf"  class="tab-pane fade {if !isset($ec_paypal_active) && !isset($ec_card_active) && !isset($bt_active) && !isset($ppp_active)}in active{/if}">
+    <div id="paypal_conf"  class="tab-pane fade {if !isset($ec_paypal_active) && !isset($ec_card_active) && !isset($bt_active) && !isset($bt_active)}in active{/if}">
         <div class="box half left">
             <div class="logo">
                  <img src="{$path|escape:'html':'UTF-8'}/views/img/paypal_btm.png" alt=""  />
@@ -92,7 +92,7 @@
                     </div>
                 </div>
             </div>
-            {if !isset($braintree_available) && !isset($ppp_available)}
+            {if !isset($braintree_available)}
             <div class="col-sm-6">
                 <div class="panel {if isset($ec_active) && $ec_active && isset($ec_card_active) && $ec_card_active}actvie-panel{/if}">
                     <img class="paypal-products" src="{$path|escape:'html':'UTF-8'}/views/img/paypal.png">
@@ -124,6 +124,30 @@
             </div>
             {/if}
             {if isset($braintree_available)}
+            <div class="col-sm-4 hide">
+                <div class="panel {if isset($bt_active) && $bt_active && $bt_paypal_active == 0}active-panel{/if}">
+                    <img class="paypal-products" src="{$path|escape:'html':'UTF-8'}/views/img/braintree-paypal.png">
+                    <p>
+                        {l s='Accept Braintree payments' mod='paypal'}
+                    </p>
+                    <p>
+                        {l s='Your customers can pay with a selection of local and international debit and credit cards. Make online payments simple. PayPal customers can buy from you quickly if they use One Touch' mod='paypal'}&trade;
+                    </p>
+                    <p><a target="_blank" href="https://www.paypal.com/webapps/mpp/standard">{l s='More Information' mod='paypal'}</a></p>
+                    <div class="bottom">
+                        <img src="{$path|escape:'html':'UTF-8'}/views/img/paypal_btm.png" class="product-img">
+                        <img src="{$path|escape:'html':'UTF-8'}/views/img/visa.svg" class="product-img">
+                        <img src="{$path|escape:'html':'UTF-8'}/views/img/mastercard.svg" class="product-img">
+                        <img src="{$path|escape:'html':'UTF-8'}/views/img/maestro.svg" class="product-img">
+                        <img src="{$path|escape:'html':'UTF-8'}/views/img/jcb.svg" class="product-img">
+                        <img src="{$path|escape:'html':'UTF-8'}/views/img/discover.svg" class="product-img">
+                        <img src="{$path|escape:'html':'UTF-8'}/views/img/amex.svg" class="product-img">
+                        <img src="{$path|escape:'html':'UTF-8'}/views/img/diners.svg" class="product-img">
+                        <img src="{$path|escape:'html':'UTF-8'}/views/img/unionpay.svg" class="product-img">
+                        <a class="btn btn-default pull-right" href="{$return_url|escape:'html':'UTF-8'}&method=BT&with_paypal=0{if isset($bt_active) && $bt_active && $bt_paypal_active == 0}&modify=1{/if}">{if isset($bt_active) && $bt_active && $bt_paypal_active == 0}{l s='Modify' mod='paypal'}{else}{l s='Activate' mod='paypal'}{/if}</a>
+                    </div>
+                </div>
+            </div>
             <div class="col-sm-6">
                 <div class="panel {if isset($bt_paypal_active) && $bt_paypal_active}active-panel{/if}">
                     <img class="paypal-products" src="{$path|escape:'html':'UTF-8'}/views/img/braintree-paypal.png">
@@ -149,33 +173,6 @@
                         <img src="{$path|escape:'html':'UTF-8'}/views/img/diners.svg" class="product-img">
                         <img src="{$path|escape:'html':'UTF-8'}/views/img/unionpay.svg" class="product-img">
                         <a class="btn btn-default pull-right" href="{$return_url|escape:'html':'UTF-8'}&method=BT&with_paypal=1{if isset($bt_paypal_active) && $bt_paypal_active}&modify=1{/if}">{if isset($bt_paypal_active) && $bt_paypal_active}{l s='Modify' mod='paypal'}{else}{l s='Activate' mod='paypal'}{/if}</a>
-                    </div>
-                </div>
-            </div>
-            {/if}
-            {if isset($ppp_available)}
-            <div class="col-sm-6">
-                <div class="panel {if isset($ppp_active)}active-panel{/if}">
-                    <img class="paypal-products" src="{$path|escape:'html':'UTF-8'}/views/img/paypal.png">
-                    <p>
-                        {l s='PayPal Plus' mod='paypal'}
-                    </p>
-                    <p><ul>
-                        <li>{l s='Get the best of PayPal & Braintree in a single solution' mod='paypal'}</li>
-                        <li>{l s='Benefit of PayPal\'s OneTouch' mod='paypal'}&trade; {l s='conversion rate improvements, in-context payments & Seller Protection Program' mod='paypal'}</li>
-                        <li>{l s='Offer debit and credit card payments with all major global card networks' mod='paypal'}</li>
-                        <li>{l s='No monthly or setup fee - check PayPal\'s & Braintree\'s pricing' mod='paypal'}</li>
-                        <li>{l s='Protect your payments with 3D Secure & PCI DSS v3.0 SAQ-A compliance' mod='paypal'}</li>
-                    </ul></p>
-                    <p><a target="_blank" href="https://www.paypal.com/webapps/mpp/standard">{l s='More Information' mod='paypal'}</a></p>
-                    <div class="bottom">
-                        <img src="{$path|escape:'html':'UTF-8'}/views/img/paypal.png" class="product-img">
-                        <img src="{$path|escape:'html':'UTF-8'}/views/img/visa.svg" class="product-img">
-                        <img src="{$path|escape:'html':'UTF-8'}/views/img/mastercard.svg" class="product-img">
-                        <img src="{$path|escape:'html':'UTF-8'}/views/img/amex.svg" class="product-img">
-                        <img src="{$path|escape:'html':'UTF-8'}/views/img/ppp-bank-logo.png" class="product-img">
-                        <img src="{$path|escape:'html':'UTF-8'}/views/img/kauf.png" class="product-img">
-                        <a class="btn btn-default pull-right" href="#" onclick="display_popup('PPP')">{if isset($ppp_active)}{l s='Modify' mod='paypal'}{else}{l s='Activate' mod='paypal'}{/if}</a>
                     </div>
                 </div>
             </div>
@@ -224,8 +221,8 @@
         </div>
 
     </div>
-        <div id="paypal_params" class="tab-pane fade col-sm-12 {if isset($ec_paypal_active) || isset($ec_card_active) || isset($bt_active) || isset($ppp_active)}in active{/if}">
-        {if isset($ec_paypal_active) || isset($ec_card_active) || isset($bt_active) || isset($ppp_active)}
+    <div id="paypal_params" class="tab-pane fade col-sm-12 {if isset($ec_paypal_active) || isset($ec_card_active) || isset($bt_active)}in active{/if}">
+        {if isset($ec_paypal_active) || isset($ec_card_active) || isset($bt_active)}
         <div class="panel parametres">
             <div class="panel-body">
                 <div class="col-sm-8 help-left">
@@ -281,19 +278,6 @@
                             {l s='Your customers can pay with a selection of local and international debit and credit cards. Make online payments simple. PayPal customers can buy from you quickly if they use One Touch' mod='paypal'}&trade;
                         </p>
                         <p><a target="_blank" href="https://www.paypal.com/{$iso_code|escape:'html':'UTF-8'}/webapps/mpp/express-checkout">{l s='More Information' mod='paypal'}</a></p>
-                    {elseif isset($ppp_available) && isset($ppp_active)}
-                        <img class="paypal-products" src="{$path|escape:'html':'UTF-8'}/views/img/paypal.png">
-                        <p>
-                            {l s='PayPal Plus' mod='paypal'}
-                        </p>
-                        <p><ul>
-                            <li>{l s='Get the best of PayPal & Braintree in a single solution' mod='paypal'}</li>
-                            <li>{l s='Benefit of PayPal\'s OneTouch' mod='paypal'}&trade; {l s='conversion rate improvements, in-context payments & Seller Protection Program' mod='paypal'}</li>
-                            <li>{l s='Offer debit and credit card payments with all major global card networks' mod='paypal'}</li>
-                            <li>{l s='No monthly or setup fee - check PayPal\'s & Braintree\'s pricing' mod='paypal'}</li>
-                            <li>{l s='Protect your payments with 3D Secure & PCI DSS v3.0 SAQ-A compliance' mod='paypal'}</li>
-                        </ul></p>
-                        <p><a target="_blank" href="https://www.paypal.com/{$iso_code|escape:'html':'UTF-8'}/webapps/mpp/hosted">{l s='More Information' mod='paypal'}</a></p>
                     {/if}
                 </div>
                 <div class="col-sm-3 help-right">
@@ -307,69 +291,10 @@
         <div class="configuration-block"></div>
     </div>
 
-    </div>
 </div>
-{if isset($ppp_available)}
-<div style="display: none;">
-    <div id="content-fancybox-configuration">
-        <form action="{$return_url|escape:'javascript':'UTF-8'}" method="post" id="credential-configuration" class="bootstrap">
-            <h4>{l s='API Credentials' mod='paypal'}</h4>
-            <p>{l s='In order to accept PayPal Plus payments, please fill your API REST credentials.' mod='paypal'}</p>
-            <ul>
-                <li>{l s='Access' mod='paypal'} <a target="_blank" href="https://developer.paypal.com/developer/applications/">{l s='https://developer.paypal.com/developer/applications/' mod='paypal'}</a></li>
-                <li>{l s='Log in or Create a business account' mod='paypal'}</li>
-                <li>{l s='Create a « REST API apps »' mod='paypal'}</li>
-                <li>{l s='Click « Show » en dessous de « Secret: »' mod='paypal'}</li>
-                <li>{l s='Copy/paste your « Client ID » and « Secret » below for each environment' mod='paypal'}</li>
-            </ul>
-            <hr/>
-            <input type="hidden" id="method" name="method"/>
-            <input type="hidden" id="with_card" name="with_card"/>
-            <h4>{l s='Sandbox' mod='paypal'}</h4>
-            <p>
-                <label for="sandbox_client_id">{l s='Client ID' mod='paypal'}</label>
-                <input type="text" id="sandbox_client_id" name="sandbox[client_id]" value="{if isset($PAYPAL_SANDBOX_CLIENTID)}{$PAYPAL_SANDBOX_CLIENTID|escape:'htmlall':'UTF-8'}{/if}"/>
-            </p>
-            <p>
-                <label for="sandbox_secret">{l s='Secret' mod='paypal'}</label>
-                <input type="password" id="sandbox_secret" name="sandbox[secret]" value="{if isset($PAYPAL_SANDBOX_SECRET)}{$PAYPAL_SANDBOX_SECRET|escape:'htmlall':'UTF-8'}{/if}"/>
-            </p>
-            <h4>{l s='Live' mod='paypal'}</h4>
-            <ul>
-                <li>{l s='You can switch to "Live" environment on top right' mod='paypal'}</li>
-            </ul>
-            <p>
-                <label for="live_client_id">{l s='Client ID' mod='paypal'}</label>
-                <input type="text" id="live_client_id" name="live[client_id]" value="{if isset($PAYPAL_LIVE_CLIENTID)}{$PAYPAL_LIVE_CLIENTID|escape:'htmlall':'UTF-8'}{/if}"/>
-            </p>
-            <p>
-                <label for="live_secret">{l s='Secret' mod='paypal'}</label>
-                <input type="password" id="live_secret" name="live[secret]" value="{if isset($PAYPAL_LIVE_SECRET)}{$PAYPAL_LIVE_SECRET|escape:'htmlall':'UTF-8'}{/if}"/>
-            </p>
-            <hr/>
-            <p>
-                <button class="btn btn-default"  onclick="$.fancybox.close();return false;">{l s='Cancel' mod='paypal'}</button>
-                <button class="btn btn-info" name="save_credentials">{l s='Confirm API Credentials' mod='paypal'}</button>
-            </p>
-        </form>
-    </div>
 </div>
-{/if}
-
 <script type="text/javascript">
 
-    function display_popup(method)
-    {
-        $('#method').val(method);
-        $.fancybox.open([
-            {
-                type: 'inline',
-                autoScale: true,
-                minHeight: 30,
-                content: $('#content-fancybox-configuration').html(),
-            }
-        ]);
-    }
 
     $(document).ready(function(){
 

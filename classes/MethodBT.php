@@ -281,7 +281,8 @@ class MethodBT extends AbstractMethodPaypal
             foreach ($response as $account) {
                 $result[$account->currencyIsoCode] = $account->id;
             }
-        } catch (Exception $e) {
+        }
+        catch  (Exception $e) {
         }
         return $result;
     }
@@ -299,7 +300,8 @@ class MethodBT extends AbstractMethodPaypal
                 if ($response->success) {
                     $result[$response->merchantAccount->currencyIsoCode] = $response->merchantAccount->id;
                 }
-            } catch (Exception $e) {
+            }
+            catch  (Exception $e) {
             }
         } else {
             $currencies = Currency::getCurrencies();
@@ -311,7 +313,8 @@ class MethodBT extends AbstractMethodPaypal
                     if ($response->success) {
                         $result[$response->merchantAccount->currencyIsoCode] = $response->merchantAccount->id;
                     }
-                } catch (Exception $e) {
+                }
+                catch  (Exception $e) {
                 }
             }
         }
@@ -396,7 +399,7 @@ class MethodBT extends AbstractMethodPaypal
                 'paymentMethodNonce'    => $token_payment,
                 'merchantAccountId'     => $merchant_accounts->$current_currency,
                 'orderId'               => $cart->id,
-                'channel'               => (defined('PLATEFORM') && PLATEFORM == 'PSREAD')?'PrestaShop_Cart_Ready_Braintree':'PrestaShop_Cart_BT',
+                'channel'               => 'PrestaShop_Cart_'.(defined('PLATEFORM') && PLATEFORM == 'PSREADY' ? 'Ready_':'').'Braintree',
                 'billing' => [
                     'firstName'         => $address_billing->firstname,
                     'lastName'          => $address_billing->lastname,
@@ -422,7 +425,6 @@ class MethodBT extends AbstractMethodPaypal
             ];
 
             $result = $this->gateway->transaction()->sale($data);
-           // print_r("result");echo'<pre>';print_r($result);echo'<pre>';die;
             if (($result instanceof Braintree_Result_Successful) && $result->success && $this->isValidStatus($result->transaction->status)) {
                 return $result->transaction;
             } else {
@@ -464,10 +466,10 @@ class MethodBT extends AbstractMethodPaypal
                     'status' => $result->transaction->status,
                     'amount' => $result->transaction->amount,
                     'currency' => $result->transaction->currencyIsoCode,
-                    'payment_type' => isset($result->transaction->payment_type) ? $result->transaction->payment_type : '',
+                    'payment_type' => $result->transaction->payment_type,
                     'merchantAccountId' => $result->transaction->merchantAccountId,
                 );
-            } else if ($result->transaction->status == Braintree_Transaction::SETTLEMENT_DECLINED) {
+            } elseif ($result->transaction->status == Braintree_Transaction::SETTLEMENT_DECLINED) {
                 $order = new Order(Tools::getValue('id_order'));
                 $order->setCurrentState(Configuration::get('PS_OS_ERROR'));
             } else {
@@ -505,11 +507,9 @@ class MethodBT extends AbstractMethodPaypal
             $paypal_order = PaypalOrder::loadByOrderId(Tools::getValue('id_order'));
             $capture = PaypalCapture::loadByOrderPayPalId($paypal_order->id);
             $id_transaction = Validate::isLoadedObject($capture) ? $capture->id_capture : $paypal_order->id_transaction;
-         //  echo '<pre>';print_r($this->gateway->transaction()->find($id_transaction));die;
             $result = $this->gateway->transaction()->refund($id_transaction, number_format($paypal_order->total_paid, 2, ".", ''));
-
             if ($result->success) {
-                $response =  array(
+                $response = array(
                     'success' => true,
                     'refund_id' => $result->transaction->refundedTransactionId,
                     'transaction_id' => $result->transaction->id,

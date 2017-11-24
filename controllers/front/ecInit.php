@@ -30,27 +30,13 @@ class PaypalEcInitModuleFrontController extends ModuleFrontController
 {
     public function postProcess()
     {
-        $paypal = Module::getInstanceByName('paypal');
         $method_ec = AbstractMethodPaypal::load('EC');
-        try {
-            $url = $method_ec->init(array('use_card'=>Tools::getValue('credit_card')));
-        } catch (PayPal\Exception\PPConnectionException $e) {
-            $ex_detailed_message = $paypal->l('Error connecting to ') . $e->getUrl();
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $ex_detailed_message)));
-        } catch (PayPal\Exception\PPMissingCredentialException $e) {
-            $ex_detailed_message = $e->errorMessage();
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $ex_detailed_message)));
-        } catch (PayPal\Exception\PPConfigurationException $e) {
-            $ex_detailed_message = $paypal->l('Invalid configuration. Please check your configuration file');
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $ex_detailed_message)));
-        } catch (Exception $e) {
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_code' => $e->getCode())));
-        }
 
-        if (Tools::getvalue('getToken')) {
-            die($method_ec->token);
+        $response = $method_ec->init(array('use_card'=>Tools::getValue('credit_card')));
+        if (!isset($response['L_ERRORCODE0'])) {
+            Tools::redirect($response.'&useraction=commit');
+        } else {
+            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_code' => $response['L_ERRORCODE0'])));
         }
-
-        Tools::redirect($url.'&useraction=commit');
     }
 }

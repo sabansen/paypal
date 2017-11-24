@@ -54,7 +54,7 @@ function initPaypalBraintree() {
                     return paypalCheckoutInstance.createPayment({
                         flow: 'vault',
                         billingAgreementDescription: 'Your agreement description',
-                        enableShippingAddress: false,
+                        enableShippingAddress: true,
                         shippingAddressEditable: false,
                     });
                 },

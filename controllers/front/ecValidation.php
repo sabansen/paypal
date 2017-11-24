@@ -33,24 +33,13 @@ class PaypalEcValidationModuleFrontController extends ModuleFrontController
     public function postProcess()
     {
         $method_ec = AbstractMethodPaypal::load('EC');
-        $paypal = Module::getInstanceByName('paypal');
-        try {
-            $method_ec->validation();
-        } catch (PayPal\Exception\PPConnectionException $e) {
-            $ex_detailed_message = $paypal->l('Error connecting to ') . $e->getUrl();
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $ex_detailed_message)));
-        } catch (PayPal\Exception\PPMissingCredentialException $e) {
-            $ex_detailed_message = $e->errorMessage();
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $ex_detailed_message)));
-        } catch (PayPal\Exception\PPConfigurationException $e) {
-            $ex_detailed_message = $paypal->l('Invalid configuration. Please check your configuration file');
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $ex_detailed_message)));
-        } catch (Exception $e) {
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_code' => $e->getCode())));
-        }
+
+        $method_ec->validation();
 
         $cart = Context::getContext()->cart;
         $customer = new Customer($cart->id_customer);
+        $paypal = Module::getInstanceByName('paypal');
+
         //unset cookie of payment init
         Context::getContext()->cookie->__unset('paypal_ecs');
         Context::getContext()->cookie->__unset('paypal_ecs_payerid');
