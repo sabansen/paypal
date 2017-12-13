@@ -781,7 +781,7 @@ class PayPal extends PaymentModule
             'first_name'    => $this->context->employee->firstname,
             'last_name'     => $this->context->employee->lastname,
             'shop_name'     => Configuration::get('PS_SHOP_NAME',null, null, null, ''),
-            'ref_merchant'  => 'PrestaShop_'.(getenv('PLATEFORM') == 'PSREADY' ? 'Ready':''),
+            'ref_merchant'  => 'PrestaShop'.(getenv('PLATEFORM') == 'PSREADY' ? '_Ready':''),
         );
         $sdk = new PaypalSDK(Configuration::get('PAYPAL_SANDBOX'));
         $response = $sdk->getUrlOnboarding($partner_info);
