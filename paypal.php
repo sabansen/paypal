@@ -46,7 +46,7 @@ class PayPal extends PaymentModule
     {
         $this->name = 'paypal';
         $this->tab = 'payments_gateways';
-        $this->version = '4.1.3';
+        $this->version = '4.1.4';
         $this->author = 'PrestaShop';
         $this->is_eu_compatible = 1;
         $this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_);
@@ -781,7 +781,7 @@ class PayPal extends PaymentModule
             'first_name'    => $this->context->employee->firstname,
             'last_name'     => $this->context->employee->lastname,
             'shop_name'     => Configuration::get('PS_SHOP_NAME',null, null, null, ''),
-            'ref_merchant'  => 'PrestaShop_'.(defined('PLATEFORM') && PLATEFORM == 'PSREADY' ? 'Ready':''),
+            'ref_merchant'  => 'PrestaShop_'.(getenv('PLATEFORM') == 'PSREADY' ? 'Ready':''),
         );
         $sdk = new PaypalSDK(Configuration::get('PAYPAL_SANDBOX'));
         $response = $sdk->getUrlOnboarding($partner_info);
