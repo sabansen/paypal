@@ -21,39 +21,49 @@ document.addEventListener("DOMContentLoaded", function(){
             });
         };
     }
+    prestashop.on('updateCart', function (event) {
+        EcCheckProductAvailability();
+    });
+
 });
+
+function EcCheckProductAvailability() {
+    $.ajax({
+        url: sc_init_url,
+        type: "POST",
+        data: 'checkAvailability=1&source_page=cart',
+        success: function (json) {
+            if (json == 1) {
+                $('#container_express_checkout').show();
+            } else {
+                $('#container_express_checkout').hide();
+            }
+        },
+        error: function (responseData, textStatus, errorThrown) {
+        }
+    });
+}
 
 function setInput()
 {
-    $('#paypal_quantity').val($('[name="qty"]').val());
-    var combination = [];
-    var re = /group\[([0-9]+)\]/;
-    $.each($('#add-to-cart-or-refresh').serializeArray(),function(key, item){
-        if(res = item.name.match(re))
-        {
-            combination.push(res[1]+':'+item.value);
-        }
-    });
     $('#paypal_url_page').val(document.location.href);
-    $('#paypal_combination').val(combination.join('|'));
     if (typeof ec_sc_in_context != "undefined" && ec_sc_in_context) {
-        ECSInContext(combination);
+        ECSInContext();
     } else {
         $('#paypal_payment_form_cart').submit();
     }
 
 }
 
-function ECSInContext(combination) {
+function ECSInContext() {
     paypal.checkout.initXO();
     $.support.cors = true;
     $.ajax({
         url: ec_sc_action_url,
         type: "GET",
-        data: 'getToken=1&id_product='+$('#paypal_payment_form_cart input[name="id_product"]').val()+'&quantity='+$('[name="qty"]').val()+'&combination='+combination.join('|'),
+        data: 'getToken=1',
         success: function (token) {
             var url = paypal.checkout.urlPrefix +token;
-            console.log(url);
             paypal.checkout.startFlow(url);
         },
         error: function (responseData, textStatus, errorThrown) {
