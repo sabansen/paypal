@@ -1040,7 +1040,7 @@ class PayPal extends PaymentModule
             (float) $total_ps,
             $payment_method,
             $message,
-            array('transaction_id' => $transaction['transaction_id']),
+            array('transaction_id' => isset($transaction['transaction_id']) ? $transaction['transaction_id'] : ''),
             $currency_special,
             $dont_touch_amount,
             $secure_key,
@@ -1066,26 +1066,29 @@ class PayPal extends PaymentModule
             Db::getInstance()->execute($sql);
         }
 
-        $paypal_order = new PaypalOrder();
-        $paypal_order->id_order = $this->currentOrder;
-        $paypal_order->id_cart = $id_cart;
-        $paypal_order->id_transaction = $transaction['transaction_id'];
-        $paypal_order->id_payment = $transaction['id_payment'];
-        $paypal_order->client_token = $transaction['client_token'];
-        $paypal_order->payment_method = $transaction['payment_method'];
-        $paypal_order->currency = $transaction['currency'];
-        $paypal_order->total_paid = (float) $amount_paid;
-        $paypal_order->payment_status = $transaction['payment_status'];
-        $paypal_order->total_prestashop = (float) $total_ps;
-        $paypal_order->method = $transaction['method'];
-        $paypal_order->payment_tool = isset($transaction['payment_tool']) ? $transaction['payment_tool'] : '';
-        $paypal_order->save();
+        //if there isn't a method, then we don't create PaypalOrder and PaypalCapture
+        if (isset($transaction['method']) && $transaction['method']) {
+            $paypal_order = new PaypalOrder();
+            $paypal_order->id_order = $this->currentOrder;
+            $paypal_order->id_cart = $id_cart;
+            $paypal_order->id_transaction = $transaction['transaction_id'];
+            $paypal_order->id_payment = $transaction['id_payment'];
+            $paypal_order->client_token = $transaction['client_token'];
+            $paypal_order->payment_method = $transaction['payment_method'];
+            $paypal_order->currency = $transaction['currency'];
+            $paypal_order->total_paid = (float) $amount_paid;
+            $paypal_order->payment_status = $transaction['payment_status'];
+            $paypal_order->total_prestashop = (float) $total_ps;
+            $paypal_order->method = $transaction['method'];
+            $paypal_order->payment_tool = isset($transaction['payment_tool']) ? $transaction['payment_tool'] : '';
+            $paypal_order->save();
 
 
-        if ($transaction['capture']) {
-            $paypal_capture = new PaypalCapture();
-            $paypal_capture->id_paypal_order = $paypal_order->id;
-            $paypal_capture->save();
+            if ($transaction['capture']) {
+                $paypal_capture = new PaypalCapture();
+                $paypal_capture->id_paypal_order = $paypal_order->id;
+                $paypal_capture->save();
+            }
         }
     }
 
