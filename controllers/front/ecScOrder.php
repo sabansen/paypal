@@ -84,6 +84,15 @@ class PaypalEcScOrderModuleFrontController extends ModuleFrontController
         $address_exist = false;
         $count = 1;
         $id_address = 0;
+
+        $payer_phone = '';
+        if (!empty($ship_addr->Phone)) {
+            $payer_phone = $ship_addr->Phone;
+        } elseif (!empty($payer_info->ContactPhone)) {
+            $payer_phone = $payer_info->ContactPhone;
+        } elseif (!empty($info->GetExpressCheckoutDetailsResponseDetails->ContactPhone)) {
+            $payer_phone = $info->GetExpressCheckoutDetailsResponseDetails->ContactPhone;
+        }
         foreach ($addresses as $address) {
 
             if ($address['firstname'].' '.$address['lastname'] == $ship_addr->Name
@@ -93,7 +102,7 @@ class PaypalEcScOrderModuleFrontController extends ModuleFrontController
                 && $address['city'] == $ship_addr->CityName
                 && (empty($ship_addr->StateOrProvince) || $address['id_state'] == State::getIdByName($ship_addr->StateOrProvince))
                 && $address['postcode'] == $ship_addr->PostalCode
-                && (empty($ship_addr->Phone) || $address['phone'] == $ship_addr->Phone)
+                && (empty($payer_phone) || $address['phone'] == $payer_phone)
             ) {
                 $address_exist = true;
                 $id_address = $address['id_address'];
@@ -116,12 +125,19 @@ class PaypalEcScOrderModuleFrontController extends ModuleFrontController
             $orderAddress->id_country = Country::getByIso($ship_addr->Country);
             $orderAddress->city = $ship_addr->CityName;
             if (Country::containsStates($orderAddress->id_country)) {
-                $orderAddress->id_state = (int) State::getIdByName($ship_addr->StateOrProvince);
+                if ($id_state = (int)State::getIdByIso(Tools::strtoupper($ship_addr->StateOrProvince), $orderAddress->id_country)) {
+                    $orderAddress->id_state = $id_state;
+                } elseif($id_state = State::getIdByName(pSQL(trim($ship_addr->StateOrProvince)))) {
+                    $state = new State((int)$id_state);
+                    if($state->id_country == $orderAddress->id_country) {
+                        $orderAddress->id_state = $state->id;
+                    }
+                }
             }
 
             $orderAddress->postcode = $ship_addr->PostalCode;
-            if (isset($ship_addr->Phone)) {
-                $orderAddress->phone = $ship_addr->Phone;
+            if (!empty($payer_phone)) {
+                $orderAddress->phone = $payer_phone;
             }
 
             $orderAddress->id_customer = $customer->id;
