@@ -68,6 +68,10 @@ class PaypalErrorModuleFrontController extends ModuleFrontController
             '81509' => $module->l('Credit card type is not accepted by this merchant account.'),
             '11607' => $module->l('A successful transaction has already been completed for this token.'),
             '10417' => $module->l('Retry the transaction using an alternative payment method from the customer\'s PayPal wallet. The transaction did not complete with the customer\'s selected payment method.'),
+            '10486' => $module->l('This transaction couldn\'t be completed..'),
+            '10736' => $module->l('There\'s an error with this transaction. Match of shipping address, city, state, and postal code failed.'),
+            '92918' => $module->l('The merchant account used is not fully set up.'),
+            '91584' => $module->l('Merchant account must match the 3D Secure authorization merchant account.'),
         );
         return isset($errors[$error_code])?$errors[$error_code]:$errors['00000'];
     }
