@@ -73,6 +73,10 @@ class PaypalErrorModuleFrontController extends ModuleFrontController
             '92918' => $module->l('The merchant account used is not fully set up.'),
             '91584' => $module->l('Merchant account must match the 3D Secure authorization merchant account.'),
         );
+
+        $handle = fopen(dirname(__FILE__).'/error_log.txt', 'a+');
+        fwrite($handle, "\r".'Cart id : '.Context::getContext()->cart->id.'; Error code : '.$error_code.'; Method : '.Configuration::get('PAYPAL_METHOD'));
+        fclose($handle);
         return isset($errors[$error_code])?$errors[$error_code]:$errors['00000'];
     }
 }
