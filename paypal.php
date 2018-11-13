@@ -1043,18 +1043,23 @@ class PayPal extends PaymentModule
         if ($amount_paid_curr > $total_ps+0.10 || $amount_paid_curr < $total_ps-0.10) {
             $total_ps = $amount_paid_curr;
         }
-        parent::validateOrder(
-            (int) $id_cart,
-            (int) $id_order_state,
-            (float) $total_ps,
-            $payment_method,
-            $message,
-            array('transaction_id' => isset($transaction['transaction_id']) ? $transaction['transaction_id'] : ''),
-            $currency_special,
-            $dont_touch_amount,
-            $secure_key,
-            $shop
-        );
+
+        try {
+            parent::validateOrder(
+                (int) $id_cart,
+                (int) $id_order_state,
+                (float) $total_ps,
+                $payment_method,
+                $message,
+                array('transaction_id' => isset($transaction['transaction_id']) ? $transaction['transaction_id'] : ''),
+                $currency_special,
+                $dont_touch_amount,
+                $secure_key,
+                $shop
+            );
+        } catch (Exception $e) {
+            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $this->l('Order validation error : ').$e->getMessage())));
+        }
 
         if (Tools::version_compare(_PS_VERSION_, '1.7.1.0', '>')) {
             $order = Order::getByCartId($id_cart);
