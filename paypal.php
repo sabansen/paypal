@@ -799,6 +799,15 @@ class PayPal extends PaymentModule
                         $paypal_order_id = PaypalOrder::getIdOrderByTransactionId($transaction->id);
                         $paypal_order = PaypalOrder::loadByOrderId($paypal_order_id);
                         $ps_order = new Order($paypal_order_id);
+                        $paid_state  = Configuration::get('PS_OS_PAYMENT');
+                        $ps_order_details = OrderDetail::getList($paypal_order_id);
+                        foreach ($ps_order_details as $order_detail) {
+                            // Switch to back order if needed
+                            $product_stock = StockAvailable::getQuantityAvailableByProduct($order_detail['product_id'], $order_detail['product_attribute_id']);
+                            if (Configuration::get('PS_STOCK_MANAGEMENT') && $product_stock <= 0) {
+                                $paid_state  = Configuration::get('PS_OS_OUTOFSTOCK_PAID');
+                            }
+                        }
                         switch ($transaction->status) {
                             case 'declined':
                                 if ($paypal_order->payment_status != "declined") {
@@ -811,7 +820,7 @@ class PayPal extends PaymentModule
                                 if ($paypal_order->payment_status != "settled") {
                                     $paypal_order->payment_status = $transaction->status;
                                     $paypal_order->update();
-                                    $ps_order->setCurrentState(Configuration::get('PS_OS_PAYMENT'));
+                                    $ps_order->setCurrentState($paid_state);
                                     $this->setTransactionId($ps_order, $transaction->id);
                                 }
                                 break;
