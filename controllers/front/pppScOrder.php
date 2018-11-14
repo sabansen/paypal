@@ -55,6 +55,19 @@ class PaypalPppScOrderModuleFrontController extends ModuleFrontController
         $payer_info = $info->payer->payer_info;
         $ship_addr = $info->transactions[0]->item_list->shipping_address;
 
+        $id_state = 0;
+        $ship_addr_country = Country::getByIso($ship_addr->country_code);
+        if (Country::containsStates($ship_addr_country)) {
+            if ($id_state = (int)State::getIdByIso(Tools::strtoupper($ship_addr->state), $ship_addr_country)) {
+                $id_state = $id_state;
+            } elseif($id_state = State::getIdByName(pSQL(trim($ship_addr->state)))) {
+                $state = new State((int)$id_state);
+                if($state->id_country == $ship_addr_country) {
+                    $id_state= $state->id;
+                }
+            }
+        }
+
         if ($this->context->cookie->logged) {
             $customer = $this->context->customer;
         } elseif ($id_customer = Customer::customerExists($payer_info->email, true)) {
@@ -91,7 +104,7 @@ class PaypalPppScOrderModuleFrontController extends ModuleFrontController
                 && $address['address1'] == $ship_addr->line1
                 && $address['id_country'] == Country::getByIso($ship_addr->country_code)
                 && $address['city'] == $ship_addr->city
-                && (empty($ship_addr->state) || $address['id_state'] == State::getIdByName($ship_addr->state))
+                && (empty($ship_addr->state) || $address['id_state'] == $id_state)
                 && $address['postcode'] == $ship_addr->postal_code
                 && (empty($ship_addr->line2) || $address['address2'] == $ship_addr->line2)
             ) {
@@ -115,8 +128,8 @@ class PaypalPppScOrderModuleFrontController extends ModuleFrontController
             }
             $orderAddress->id_country = Country::getByIso($ship_addr->country_code);
             $orderAddress->city = $ship_addr->city;
-            if (Country::containsStates($orderAddress->id_country)) {
-                $orderAddress->id_state = (int) State::getIdByName($ship_addr->state);
+            if ($id_state) {
+                $orderAddress->id_state = (int) $id_state;
             }
             $orderAddress->postcode = $ship_addr->postal_code;
             $orderAddress->id_customer = $customer->id;

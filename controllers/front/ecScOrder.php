@@ -93,14 +93,29 @@ class PaypalEcScOrderModuleFrontController extends ModuleFrontController
         } elseif (!empty($info->GetExpressCheckoutDetailsResponseDetails->ContactPhone)) {
             $payer_phone = $info->GetExpressCheckoutDetailsResponseDetails->ContactPhone;
         }
+
+        $id_state = 0;
+        $ship_addr_country = Country::getByIso($ship_addr->Country);
+        if (Country::containsStates($ship_addr_country)) {
+            if ($id_state = (int)State::getIdByIso(Tools::strtoupper($ship_addr->StateOrProvince), $ship_addr_country)) {
+                $id_state = $id_state;
+            } elseif($id_state = State::getIdByName(pSQL(trim($ship_addr->StateOrProvince)))) {
+                $state = new State((int)$id_state);
+                if($state->id_country == $ship_addr_country) {
+                    $id_state= $state->id;
+                }
+            }
+        }
+
         foreach ($addresses as $address) {
+
 
             if ($address['firstname'].' '.$address['lastname'] == $ship_addr->Name
                 && $address['address1'] == $ship_addr->Street1
                 && (empty($ship_addr->Street2) || $address['address2'] == $ship_addr->Street2)
                 && $address['id_country'] == Country::getByIso($ship_addr->Country)
                 && $address['city'] == $ship_addr->CityName
-                && (empty($ship_addr->StateOrProvince) || $address['id_state'] == State::getIdByName($ship_addr->StateOrProvince))
+                && (empty($ship_addr->StateOrProvince) || $address['id_state'] == $id_state)
                 && $address['postcode'] == $ship_addr->PostalCode
                 && (empty($payer_phone) || $address['phone'] == $payer_phone)
             ) {
@@ -124,17 +139,9 @@ class PaypalEcScOrderModuleFrontController extends ModuleFrontController
             }
             $orderAddress->id_country = Country::getByIso($ship_addr->Country);
             $orderAddress->city = $ship_addr->CityName;
-            if (Country::containsStates($orderAddress->id_country)) {
-                if ($id_state = (int)State::getIdByIso(Tools::strtoupper($ship_addr->StateOrProvince), $orderAddress->id_country)) {
-                    $orderAddress->id_state = $id_state;
-                } elseif($id_state = State::getIdByName(pSQL(trim($ship_addr->StateOrProvince)))) {
-                    $state = new State((int)$id_state);
-                    if($state->id_country == $orderAddress->id_country) {
-                        $orderAddress->id_state = $state->id;
-                    }
-                }
+            if ($id_state) {
+                $orderAddress->id_state = $id_state;
             }
-
             $orderAddress->postcode = $ship_addr->PostalCode;
             if (!empty($payer_phone)) {
                 $orderAddress->phone = $payer_phone;
