@@ -92,7 +92,7 @@
                     }
                     event.preventDefault();
                     event.stopPropagation();
-
+                    $('#payment-confirmation button').attr('disabled', true);
                     // use vaulted card
                     if ($('select[name=bt_vaulting_token]').val()) {
                         if (check3DS) {
@@ -110,6 +110,7 @@
                                             popup_message = bt_translations.load_3d;
                                     }
                                     $('#bt-card-error-msg').show().text(popup_message);
+                                    $('#payment-confirmation button').attr('disabled', false);
                                     return false;
                                 }
                             threeDSecure.verifyCard({
@@ -138,6 +139,7 @@
                                             popup_message = bt_translations.failed_3d;
                                     }
                                     $('#bt-card-error-msg').show().text(popup_message);
+                                    $('#payment-confirmation button').attr('disabled', false);
                                     return false;
                                 }
                                 bt_form.submit()
@@ -170,6 +172,7 @@
                                         popup_message = bt_translations.tkn_failed;
                                 }
                                 $('#bt-card-error-msg').show().text(popup_message);
+                                $('#payment-confirmation button').attr('disabled', false);
                                 return false;
                             }
                             if (check3DS) {
@@ -187,6 +190,7 @@
                                                 popup_message = bt_translations.load_3d;
                                         }
                                         $('#bt-card-error-msg').show().text(popup_message);
+                                        $('#payment-confirmation button').attr('disabled', false);
                                         return false;
                                     }
                                     threeDSecure.verifyCard({
@@ -215,6 +219,7 @@
                                                     popup_message = bt_translations.failed_3d;
                                             }
                                             $('#bt-card-error-msg').show().text(popup_message);
+                                            $('#payment-confirmation button').attr('disabled', false);
                                             return false;
                                         }
 
