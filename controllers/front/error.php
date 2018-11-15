@@ -42,6 +42,7 @@ class PaypalErrorModuleFrontController extends ModuleFrontController
 
         Context::getContext()->smarty->assign(array(
             'error_paypal' => $error_message,
+            'show_retry' => (Context::getContext()->cart->nbProducts() > 0 && !Tools::getValue('no_retry')) ? true : false,
         ));
 
         $this->setTemplate('module:paypal/views/templates/front/payment_error.tpl');
