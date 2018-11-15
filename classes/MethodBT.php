@@ -488,16 +488,14 @@ class MethodBT extends AbstractMethodPaypal
                 ],
                 "deviceData"            => $device_data,
             ];
-
             $paypal_customer = PaypalCustomer::loadCustomerByMethod(Context::getContext()->customer->id, 'BT');
-
+            $paypal = Module::getInstanceByName($this->name);
             if (!$paypal_customer->id) {
                 $paypal_customer = $this->createCustomer();
             } else {
                 $this->updateCustomer($paypal_customer->reference);
             }
-           // echo'<pre>';print_r($this->gateway->customer()->find($paypal_customer->reference));die;
-            $paypal = Module::getInstanceByName($this->name);
+
             if (Configuration::get('PAYPAL_VAULTING')) {
                 if ($bt_method == BT_CARD_PAYMENT) {
                     $vault_token = Tools::getValue('bt_vaulting_token');
@@ -593,6 +591,16 @@ class MethodBT extends AbstractMethodPaypal
 
     public function updateCustomer($id_customer)
     {
+        $paypal = Module::getInstanceByName($this->name);
+        try {
+            $this->gateway->customer()->find($id_customer);
+        } catch (Braintree\Exception\NotFound $e) {
+            $mode  = Configuration::get('PAYPAL_SANDBOX') ? 'Sandbox' : 'Live';
+            $mode2  = !Configuration::get('PAYPAL_SANDBOX') ? 'Sandbox' : 'Live';
+            $msg = sprintf($paypal->l('This client is not found in %s mode.'), $mode);
+            $msg .= sprintf($paypal->l('Probably this customer has been already created in %s mode. Please create new prestashop client for this mode.'), $mode2);
+            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $msg)));
+        }
         $context = Context::getContext();
         $data = [
             'firstName' => $context->customer->firstname,
