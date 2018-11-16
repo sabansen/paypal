@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="paypal addons" default="build" basedir="../">
+<project name="paypal addons" default="build" basedir="..//">
     <property environment="env" />
     <property name="build-dir" value="${basedir}/202/build" />
     <property name="src-dir" value="${basedir}" />
@@ -70,7 +70,6 @@
         </exec>
     </target>
     <!-- end composer -->
-
     <!-- start documentation -->
     <target name="doc.check">
         <condition property="doc.directory.exist">
@@ -93,5 +92,4 @@
         </exec>
     </target>
     <!-- end documentation -->
-
 </project>
