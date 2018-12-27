@@ -499,8 +499,9 @@ class MethodEC extends AbstractMethodPaypal
         $context = Context::getContext();
         $context_currency = $context->currency;
         $paypal = Module::getInstanceByName('paypal');
-        if ($paypal->needConvert()) {
-            $price = Tools::convertPrice($price, $context_currency, false);
+        if ($id_currency_to = $paypal->needConvert()) {
+            $currency_to_convert = new Currency($id_currency_to);
+            $price = Tools::convertPriceFull($price, $context_currency, $currency_to_convert);
         }
         $price = number_format($price, Paypal::getDecimal(), ".", '');
         return $price;

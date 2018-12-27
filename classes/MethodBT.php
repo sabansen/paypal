@@ -420,8 +420,9 @@ class MethodBT extends AbstractMethodPaypal
         $context = Context::getContext();
         $context_currency = $context->currency;
         $paypal = Module::getInstanceByName('paypal');
-        if ($paypal->needConvert()) {
-            $price = Tools::ps_round(Tools::convertPrice($price, $context_currency, false), _PS_PRICE_COMPUTE_PRECISION_);
+        if ($id_currency_to = $paypal->needConvert()) {
+            $currency_to_convert = new Currency($id_currency_to);
+            $price = Tools::ps_round(Tools::convertPriceFull($price, $context_currency, $currency_to_convert), _PS_PRICE_COMPUTE_PRECISION_);
         }
         return $price;
     }

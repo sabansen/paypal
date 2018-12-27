@@ -1014,15 +1014,20 @@ class PayPal extends PaymentModule
         $currency_mode = Currency::getPaymentCurrenciesSpecial($this->id);
         $mode_id = $currency_mode['id_currency'];
         if ($mode_id == -2) {
-            return true;
+            return (int)Configuration::get('PS_CURRENCY_DEFAULT');
+        } elseif ($mode_id == -1) {
+            return false;
+        } elseif ($mode_id != $this->context->currency->id) {
+            return (int)$mode_id;
+        } else {
+            return false;
         }
-        return false;
     }
 
     public function getPaymentCurrencyIso()
     {
-        if ($this->needConvert()) {
-            $currency = new Currency((int)Configuration::get('PS_CURRENCY_DEFAULT'));
+        if ($id_currency = $this->needConvert()) {
+            $currency = new Currency((int)$id_currency);
         } else {
             $currency = Context::getContext()->currency;
         }
