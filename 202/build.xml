@@ -6,15 +6,17 @@
     <property name="TARGETNAME" value="paypal" />
     <property name="TARGETBRANCH" value="develop" />
     <property name="TARGETVERSION" value="4.4.2" />
+    <property name="PHPVERSION" value="5.6" />
+    <property name="PSVERSION" value="1.7.5.x" />
 
-    <target name="build" depends="build-common,package-zip,psvalidator" />
+    <target name="build" depends="build-common,package-zip,tot-testing" />
 
     <target name="build-common" depends="lint,prepare,npm,doc" />
 
     <target name="package-zip" depends="build-common" description="Create ZIP package">
         <echo>Create ZIP package</echo>
 
-        <exec executable="${PACKAGE_ZIP_PATH}" failonerror="true">
+        <exec executable="${TOTBUILDER_PATH}tot-package.sh" failonerror="true">
             <arg value="prod" />
             <arg value="${TARGETNAME}" />
             <arg value="${TARGETBRANCH}" />
@@ -27,9 +29,19 @@
     <target name="psvalidator" description="Send Prestashop Validator">
         <echo>Send Prestashop Validator</echo>
         <exec executable="php" failonerror="true">
-            <arg value="/var/www/totbuilder/bin/console"/>
+            <arg value="${TOTBUILDER_PATH}console"/>
             <arg value="psvalidator:validate"/>
             <arg value="${env.WORKSPACE}/202/build/packages/v${TARGETVERSION}-prod-${TARGETNAME}.zip"/>
+        </exec>
+    </target>
+
+    <target name="tot-testing" description="Create prestashop environment and execute unit tests">
+        <exec executable="${TOTBUILDER_PATH}tot-testing.sh" failonerror="true">
+            <arg value="${env.WORKSPACE}build/packages/v${TARGETVERSION}-prod-${TARGETNAME}.zip" />
+            <arg value="${TARGETNAME}" />
+            <arg value="${env.WORKSPACE}" />
+            <arg value="${PHPVERSION}" />
+            <arg value="${PSVERSION}" />
         </exec>
     </target>
 
@@ -49,11 +61,13 @@
         <echo>Cleaning out the build artifacts</echo>
         <delete dir="${build-dir}/packages" />
         <delete dir="${build-dir}/logs" />
+        <delete dir="${build-dir}/coverage" />
     </target>
     <target name="prepare" depends="clean-build" description="Prepare for build">
         <echo>Making the build artifact folders</echo>
         <mkdir dir="${build-dir}/packages" />
         <mkdir dir="${build-dir}/logs" />
+        <mkdir dir="${build-dir}/coverage" />
     </target>
 
     <!-- start composer -->
