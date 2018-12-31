@@ -9,7 +9,7 @@
     <property name="PHPVERSION" value="5.6" />
     <property name="PSVERSION" value="1.7.5.x" />
 
-    <target name="build" depends="build-common,package-zip,tot-testing" />
+    <target name="build" depends="build-common,package-zip,psvalidator,tot-testing" />
 
     <target name="build-common" depends="lint,prepare,npm,doc" />
 
@@ -37,9 +37,9 @@
 
     <target name="tot-testing" description="Create prestashop environment and execute unit tests">
         <exec executable="${TOTBUILDER_PATH}tot-testing.sh" failonerror="true">
-            <arg value="${env.WORKSPACE}build/packages/v${TARGETVERSION}-prod-${TARGETNAME}.zip" />
+            <arg value="${env.WORKSPACE}/build/packages/v${TARGETVERSION}-prod-${TARGETNAME}.zip" />
             <arg value="${TARGETNAME}" />
-            <arg value="${env.WORKSPACE}" />
+            <arg value="${env.WORKSPACE}/" />
             <arg value="${PHPVERSION}" />
             <arg value="${PSVERSION}" />
         </exec>
