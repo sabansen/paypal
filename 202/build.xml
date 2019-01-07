@@ -21,7 +21,6 @@
             <arg value="${TARGETNAME}" />
             <arg value="${TARGETBRANCH}" />
             <arg value="${TARGETVERSION}" />
-            <arg value="${BUILD_TAG}" />
             <arg value="${env.BUILD_TAG}" />
         </exec>
     </target>
