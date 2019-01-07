@@ -16,7 +16,7 @@
     <target name="package-zip" depends="build-common" description="Create ZIP package">
         <echo>Create ZIP package</echo>
 
-        <exec executable="${TOTBUILDER_PATH}tot-package.sh" failonerror="true">
+        <exec executable="${env.TOTBUILDER_PATH}tot-package.sh" failonerror="true">
             <arg value="prod" />
             <arg value="${TARGETNAME}" />
             <arg value="${TARGETBRANCH}" />
@@ -28,14 +28,14 @@
     <target name="psvalidator" description="Send Prestashop Validator">
         <echo>Send Prestashop Validator</echo>
         <exec executable="php" failonerror="true">
-            <arg value="${TOTBUILDER_PATH}console"/>
+            <arg value="${env.TOTBUILDER_PATH}console"/>
             <arg value="psvalidator:validate"/>
             <arg value="${env.WORKSPACE}/202/build/packages/v${TARGETVERSION}-prod-${TARGETNAME}.zip"/>
         </exec>
     </target>
 
     <target name="tot-testing" description="Create prestashop environment and execute unit tests">
-        <exec executable="${TOTBUILDER_PATH}tot-testing.sh" failonerror="true">
+        <exec executable="${env.TOTBUILDER_PATH}tot-testing.sh" failonerror="true">
             <arg value="${env.WORKSPACE}/202/build/packages/v${TARGETVERSION}-prod-${TARGETNAME}.zip" />
             <arg value="${TARGETNAME}" />
             <arg value="${env.WORKSPACE}/" />
