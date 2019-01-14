@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author    PrestaShop SA <contact@prestashop.com>
- *  @copyright 2007-2018 PrestaShop SA
+ *  @copyright 2007-2019 PrestaShop SA
  *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -99,17 +99,15 @@ class PaypalEcScOrderModuleFrontController extends ModuleFrontController
         if (Country::containsStates($ship_addr_country)) {
             if ($id_state = (int)State::getIdByIso(Tools::strtoupper($ship_addr->StateOrProvince), $ship_addr_country)) {
                 $id_state = $id_state;
-            } elseif($id_state = State::getIdByName(pSQL(trim($ship_addr->StateOrProvince)))) {
+            } elseif ($id_state = State::getIdByName(pSQL(trim($ship_addr->StateOrProvince)))) {
                 $state = new State((int)$id_state);
-                if($state->id_country == $ship_addr_country) {
+                if ($state->id_country == $ship_addr_country) {
                     $id_state= $state->id;
                 }
             }
         }
 
         foreach ($addresses as $address) {
-
-
             if ($address['firstname'].' '.$address['lastname'] == $ship_addr->Name
                 && $address['address1'] == $ship_addr->Street1
                 && (empty($ship_addr->Street2) || $address['address2'] == $ship_addr->Street2)
@@ -130,9 +128,9 @@ class PaypalEcScOrderModuleFrontController extends ModuleFrontController
         }
         if (!$address_exist) {
             $orderAddress = new Address();
-            $pos_separator = strpos($ship_addr->Name,' ');
-            $orderAddress->firstname = Tools::substr($ship_addr->Name,0,$pos_separator);
-            $orderAddress->lastname = Tools::substr($ship_addr->Name,$pos_separator+1);
+            $pos_separator = strpos($ship_addr->Name, ' ');
+            $orderAddress->firstname = Tools::substr($ship_addr->Name, 0, $pos_separator);
+            $orderAddress->lastname = Tools::substr($ship_addr->Name, $pos_separator+1);
             $orderAddress->address1 = $ship_addr->Street1;
             if (isset($ship_addr->Street2)) {
                 $orderAddress->address2 = $ship_addr->Street2;

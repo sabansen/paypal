@@ -32,6 +32,7 @@
             <arg value="${env.TOTBUILDER_PATH}console"/>
             <arg value="psvalidator:validate"/>
             <arg value="${env.WORKSPACE}/202/build/packages/v${TARGETVERSION}-prod-${TARGETNAME}.zip"/>
+            <arg value="${env.BUILD_NUMBER}"/>
         </exec>
     </target>
 

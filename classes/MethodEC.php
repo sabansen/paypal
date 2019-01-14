@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author    PrestaShop SA <contact@prestashop.com>
- *  @copyright 2007-2018 PrestaShop SA
+ *  @copyright 2007-2019 PrestaShop SA
  *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -334,7 +334,6 @@ class MethodEC extends AbstractMethodPaypal
             Configuration::updateValue('PAYPAL_MERCHANT_ID_'.$mode, $params['merchant_id']);
             Configuration::updateValue('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT', 1);
             Tools::redirect($paypal->module_link);
-
         }
         if (Tools::isSubmit('submit_shortcut')) {
             Configuration::updateValue('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT', $params['paypal_show_shortcut']);
@@ -491,7 +490,6 @@ class MethodEC extends AbstractMethodPaypal
             $this->_itemTotalValue += $this->formatPrice($product['price']) * $product['quantity'];
             $this->_taxTotalValue += $product['product_tax'] * $product['quantity'];
         }
-
     }
 
     public function formatPrice($price)
@@ -520,7 +518,7 @@ class MethodEC extends AbstractMethodPaypal
                 $discount['value_real'] = -1 * $this->formatPrice($discount['value_real']);
                 $itemDetails = new PaymentDetailsItemType();
                 $itemDetails->Name = $discount['name'];
-                $itemDetails->Amount = new BasicAmountType($currency, $discount['value_real']);;
+                $itemDetails->Amount = new BasicAmountType($currency, $discount['value_real']);
                 $itemDetails->Quantity = 1;
                 $this->_paymentDetails->PaymentDetailsItem[] = $itemDetails;
                 $this->_itemTotalValue += $discount['value_real'];
@@ -535,7 +533,7 @@ class MethodEC extends AbstractMethodPaypal
             $wrapping_price = $this->formatPrice($wrapping_price);
             $itemDetails = new PaymentDetailsItemType();
             $itemDetails->Name = 'Gift wrapping';
-            $itemDetails->Amount = new BasicAmountType($currency, $wrapping_price);;
+            $itemDetails->Amount = new BasicAmountType($currency, $wrapping_price);
             $itemDetails->Quantity = 1;
             $this->_paymentDetails->PaymentDetailsItem[] = $itemDetails;
             $this->_itemTotalValue += $wrapping_price;
@@ -671,7 +669,7 @@ class MethodEC extends AbstractMethodPaypal
         $DoECRequestDetails->PayerID = Tools::getValue('shortcut') ? $context->cookie->paypal_ecs_payerid : Tools::getValue('PayerID');
         $DoECRequestDetails->Token = Tools::getValue('shortcut') ? $context->cookie->paypal_ecs : Tools::getValue('token');
         $DoECRequestDetails->ButtonSource = 'PrestaShop_Cart_'.(getenv('PLATEFORM') == 'PSREADY' ? 'Ready_':'').'EC';
-        $DoECRequestDetails->PaymentAction = Tools::ucfirst(Configuration::get('PAYPAL_API_INTENT'));;
+        $DoECRequestDetails->PaymentAction = Tools::ucfirst(Configuration::get('PAYPAL_API_INTENT'));
         $DoECRequestDetails->PaymentDetails[0] = $this->_paymentDetails;
 
         $DoECRequest = new DoExpressCheckoutPaymentRequestType();

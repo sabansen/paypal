@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author    PrestaShop SA <contact@prestashop.com>
- *  @copyright 2007-2018 PrestaShop SA
+ *  @copyright 2007-2019 PrestaShop SA
  *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -460,12 +460,12 @@ class MethodBT extends AbstractMethodPaypal
         }
 
         try {
-            $data = [
+            $data = array(
                 'amount'                => $amount,
                 'merchantAccountId'     => $merchant_accounts[$currency],
                 'orderId'               => $this->getOrderId($cart),
                 'channel'               => (getenv('PLATEFORM') == 'PSREAD')?'PrestaShop_Cart_Ready_Braintree':'PrestaShop_Cart_Braintree',
-                'billing' => [
+                'billing' => array(
                     'firstName'         => $address_billing->firstname,
                     'lastName'          => $address_billing->lastname,
                     'company'           => $address_billing->company,
@@ -475,8 +475,8 @@ class MethodBT extends AbstractMethodPaypal
                     'postalCode'        => $address_billing->postcode,
                     'countryCodeAlpha2' => $country_billing->iso_code,
                     'region'            => $iso_state,
-                ],
-                'shipping' => [
+                ),
+                'shipping' => array(
                     'firstName'         => $address_shipping->firstname,
                     'lastName'          => $address_shipping->lastname,
                     'company'           => $address_shipping->company,
@@ -486,9 +486,9 @@ class MethodBT extends AbstractMethodPaypal
                     'postalCode'        => $address_shipping->postcode,
                     'countryCodeAlpha2' => $country_shipping->iso_code,
                     'region'            => $iso_state,
-                ],
+                ),
                 "deviceData"            => $device_data,
-            ];
+            );
             $paypal_customer = PaypalCustomer::loadCustomerByMethod(Context::getContext()->customer->id, 'BT');
             $paypal = Module::getInstanceByName($this->name);
             if (!$paypal_customer->id) {
@@ -529,7 +529,6 @@ class MethodBT extends AbstractMethodPaypal
                         }
                         $options['storeInVaultOnSuccess'] = true;
                         $data['customerId'] = $paypal_customer->reference;
-
                     }
                     if ($paymentMethodToken) {
                         $data['paymentMethodToken'] = $paymentMethodToken;
@@ -603,22 +602,22 @@ class MethodBT extends AbstractMethodPaypal
             Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $msg)));
         }
         $context = Context::getContext();
-        $data = [
+        $data = array(
             'firstName' => $context->customer->firstname,
             'lastName' => $context->customer->lastname,
             'email' => $context->customer->email
-        ];
+        );
         $this->gateway->customer()->update($id_customer, $data);
     }
 
     public function createCustomer()
     {
         $context = Context::getContext();
-        $data = [
+        $data = array(
             'firstName' => $context->customer->firstname,
             'lastName' => $context->customer->lastname,
             'email' => $context->customer->email
-        ];
+        );
 
         $result = $this->gateway->customer()->create($data);
         $customer = new PaypalCustomer();
@@ -825,7 +824,8 @@ class MethodBT extends AbstractMethodPaypal
         }
     }
 
-    public function searchTransactions($ids) {
+    public function searchTransactions($ids)
+    {
         $this->initConfig();
         $ids_transaction =  Braintree_TransactionSearch::ids()->in($ids);
         $collection = $this->gateway->transaction()->search([
@@ -834,7 +834,8 @@ class MethodBT extends AbstractMethodPaypal
         return $collection;
     }
 
-    public function createMethodNonce($token) {
+    public function createMethodNonce($token)
+    {
         $this->initConfig();
         $nonce = $this->gateway->paymentMethodNonce()->create($token);
         return $nonce->paymentMethodNonce->nonce;

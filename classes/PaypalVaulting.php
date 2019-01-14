@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * 2007-2019 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author    PrestaShop SA <contact@prestashop.com>
- *  @copyright 2007-2018 PrestaShop SA
+ *  @copyright 2007-2019 PrestaShop SA
  *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -75,7 +75,7 @@ class PaypalVaulting extends ObjectModel
         $query = new DbQuery();
         $query->select('*');
         $query->from('paypal_vaulting', 'pv');
-        $query->leftJoin('paypal_customer','pc','pv.id_paypal_customer = pc.id_paypal_customer');
+        $query->leftJoin('paypal_customer', 'pc', 'pv.id_paypal_customer = pc.id_paypal_customer');
         $query->where('pc.id_customer = '.(int)$customer.' AND pv.payment_tool = "'.pSQL($method).'"');
         $result = $db->executeS($query);
         return $result;
@@ -88,7 +88,7 @@ class PaypalVaulting extends ObjectModel
         $query = new DbQuery();
         $query->select('*');
         $query->from('paypal_vaulting', 'pv');
-        $query->leftJoin('paypal_customer','pc','pv.id_paypal_customer = pc.id_paypal_customer');
+        $query->leftJoin('paypal_customer', 'pc', 'pv.id_paypal_customer = pc.id_paypal_customer');
         $query->where('pc.id_customer = '.(int)$customer);
         $results = $db->query($query);
         while ($result = $db->nextRow($results)) {
@@ -96,5 +96,4 @@ class PaypalVaulting extends ObjectModel
         }
         return $methods;
     }
-
 }
