@@ -42,15 +42,15 @@ function upgrade_module_4_3_0($module)
     {
         Configuration::updateValue('PAYPAL_METHOD','');
 
-        Configuration::updateValue('PAYPAL_USERNAME_SANDBOX','');
-        Configuration::updateValue('PAYPAL_PSWD_SANDBOX','');
-        Configuration::updateValue('PAYPAL_SIGNATURE_SANDBOX','');
-        Configuration::updateValue('PAYPAL_SANDBOX_ACCESS','');
+        Configuration::updateValue('PAYPAL_USERNAME_SANDBOX', '');
+        Configuration::updateValue('PAYPAL_PSWD_SANDBOX', '');
+        Configuration::updateValue('PAYPAL_SIGNATURE_SANDBOX', '');
+        Configuration::updateValue('PAYPAL_SANDBOX_ACCESS', '');
 
-        Configuration::updateValue('PAYPAL_USERNAME_LIVE','');
-        Configuration::updateValue('PAYPAL_PSWD_LIVE','');
-        Configuration::updateValue('PAYPAL_SIGNATURE_LIVE','');
-        Configuration::updateValue('PAYPAL_LIVE_ACCESS','');
+        Configuration::updateValue('PAYPAL_USERNAME_LIVE', '');
+        Configuration::updateValue('PAYPAL_PSWD_LIVE', '');
+        Configuration::updateValue('PAYPAL_SIGNATURE_LIVE', '');
+        Configuration::updateValue('PAYPAL_LIVE_ACCESS', '');
     }
 
     return true;

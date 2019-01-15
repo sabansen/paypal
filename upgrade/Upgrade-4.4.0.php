@@ -35,8 +35,7 @@ function upgrade_module_4_4_0($module)
     Configuration::updateValue('PAYPAL_CONFIG_LOGO', '');
 
     if (!$module->registerHook('displayMyAccountBlock')
-        || !$module->registerHook('displayCustomerAccount'))
-    {
+        || !$module->registerHook('displayCustomerAccount')) {
         return false;
     }
 

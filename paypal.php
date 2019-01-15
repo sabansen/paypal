@@ -703,8 +703,7 @@ class PayPal extends PaymentModule
                     $payment_options->setAction('javascript:doPatchPPP();');
                     try {
                         $payment_options->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_ppp.tpl'));
-                    }catch (Exception $e)
-                    {
+                    } catch (Exception $e) {
                         die($e);
                     }
                     $payments_options[] = $payment_options;
@@ -978,20 +977,17 @@ class PayPal extends PaymentModule
             return;
         }
 
-
         $this->context->smarty->assign(array(
             'transaction_id' => $paypal_order->id_transaction,
             'method' => $paypal_order->method,
         ));
-        if($paypal_order->method == 'PPP' && $paypal_order->payment_tool == 'PAY_UPON_INVOICE')
-        {
+        if ($paypal_order->method == 'PPP' && $paypal_order->payment_tool == 'PAY_UPON_INVOICE') {
             $method = AbstractMethodPaypal::load('PPP');
-            try{
-                $this->context->smarty->assign('ppp_information',$method->getInstructionInfo($paypal_order->id_payment));
+            try {
+                $this->context->smarty->assign('ppp_information', $method->getInstructionInfo($paypal_order->id_payment));
             } catch (Exception $e) {
-                $this->context->smarty->assign('error_msg',$this->l('We are not able to verify if payment was successful. Please check if you have received confirmation from PayPal.'));
+                $this->context->smarty->assign('error_msg', $this->l('We are not able to verify if payment was successful. Please check if you have received confirmation from PayPal.'));
             }
-
         }
         $this->context->controller->registerJavascript($this->name.'-order_confirmation_js', $this->_path.'/views/js/order_confirmation.js');
         return $this->context->smarty->fetch('module:paypal/views/templates/hook/order_confirmation.tpl');
@@ -1183,8 +1179,7 @@ class PayPal extends PaymentModule
             $preferences = $this->context->link->getAdminLink('AdminPreferences', true);
             $paypal_msg .= $this->displayWarning('<p class="paypal-warning">'.$this->l('Product pricing has been modified as your rounding settings aren\'t compliant with PayPal.').' '.
                 $this->l('To avoid automatic rounding to customer for PayPal payments, please update your rounding settings.').' '.
-                '<a target="_blank" href="'.$preferences.'">'.$this->l('Reed more.').'</a></p>'
-            );
+                '<a target="_blank" href="'.$preferences.'">'.$this->l('Reed more.').'</a></p>');
         }
 
         return $paypal_msg.$this->display(__FILE__, 'views/templates/hook/paypal_order.tpl');

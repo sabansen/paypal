@@ -32,8 +32,7 @@ function upgrade_module_4_4_2($module)
 {
     Configuration::updateValue('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART', 0);
 
-    if (!$module->registerHook('displayShoppingCartFooter'))
-    {
+    if (!$module->registerHook('displayShoppingCartFooter')) {
         return false;
     }
 
