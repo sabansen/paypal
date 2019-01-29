@@ -531,7 +531,7 @@ class MethodBT extends AbstractMethodPaypal
                         $options['storeInVaultOnSuccess'] = true;
                         $data['customerId'] = $paypal_customer->reference;
                     }
-                    if ($paymentMethodToken) {
+                    if (isset($paymentMethodToken)) {
                         $data['paymentMethodToken'] = $paymentMethodToken;
                     } else {
                         $data['paymentMethodNonce'] = $token_payment;
