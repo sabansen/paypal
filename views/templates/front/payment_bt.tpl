@@ -31,7 +31,7 @@
             <div class="payment_module braintree-card">
                 <form action="{$braintreeSubmitUrl}" id="braintree-form" method="post">
                 {if isset($init_error)}
-                    <div class="error">{$init_error}</div>
+                    <div class="alert alert-danger">{$init_error}</div>
                     <div id="logo_braintree_by_paypal"><img src="https://s3-us-west-1.amazonaws.com/bt-partner-assets/paypal-braintree.png" height="20px"></div>
                 {else}
 
@@ -71,7 +71,7 @@
                         <input type="hidden" name="card_type" id="braintree_card_type"/>
                         <input type="hidden" name="payment_method_bt" value="{$method_bt|escape:'htmlall':'UTF-8'}"/>
                         <div class="paypal_clear"></div>
-                        <div id="bt-card-error-msg"></div>
+                        <div id="bt-card-error-msg" class="alert alert-danger"></div>
                         {if isset($active_vaulting) && $active_vaulting}
                             <div class="save-in-vault">
                                 <input type="checkbox" name="save_card_in_vault" id="save_card_in_vault"/> <label for="save_card_in_vault"> {l s='Memorize my card' mod='paypal'}</label>

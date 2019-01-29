@@ -29,7 +29,7 @@
                 <form action="{$braintreeSubmitUrl}" id="paypal-braintree-form" method="post">
                 {include file="module:paypal/views/templates/front/payment_infos.tpl"}
                 {if isset($init_error)}
-                    <div class="error">{$init_error}</div>
+                    <div class="alert alert-danger">{$init_error}</div>
                 {else}
                     <input type="hidden" name="payment_method_nonce" id="paypal_payment_method_nonce"/>
                     <input type="hidden" name="payment_method_bt" value="{$bt_method|escape:'htmlall':'UTF-8'}"/>
@@ -56,7 +56,7 @@
                     {/if}
                 {/if}
                 </form>
-                <div id="bt-paypal-error-msg"></div>
+                <div id="bt-paypal-error-msg" class="alert alert-danger"></div>
             </div>
         </div>
     </div>
