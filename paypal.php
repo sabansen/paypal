@@ -685,7 +685,8 @@ class PayPal extends PaymentModule
 
                     $embeddedOption = new PaymentOption();
                     $embeddedOption->setCallToActionText($this->l('Pay with card'))
-                        ->setForm($this->generateFormBt())
+                        ->setAdditionalInformation($this->generateFormBt())
+                        ->setAction('javascript:BTSubmitPayment();')
                         ->setLogo(Media::getMediaPath(_PS_MODULE_DIR_.$this->name.'/views/img/mini-cards.png'));
                     $embeddedOption->setModuleName('braintree');
 
@@ -999,7 +1000,6 @@ class PayPal extends PaymentModule
             'baseDir' => $this->context->link->getBaseLink($this->context->shop->id, true),
             'method_bt' => BT_CARD_PAYMENT,
         ));
-       // echo '<pre>';print_r($payment_methods);die;
         return $this->context->smarty->fetch('module:paypal/views/templates/front/payment_bt.tpl');
     }
 
