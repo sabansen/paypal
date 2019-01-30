@@ -59,7 +59,6 @@ class MethodEC extends AbstractMethodPaypal
 
     private $_taxTotalValue = 0;
 
-
     public function getConfig(PayPal $module)
     {
         $mode = Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
@@ -515,13 +514,16 @@ class MethodEC extends AbstractMethodPaypal
                 if (isset($discount['description']) && !empty($discount['description'])) {
                     $discount['description'] = Tools::substr(strip_tags($discount['description']), 0, 50).'...';
                 }
-                $discount['value_real'] = -1 * $this->formatPrice($discount['value_real']);
+                $discount['tax'] = -1 * $this->formatPrice($discount['value_real'] - $discount['value_tax_exc']);
+                $discount['value_tax_exc'] = -1 * $this->formatPrice($discount['value_tax_exc']);
                 $itemDetails = new PaymentDetailsItemType();
                 $itemDetails->Name = $discount['name'];
-                $itemDetails->Amount = new BasicAmountType($currency, $discount['value_real']);
+                $itemDetails->Amount = new BasicAmountType($currency, $discount['value_tax_exc']);
+                $itemDetails->Tax = new BasicAmountType($currency, $discount['tax']);
                 $itemDetails->Quantity = 1;
                 $this->_paymentDetails->PaymentDetailsItem[] = $itemDetails;
-                $this->_itemTotalValue += $discount['value_real'];
+                $this->_itemTotalValue += $discount['value_tax_exc'];
+                $this->_taxTotalValue += $discount['tax'];
             }
         }
     }
