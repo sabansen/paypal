@@ -55,7 +55,7 @@
                             {$error_paypal}
                         </p>
                         {if $show_retry}
-                            <a class="btn btn-primary" href="{$link->getPageLink('order', true)}">{l s='Try again' mod='paypal'}</a>
+                            <a class="btn btn-secondary" href="{$link->getPageLink('order', true)}">{l s='Try to pay again' mod='paypal'}</a>
                         {/if}
                     </div>
 
