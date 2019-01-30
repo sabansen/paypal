@@ -732,39 +732,14 @@ class PayPal extends PaymentModule
     public function hookHeader()
     {
         if (Tools::getValue('controller') == "order") {
-            $db = Db::getInstance();
-
-            $groups = Customer::getGroupsStatic($this->context->cart->id_customer);
-            if (!$db->executeS(
-                'SELECT * FROM `' . _DB_PREFIX_ . 'module_group`
-                 WHERE id_group IN('.pSQL(implode(",", $groups)).')
-                 AND id_module = '.(int)$this->id.'
-                 AND id_shop = '.(int)$this->context->shop->id
-            )) {
-                return;
+            $active = false;
+            $modules = Hook::getHookModuleExecList('paymentOptions');
+            foreach ($modules as $module) {
+                if ($module['module'] == 'paypal') {
+                    $active = true;
+                }
             }
-
-            $country = Address::getCountryAndState($this->context->cart->id_address_delivery);
-            if (!$db->executeS(
-                 'SELECT * FROM `' . _DB_PREFIX_ . 'module_country`
-                 WHERE id_country = '.(int)$country['id_country'].'
-                 AND id_module = '.(int)$this->id.'
-                 AND id_shop = '.(int)$this->context->shop->id
-            )) {
-                return;
-            }
-
-            $id_reference = $db->getValue('
-                SELECT `id_reference`
-                FROM `' . _DB_PREFIX_ .'carrier'. '`
-                WHERE id_carrier = ' . (int) $this->context->cart->id_carrier);
-
-            if (!$db->executeS(
-                    'SELECT * FROM `' . _DB_PREFIX_ . 'module_carrier`
-                 WHERE id_reference = '.(int)$id_reference.'
-                 AND id_module = '.(int)$this->id.'
-                 AND id_shop = '.(int)$this->context->shop->id
-                )) {
+            if (!$active) {
                 return;
             }
 
