@@ -25,7 +25,6 @@
  */
 
 use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -121,6 +120,7 @@ class PayPal extends PaymentModule
             || !Configuration::updateValue('PAYPAL_BY_BRAINTREE', 0)
             || !Configuration::updateValue('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT', 0)
             || !Configuration::updateValue('PAYPAL_VAULTING', 0)
+            || !Configuration::updateValue('PAYPAL_REQUIREMENTS', 0)
         ) {
             return false;
         }
@@ -356,7 +356,8 @@ class PayPal extends PaymentModule
             'PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT',
             'PAYPAL_VAULTING',
             'PAYPAL_CONFIG_BRAND',
-            'PAYPAL_CONFIG_LOGO'
+            'PAYPAL_CONFIG_LOGO',
+            'PAYPAL_REQUIREMENTS'
         );
 
         foreach ($config as $var) {
@@ -425,8 +426,60 @@ class PayPal extends PaymentModule
         return $method->renderExpressCheckoutShortCut($this->context, Configuration::get('PAYPAL_METHOD'), 'cart');
     }
 
+    private function _checkRequirements()
+    {
+        $requirements = '';
+        if (Configuration::get('PS_COUNTRY_DEFAULT')) {
+            $requirements .= $this->displayError($this->l('To activate a payment solution, please select your default country on the following page:').
+            '<a href="'.$this->context->link->getAdminLink('AdminLocalization', true).'"> '.$this->l('Localization').'</a>');
+        }
+        if ($tls_check = $this->_checkTLSVersion()) {
+            $requirements .= $this->displayError($this->l('Tls verification failed.').' '.$tls_check);
+        }
+        return $requirements;
+    }
+
+    private function _checkTLSVersion()
+    {
+        $error = '';
+        $paypal = Module::getInstanceByName('paypal');
+        if (defined('CURL_SSLVERSION_TLSv1_2')) {
+            $tls_server = $this->context->link->getModuleLink('paypal', 'tlscurltestserver');
+            $curl = curl_init($tls_server);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+            curl_setopt($curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2);
+            $response = curl_exec($curl);
+            if ($response != 'ok') {
+                $curl_info = curl_getinfo($curl);
+                if ($curl_info['http_code'] == 401) {
+                    $error = $paypal->l('401 Unauthorized');
+                } else {
+                    $error = curl_error($curl);
+                }
+            }
+        } else {
+            $error = $paypal->l('TLS version is not compatible');
+        }
+        return $error;
+    }
+
+    public function ajaxProcessCheckRequirements()
+    {
+        $validation = $this->_checkRequirements();
+
+        die(json_encode($validation));
+    }
+
     public function getContent()
     {
+        /*if (!Configuration::get('PAYPAL_REQUIREMENTS')) {
+            $requirements = $this->_checkRequirements();
+            Configuration::updateValue('PAYPAL_REQUIREMENTS', 1);
+        }*/
+        $requirements = $this->_checkRequirements();
+       // print_r(Configuration::get('PS_COUNTRY_DEFAULT'));die;
         $this->_postProcess();
         $country_default = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
 
@@ -566,7 +619,7 @@ class PayPal extends PaymentModule
             $result .= $config['form'];
         }
 
-        return $result;
+        return $requirements.$result;
     }
 
     private function _postProcess()

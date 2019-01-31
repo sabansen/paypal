@@ -67,6 +67,14 @@
         </div>
         <div style="clear:both;"></div>
 
+        <div class="form-group col-sm-12">
+            <button  name="submit-ckeck_requirements"  class="btn btn-info" id="ckeck_requirements">{l s='Check requirements' mod='paypal'}</button>
+            <br><br>
+            <div class="action_response"></div>
+        </div>
+
+
+        <div style="clear:both;"></div>
         <div class="active-products">
             <p><b>{l s='2 PayPal products selected for you' mod='paypal'}</b></p>
             <div class="col-sm-6">
@@ -405,6 +413,28 @@
         if ($('#config_logo-images-thumbnails').length && !ssl_active) {
             $('#config_logo-images-thumbnails').after("{l s='An image is on a insecure (http) server and will not be shown on paypal' mod='paypal'}");
         }
+    });
+
+    $("#ckeck_requirements").click( function() {
+        $.ajax({
+            url: 'ajax-tab.php',
+            context: this,
+            dataType: 'json',
+            data : {
+                ajax : true,
+                controller: 'AdminModules',
+                configure:'paypal',
+                action : 'CheckRequirements',
+                token: token
+            },
+            success: function(data) {
+                if(data) {
+                    $('.action_response').html(data);
+                } else {
+                    $('.action_response').html('<p class="alert alert-success">{l s='Perfect ! All the requirements for the activation are fulfilled.' mod='paypal'}</p>');
+                }
+            }
+        });
     });
 
 </script>
