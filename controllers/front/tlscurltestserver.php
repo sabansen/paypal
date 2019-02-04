@@ -24,6 +24,9 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Class PayPalTlscurltestserverModuleFrontController. Check TLS
+ */
 class PayPalTlscurltestserverModuleFrontController extends ModuleFrontController
 {
     public function initContent()

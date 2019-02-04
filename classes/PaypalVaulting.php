@@ -24,20 +24,30 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Class PaypalVaulting.
+ */
 class PaypalVaulting extends ObjectModel
 {
+    /** @var string Token received from BT */
     public $token;
 
+    /** @var int BT Customer ID */
     public $id_paypal_customer;
 
-    public $name; // client can set card name in prestashop account
+    /** @var string client can set card name in prestashop account */
+    public $name;
 
+    /** @var string Card or paypal account short info like last 4 numbers/exp. date */
     public $info;
 
-    public $payment_tool; // card ou paypal, etc...
+    /** @var string card ou paypal, etc... */
+    public $payment_tool;
 
+    /** @var string Object creation date */
     public $date_add;
 
+    /** @var string Object last modification date */
     public $date_upd;
 
     /**
@@ -58,6 +68,10 @@ class PaypalVaulting extends ObjectModel
         )
     );
 
+    /**
+     * Checking if vault was created already for this card/pp account
+     * @return boolean
+     */
     public static function vaultingExist($token, $customer)
     {
         $db = Db::getInstance();
@@ -69,6 +83,12 @@ class PaypalVaulting extends ObjectModel
         return $result ? true : false;
     }
 
+    /**
+     * Get all vaulted methods (cards, accounts) for this customer
+     * @param integer $customer PrestaShop Customer ID
+     * @param string $method payment tool (card or paypal account)
+     * @return array PaypalVaulting
+     */
     public static function getCustomerMethods($customer, $method)
     {
         $db = Db::getInstance();
@@ -81,6 +101,11 @@ class PaypalVaulting extends ObjectModel
         return $result;
     }
 
+    /**
+     * Get vaulted methods grouped by tools (card or paypal account)
+     * @param integer $customer PrestaShop Customer ID
+     * @return array PaypalVaulting
+     */
     public static function getCustomerGroupedMethods($customer)
     {
         $db = Db::getInstance();

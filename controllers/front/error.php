@@ -24,6 +24,9 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Manage errors.
+ */
 class PaypalErrorModuleFrontController extends ModuleFrontController
 {
     /**
@@ -48,6 +51,11 @@ class PaypalErrorModuleFrontController extends ModuleFrontController
         $this->setTemplate('module:paypal/views/templates/front/payment_error.tpl');
     }
 
+    /**
+     * Fetch code with message
+     * @param $error_code
+     * @return mixed
+     */
     public function getErrorMsg($error_code)
     {
         $module = Module::getInstanceByName('paypal');

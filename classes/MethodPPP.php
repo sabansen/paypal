@@ -43,6 +43,11 @@ use PayPal\Api\Sale;
 
 require(_PS_MODULE_DIR_.'paypal/sdk/paypalREST/vendor/autoload.php');
 
+/**
+ * Class MethodPPP
+ * @see https://paypal.github.io/PayPal-PHP-SDK/ REST API sdk doc
+ * @see https://developer.paypal.com/docs/api/payments/v1/ REST API references
+ */
 class MethodPPP extends AbstractMethodPaypal
 {
     public $name = 'paypal';
@@ -282,6 +287,9 @@ class MethodPPP extends AbstractMethodPaypal
         return $helper->generateForm($fields_form);
     }
 
+    /**
+     * @return ApiContext
+     */
     public function _getCredentialsInfo()
     {
         switch (Configuration::get('PAYPAL_SANDBOX')) {
@@ -314,9 +322,12 @@ class MethodPPP extends AbstractMethodPaypal
         return $apiContext;
     }
 
+    /**
+     * Customize payment experience
+     * @return bool|\PayPal\Api\CreateProfileResponse
+     */
     public function createWebExperience()
     {
-
         $brand_name = Configuration::get('PAYPAL_PPP_CONFIG_BRAND')?Configuration::get('PAYPAL_PPP_CONFIG_BRAND'):Configuration::get('PS_SHOP_NAME');
         $brand_logo = file_exists(_PS_MODULE_DIR_.'paypal/views/img/ppp_logo'.Context::getContext()->shop->id.'.png')?Context::getContext()->link->getBaseLink(Context::getContext()->shop->id, true).'modules/paypal/views/img/ppp_logo'.Context::getContext()->shop->id.'.png':Context::getContext()->link->getBaseLink().'img/'.Configuration::get('PS_LOGO');
 
@@ -527,6 +538,10 @@ class MethodPPP extends AbstractMethodPaypal
             ->setDetails($details);
     }
 
+    /**
+     * Update payment requestbefore redirection.
+     * Add reductions.
+     */
     public function doPatch()
     {
         $discounts = Context::getContext()->cart->getCartRules();
@@ -735,6 +750,11 @@ class MethodPPP extends AbstractMethodPaypal
     {
     }
 
+    /**
+     * Get payment details
+     * @param $id_payment
+     * @return mixed
+     */
     public function getInstructionInfo($id_payment)
     {
         $sale = Payment::get($id_payment, $this->_getCredentialsInfo());
@@ -769,6 +789,9 @@ class MethodPPP extends AbstractMethodPaypal
         }
     }
 
+    /**
+     * @param $response
+     */
     public function processCheckoutSc($response)
     {
         if (isset($response['approval_url'])) {

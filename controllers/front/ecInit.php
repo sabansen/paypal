@@ -26,8 +26,14 @@
 
 include_once _PS_MODULE_DIR_.'paypal/classes/AbstractMethodPaypal.php';
 
+/**
+ * Prepare EC payment
+ */
 class PaypalEcInitModuleFrontController extends ModuleFrontController
 {
+    /**
+     * @see FrontController::postProcess()
+     */
     public function postProcess()
     {
         $paypal = Module::getInstanceByName('paypal');

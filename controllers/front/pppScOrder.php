@@ -28,10 +28,16 @@ use PayPal\Api\Payment;
 
 include_once _PS_MODULE_DIR_.'paypal/classes/AbstractMethodPaypal.php';
 
+/**
+ * Update PrestaShop Order after return from PayPal Plus
+ */
 class PaypalPppScOrderModuleFrontController extends ModuleFrontController
 {
     public $name = 'paypal';
 
+    /**
+     *  @see FrontController::postProcess()
+     */
     public function postProcess()
     {
         $method = AbstractMethodPaypal::load('PPP');

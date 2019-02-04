@@ -98,7 +98,7 @@
     <!-- start documentation -->
     <target name="doc.check">
         <condition property="doc.directory.exist">
-            <available file="${basedir}/202/doc" type="dir"/>
+            <available file="${basedir}/202/doc/src" type="dir"/>
         </condition>
     </target>
     <target name="doc" if="doc.directory.exist" depends="doc.check,npm" description="Build documentation mini site.">

@@ -24,34 +24,51 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Class PaypalOrder.
+ */
 class PaypalOrder extends ObjectModel
 {
+    /** @var integer Prestashop Order generated ID */
     public $id_order;
 
+    /** @var integer Prestashop Cart generated ID */
     public $id_cart;
 
+    /** @var string Transaction ID */
     public $id_transaction;
 
+    /** @var string Payment ID */
     public $id_payment;
 
+    /** @var string BT gateway client token */
     public $client_token;
 
+    /** @var string Transaction type returned by API */
     public $payment_method;
 
+    /** @var string Currency iso code */
     public $currency;
 
+    /** @var float Total paid amount by customer */
     public $total_paid;
 
+    /** @var string Transaction status */
     public $payment_status;
 
+    /** @var float Prestashop order total */
     public $total_prestashop;
 
+    /** @var string method BT, EC, PPP, etc.. */
     public $method;
 
+    /** @var string BT tool (cards or paypal) */
     public $payment_tool;
 
+    /** @var string Object creation date */
     public $date_add;
 
+    /** @var string Object last modification date */
     public $date_upd;
 
     /**
@@ -79,7 +96,11 @@ class PaypalOrder extends ObjectModel
         )
     );
 
-
+    /**
+     * Get Id of order by transaction
+     * @param string $id_transaction Transaction ID
+     * @return integer Order id
+     */
     public static function getIdOrderByTransactionId($id_transaction)
     {
         $sql = 'SELECT `id_order`
@@ -92,6 +113,11 @@ class PaypalOrder extends ObjectModel
         return 0;
     }
 
+    /**
+     * Get PaypalOrder by PrestaShop order ID
+     * @param integer $id_order Order ID
+     * @return array PaypalOrder
+     */
     public static function getOrderById($id_order)
     {
         return Db::getInstance()->getRow(
@@ -100,6 +126,11 @@ class PaypalOrder extends ObjectModel
         );
     }
 
+    /**
+     * Load PaypalOrder object by PrestaShop order ID
+     * @param integer $id_order Order ID
+     * @return object PaypalOrder
+     */
     public static function loadByOrderId($id_order)
     {
         $sql = new DbQuery();
@@ -110,6 +141,10 @@ class PaypalOrder extends ObjectModel
         return new self($id_paypal_order);
     }
 
+    /**
+     * Get BT records
+     * @return array all BT transaction IDs
+     */
     public static function getPaypalBtOrdersIds()
     {
         $ids = array();

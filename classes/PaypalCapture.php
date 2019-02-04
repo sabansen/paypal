@@ -24,18 +24,27 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Class PaypalCapture.
+ */
 class PaypalCapture extends ObjectModel
 {
+    /** @var string Capture ID */
     public $id_capture;
 
+    /** @var integer PaypalOrder ID */
     public $id_paypal_order;
 
+    /** @var float Captured amount */
     public $capture_amount;
 
+    /** @var string Transaction status */
     public $result;
 
+    /** @var string Object creation date */
     public $date_add;
 
+    /** @var string Object last modification date */
     public $date_upd;
 
     /**
@@ -55,7 +64,11 @@ class PaypalCapture extends ObjectModel
         )
     );
 
-
+    /**
+     * Load Capture by PaypalOrder
+     * @param integer $orderPayPalId PaypalOrder ID
+     * @return object PaypalCapture
+     */
     public static function loadByOrderPayPalId($orderPayPalId)
     {
         $sql = new DbQuery();
@@ -67,6 +80,11 @@ class PaypalCapture extends ObjectModel
         return new self($id_paypal_capture);
     }
 
+    /**
+     * Get all datas from PaypalOrder and PaypalCapture
+     * @param integer $id_order PrestaShop order ID
+     * @return array PaypalCapture
+     */
     public static function getByOrderId($id_order)
     {
         $sql = new DbQuery();
@@ -77,6 +95,13 @@ class PaypalCapture extends ObjectModel
         return Db::getInstance()->getRow($sql);
     }
 
+    /**
+     * Update PaypalCapture
+     * @param string $transaction_id New transaction ID that correspond to capture
+     * @param float $amount Captured amount
+     * @param string $status new payment status
+     * @param integer $id_paypal_order PaypalOrder ID
+     */
     public static function updateCapture($transaction_id, $amount, $status, $id_paypal_order)
     {
         Db::getInstance()->update(

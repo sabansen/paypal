@@ -26,6 +26,9 @@
 
 include_once _PS_MODULE_DIR_.'paypal/classes/AbstractMethodPaypal.php';
 
+/**
+ * Validate PPP payment
+ */
 class PaypalPppValidationModuleFrontController extends ModuleFrontController
 {
     public function postProcess()

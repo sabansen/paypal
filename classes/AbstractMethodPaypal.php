@@ -37,6 +37,10 @@ abstract class AbstractMethodPaypal
     abstract public function void($params);
     abstract public function partialRefund($params);
 
+    /**
+     * @param string $method method alias like BT, EC, PPP
+     * @return stdClass Method class
+     */
     public static function load($method)
     {
         if (preg_match('/^[a-zA-Z0-9_-]+$/', $method) && file_exists(_PS_MODULE_DIR_.'paypal/classes/Method'.$method.'.php')) {

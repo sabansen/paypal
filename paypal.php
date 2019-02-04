@@ -36,6 +36,7 @@ include_once 'classes/PaypalOrder.php';
 
 const BT_CARD_PAYMENT = 'card-braintree';
 const BT_PAYPAL_PAYMENT = 'paypal-braintree';
+// Method Alias :
 // EC = express checkout
 // ECS = express checkout sortcut
 // BT = Braintree
@@ -198,6 +199,10 @@ class PayPal extends PaymentModule
         return true;
     }
 
+    /**
+     * Set default currency restriction to "customer currency"
+     * @return bool
+     */
     public function updateRadioCurrencyRestrictionsForModule()
     {
         $shops = Shop::getShops(true, null, true);
@@ -406,6 +411,10 @@ class PayPal extends PaymentModule
         }
     }
 
+    /**
+     * Get url for BT
+     * @return string
+     */
     public function getUrlBt()
     {
         if (Configuration::get('PAYPAL_SANDBOX')) {
@@ -426,6 +435,9 @@ class PayPal extends PaymentModule
         return $method->renderExpressCheckoutShortCut($this->context, Configuration::get('PAYPAL_METHOD'), 'cart');
     }
 
+    /**
+     * Check requirement before method activation
+     */
     private function _checkRequirements()
     {
         $requirements = '';
@@ -439,6 +451,9 @@ class PayPal extends PaymentModule
         return $requirements;
     }
 
+    /**
+     * Check TLS version 1.2 compability : CURL request to server
+     */
     private function _checkTLSVersion()
     {
         $error = '';
@@ -465,6 +480,9 @@ class PayPal extends PaymentModule
         return $error;
     }
 
+    /**
+     * Ajax request to check requirements
+     */
     public function ajaxProcessCheckRequirements()
     {
         $validation = $this->_checkRequirements();
@@ -641,7 +659,10 @@ class PayPal extends PaymentModule
             $method->setConfig(Tools::getAllValues());
         }
     }
-
+    /**
+     * Get url for BT onboarding
+     * @return string
+     */
     public function getBtConnectUrl()
     {
         $connect_params = array(
@@ -903,6 +924,11 @@ class PayPal extends PaymentModule
         }
     }
 
+    /**
+     * Get url for BT onboarding
+     * @param object $ps_order PS order object
+     * @param string $transaction_id payment transaction ID
+     */
     public function setTransactionId($ps_order, $transaction_id)
     {
         Db::getInstance()->update('order_payment', array(
@@ -912,7 +938,6 @@ class PayPal extends PaymentModule
 
     public function hookActionObjectCurrencyAddAfter($params)
     {
-
         if (Configuration::get('PAYPAL_METHOD') == 'BT') {
             $mode = Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
             $merchant_accounts = (array)Tools::jsonDecode(Configuration::get('PAYPAL_' . $mode . '_BRAINTREE_ACCOUNT_ID'));
@@ -926,6 +951,10 @@ class PayPal extends PaymentModule
         }
     }
 
+    /**
+     * Assign form data for Paypal Plus payment option
+     * @return boolean
+     */
     protected function assignInfoPaypalPlus()
     {
         $ppplus = AbstractMethodPaypal::load('PPP');
@@ -951,6 +980,10 @@ class PayPal extends PaymentModule
         return true;
     }
 
+    /**
+     * Display form for BT paypal payment option
+     * @return string
+     */
     protected function generateFormPaypalBt()
     {
         $amount = $this->context->cart->getOrderTotal();
@@ -986,7 +1019,10 @@ class PayPal extends PaymentModule
         return $this->context->smarty->fetch('module:paypal/views/templates/front/payment_pb.tpl');
     }
 
-
+    /**
+     * Display form for BT cards payment option
+     * @return string
+     */
     protected function generateFormBt()
     {
         $amount = $this->context->cart->getOrderTotal();
@@ -1068,6 +1104,10 @@ class PayPal extends PaymentModule
         return $method->renderExpressCheckoutShortCut($this->context, Configuration::get('PAYPAL_METHOD'), 'product');
     }
 
+    /**
+     * Check if we need convert currency
+     * @return boolean|integer currency id
+     */
     public function needConvert()
     {
         $currency_mode = Currency::getPaymentCurrenciesSpecial($this->id);
@@ -1083,6 +1123,10 @@ class PayPal extends PaymentModule
         }
     }
 
+    /**
+     * Get payment currency iso code
+     * @return string currency iso code
+     */
     public function getPaymentCurrencyIso()
     {
         if ($id_currency = $this->needConvert()) {
@@ -1266,6 +1310,11 @@ class PayPal extends PaymentModule
         }
     }
 
+    /**
+     * Check if we need convert currency
+     * @param integer $id_order
+     * @return integer ID thread
+     */
     public function createOrderThread($id_order)
     {
         $orderThread = new CustomerThread();
@@ -1560,7 +1609,11 @@ class PayPal extends PaymentModule
         }
     }
 
-    public function getPartnerInfo($method)
+    /**
+     * Get URL for EC onboarding
+     * @return string
+     */
+    public function getPartnerInfo()
     {
         $return_url = $this->context->link->getAdminLink('AdminModules', true).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name.'&active_method='.Tools::getValue('method');
         if ($this->context->country->iso_code == "CN") {
@@ -1614,6 +1667,10 @@ class PayPal extends PaymentModule
         return $tab;
     }
 
+    /**
+     * Get decimal correspondent to payment currency
+     * @return integer Number of decimal
+     */
     public static function getDecimal()
     {
         $paypal = Module::getInstanceByName('paypal');

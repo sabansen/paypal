@@ -47,16 +47,26 @@ use PayPal\Service\PayPalAPIInterfaceServiceService;
 
 require_once(_PS_MODULE_DIR_.'paypal/sdk/paypalNVP/PPBootStrap.php');
 
+/**
+ * Class MethodEC.
+ * @see https://developer.paypal.com/docs/classic/api/ NVP SOAP SDK
+ * @see https://developer.paypal.com/docs/classic/api/nvpsoap-sdks/
+ */
 class MethodEC extends AbstractMethodPaypal
 {
+    /** @var string module name*/
     public $name = 'paypal';
 
+    /** @var string token */
     public $token;
 
+    /** @var object PaymentDetailsType */
     private $_paymentDetails;
 
+    /** @var float total item amount HT */
     private $_itemTotalValue = 0;
 
+    /** @var float total cart taxes */
     private $_taxTotalValue = 0;
 
     public function getConfig(PayPal $module)
@@ -386,7 +396,7 @@ class MethodEC extends AbstractMethodPaypal
         if (isset($params['method'])) {
             Configuration::updateValue('PAYPAL_API_CARD', $params['with_card']);
             if ((isset($params['modify']) && $params['modify']) || (Configuration::get('PAYPAL_METHOD') != $params['method'])) {
-                $response = $paypal->getPartnerInfo($params['method']);
+                $response = $paypal->getPartnerInfo();
                 Tools::redirectLink($response);
             }
         }
@@ -606,6 +616,10 @@ class MethodEC extends AbstractMethodPaypal
         return $address_pp;
     }
 
+    /**
+     * @param string $method
+     * @return string Url
+     */
     public function redirectToAPI($method)
     {
         if ($this->useMobile()) {
@@ -621,6 +635,9 @@ class MethodEC extends AbstractMethodPaypal
         return $paypal->getUrl().$url.'&token='.urldecode($this->token);
     }
 
+    /**
+     * @return bool
+     */
     public function useMobile()
     {
         if ((method_exists(Context::getContext(), 'getMobileDevice') && Context::getContext()->getMobileDevice())
@@ -631,6 +648,9 @@ class MethodEC extends AbstractMethodPaypal
         return false;
     }
 
+    /**
+     * @return array Merchant Credentiales
+     */
     public function _getCredentialsInfo()
     {
         $params = array();
@@ -707,6 +727,11 @@ class MethodEC extends AbstractMethodPaypal
         return true;
     }
 
+    /**
+     * Get Transaction details for order
+     * @param object $transaction
+     * @return array
+     */
     public function getDetailsTransaction($transaction)
     {
         $payment_info = $transaction->PaymentInfo[0];
@@ -891,6 +916,12 @@ class MethodEC extends AbstractMethodPaypal
         return $response;
     }
 
+    /**
+     * @param $context
+     * @param $type
+     * @param $page_source
+     * @return mixed
+     */
     public function renderExpressCheckoutShortCut(&$context, $type, $page_source)
     {
         $lang = $context->country->iso_code;
@@ -922,6 +953,9 @@ class MethodEC extends AbstractMethodPaypal
         }
     }
 
+    /**
+     * @param $response
+     */
     public function processCheckoutSc($response)
     {
         if (!isset($response['L_ERRORCODE0'])) {
@@ -934,6 +968,11 @@ class MethodEC extends AbstractMethodPaypal
         }
     }
 
+    /**
+     * @param $params
+     * @return \PayPal\PayPalAPI\GetExpressCheckoutDetailsResponseType
+     * @throws Exception
+     */
     public function getInfo($params)
     {
         $getExpressCheckoutDetailsRequest = new GetExpressCheckoutDetailsRequestType($params['token']);

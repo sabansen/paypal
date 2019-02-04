@@ -26,6 +26,9 @@
 
 include_once _PS_MODULE_DIR_.'paypal/classes/AbstractMethodPaypal.php';
 
+/**
+ * Update PrestaShop Order after return from PayPal
+ */
 class PaypalEcScOrderModuleFrontController extends ModuleFrontController
 {
     public $name = 'paypal';

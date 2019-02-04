@@ -26,6 +26,9 @@
 
 include_once _PS_MODULE_DIR_.'paypal/classes/AbstractMethodPaypal.php';
 
+/**
+ * Validate BT payment
+ */
 class PaypalBtValidationModuleFrontController extends ModuleFrontController
 {
     public $name = 'paypal';

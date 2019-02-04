@@ -26,6 +26,9 @@
 
 include_once _PS_MODULE_DIR_.'paypal/classes/AbstractMethodPaypal.php';
 
+/**
+ * Update PPP payment request before initialize it.
+ */
 class PaypalPppPatchModuleFrontController extends ModuleFrontController
 {
     public function postProcess()

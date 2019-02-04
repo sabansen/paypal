@@ -24,16 +24,24 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Class PaypalCustomer.
+ */
 class PaypalCustomer extends ObjectModel
 {
+    /** @var integer PrestaShop Customer ID */
     public $id_customer;
 
+    /** @var string Paypal customer reference number */
     public $reference;
 
-    public $method; // BT, EC, etc...
+    /** @var string BT, EC, etc... */
+    public $method;
 
+    /** @var string Object creation date */
     public $date_add;
 
+    /** @var string Object last modification date */
     public $date_upd;
 
     /**
@@ -52,6 +60,12 @@ class PaypalCustomer extends ObjectModel
         )
     );
 
+    /**
+     * Load customer object by ID
+     * @param integer $id_customer PrestaShop Customer ID
+     * @param string $method method alias
+     * @return object PaypalCustomer
+     */
     public static function loadCustomerByMethod($id_customer, $method)
     {
         $db = Db::getInstance();

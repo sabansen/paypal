@@ -26,10 +26,16 @@
 
 include_once _PS_MODULE_DIR_.'paypal/classes/AbstractMethodPaypal.php';
 
+/**
+ * Validate EC payment
+ */
 class PaypalEcValidationModuleFrontController extends ModuleFrontController
 {
     public $name = 'paypal';
 
+    /**
+     * @see FrontController::postProcess()
+     */
     public function postProcess()
     {
         $method_ec = AbstractMethodPaypal::load('EC');

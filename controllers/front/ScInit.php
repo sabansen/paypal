@@ -26,6 +26,9 @@
 
 include_once _PS_MODULE_DIR_.'paypal/classes/AbstractMethodPaypal.php';
 
+/**
+ * Init payment for EC shortcut
+ */
 class PaypalScInitModuleFrontController extends ModuleFrontController
 {
     public $name = 'paypal';

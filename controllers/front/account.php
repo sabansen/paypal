@@ -69,7 +69,7 @@ class PaypalAccountModuleFrontController extends ModuleFrontController
         parent::initContent();
 
         $methods = PaypalVaulting::getCustomerGroupedMethods($this->context->customer->id);
-//echo '<pre>';print_r($methods);die;
+
         $this->context->smarty->assign(array(
             'payment_methods'                 => $methods,
         ));

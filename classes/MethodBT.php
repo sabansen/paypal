@@ -28,12 +28,19 @@ include_once(_PS_MODULE_DIR_.'paypal/sdk/braintree/lib/Braintree.php');
 include_once 'PaypalCustomer.php';
 include_once 'PaypalVaulting.php';
 
+/**
+ * Class MethodBT
+ * @see https://developers.braintreepayments.com/guides/overview BT developper documentation
+ */
 class MethodBT extends AbstractMethodPaypal
 {
+    /** @var string module name*/
     public $name = 'paypal';
 
+    /** @var string token*/
     public $token;
 
+    /** @var string sandbox or live*/
     public $mode;
 
     public function getConfig(PayPal $module)
@@ -297,9 +304,11 @@ class MethodBT extends AbstractMethodPaypal
         }
     }
 
+    /**
+     * Init class configurations
+     */
     private function initConfig()
     {
-
         $this->mode = Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
         $this->gateway = new Braintree_Gateway(['accessToken' => Configuration::get('PAYPAL_'.$this->mode.'_BRAINTREE_ACCESS_TOKEN') ]);
         $this->error = '';
@@ -317,6 +326,10 @@ class MethodBT extends AbstractMethodPaypal
         }
     }
 
+    /**
+     * Get all activated currencies from BT account
+     * @return array [curr_iso_code => account_id]
+     */
     public function getAllCurrency()
     {
         $this->initConfig();
@@ -331,6 +344,11 @@ class MethodBT extends AbstractMethodPaypal
         return $result;
     }
 
+    /**
+     * Create new BT account for currency added on PS
+     * @param string $currency iso code
+     * @return array [curr_iso_code => account_id]
+     */
     public function createForCurrency($currency = null)
     {
         $this->initConfig();
@@ -364,7 +382,11 @@ class MethodBT extends AbstractMethodPaypal
         return $result;
     }
 
-
+    /**
+     * Get current Transaction status from BT
+     * @param string $transactionId
+     * @return string|boolean
+     */
     public function getTransactionStatus($transactionId)
     {
         $this->initConfig();
@@ -396,6 +418,11 @@ class MethodBT extends AbstractMethodPaypal
         $paypal->validateOrder(context::getContext()->cart->id, $order_state, $transaction->amount, 'Braintree', $paypal->l('Payment accepted.'), $transactionDetail, context::getContext()->cart->id_currency, false, context::getContext()->customer->secure_key);
     }
 
+    /**
+     * Get Transaction details for order
+     * @param object $transaction
+     * @return array
+     */
     public function getDetailsTransaction($transaction)
     {
         return array(
@@ -410,6 +437,12 @@ class MethodBT extends AbstractMethodPaypal
             'payment_tool' => $transaction->paymentInstrumentType,
         );
     }
+
+    /**
+     * Get order id for BT sale. Use secure key to avoid duplicate orderId error.
+     * @param object $cart
+     * @return string
+     */
     public function getOrderId($cart)
     {
         return $cart->secure_key.'_'.$cart->id;
@@ -570,6 +603,11 @@ class MethodBT extends AbstractMethodPaypal
         return false;
     }
 
+    /**
+     * Add PaypalVaulting
+     * @param object $result payment transaction result object
+     * @param object $paypal_customer
+     */
     public function createVaulting($result, $paypal_customer)
     {
         $vaulting = new PaypalVaulting();
@@ -590,6 +628,10 @@ class MethodBT extends AbstractMethodPaypal
         $vaulting->save();
     }
 
+    /**
+     * Update customer info on BT
+     * @param string $id_customer BT customer reference
+     */
     public function updateCustomer($id_customer)
     {
         $context = Context::getContext();
@@ -601,6 +643,10 @@ class MethodBT extends AbstractMethodPaypal
         $this->gateway->customer()->update($id_customer, $data);
     }
 
+    /**
+     * Create new customer on BT and PS
+     * @return object PaypalCustomer
+     */
     public function createCustomer()
     {
         $context = Context::getContext();
@@ -619,12 +665,21 @@ class MethodBT extends AbstractMethodPaypal
         return $customer;
     }
 
+    /**
+     * Deleted vaulted method from BT
+     * @param object $payment_method PaypalVaulting
+     */
     public function deleteVaultedMethod($payment_method)
     {
         $this->initConfig();
         $this->gateway->paymentMethod()->delete($payment_method->token);
     }
 
+    /**
+     * Check if status is valid for vaulting
+     * @param $status
+     * @return bool
+     */
     public function isValidStatus($status)
     {
         return in_array($status, array('submitted_for_settlement','authorized','settled', 'settling'));
@@ -815,6 +870,10 @@ class MethodBT extends AbstractMethodPaypal
         }
     }
 
+    /**
+     * @param array $ids
+     * @return mixed
+     */
     public function searchTransactions($ids)
     {
         $this->initConfig();
@@ -825,6 +884,11 @@ class MethodBT extends AbstractMethodPaypal
         return $collection;
     }
 
+    /**
+     * Create payment method nonce
+     * @param $token
+     * @return mixed
+     */
     public function createMethodNonce($token)
     {
         $this->initConfig();
