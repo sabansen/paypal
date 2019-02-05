@@ -976,7 +976,7 @@ class MethodEC extends AbstractMethodPaypal
      */
     public function getInfo($params)
     {
-        $getExpressCheckoutDetailsRequest = new GetExpressCheckoutDetailsRequestType("eee");
+        $getExpressCheckoutDetailsRequest = new GetExpressCheckoutDetailsRequestType($params['token']);
         $getExpressCheckoutReq = new GetExpressCheckoutDetailsReq();
         $getExpressCheckoutReq->GetExpressCheckoutDetailsRequest = $getExpressCheckoutDetailsRequest;
         $paypalService = new PayPalAPIInterfaceServiceService($this->_getCredentialsInfo());

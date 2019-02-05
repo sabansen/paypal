@@ -47,8 +47,13 @@ class PaypalPppScOrderModuleFrontController extends ModuleFrontController
             $info = Payment::get($paymentId, $method->_getCredentialsInfo());
         } catch (PayPal\Exception\PayPalConnectionException $e) {
             $decoded_message = Tools::jsonDecode($e->getData());
-            $ex_detailed_message = $decoded_message->message;
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $ex_detailed_message)));
+            Tools::redirect(Context::getContext()->link->getModuleLink(
+                'paypal', 'error', array(
+                    'error_code' => $e->getCode(),
+                    'error_msg' => $decoded_message->message,
+                    'msg_long' => $decoded_message->name.' - '.$decoded_message->details[0]->issue
+                )
+            ));
         } catch (PayPal\Exception\PayPalInvalidCredentialException $e) {
             $ex_detailed_message = $e->errorMessage();
             Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $ex_detailed_message)));
@@ -56,7 +61,7 @@ class PaypalPppScOrderModuleFrontController extends ModuleFrontController
             $ex_detailed_message = $paypal->l('Invalid configuration. Please check your configuration file');
             Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $ex_detailed_message)));
         } catch (Exception $e) {
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $e->getMessage())));
+            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_code' => $e->getCode(), 'error_msg' => $e->getMessage())));
         }
 
         $payer_info = $info->payer->payer_info;

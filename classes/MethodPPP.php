@@ -777,6 +777,7 @@ class MethodPPP extends AbstractMethodPaypal
             'PayPal_img_esc' => $shop_url.$img_esc,
             'action_url' => $context->link->getModuleLink('paypal', 'ScInit', array(), true),
             'environment' => $environment,
+            'PayPal_tracking_code' => '',
         ));
 
         if ($page_source == 'product') {

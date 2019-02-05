@@ -39,7 +39,6 @@
                 {include file="module:paypal/views/templates/front/payment_infos.tpl"}
 
                 <div id="ppplus" style="width: 100%;"> </div>
-                <div id="bt-paypal-error-msg" class="alert alert-danger"></div>
 
             </div>
         </div>
