@@ -49,8 +49,14 @@ class PaypalEcScOrderModuleFrontController extends ModuleFrontController
         } catch (PayPal\Exception\PPConfigurationException $e) {
             $ex_detailed_message = $paypal->l('Invalid configuration. Please check your configuration file');
             Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $ex_detailed_message)));
-        } catch (Exception $e) {
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_code' => $e->getCode())));
+        } catch (PaypalAddons\classes\PaypalException $e) {
+            Tools::redirect(Context::getContext()->link->getModuleLink(
+                'paypal', 'error', array(
+                    'error_code' => $e->getCode(),
+                    'error_msg' => $e->getMessage(),
+                    'msg_long' => $e->getMessageLong()
+                )
+            ));
         }
 
         $payer_info = $info->GetExpressCheckoutDetailsResponseDetails->PayerInfo;

@@ -44,6 +44,7 @@ use PayPal\PayPalAPI\DoVoidRequestType;
 use PayPal\PayPalAPI\GetExpressCheckoutDetailsRequestType;
 use PayPal\PayPalAPI\GetExpressCheckoutDetailsReq;
 use PayPal\Service\PayPalAPIInterfaceServiceService;
+use PaypalAddons\classes\PaypalException;
 
 require_once(_PS_MODULE_DIR_.'paypal/sdk/paypalNVP/PPBootStrap.php');
 
@@ -465,7 +466,7 @@ class MethodEC extends AbstractMethodPaypal
 
         //You are not signed up to accept payment for digitally delivered goods.
         if (isset($payment->Errors)) {
-            throw new Exception('ERROR in SetExpressCheckout', $payment->Errors[0]->ErrorCode);
+            throw new PaypalException($payment->Errors[0]->ErrorCode, $payment->Errors[0]->ShortMessage, $payment->Errors[0]->LongMessage);
         }
         $this->token = $payment->Token;
         return $this->redirectToAPI('setExpressCheckout');
@@ -704,7 +705,7 @@ class MethodEC extends AbstractMethodPaypal
         $exec_payment = $paypalService->DoExpressCheckoutPayment($DoECReq);
 
         if (isset($exec_payment->Errors)) {
-            throw new Exception('ERROR in SetExpressCheckout', $exec_payment->Errors[0]->ErrorCode);
+            throw new PaypalException($exec_payment->Errors[0]->ErrorCode, $exec_payment->Errors[0]->ShortMessage, $exec_payment->Errors[0]->LongMessage);
         }
 
         $cart = $context->cart;
@@ -975,13 +976,13 @@ class MethodEC extends AbstractMethodPaypal
      */
     public function getInfo($params)
     {
-        $getExpressCheckoutDetailsRequest = new GetExpressCheckoutDetailsRequestType($params['token']);
+        $getExpressCheckoutDetailsRequest = new GetExpressCheckoutDetailsRequestType("eee");
         $getExpressCheckoutReq = new GetExpressCheckoutDetailsReq();
         $getExpressCheckoutReq->GetExpressCheckoutDetailsRequest = $getExpressCheckoutDetailsRequest;
         $paypalService = new PayPalAPIInterfaceServiceService($this->_getCredentialsInfo());
         $response = $paypalService->GetExpressCheckoutDetails($getExpressCheckoutReq);
         if (isset($response->Errors)) {
-            throw new Exception('ERROR in SetExpressCheckout', $response->Errors[0]->ErrorCode);
+            throw new PaypalException($response->Errors[0]->ErrorCode, $response->Errors[0]->ShortMessage, $response->Errors[0]->LongMessage);
         }
         return $response;
     }

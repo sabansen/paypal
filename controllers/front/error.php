@@ -36,52 +36,13 @@ class PaypalErrorModuleFrontController extends ModuleFrontController
     {
         parent::initContent();
 
-        if (Tools::getValue('error_msg')) {
-            $error_message = Tools::getValue('error_msg');
-        } else {
-            $error_code = Tools::getValue('error_code');
-            $error_message = $this->getErrorMsg($error_code);
-        }
-
         Context::getContext()->smarty->assign(array(
-            'error_paypal' => $error_message,
+            'error_msg' => Tools::getValue('error_msg'),
+            'msg_long' => Tools::getValue('msg_long'),
+            'error_code' => Tools::getValue('error_code'),
             'show_retry' => (Context::getContext()->cart->nbProducts() > 0 && !Tools::getValue('no_retry')) ? true : false,
         ));
 
         $this->setTemplate('module:paypal/views/templates/front/payment_error.tpl');
-    }
-
-    /**
-     * Fetch code with message
-     * @param $error_code
-     * @return mixed
-     */
-    public function getErrorMsg($error_code)
-    {
-        $module = Module::getInstanceByName('paypal');
-        $errors = array(
-            '00000' => $module->l('Unexpected error occurred.'),
-            '10002' => $module->l('You do not have permissions to make this API call'),
-            '81002' => $module->l('Method Specified is not Supported'),
-            '10413' => $module->l('The totals of the cart item amounts do not match order amounts.'),
-            '10400' => $module->l('Order total is missing'),
-            '10006' => $module->l('Version is not supported'),
-            '10605' => $module->l('Currency is not supported'),
-            '2069' =>  $module->l('PayPal Blocking Duplicate Order IDs'),
-            '93102' => $module->l('The nonce that was received is not a valid nonce.'),
-            '93103' => $module->l('A nonce was not provided.'),
-            '93107' => $module->l('A payment method nonce may only be consumed once.'),
-            '93108' => $module->l('Unknown or expired payment_method_nonce.'),
-            '81503' => $module->l('Amount is an invalid format.'),
-            '81501' => $module->l('Amount cannot be negative.'),
-            '81509' => $module->l('Credit card type is not accepted by this merchant account.'),
-            '11607' => $module->l('A successful transaction has already been completed for this token.'),
-            '10417' => $module->l('Retry the transaction using an alternative payment method from the customer\'s PayPal wallet. The transaction did not complete with the customer\'s selected payment method.'),
-            '10486' => $module->l('This transaction couldn\'t be completed..'),
-            '10736' => $module->l('There\'s an error with this transaction. Match of shipping address, city, state, and postal code failed.'),
-            '92918' => $module->l('The merchant account used is not fully set up.'),
-            '91584' => $module->l('Merchant account must match the 3D Secure authorization merchant account.'),
-        );
-        return isset($errors[$error_code])?$errors[$error_code]:$errors['00000'];
     }
 }

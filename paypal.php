@@ -30,6 +30,7 @@ if (!defined('_PS_VERSION_')) {
 }
 
 include_once(_PS_MODULE_DIR_.'paypal/sdk/BraintreeSiSdk.php');
+include_once(_PS_MODULE_DIR_.'paypal/vendor/autoload.php');
 include_once 'classes/AbstractMethodPaypal.php';
 include_once 'classes/PaypalCapture.php';
 include_once 'classes/PaypalOrder.php';

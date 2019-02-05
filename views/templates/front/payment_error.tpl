@@ -51,16 +51,23 @@
                     <h2>{l s='Error in Paypal' mod='paypal'}</h2>
 
                     <div class="table-responsive-row clearfix">
-                        <p>
-                            {$error_paypal}
+                        <p class="paypal_error_msg">
+                            {if $error_msg == '' && $msg_long == ''}
+                                {if $error_code}<span class="code">[{$error_code}]</span>{/if}
+                                {l s='Unexpected error occurred.' mod='paypal'}
+                            {else}
+                                {if $error_code}<span class="code">[{$error_code}]</span>{/if}
+                                {if $error_msg}<span class="short">{$error_msg}</span>{/if}
+                                <br>
+                                {if $msg_long && $msg_long != $error_msg}
+                                    <span class="long">{l s='Additional error message : ' mod='paypal'}{$msg_long}</span>
+                                {/if}
+                            {/if}
                         </p>
                         {if $show_retry}
                             <a class="btn btn-secondary" href="{$link->getPageLink('order', true)}">{l s='Try to pay again' mod='paypal'}</a>
                         {/if}
                     </div>
-
-
-
                 </section>
             </section>
         </div>

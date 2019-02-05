@@ -49,8 +49,14 @@ class PaypalScInitModuleFrontController extends ModuleFrontController
 
         try {
             $response = $method->init(array('use_card'=>0, 'short_cut' => 1));
-        } catch (Exception $e) {
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $e->getMessage())));
+        } catch (PaypalAddons\classes\PaypalException $e) {
+            Tools::redirect(Context::getContext()->link->getModuleLink(
+                'paypal', 'error', array(
+                    'error_code' => $e->getCode(),
+                    'error_msg' => $e->getMessage(),
+                    'msg_long' => $e->getMessageLong()
+                )
+            ));
         }
 
         $method->processCheckoutSc($response);
