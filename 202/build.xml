@@ -96,17 +96,6 @@
     </target>
     <!-- end composer -->
     <!-- start documentation -->
-    <target name="doc.check">
-        <condition property="doc.directory.exist">
-            <available file="${basedir}/202/doc/src" type="dir"/>
-        </condition>
-    </target>
-    <target name="doc" if="doc.directory.exist" depends="doc.check,npm" description="Build documentation mini site.">
-        <exec executable="npm">
-            <arg value="run" />
-            <arg value="doc-build" />
-        </exec>
-    </target>
     <target name="npm" depends="clean-npm,npm-install" description="Install or update node dependencies" />
     <target name="clean-npm" description="Empty node_modules folder">
         <delete dir="${basedir}/202/node_modules" />
@@ -114,6 +103,17 @@
     <target name="npm-install" description="Installing node deps">
         <exec executable="npm">
             <arg value="install" />
+        </exec>
+    </target>
+    <target name="doc.check">
+        <condition property="doc.directory.exist">
+            <available file="${basedir}/202/doc" type="dir"/>
+        </condition>
+    </target>
+    <target name="doc" if="doc.directory.exist" depends="doc.check,npm" description="Build documentation mini site.">
+        <exec executable="npm">
+            <arg value="run" />
+            <arg value="doc-build" />
         </exec>
     </target>
     <!-- end documentation -->
