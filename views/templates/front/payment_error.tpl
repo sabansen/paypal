@@ -48,7 +48,11 @@
             <section id="main">
                 <section id="content" class="page-content card card-block">
                     {include file='_partials/breadcrumb.tpl'}
-                    <h2>{l s='Error in Paypal' mod='paypal'}</h2>
+                    {if $method == 'BT'}
+                        <h2>{l s='Error in Braintree' mod='paypal'}</h2>
+                    {else}
+                        <h2>{l s='Error in Paypal' mod='paypal'}</h2>
+                    {/if}
 
                     <div class="table-responsive-row clearfix">
                         <p class="paypal_error_msg">

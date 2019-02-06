@@ -57,6 +57,13 @@ class PaypalEcInitModuleFrontController extends ModuleFrontController
                     'msg_long' => $e->getMessageLong()
                 )
             ));
+        } catch (Exception $e) {
+            Tools::redirect(Context::getContext()->link->getModuleLink(
+                'paypal', 'error', array(
+                    'error_code' => $e->getCode(),
+                    'error_msg' => $e->getMessage()
+                )
+            ));
         }
 
         if (Tools::getvalue('getToken')) {

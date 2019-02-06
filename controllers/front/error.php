@@ -41,6 +41,7 @@ class PaypalErrorModuleFrontController extends ModuleFrontController
             'msg_long' => Tools::getValue('msg_long'),
             'error_code' => Tools::getValue('error_code'),
             'show_retry' => (Context::getContext()->cart->nbProducts() > 0 && !Tools::getValue('no_retry')) ? true : false,
+            'method' => Configuration::get('PAYPAL_METHOD'),
         ));
 
         $this->setTemplate('module:paypal/views/templates/front/payment_error.tpl');

@@ -39,8 +39,16 @@ class PaypalBtValidationModuleFrontController extends ModuleFrontController
 
         try {
             $method_bt->validation();
+        } catch (PaypalAddons\classes\PaypalException $e) {
+            Tools::redirect(Context::getContext()->link->getModuleLink(
+                'paypal', 'error', array(
+                    'error_code' => $e->getCode(),
+                    'error_msg' => $e->getMessage(),
+                    'msg_long' => $e->getMessageLong()
+                )
+            ));
         } catch (Exception $e) {
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_code' => $e->getCode())));
+            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_code' => $e->getCode(), 'error_msg' => $e->getMessage())));
         }
 
         $cart = Context::getContext()->cart;
