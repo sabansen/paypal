@@ -79,7 +79,11 @@
                     } else if (!blur_field_info.isValid) {
                         popup_message = bt_translations.invalid+' '+bt_translations[event.emittedBy];
                     }
-                    $('#bt-card-error-msg').show().text(popup_message);
+                    if (popup_message) {
+                        $('#bt-card-error-msg').show().text(popup_message);
+                    } else {
+                        $('#bt-card-error-msg').hide();
+                    }
                 });
                 bt_hosted_fileds = hostedFieldsInstance;
                 bt_client_instance = clientInstance;
