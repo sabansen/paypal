@@ -58,7 +58,7 @@ class MethodEC extends AbstractMethodPaypal
     /** @var string module name*/
     public $name = 'paypal';
 
-    /** @var string token */
+    /** @var string token. for in-context */
     public $token;
 
     /** @var object PaymentDetailsType */

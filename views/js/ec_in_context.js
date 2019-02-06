@@ -28,9 +28,14 @@ function ECInContext() {
         url: url_token,
         type: "GET",
 
-        success: function (token) {
-            var url = paypal.checkout.urlPrefix +token;
-            paypal.checkout.startFlow(url);
+        success: function (json) {
+            if (json.success) {
+                var url = paypal.checkout.urlPrefix +token;
+                paypal.checkout.startFlow(url);
+            } else {
+                paypal.checkout.closeFlow();
+                window.location.replace(json.redirect_link);
+            }
         },
         error: function (responseData, textStatus, errorThrown) {
             alert("Error in ajax post"+responseData.statusText);
