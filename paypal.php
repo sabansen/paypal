@@ -666,11 +666,12 @@ class PayPal extends PaymentModule
      */
     public function getBtConnectUrl()
     {
+        $redirect_link = $this->module_link.'&active_method='.Tools::getValue('method');
         $connect_params = array(
             'user_country' => $this->context->country->iso_code,
             'user_email' => Configuration::get('PS_SHOP_EMAIL'),
             'business_name' => Configuration::get('PS_SHOP_NAME'),
-            'redirect_url' => $this->module_link.'&active_method='.Tools::getValue('method'),
+            'redirect_url' => str_replace("http://", "https://", $redirect_link),
         );
         $sdk = new BraintreeSDK(Configuration::get('PAYPAL_SANDBOX'));
         return $sdk->getUrlConnect($connect_params);
@@ -1633,7 +1634,7 @@ class PayPal extends PaymentModule
             'country_code'  => Tools::strtoupper($country),
             'postal_code'   => Configuration::get('PS_SHOP_CODE', null, null, null, ''),
             'state'         => Configuration::get('PS_SHOP_STATE_ID', null, null, null, ''),
-            'return_url'    => $return_url,
+            'return_url'    => str_replace("http://", "https://", $return_url),
             'first_name'    => $this->context->employee->firstname,
             'last_name'     => $this->context->employee->lastname,
             'shop_name'     => Configuration::get('PS_SHOP_NAME', null, null, null, ''),
