@@ -314,7 +314,7 @@
                     {l s='If you have just created your PayPal account, check the email sent by PayPal to confirm your email address.' mod='paypal'}<br>
                     {l s='You must have a [1]PayPal Business[/1] Account. Otherwise, your personal account should be converted to a Business account.' tags=['<a href="https://www.paypal.com/us/webapps/mpp/set-up-paypal-business-account" target="_blank">'] mod='paypal'}
                 </p>
-            {else}
+            {elseif isset($bt_active) }
                 <p class="alert alert-warning">
                     {l s='If you have just created your Braintree account, check the email sent by Braintree to confirm your email address.' mod='paypal'}<br>
                 </p>
