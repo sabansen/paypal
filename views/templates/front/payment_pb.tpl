@@ -65,10 +65,10 @@
 
 <script>
     var paypal_braintree = {
-        authorization : '{$braintreeToken}',
-        amount : {$braintreeAmount},
-        mode : '{$mode}',
-        currency : '{$currency}'
+        authorization : '{$braintreeToken|escape:'htmlall':'UTF-8'}',
+        amount : {$braintreeAmount|escape:'htmlall':'UTF-8'},
+        mode : '{$mode|escape:'htmlall':'UTF-8'}',
+        currency : '{$currency|escape:'htmlall':'UTF-8'}'
     };
     paypal_braintree.translations = {
         empty_nonce:"{l s='Click paypal button first' mod='paypal'}"

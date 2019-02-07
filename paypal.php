@@ -445,7 +445,7 @@ class PayPal extends PaymentModule
         if (!Configuration::get('PS_COUNTRY_DEFAULT')) {
             $link = $this->context->link->getAdminLink('AdminLocalization', true);
             if ($ajax && strpos($this->context->link->getAdminLink('AdminLocalization', true), '/') == 0) {
-                $link = substr($this->context->link->getAdminLink('AdminLocalization', true), 1);
+                $link = Tools::substr($this->context->link->getAdminLink('AdminLocalization', true), 1);
             }
             $requirements .= $this->displayError($this->l('To activate a payment solution, please select your default country on the following page:').
             '<a target="_blank" href="'.$link.'"> '.$this->l('Localization').'</a>');

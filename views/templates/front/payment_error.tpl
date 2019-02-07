@@ -57,14 +57,14 @@
                     <div class="table-responsive-row clearfix">
                         <p class="paypal_error_msg">
                             {if $error_msg == '' && $msg_long == ''}
-                                {if $error_code}<span class="code">[{$error_code}]</span>{/if}
+                                {if $error_code}<span class="code">[{$error_code|escape:'htmlall':'UTF-8'}]</span>{/if}
                                 {l s='Unexpected error occurred.' mod='paypal'}
                             {else}
-                                {if $error_code}<span class="code">[{$error_code}]</span>{/if}
-                                {if $error_msg}<span class="short">{$error_msg}</span>{/if}
+                                {if $error_code}<span class="code">[{$error_code|escape:'htmlall':'UTF-8'}]</span>{/if}
+                                {if $error_msg}<span class="short">{$error_msg|escape:'htmlall':'UTF-8'}</span>{/if}
                                 <br>
                                 {if $msg_long && $msg_long != $error_msg}
-                                    <span class="long">{l s='Additional error message : ' mod='paypal'}{$msg_long}</span>
+                                    <span class="long">{l s='Additional error message : ' mod='paypal'}{$msg_long|escape:'htmlall':'UTF-8'}</span>
                                 {/if}
                             {/if}
                         </p>

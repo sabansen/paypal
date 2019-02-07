@@ -45,8 +45,8 @@ class PaypalException extends Exception
      * @param string $message
      * @param string $message_long
      */
-    public function __construct($code = 0, $message = '',  $message_long = '') {
-
+    public function __construct($code = 0, $message = '', $message_long = '')
+    {
         $this->message_long = $message_long;
         // make sure everything is assigned properly
         parent::__construct($message, $code);

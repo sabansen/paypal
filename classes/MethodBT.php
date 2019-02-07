@@ -316,7 +316,7 @@ class MethodBT extends AbstractMethodPaypal
     private function initConfig()
     {
         $this->mode = Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
-        $this->gateway = new Braintree_Gateway(['accessToken' => Configuration::get('PAYPAL_'.$this->mode.'_BRAINTREE_ACCESS_TOKEN') ]);
+        $this->gateway = new Braintree_Gateway(array('accessToken' => Configuration::get('PAYPAL_'.$this->mode.'_BRAINTREE_ACCESS_TOKEN')));
         $this->error = '';
     }
 
@@ -362,9 +362,9 @@ class MethodBT extends AbstractMethodPaypal
 
         if ($currency) {
             try {
-                $response = $this->gateway->merchantAccount()->createForCurrency([
+                $response = $this->gateway->merchantAccount()->createForCurrency(array(
                     'currency' => $currency,
-                ]);
+                ));
                 if ($response->success) {
                     $result[$response->merchantAccount->currencyIsoCode] = $response->merchantAccount->id;
                 }
@@ -374,9 +374,9 @@ class MethodBT extends AbstractMethodPaypal
             $currencies = Currency::getCurrencies();
             foreach ($currencies as $curr) {
                 try {
-                    $response = $this->gateway->merchantAccount()->createForCurrency([
+                    $response = $this->gateway->merchantAccount()->createForCurrency(array(
                         'currency' => $curr['iso_code'],
-                    ]);
+                    ));
                     if ($response->success) {
                         $result[$response->merchantAccount->currencyIsoCode] = $response->merchantAccount->id;
                     }
@@ -559,11 +559,11 @@ class MethodBT extends AbstractMethodPaypal
             } else {
                 if (Tools::getValue('save_card_in_vault') || Tools::getValue('save_account_in_vault')) {
                     if (Configuration::get('PAYPAL_BT_CARD_VERIFICATION') && Tools::getValue('save_card_in_vault')) {
-                        $payment_method = $this->gateway->paymentMethod()->create([
+                        $payment_method = $this->gateway->paymentMethod()->create(array(
                             'customerId' => $paypal_customer->reference,
                             'paymentMethodNonce' => $token_payment,
                             'options' => array('verifyCard' => true),
-                        ]);
+                        ));
 
                         if (isset($payment_method->verification) && $payment_method->verification->status != 'verified') {
                             $error_msg = $paypal->l('Card verification repond with status').' '.$payment_method->verification->status.'. ';
@@ -901,6 +901,7 @@ class MethodBT extends AbstractMethodPaypal
     public function searchTransactions($ids)
     {
         $this->initConfig();
+        //method Braintree_TransactionSearch::ids() exists in SDK, alias is used.
         $ids_transaction =  Braintree_TransactionSearch::ids()->in($ids);
         $collection = $this->gateway->transaction()->search([
             $ids_transaction

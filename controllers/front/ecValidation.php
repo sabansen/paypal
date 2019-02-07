@@ -53,7 +53,9 @@ class PaypalEcValidationModuleFrontController extends ModuleFrontController
             Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $ex_detailed_message)));
         } catch (PaypalAddons\classes\PaypalException $e) {
             Tools::redirect(Context::getContext()->link->getModuleLink(
-                'paypal', 'error', array(
+                'paypal',
+                'error',
+                array(
                     'error_code' => $e->getCode(),
                     'error_msg' => $e->getMessage(),
                     'msg_long' => $e->getMessageLong()
@@ -61,7 +63,9 @@ class PaypalEcValidationModuleFrontController extends ModuleFrontController
             ));
         } catch (Exception $e) {
             Tools::redirect(Context::getContext()->link->getModuleLink(
-                'paypal', 'error', array(
+                'paypal',
+                'error',
+                array(
                     'error_code' => $e->getCode(),
                     'error_msg' => $e->getMessage()
                 )

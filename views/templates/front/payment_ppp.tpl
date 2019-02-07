@@ -47,9 +47,9 @@
 
 <script type="text/javascript">
     var ppp_approval_url = '{$approval_url_ppp nofilter}';
-    var ppp_mode = '{$mode}';
-    var ppp_language_iso_code = '{$ppp_language_iso_code}';
-    var ppp_country_iso_code = '{$ppp_country_iso_code}';
+    var ppp_mode = '{$mode|escape:'htmlall':'UTF-8'}';
+    var ppp_language_iso_code = '{$ppp_language_iso_code|escape:'htmlall':'UTF-8'}';
+    var ppp_country_iso_code = '{$ppp_country_iso_code|escape:'htmlall':'UTF-8'}';
     var ajax_patch_url = '{$ajax_patch_url nofilter}';
     var waiting_redirection = "{l s='In few seconds you will be redirected to PayPal. Please wait.' mod='paypal'}";
 </script>

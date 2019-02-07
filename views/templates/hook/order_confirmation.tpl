@@ -24,7 +24,7 @@
 *}
 {if isset($error_msg)}
 <div class="alert alert-danger">
-    {$error_msg}
+    {$error_msg|escape:'htmlall':'UTF-8'}
 </div>
 {/if}
 <li id="paypal_transaction_id">
@@ -33,30 +33,30 @@
     {else}
         {l s='Paypal transaction id :' mod='paypal'}
     {/if}
-    {$transaction_id}
+    {$transaction_id|escape:'htmlall':'UTF-8'}
 </li>
 {if isset($ppp_information)}
     <dl>
         <dd>
-            {l s='The bank name' mod='paypal'} : {$ppp_information->recipient_banking_instruction->bank_name}
+            {l s='The bank name' mod='paypal'} : {$ppp_information->recipient_banking_instruction->bank_name|escape:'htmlall':'UTF-8'}
         </dd>
         <dd>
-            {l s='Account holder name' mod='paypal'} : {$ppp_information->recipient_banking_instruction->account_holder_name}
+            {l s='Account holder name' mod='paypal'} : {$ppp_information->recipient_banking_instruction->account_holder_name|escape:'htmlall':'UTF-8'}
         </dd>
         <dd>
-            {l s='IBAN' mod='paypal'} : {$ppp_information->recipient_banking_instruction->international_bank_account_number}
+            {l s='IBAN' mod='paypal'} : {$ppp_information->recipient_banking_instruction->international_bank_account_number|escape:'htmlall':'UTF-8'}
         </dd>
         <dd>
-            {l s='BIC' mod='paypal'} : {$ppp_information->recipient_banking_instruction->bank_identifier_code}
+            {l s='BIC' mod='paypal'} : {$ppp_information->recipient_banking_instruction->bank_identifier_code|escape:'htmlall':'UTF-8'}
         </dd>
         <dd>
-            {l s='Amount due / currency' mod='paypal'} : {$ppp_information->amount->value} {$ppp_information->amount->currency}
+            {l s='Amount due / currency' mod='paypal'} : {$ppp_information->amount->value|escape:'htmlall':'UTF-8'} {$ppp_information->amount->currency|escape:'htmlall':'UTF-8'}
         </dd>
         <dd>
-            {l s='Payment due date' mod='paypal'} : {$ppp_information->payment_due_date}
+            {l s='Payment due date' mod='paypal'} : {$ppp_information->payment_due_date|escape:'htmlall':'UTF-8'}
         </dd>
         <dd>
-            {l s='Reference' mod='paypal'} : {$ppp_information->reference_number}
+            {l s='Reference' mod='paypal'} : {$ppp_information->reference_number|escape:'htmlall':'UTF-8'}
         </dd>
     </dl>
 {/if}

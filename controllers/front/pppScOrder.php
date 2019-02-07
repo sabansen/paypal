@@ -48,7 +48,9 @@ class PaypalPppScOrderModuleFrontController extends ModuleFrontController
         } catch (PayPal\Exception\PayPalConnectionException $e) {
             $decoded_message = Tools::jsonDecode($e->getData());
             Tools::redirect(Context::getContext()->link->getModuleLink(
-                'paypal', 'error', array(
+                'paypal',
+                'error',
+                array(
                     'error_code' => $e->getCode(),
                     'error_msg' => $decoded_message->message,
                     'msg_long' => $decoded_message->name.' - '.$decoded_message->details[0]->issue

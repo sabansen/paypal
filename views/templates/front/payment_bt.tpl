@@ -31,7 +31,7 @@
             <div class="payment_module braintree-card">
                 <form action="{$braintreeSubmitUrl}" id="braintree-form" method="post">
                 {if isset($init_error)}
-                    <div class="alert alert-danger">{$init_error}</div>
+                    <div class="alert alert-danger">{$init_error|escape:'htmlall':'UTF-8'}</div>
                     <div id="logo_braintree_by_paypal"><img src="https://s3-us-west-1.amazonaws.com/bt-partner-assets/paypal-braintree.png" height="20px"></div>
                 {else}
 
@@ -64,7 +64,7 @@
                         </div>
 
                         <input type="hidden" name="deviceData" id="deviceData"/>
-                        <input type="hidden" name="client_token" value="{$braintreeToken}">
+                        <input type="hidden" name="client_token" value="{$braintreeToken|escape:'htmlall':'UTF-8'}">
                         <input type="hidden" name="liabilityShifted" id="liabilityShifted"/>
                         <input type="hidden" name="liabilityShiftPossible" id="liabilityShiftPossible"/>
                         <input type="hidden" name="payment_method_nonce" id="payment_method_nonce"/>
@@ -89,9 +89,9 @@
 
 <script>
 
-    var authorization = '{$braintreeToken}';
-    var bt_amount = {$braintreeAmount};
-    var check3DS = {$check3Dsecure};
+    var authorization = '{$braintreeToken|escape:'htmlall':'UTF-8'}';
+    var bt_amount = {$braintreeAmount|escape:'htmlall':'UTF-8'};
+    var check3DS = {$check3Dsecure|escape:'htmlall':'UTF-8'};
     var bt_translations = {
         client:"{l s='Error create Client' mod='paypal'}",
         card_nmb:"{l s='Card number' mod='paypal'}",
