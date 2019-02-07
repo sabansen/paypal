@@ -439,12 +439,16 @@ class PayPal extends PaymentModule
     /**
      * Check requirement before method activation
      */
-    private function _checkRequirements()
+    private function _checkRequirements($ajax = false)
     {
         $requirements = '';
         if (Configuration::get('PS_COUNTRY_DEFAULT')) {
+            $link = $this->context->link->getAdminLink('AdminLocalization', true);
+            if ($ajax && strpos($this->context->link->getAdminLink('AdminLocalization', true), '/') == 0) {
+                $link = substr($this->context->link->getAdminLink('AdminLocalization', true), 1);
+            }
             $requirements .= $this->displayError($this->l('To activate a payment solution, please select your default country on the following page:').
-            '<a href="'.$this->context->link->getAdminLink('AdminLocalization', true).'"> '.$this->l('Localization').'</a>');
+            '<a target="_blank" href="'.$link.'"> '.$this->l('Localization').'</a>');
         }
         if ($tls_check = $this->_checkTLSVersion()) {
             $requirements .= $this->displayError($this->l('Tls verification failed.').' '.$tls_check);
@@ -486,19 +490,18 @@ class PayPal extends PaymentModule
      */
     public function ajaxProcessCheckRequirements()
     {
-        $validation = $this->_checkRequirements();
+        $validation = $this->_checkRequirements(true);
 
         die(json_encode($validation));
     }
 
     public function getContent()
     {
-        /*if (!Configuration::get('PAYPAL_REQUIREMENTS')) {
+        $requirements = '';
+        if (!Configuration::get('PAYPAL_REQUIREMENTS')) {
             $requirements = $this->_checkRequirements();
             Configuration::updateValue('PAYPAL_REQUIREMENTS', 1);
-        }*/
-        $requirements = $this->_checkRequirements();
-       // print_r(Configuration::get('PS_COUNTRY_DEFAULT'));die;
+        }
         $this->_postProcess();
         $country_default = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
 
@@ -627,9 +630,7 @@ class PayPal extends PaymentModule
         $this->context->controller->addCSS($this->_path.'views/css/paypal-bo.css', 'all');
 
         $result = $this->message;
-        if (isset($config['block_info'])) {
-            $result .= $config['block_info'];
-        }
+
         $result .= $this->display(__FILE__, 'views/templates/admin/configuration.tpl').$form;
         if (isset($config['shortcut'])) {
             $result .= $config['shortcut'];

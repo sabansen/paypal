@@ -192,13 +192,9 @@ class MethodEC extends AbstractMethodPaypal
             'access_token_live' => Configuration::get('PAYPAL_LIVE_ACCESS'),
             'ec_card_active' => Configuration::get('PAYPAL_API_CARD'),
             'ec_paypal_active' => !Configuration::get('PAYPAL_API_CARD'),
-            'need_rounding' => ((Configuration::get('PS_ROUND_TYPE') == Order::ROUND_ITEM) || (Configuration::get('PS_PRICE_ROUND_MODE') != PS_ROUND_HALF_UP) ? 0 : 1),
+            'need_rounding' => ((Configuration::get('PS_ROUND_TYPE') == Order::ROUND_ITEM) && (Configuration::get('PS_PRICE_ROUND_MODE') == PS_ROUND_HALF_UP) ? 0 : 1),
             'ec_active' => Configuration::get('PAYPAL_EXPRESS_CHECKOUT'),
         ));
-
-        if (Configuration::get('PS_ROUND_TYPE') != Order::ROUND_ITEM || Configuration::get('PS_PRICE_ROUND_MODE') != PS_ROUND_HALF_UP) {
-            $params['block_info'] = $module->display(_PS_MODULE_DIR_.$module->name, 'views/templates/admin/block_info.tpl');
-        }
 
         $params['form'] = $this->getApiUserName($module);
 
@@ -402,9 +398,13 @@ class MethodEC extends AbstractMethodPaypal
             }
         }
 
-        if (!Configuration::get('PAYPAL_USERNAME_'.$mode) || !Configuration::get('PAYPAL_PSWD_'.$mode)
-            || !Configuration::get('PAYPAL_SIGNATURE_'.$mode)) {
-            $paypal->errors .= $paypal->displayError($paypal->l('An error occurred. Please, check your credentials Paypal.'));
+        if ($mode == 'SANDBOX' && (!Configuration::get('PAYPAL_USERNAME_'.$mode) || !Configuration::get('PAYPAL_PSWD_'.$mode)
+            || !Configuration::get('PAYPAL_SIGNATURE_'.$mode))) {
+            $paypal->errors .= $paypal->displayError($paypal->l('You are trying to switch to sandbox account. You should use your test credentials. Please go to the "Products" tab and click on "Modify\' for activating the sandbox version of the selected product.'));
+        }
+        if ($mode == 'LIVE' && (!Configuration::get('PAYPAL_USERNAME_'.$mode) || !Configuration::get('PAYPAL_PSWD_'.$mode)
+                || !Configuration::get('PAYPAL_SIGNATURE_'.$mode))) {
+            $paypal->errors .= $paypal->displayError($paypal->l('You are trying to switch to production account. You should use your production credentials. Please go to the "Products" tab and click on "Modify\' for activating the production version of the selected product.'));
         }
     }
 

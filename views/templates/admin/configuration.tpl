@@ -39,6 +39,7 @@
     <ul class="nav nav-pills navbar-separator">
         <li {if !isset($ec_paypal_active) && !isset($ec_card_active) && !isset($bt_active) && !isset($ppp_active)}class="active"{/if}><a data-toggle="pill" href="#paypal_conf"><span>{l s='Products' mod='paypal'}</span></a></li>
         <li {if isset($ec_paypal_active) || isset($ec_card_active) || isset($bt_active) || isset($ppp_active)}class="active"{/if}><a data-toggle="pill" href="#paypal_params"><span>{l s='Settings' mod='paypal'}</span></a></li>
+        <li><a data-toggle="pill" href="#paypal_help"><span>{l s='Help' mod='paypal'}</span></a></li>
     </ul>
     <div class="tab-content">
         <div id="paypal_conf"  class="tab-pane fade {if !isset($ec_paypal_active) && !isset($ec_card_active) && !isset($bt_active) && !isset($ppp_active)}in active{/if}">
@@ -66,13 +67,6 @@
             </div>
         </div>
         <div style="clear:both;"></div>
-
-        <div class="form-group col-sm-12">
-            <button  name="submit-ckeck_requirements"  class="btn btn-info" id="ckeck_requirements">{l s='Check requirements' mod='paypal'}</button>
-            <br><br>
-            <div class="action_response"></div>
-        </div>
-
 
         <div style="clear:both;"></div>
         <div class="active-products">
@@ -314,9 +308,53 @@
         {/if}
         <div class="configuration-block"></div>
     </div>
-
+        <div id="paypal_help" class="tab-pane fade col-sm-12">
+            {if isset($ec_paypal_active) || isset($ec_card_active) || isset($ppp_active)}
+                <p class="alert alert-warning">
+                    {l s='If you have just created your PayPal account, check the email sent by PayPal to confirm your email address.' mod='paypal'}<br>
+                    {l s='You must have a PayPal [1]Business Account[/1]. Otherwise, your personal account should be converted to a Business account.' tags=['<a href="https://www.paypal.com/us/webapps/mpp/set-up-paypal-business-account" target="_blank">'] mod='paypal'}
+                </p>
+            {else}
+                <p class="alert alert-warning">
+                    {l s='If you have just created your Braintree account, check the email sent by Braintree to confirm your email address.' mod='paypal'}<br>
+                </p>
+            {/if}
+            {if isset($need_rounding) && $need_rounding}
+                {include file="./block_info.tpl"}
+            {/if}
+            <div class="panel help">
+                <ul class="tick">
+                    <li class="paypal-bold li-padding">{l s='Discover module ducumentation before configuration' mod='paypal'}</li>
+                    <div class="btn-padding form-group"">
+                        <a target="_blank" href="https://addons.prestashop.com/documentation/ee767c22c12e349aab3767a6cf32f389644d5964" class="btn btn-default">
+                            {l s='Download User Documentation' mod='paypal'}
+                        </a>
+                    </div>
+                    <li class="paypal-bold li-padding">{l s='Check requirements before installation' mod='paypal'}</li>
+                    {l s='Are you using the required TLS version? Did you select a default country? Click on the button below and check if all requirements are completed!' mod='paypal'}
+                    <div class="btn-padding form-group"">
+                        <button  name="submit-ckeck_requirements"  class="btn btn-default" id="ckeck_requirements">{l s='Check requirements' mod='paypal'}</button>
+                        <br><br>
+                        <div class="action_response"></div>
+                    </div>
+                    <li class="paypal-bold li-padding">{l s='Do you still have any questions?' mod='paypal'}</li>
+                    {l s='Contact us! We will be happy to help!' mod='paypal'}
+                    <div class="btn-padding form-group"">
+                        <a target="_blank" href="https://www.paypal.com/fr/webapps/mpp/contact-us" class="btn btn-default">
+                            {l s='Contact our product team for any functional questions' mod='paypal'}
+                        </a>
+                    </div>
+                    <div class="btn-padding form-group">
+                        <a target="_blank" href="https://addons.prestashop.com/fr/contactez-nous?id_product=1748" class="btn btn-default">
+                            {l s='Contact our technical support' mod='paypal'}
+                        </a>
+                    </div>
+                </ul>
+            </div>
+        </div>
     </div>
 </div>
+
 {if isset($ppp_available)}
 <div style="display: none;">
     <div id="content-fancybox-configuration">
@@ -418,7 +456,6 @@
     $("#ckeck_requirements").click( function() {
         $.ajax({
             url: 'ajax-tab.php',
-            context: this,
             dataType: 'json',
             data : {
                 ajax : true,
@@ -431,7 +468,7 @@
                 if(data) {
                     $('.action_response').html(data);
                 } else {
-                    $('.action_response').html('<p class="alert alert-success">{l s='Perfect ! All the requirements for the activation are fulfilled.' mod='paypal'}</p>');
+                    $('.action_response').html('<p class="alert alert-success">{l s='Your shop configuration is OK. You can start to configure the PayPal module.' mod='paypal'}</p>');
                 }
             }
         });

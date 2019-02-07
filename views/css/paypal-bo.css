@@ -219,6 +219,12 @@ p.contentPara {
 div#config_logo-images-thumbnails img {
     max-height: 90px;
 }
+#paypal_help .btn-padding {
+    margin-top: 12px;
+}
+#paypal_help .li-padding {
+    margin-top: 20px;
+}
 @media only screen and (max-width: 1240px) {
     #paypal_conf .box ul {
         width: 55%;
