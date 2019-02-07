@@ -38,9 +38,8 @@ function upgrade_module_4_3_0($module)
     Configuration::updateValue('PAYPAL_MERCHANT_ID_SANDBOX', '');
     Configuration::updateValue('PAYPAL_MERCHANT_ID_LIVE', '');
 
-    if(Configuration::get('PAYPAL_METHOD') == 'EC')
-    {
-        Configuration::updateValue('PAYPAL_METHOD','');
+    if (Configuration::get('PAYPAL_METHOD') == 'EC') {
+        Configuration::updateValue('PAYPAL_METHOD', '');
 
         Configuration::updateValue('PAYPAL_USERNAME_SANDBOX', '');
         Configuration::updateValue('PAYPAL_PSWD_SANDBOX', '');

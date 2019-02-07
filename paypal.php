@@ -25,6 +25,7 @@
  */
 
 use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
+
 if (!defined('_PS_VERSION_')) {
     exit;
 }

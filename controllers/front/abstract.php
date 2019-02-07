@@ -47,7 +47,6 @@ abstract class PaypalAbstarctModuleFrontController extends ModuleFrontController
         if ($this->checkAccess()) {
             // postProcess handles ajaxProcess
             $this->postProcess();
-
         }
         if (!empty($this->redirectUrl)) {
             Tools::redirect($this->redirectUrl);
