@@ -664,7 +664,6 @@ class MethodBT extends AbstractMethodPaypal
             $msg .= sprintf($paypal->l('Probably this customer has been already created in %s mode. Please create new prestashop client for this mode.'), $mode2);
             throw new Exception($msg);
         }
-
     }
 
     /**
@@ -903,9 +902,7 @@ class MethodBT extends AbstractMethodPaypal
         $this->initConfig();
         //method Braintree_TransactionSearch::ids() exists in SDK, alias is used.
         $ids_transaction =  Braintree_TransactionSearch::ids()->in($ids);
-        $collection = $this->gateway->transaction()->search([
-            $ids_transaction
-        ]);
+        $collection = $this->gateway->transaction()->search(array($ids_transaction));
         return $collection;
     }
 
