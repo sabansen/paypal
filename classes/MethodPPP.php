@@ -131,6 +131,14 @@ class MethodPPP extends AbstractMethodPaypal
                 }
             }
         }
+
+        $mode = Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
+        if ($mode == 'SANDBOX' && (!Configuration::get('PAYPAL_SANDBOX_CLIENTID') || !Configuration::get('PAYPAL_SANDBOX_SECRET'))) {
+            $paypal->errors .= $paypal->displayError($paypal->l('You are trying to switch to sandbox account. You should use your test credentials. Please go to the "Products" tab and click on "Modify\' for activating the sandbox version of the selected product.'));
+        }
+        if ($mode == 'LIVE' && (!Configuration::get('PAYPAL_LIVE_CLIENTID') || !Configuration::get('PAYPAL_LIVE_SECRET'))) {
+            $paypal->errors .= $paypal->displayError($paypal->l('You are trying to switch to production account. You should use your production credentials. Please go to the "Products" tab and click on "Modify\' for activating the production version of the selected product.'));
+        }
     }
 
     public function getConfig(Paypal $module)
