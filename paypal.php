@@ -442,7 +442,7 @@ class PayPal extends PaymentModule
     private function _checkRequirements($ajax = false)
     {
         $requirements = '';
-        if (Configuration::get('PS_COUNTRY_DEFAULT')) {
+        if (!Configuration::get('PS_COUNTRY_DEFAULT')) {
             $link = $this->context->link->getAdminLink('AdminLocalization', true);
             if ($ajax && strpos($this->context->link->getAdminLink('AdminLocalization', true), '/') == 0) {
                 $link = substr($this->context->link->getAdminLink('AdminLocalization', true), 1);

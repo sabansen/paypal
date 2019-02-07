@@ -312,7 +312,7 @@
             {if isset($ec_paypal_active) || isset($ec_card_active) || isset($ppp_active)}
                 <p class="alert alert-warning">
                     {l s='If you have just created your PayPal account, check the email sent by PayPal to confirm your email address.' mod='paypal'}<br>
-                    {l s='You must have a PayPal [1]Business Account[/1]. Otherwise, your personal account should be converted to a Business account.' tags=['<a href="https://www.paypal.com/us/webapps/mpp/set-up-paypal-business-account" target="_blank">'] mod='paypal'}
+                    {l s='You must have a [1]PayPal Business[/1] Account. Otherwise, your personal account should be converted to a Business account.' tags=['<a href="https://www.paypal.com/us/webapps/mpp/set-up-paypal-business-account" target="_blank">'] mod='paypal'}
                 </p>
             {else}
                 <p class="alert alert-warning">
