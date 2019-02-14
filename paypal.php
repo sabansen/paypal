@@ -475,7 +475,7 @@ class PayPal extends PaymentModule
             if ($response != 'ok') {
                 $curl_info = curl_getinfo($curl);
                 if ($curl_info['http_code'] == 401) {
-                    $error = $paypal->l('401 Unauthorized');
+                    $error = $paypal->l('401 Unauthorized. Please note that the TLS verification can not be done if you have an htaccess password protection enabled on your web site.');
                 } else {
                     $error = curl_error($curl);
                 }
@@ -505,7 +505,6 @@ class PayPal extends PaymentModule
         }
         $this->_postProcess();
         $country_default = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
-
 
         $lang = $this->context->country->iso_code;
         $img_esc = $this->_path."/views/img/ECShortcut/".Tools::strtolower($lang)."/checkout.png";
