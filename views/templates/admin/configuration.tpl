@@ -326,7 +326,7 @@
                 <ul class="tick">
                     <li class="paypal-bold li-padding">{l s='Discover module ducumentation before configuration' mod='paypal'}</li>
                     <div class="btn-padding form-group"">
-                        <a target="_blank" href="https://addons.prestashop.com/documentation/ee767c22c12e349aab3767a6cf32f389644d5964" class="btn btn-default">
+                        <a target="_blank" href="https://addons.prestashop.com/documentation/e582dd0854d8994e815d6c0e8886e703bfdf7713" class="btn btn-default">
                             {l s='Download User Documentation' mod='paypal'}
                         </a>
                     </div>

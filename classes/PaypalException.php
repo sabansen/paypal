@@ -40,10 +40,10 @@ class PaypalException extends Exception
 
     /**
      * PaypalException constructor.
-     * Redefine the exception so message isn't optional
+     * Redefine the exception construct so add long message
      * @param int $code
-     * @param string $message
-     * @param string $message_long
+     * @param string $message not required
+     * @param string $message_long not required
      */
     public function __construct($code = 0, $message = '', $message_long = '')
     {
