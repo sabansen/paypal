@@ -15,6 +15,7 @@ Save log in database.
 |id_paypal_log|integer|ID of the record|isUnsignedId|
 |id_order|integer|ID of PS order|Not empty if order exist.|
 |id_cart|integer|ID of PS cart|Not empty if order doesn't exist yet.|
+|id_shop|integer|Shop ID||
 |id_transaction|string|transaction id from API response||
 |log|string|Log message, like API response or error. Example: error code - short message - message long|Required |
 |status|string|Info or Error||
