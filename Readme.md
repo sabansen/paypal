@@ -46,6 +46,15 @@ Roadmap Microsite:
 Check the version of your URL’s underlying security library. If you use OpenSSL
 libraries, please update them to at least version 1.0.1c.
 
+##Instalation
+
+To install module on PrestaShop, download zip package form [product page on PrestaShop Addons][addons].
+
+This module contain composer.json file. If you clone or download the module from github
+repository, run the ```composer install``` from the root module folder.
+
+See the [composer documentation][composer-doc] to learn more about the composer.json file.
+
 ## Contributing
 
 PrestaShop modules are open-source extensions to the PrestaShop e-commerce solution. Everyone is welcome and even encouraged to contribute with their own improvements.
@@ -81,3 +90,5 @@ That's it: you have contributed to this open-source project! Congratulations!
 [6]: https://addons.prestashop.com/documentation/ee767c22c12e349aab3767a6cf32f389644d5964
 [paypal-3.12]: https://github.com/202-ecommerce/paypal/tree/release/3.12.1
 [paypal-4]: https://github.com/202-ecommerce/paypal/tree/master
+[addons]: https://addons.prestashop.com/en/payment-card-wallet/1748-paypal-braintree-official.html
+[composer-doc]: https://getcomposer.org/doc/04-schema.md
