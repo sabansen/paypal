@@ -73,7 +73,7 @@ function ECSInContext(combination) {
     $.ajax({
         url: ec_sc_action_url,
         type: "GET",
-        data: 'getToken=1&id_product='+$('#paypal_payment_form_cart input[name="id_product"]').val()+'&quantity='+$('[name="qty"]').val()+'&combination='+combination.join('|'),
+        data: 'getToken=1&source_page=product&id_product='+$('#paypal_payment_form_cart input[name="id_product"]').val()+'&quantity='+$('[name="qty"]').val()+'&combination='+combination.join('|'),
         success: function (token) {
             var url = paypal.checkout.urlPrefix +token;
             paypal.checkout.startFlow(url);

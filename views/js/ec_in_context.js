@@ -30,7 +30,7 @@ function ECInContext() {
 
         success: function (json) {
             if (json.success) {
-                var url = paypal.checkout.urlPrefix +token;
+                var url = paypal.checkout.urlPrefix +json.token;
                 paypal.checkout.startFlow(url);
             } else {
                 paypal.checkout.closeFlow();

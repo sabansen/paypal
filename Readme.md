@@ -46,7 +46,7 @@ Roadmap Microsite:
 Check the version of your URL’s underlying security library. If you use OpenSSL
 libraries, please update them to at least version 1.0.1c.
 
-##Instalation
+##Installation
 
 To install module on PrestaShop, download zip package form [product page on PrestaShop Addons][addons].
 
