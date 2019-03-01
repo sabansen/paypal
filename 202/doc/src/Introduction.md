@@ -9,7 +9,7 @@ PayPal & Braintree official Module
 
 This module is for PrestaShop 1.7.*
 
-###Instalation
+### Instalation
 
 To install module on PrestaShop, download zip package form [product page on PrestaShop Addons][addons]
 

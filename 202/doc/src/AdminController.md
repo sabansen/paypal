@@ -9,7 +9,7 @@ Coming in v.4.5
 
 Second level menu "PayPal" with several third-level menus.
 
-##Structure
+## Structure
 
 Second level menu is AdminPaypalConfiguration controller, which replace content of getContent function.
 
@@ -18,11 +18,11 @@ Third-level menus :
 * Logs (AdminPaypalProcessLoggerController)
 * Stats (AdminPaypalStatsController)
 
-###Stats
+### Stats
 
 This tab redirect to external url of PayPal or Braintree stats
 
-###Logs
+### Logs
 
 ModuleAdminController from PPBTlib SDK. 
 Use Helper list.
@@ -30,7 +30,7 @@ Use Helper list.
 Associated object class name : PaypalLog.
 Associated table name : paypal_log.
 
-###Configurations
+### Configurations
 
 The system of tabs : 
 - General Configuration 

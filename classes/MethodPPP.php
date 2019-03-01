@@ -768,11 +768,11 @@ class MethodPPP extends AbstractMethodPaypal
 
     public function renderExpressCheckoutShortCut(&$context, $type, $page_source)
     {
-        $lang = $context->country->iso_code;
+        $lang = $context->language->iso_code;
         $environment = (Configuration::get('PAYPAL_SANDBOX')?'sandbox':'live');
         $img_esc = "modules/paypal/views/img/ECShortcut/".Tools::strtolower($lang)."/buy/buy.png";
 
-        if (!file_exists(_PS_ROOT_DIR_.$img_esc)) {
+        if (!file_exists(_PS_ROOT_DIR_.'/'.$img_esc)) {
             $img_esc = "modules/paypal/views/img/ECShortcut/us/buy/buy.png";
         }
         $shop_url = Context::getContext()->link->getBaseLink(Context::getContext()->shop->id, true);
