@@ -191,9 +191,17 @@ class MethodEC extends AbstractMethodPaypal
             'access_token_sandbox' => Configuration::get('PAYPAL_SANDBOX_ACCESS'),
             'access_token_live' => Configuration::get('PAYPAL_LIVE_ACCESS'),
             'ec_card_active' => Configuration::get('PAYPAL_API_CARD'),
-            'ec_paypal_active' => !Configuration::get('PAYPAL_API_CARD'),
+            'ec_paypal_active' => !Configuration::get('PAYPAL_API_CARD') || (Configuration::get('PAYPAL_EXPRESS_CHECKOUT') && Context::getContext()->country->iso_code == 'DE'),
             'need_rounding' => ((Configuration::get('PS_ROUND_TYPE') == Order::ROUND_ITEM) && (Configuration::get('PS_PRICE_ROUND_MODE') == PS_ROUND_HALF_UP) ? 0 : 1),
             'ec_active' => Configuration::get('PAYPAL_EXPRESS_CHECKOUT'),
+        ));
+
+        $context->smarty->assign(array(
+            'api_username' => Configuration::get('PAYPAL_USERNAME_'.$mode),
+            'api_password' => Configuration::get('PAYPAL_PSWD_'.$mode),
+            'api_signature' => Configuration::get('PAYPAL_SIGNATURE_'.$mode),
+            'merchant_id' => Configuration::get('PAYPAL_MERCHANT_ID_'.$mode),
+            'mode' => $mode
         ));
 
         $params['form'] = $this->getApiUserName($module);
@@ -339,6 +347,7 @@ class MethodEC extends AbstractMethodPaypal
             Configuration::updateValue('PAYPAL_'.$mode.'_ACCESS', 1);
             Configuration::updateValue('PAYPAL_MERCHANT_ID_'.$mode, $params['merchant_id']);
             Configuration::updateValue('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT', 1);
+            Configuration::updateValue('PAYPAL_API_CARD', $params['with_card']);
             Tools::redirect($paypal->module_link);
         }
         if (Tools::isSubmit('submit_shortcut')) {

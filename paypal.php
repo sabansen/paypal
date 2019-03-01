@@ -527,7 +527,9 @@ class PayPal extends PaymentModule
             'PAYPAL_LIVE_CLIENTID' => Configuration::get('PAYPAL_LIVE_CLIENTID'),
             'PAYPAL_LIVE_SECRET' => Configuration::get('PAYPAL_LIVE_SECRET'),
             'ssl_active' => Configuration::get('PS_SSL_ENABLED'),
+            'country_iso' => $this->context->country->iso_code
         ));
+
 
         if (getenv('PLATEFORM') != 'PSREADY' && in_array($country_default, $this->bt_countries)) {
             $this->context->smarty->assign(array(

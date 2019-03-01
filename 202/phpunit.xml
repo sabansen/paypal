@@ -36,6 +36,8 @@
                 <directory>./build/prestashop/modules/paypal/override</directory>
                 <directory>./build/prestashop/modules/paypal/upgrade</directory>
                 <directory>./build/prestashop/modules/paypal/sdk</directory>
+                <directory>./build/prestashop/modules/paypal/202</directory>
+                <directory>./build/prestashop/modules/paypal/vendor</directory>
                 <directory suffix="index.php">./build/prestashop/modules/paypal/</directory>
                 <directory suffix="index.php">./build/prestashop/modules/paypal/*/</directory>
                 <directory suffix="index.php">./build/prestashop/modules/paypal/*/*/</directory>
