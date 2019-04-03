@@ -45,7 +45,7 @@ $(document).ready( function() {
 	{literal}
 	if($('#in_context_checkout_enabled').val() != 1)
 	{
-		$('#payment_paypal_express_checkout').click(function() {
+        $(document).on('click','#payment_paypal_express_checkout', function() {
 			$('#paypal_payment_form_cart').submit();
 			return false;
 		});
