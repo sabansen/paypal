@@ -1,5 +1,5 @@
 ---
-name: 5. PayPal order
+name: 5. PayPal Log
 category: Entities
 ---
 
@@ -23,4 +23,15 @@ Save log in database.
 |tools|string|Cards, paypal, google or apple pay|Not required|
 |date_add|datetime|Date of the creation||
 
-Stock logs during 90 days. Purge logs with cron.
+### Hooks associated
+
+displayAdminOrderContentOrder
+
+displayAdminOrderTabOrder
+
+Display log recap on order page in the order tab. 
+Add tab with table :
+
+|DATE|Transaction|Description|Payment tool|
+|------|------|------|------|
+
