@@ -60,7 +60,6 @@ class PayPal extends PaymentModule
         $this->name = 'paypal';
         $this->tab = 'payments_gateways';
         $this->version = '4.4.3';
-        $this->author_address = '0x416357AF746680E3B2787841AB0e51d9BB684734';
         $this->author = 'PrestaShop';
         $this->display = 'view';
         $this->module_key = '336225a5988ad434b782f2d868d7bfcd';
@@ -130,7 +129,7 @@ class PayPal extends PaymentModule
 
         return true;
     }
-    
+
     /**
      * Install DataBase table
      * @return boolean if install was successfull
@@ -527,7 +526,9 @@ class PayPal extends PaymentModule
             'PAYPAL_LIVE_CLIENTID' => Configuration::get('PAYPAL_LIVE_CLIENTID'),
             'PAYPAL_LIVE_SECRET' => Configuration::get('PAYPAL_LIVE_SECRET'),
             'ssl_active' => Configuration::get('PS_SSL_ENABLED'),
+            'country_iso' => $this->context->country->iso_code
         ));
+
 
         if (getenv('PLATEFORM') != 'PSREADY' && in_array($country_default, $this->bt_countries)) {
             $this->context->smarty->assign(array(

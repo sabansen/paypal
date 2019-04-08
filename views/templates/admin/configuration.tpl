@@ -90,13 +90,20 @@
                     </p>
                     <div class="bottom">
                         <img src="{$img_checkout|escape:'html':'UTF-8'}" class="product-img">
-                        <a class="btn btn-default pull-right" href="{$return_url|escape:'html':'UTF-8'}&method=EC&with_card=0{if isset($ec_paypal_active) &&  $ec_paypal_active}&modify=1{/if}" >{if isset($ec_paypal_active) && $ec_paypal_active}{l s='Modify' mod='paypal'}{else}{l s='Activate' mod='paypal'}{/if}</a>
+                        <a class="btn btn-default pull-right"
+                           {if $country_iso == 'BR' || $country_iso == 'IN'}
+                                 href="#" onclick="display_popup('EC', 0)"
+                           {else}
+                                 href="{$return_url|escape:'html':'UTF-8'}&method=EC&with_card=0{if isset($ec_paypal_active) &&  $ec_paypal_active}&modify=1{/if}"
+                           {/if}>
+                            {if isset($ec_paypal_active) && $ec_paypal_active}{l s='Modify' mod='paypal'}{else}{l s='Activate' mod='paypal'}{/if}
+                        </a>
                     </div>
                 </div>
             </div>
             {if !isset($braintree_available) && !isset($ppp_available)}
             <div class="col-sm-6">
-                <div class="panel {if isset($ec_active) && $ec_active && isset($ec_card_active) && $ec_card_active}actvie-panel{/if}">
+                <div class="panel {if isset($ec_active) && $ec_active && isset($ec_card_active) && $ec_card_active}active-panel{/if}">
                     <img class="paypal-products" src="{$path|escape:'html':'UTF-8'}/views/img/paypal.png">
                     <p>
                             {l s='Accept credit cards, debit cards and PayPal payments' mod='paypal'}
@@ -120,7 +127,14 @@
                         <img src="{$path|escape:'html':'UTF-8'}/views/img/amex.svg" class="product-img">
                         <img src="{$path|escape:'html':'UTF-8'}/views/img/diners.svg" class="product-img">
                         <img src="{$path|escape:'html':'UTF-8'}/views/img/unionpay.svg" class="product-img">
-                        <a class="btn btn-default pull-right" href="{$return_url|escape:'html':'UTF-8'}&method=EC&with_card=1{if isset($ec_active) && $ec_active && isset($ec_card_active) && $ec_card_active}&modify=1{/if}">{if  isset($ec_active) && $ec_active && isset($ec_card_active) && $ec_card_active}{l s='Modify' mod='paypal'}{else}{l s='Activate' mod='paypal'}{/if}</a>
+                        <a class="btn btn-default pull-right"
+                                {if $country_iso == 'BR' || $country_iso == 'IN'}
+                            href="#" onclick="display_popup('EC', 1)"
+                                {else}
+                            href="{$return_url|escape:'html':'UTF-8'}&method=EC&with_card=1{if isset($ec_active) && $ec_active && isset($ec_card_active) && $ec_card_active}&modify=1{/if}"
+                                {/if}>
+                            {if  isset($ec_active) && $ec_active && isset($ec_card_active) && $ec_card_active}{l s='Modify' mod='paypal'}{else}{l s='Activate' mod='paypal'}{/if}
+                        </a>
                     </div>
                 </div>
             </div>
@@ -177,7 +191,7 @@
                         <img src="{$path|escape:'html':'UTF-8'}/views/img/amex.svg" class="product-img">
                         <img src="{$path|escape:'html':'UTF-8'}/views/img/ppp-bank-logo.png" class="product-img">
                         <img src="{$path|escape:'html':'UTF-8'}/views/img/kauf.png" class="product-img">
-                        <a class="btn btn-default pull-right" href="#" onclick="display_popup('PPP')">{if isset($ppp_active)}{l s='Modify' mod='paypal'}{else}{l s='Activate' mod='paypal'}{/if}</a>
+                        <a class="btn btn-default pull-right" href="#" onclick="display_popup('PPP', 0)">{if isset($ppp_active)}{l s='Modify' mod='paypal'}{else}{l s='Activate' mod='paypal'}{/if}</a>
                     </div>
                 </div>
             </div>
@@ -357,7 +371,7 @@
 
 {if isset($ppp_available)}
 <div style="display: none;">
-    <div id="content-fancybox-configuration">
+    <div id="content-fancybox-configuration-PPP">
         <form action="{$return_url|escape:'javascript':'UTF-8'}" method="post" id="credential-configuration" class="bootstrap">
             <h4>{l s='API Credentials' mod='paypal'}</h4>
             <p>{l s='In order to accept PayPal Plus payments, please fill your API REST credentials.' mod='paypal'}</p>
@@ -369,8 +383,7 @@
                 <li>{l s='Copy/paste your « Client ID » and « Secret » below for each environment' mod='paypal'}</li>
             </ul>
             <hr/>
-            <input type="hidden" id="method" name="method"/>
-            <input type="hidden" id="with_card" name="with_card"/>
+            <input type="hidden" class="method" name="method"/>
             <h4>{l s='Sandbox' mod='paypal'}</h4>
             <p>
                 <label for="sandbox_client_id">{l s='Client ID' mod='paypal'}</label>
@@ -401,18 +414,64 @@
     </div>
 </div>
 {/if}
+{if $country_iso == 'BR' || $country_iso == 'IN'}
+    <div style="display: none;">
+        <div id="content-fancybox-configuration-EC">
+            <form action="{$return_url|escape:'javascript':'UTF-8'}" method="post" id="credential-configuration" class="bootstrap">
+                <h4>{l s='API Credentials' mod='paypal'}</h4>
+                <p>{l s='In order to accept PayPal payments, please fill your API NVP credentials.' mod='paypal'}</p>
+                <ul>
+                    <li>{l s='Access' mod='paypal'}
+                        <a target="_blank" href="https://www.{if $mode == 'SANDBOX'}sandbox.{/if}paypal.com/">https://www.{if $mode == 'SANDBOX'}sandbox.{/if}paypal.com/</a>
+                    </li>
+                    <li>{l s='Log in or Create a business account' mod='paypal'}</li>
+                    <li>{l s='Access to' mod='paypal'} <a target="_blank" href="https://www.{if $mode == 'SANDBOX'}sandbox.{/if}paypal.com/businessprofile/mytools/apiaccess/firstparty/signature">{l s='API NVP/SOAP integration' mod='paypal'}</a></li>
+                    <li>{l s='Click « Show » on the right of credentials' mod='paypal'}</li>
+                    <li>{l s='Copy/paste your API credentials below for %s environment' sprintf=[$mode] mod='paypal'} </li>
+                </ul>
+                <hr/>
+                <input type="hidden" class="method" name="method"/>
+                <input type="hidden" id="with_card" name="with_card"/>
+                <h4>{l s='API Credentials for' mod='paypal'} {$mode}</h4>
+                <p>
+                    <label for="api_username">{l s='API username' mod='paypal'}</label>
+                    <input type="text" id="api_username" name="api_username" value="{if isset($api_username)}{$api_username|escape:'htmlall':'UTF-8'}{/if}"/>
+                </p>
+                <p>
+                    <label for="api_password">{l s='API password' mod='paypal'}</label>
+                    <input type="password" id="api_password" name="api_password" value="{if isset($api_password)}{$api_password|escape:'htmlall':'UTF-8'}{/if}"/>
+                </p>
+                <p>
+                    <label for="api_signature">{l s='API signature' mod='paypal'}</label>
+                    <input type="text" id="api_signature" name="api_signature" value="{if isset($api_signature)}{$api_signature|escape:'htmlall':'UTF-8'}{/if}"/>
+                </p>
+                <p>
+                    <label for="merchant_id">{l s='Merchant ID' mod='paypal'}</label>
+                    <input type="text" id="merchant_id" name="merchant_id" value="{if isset($merchant_id)}{$merchant_id|escape:'htmlall':'UTF-8'}{/if}"/>
+                </p>
+                <hr/>
+                <p>
+                    <button class="btn btn-default"  onclick="$.fancybox.close();return false;">{l s='Cancel' mod='paypal'}</button>
+                    <button class="btn btn-info" name="save_credentials">{l s='Confirm API Credentials' mod='paypal'}</button>
+                </p>
+            </form>
+        </div>
+    </div>
+{/if}
+
 
 <script type="text/javascript">
 
-    function display_popup(method)
+    function display_popup(method, with_card)
     {
-        $('#method').val(method);
+        $('.method').val(method);
+        $('#with_card').val(with_card);
         $.fancybox.open([
             {
                 type: 'inline',
                 autoScale: true,
                 minHeight: 30,
-                content: $('#content-fancybox-configuration').html(),
+                content: $('#content-fancybox-configuration-'+method).html(),
             }
         ]);
     }
