@@ -32,22 +32,23 @@ include_once _PS_MODULE_DIR_.'paypal/controllers/front/abstract.php';
  */
 class PaypalEcInitModuleFrontController extends PaypalAbstarctModuleFrontController
 {
-    public $values;
     public function init()
     {
         parent::init();
         $this->values['getToken'] = Tools::getvalue('getToken');
         $this->values['credit_card'] = Tools::getvalue('credit_card');
+        $this->values['short_cut'] = 0;
     }
     /**
      * @see FrontController::postProcess()
      */
     public function postProcess()
     {
-        $paypal = Module::getInstanceByName('paypal');
+        $paypal = Module::getInstanceByName($this->name);
         $method_ec = AbstractMethodPaypal::load('EC');
         try {
-            $url = $method_ec->init(array('use_card' => $this->values['credit_card']));
+            $method_ec->setParameters($this->values);
+            $url = $method_ec->init();
             if ($this->values['getToken']) {
                 $this->jsonValues = array('success' => true, 'token' => $method_ec->token);
             } else {
@@ -70,9 +71,9 @@ class PaypalEcInitModuleFrontController extends PaypalAbstarctModuleFrontControl
 
         if (!empty($this->errors)) {
             if ($this->values['getToken']) {
-                $this->jsonValues = array('success' => false, 'redirect_link' => Context::getContext()->link->getModuleLink('paypal', 'error', $this->errors));
+                $this->jsonValues = array('success' => false, 'redirect_link' => Context::getContext()->link->getModuleLink($this->name, 'error', $this->errors));
             } else {
-                $this->redirectUrl = Context::getContext()->link->getModuleLink('paypal', 'error', $this->errors);
+                $this->redirectUrl = Context::getContext()->link->getModuleLink($this->name, 'error', $this->errors);
             }
         }
     }

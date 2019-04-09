@@ -1,7 +1,18 @@
 {
-  "autoload": {
-    "psr-4": {
-      "PaypalAddons\\": "."
+    "config": {
+        "vendor-dir": "vendor"
+    },
+    "autoload": {
+        "psr-4": {
+            "PaypalClasslib\\": "vendor/totpsclasslib/src/",
+            "PaypalPPBTlib\\": "vendor/ppbtclasslib/src/",
+            "PaypalAddons\\": "."
+        }
+    },
+    "scripts": {
+        "pre-autoload-dump": [
+            "php ${TOTPSCLASSLIB_DEV_PATH}/classlib/refresh.php .",
+            "php ${PPBTCLASSLIB_DEV_PATH}/classlib/refresh.php ."
+        ]
     }
-  }
 }

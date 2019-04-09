@@ -50,8 +50,6 @@ require(_PS_MODULE_DIR_.'paypal/sdk/paypalREST/vendor/autoload.php');
  */
 class MethodPPP extends AbstractMethodPaypal
 {
-    public $name = 'paypal';
-
     private $_items = array();
 
     private $_itemTotalValue = 0;
@@ -62,6 +60,30 @@ class MethodPPP extends AbstractMethodPaypal
 
     private $_amount;
 
+    /** @var boolean shortcut payment from product or cart page*/
+    public $short_cut;
+
+    /** @var string payment payer ID returned by paypal*/
+    private $payerId;
+
+    /** payment Object IDl*/
+    public $paymentId;
+
+    /**
+     * @param $values array replace for tools::getValues()
+     */
+    public function setParameters($values)
+    {
+        foreach ($values as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
+        }
+    }
+
+    /**
+     * @see AbstractMethodPaypal::setConfig()
+     */
     public function setConfig($params)
     {
         $paypal = Module::getInstanceByName($this->name);
@@ -141,6 +163,9 @@ class MethodPPP extends AbstractMethodPaypal
         }
     }
 
+    /**
+     * @see AbstractMethodPaypal::getConfig()
+     */
     public function getConfig(Paypal $module)
     {
         $params = array('inputs' => array(
@@ -382,7 +407,10 @@ class MethodPPP extends AbstractMethodPaypal
         return $createProfileResponse;
     }
 
-    public function init($params)
+    /**
+     * @see AbstractMethodPaypal::init()
+     */
+    public function init()
     {
         $payer = new Payer();
         $payer->setPaymentMethod("paypal");
@@ -411,7 +439,7 @@ class MethodPPP extends AbstractMethodPaypal
         // payment approval/ cancellation.
 
         $redirectUrls = new RedirectUrls();
-        if ($params['short_cut']) {
+        if ($this->short_cut) {
             $return_url = Context::getContext()->link->getModuleLink($this->name, 'pppScOrder', array(), true);
         } else {
             $return_url = Context::getContext()->link->getModuleLink($this->name, 'pppValidation', array(), true);
@@ -441,14 +469,15 @@ class MethodPPP extends AbstractMethodPaypal
         // ### Get redirect url
         // The API response provides the url that you must redirect
         // the buyer to. Retrieve the url from the $payment->getApprovalLink() method
-        return array('approval_url' => $payment->getApprovalLink(), 'payment_id' => $payment->id);
+        $this->paymentId = $payment->id;
+        return $payment->getApprovalLink();
     }
 
     public function formatPrice($price)
     {
         $context = Context::getContext();
         $context_currency = $context->currency;
-        $paypal = Module::getInstanceByName('paypal');
+        $paypal = Module::getInstanceByName($this->name);
         if ($id_currency_to = $paypal->needConvert()) {
             $currency_to_convert = new Currency($id_currency_to);
             $price = Tools::convertPriceFull($price, $context_currency, $currency_to_convert);
@@ -459,7 +488,7 @@ class MethodPPP extends AbstractMethodPaypal
 
     private function _getPaymentDetails()
     {
-        $paypal = Module::getInstanceByName('paypal');
+        $paypal = Module::getInstanceByName($this->name);
         $currency = $paypal->getPaymentCurrencyIso();
         $this->_getProductsList($currency);
         //$this->_getDiscountsList($items, $total_products);
@@ -599,6 +628,9 @@ class MethodPPP extends AbstractMethodPaypal
         return $payment->update($patchRequest, $this->_getCredentialsInfo());
     }
 
+    /**
+     * @see AbstractMethodPaypal::validation()
+     */
     public function validation()
     {
         $context = Context::getContext();
@@ -606,9 +638,9 @@ class MethodPPP extends AbstractMethodPaypal
         // Get the payment Object by passing paymentId
         // payment id was previously stored in session in
         // CreatePaymentUsingPayPal.php
-        $paymentId = Tools::getValue('shortcut') ? $context->cookie->paypal_pSc : Tools::getValue('paymentId');
+        $paymentId = $this->short_cut ? $context->cookie->paypal_pSc : $this->paymentId;
         $payment = Payment::get($paymentId, $this->_getCredentialsInfo());
-        if (Tools::getValue('shortcut')) {
+        if ($this->short_cut) {
             $discounts = Context::getContext()->cart->getCartRules();
             if (count($discounts) > 0) {
                 Context::getContext()->cookie->__unset('paypal_pSc');
@@ -644,7 +676,7 @@ class MethodPPP extends AbstractMethodPaypal
         // The payer_id is added to the request query parameters
         // when the user is redirected from paypal back to your site
         $execution = new PaymentExecution();
-        $execution->setPayerId(Tools::getValue('shortcut') ? $context->cookie->paypal_pSc_payerid : Tools::getValue('PayerID'));
+        $execution->setPayerId($this->short_cut ? $context->cookie->paypal_pSc_payerid : $this->payerId);
         // ### Optional Changes to Amount
         // If you wish to update the amount that you wish to charge the customer,
         // based on the shipping address or any other reason, you could
@@ -653,15 +685,14 @@ class MethodPPP extends AbstractMethodPaypal
 
         $customer = new Customer($cart->id_customer);
         if (!Validate::isLoadedObject($customer)) {
-            Tools::redirect('index.php?controller=order&step=1');
+            throw new Exception('Customer is not loaded object');
         }
         $currency = $context->currency;
         $total = (float)$exec_payment->transactions[0]->amount->total;
-        $paypal = Module::getInstanceByName('paypal');
+        $paypal = Module::getInstanceByName($this->name);
         $order_state = Configuration::get('PS_OS_PAYMENT');
         $transactionDetail = $this->getDetailsTransaction($exec_payment);
         $paypal->validateOrder($cart->id, $order_state, $total, 'PayPal', null, $transactionDetail, (int)$currency->id, false, $customer->secure_key);
-        return true;
     }
 
     public function getDetailsTransaction($transaction)
@@ -675,19 +706,21 @@ class MethodPPP extends AbstractMethodPaypal
             'payment_status' => $transaction->state,
             'payment_method' => $transaction->payer->payment_method,
             'id_payment' => pSQL($transaction->id),
-            'client_token' => "",
             'capture' => false,
             'payment_tool' => isset($transaction->payment_instruction)?$transaction->payment_instruction->instruction_type:'',
         );
     }
 
+    /**
+     * @see AbstractMethodPaypal::confirmCapture()
+     */
     public function confirmCapture()
     {
     }
-    public function check()
-    {
-    }
 
+    /**
+     * @see AbstractMethodPaypal::refund()
+     */
     public function refund()
     {
         $paypal_order = PaypalOrder::loadByOrderId(Tools::getValue('id_order'));
@@ -717,6 +750,9 @@ class MethodPPP extends AbstractMethodPaypal
         return $result;
     }
 
+    /**
+     * @see AbstractMethodPaypal::partialRefund()
+     */
     public function partialRefund($params)
     {
         $paypal_order = PaypalOrder::loadByOrderId(Tools::getValue('id_order'));
@@ -751,6 +787,9 @@ class MethodPPP extends AbstractMethodPaypal
         return $result;
     }
 
+    /**
+     * @see AbstractMethodPaypal::void()
+     */
     public function void($params)
     {
     }
@@ -780,7 +819,7 @@ class MethodPPP extends AbstractMethodPaypal
             'shop_url' => $shop_url,
             'PayPal_payment_type' => $type,
             'PayPal_img_esc' => $shop_url.$img_esc,
-            'action_url' => $context->link->getModuleLink('paypal', 'ScInit', array(), true),
+            'action_url' => $context->link->getModuleLink($this->name, 'ScInit', array(), true),
             'environment' => $environment,
             'PayPal_tracking_code' => '',
         ));
@@ -792,18 +831,6 @@ class MethodPPP extends AbstractMethodPaypal
             return $context->smarty->fetch('module:paypal/views/templates/hook/PPP_shortcut.tpl');
         } elseif ($page_source == 'cart') {
             return $context->smarty->fetch('module:paypal/views/templates/hook/cart_shortcut.tpl');
-        }
-    }
-
-    /**
-     * @param $response
-     */
-    public function processCheckoutSc($response)
-    {
-        if (isset($response['approval_url'])) {
-            Tools::redirect($response['approval_url']);
-        } else {
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_code' => '00000')));
         }
     }
 }

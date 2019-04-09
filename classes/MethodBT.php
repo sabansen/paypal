@@ -36,15 +36,45 @@ use PaypalAddons\classes\PaypalException;
  */
 class MethodBT extends AbstractMethodPaypal
 {
-    /** @var string module name*/
-    public $name = 'paypal';
-
     /** @var string token*/
     public $token;
 
     /** @var string sandbox or live*/
     public $mode;
 
+    /** @var  string A secure, one-time-use reference to payment information */
+    private $payment_method_nonce;
+
+    /** @var  string  BT_CARD_PAYMENT or BT_PAYPAL_PAYMENT*/
+    private $payment_method_bt;
+
+    /** @var  string Vaulted token for cards */
+    private $bt_vaulting_token;
+
+    /** @var  string Vaulted token for paypal */
+    private $pbt_vaulting_token;
+
+    /** @var  bool vaulting checkbox */
+    private $save_card_in_vault;
+
+    /** @var  bool vaulting checkbox */
+    private $save_account_in_vault;
+
+    /**
+     * @param $values array replace for tools::getValues()
+     */
+    public function setParameters($values)
+    {
+        foreach ($values as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
+        }
+    }
+
+    /**
+     * @see AbstractMethodPaypal::getConfig()
+     */
     public function getConfig(PayPal $module)
     {
         $params = array('inputs' => array(
@@ -242,6 +272,9 @@ class MethodBT extends AbstractMethodPaypal
         return $helper->generateForm($fields_form2);
     }
 
+    /**
+     * @see AbstractMethodPaypal::setConfig()
+     */
     public function setConfig($params)
     {
         $mode = Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
@@ -320,8 +353,10 @@ class MethodBT extends AbstractMethodPaypal
         $this->error = '';
     }
 
-
-    public function init($data)
+    /**
+     * @see AbstractMethodPaypal::init()
+     */
+    public function init()
     {
         try {
             $this->initConfig();
@@ -404,10 +439,13 @@ class MethodBT extends AbstractMethodPaypal
         }
     }
 
+    /**
+     * @see AbstractMethodPaypal::validation()
+     */
     public function validation()
     {
         $paypal = new PayPal();
-        $transaction = $this->sale(context::getContext()->cart, Tools::getValue('payment_method_nonce'), Tools::getValue('deviceData'));
+        $transaction = $this->sale(context::getContext()->cart, $this->payment_method_nonce);
 
         if (!$transaction) {
             throw new Exception('Error during transaction validation', '00000');
@@ -437,8 +475,7 @@ class MethodBT extends AbstractMethodPaypal
             'transaction_id' => pSQL($transaction->id),
             'payment_method' => $transaction->type,
             'payment_status' => $transaction->status,
-            'id_payment' => Tools::getValue('payment_method_nonce'),
-            'client_token' => Tools::getValue('client_token'),
+            'id_payment' => $this->payment_method_nonce,
             'capture' => $transaction->status == "authorized" ? true : false,
             'payment_tool' => $transaction->paymentInstrumentType,
         );
@@ -458,7 +495,7 @@ class MethodBT extends AbstractMethodPaypal
     {
         $context = Context::getContext();
         $context_currency = $context->currency;
-        $paypal = Module::getInstanceByName('paypal');
+        $paypal = Module::getInstanceByName($this->name);
         if ($id_currency_to = $paypal->needConvert()) {
             $currency_to_convert = new Currency($id_currency_to);
             $price = Tools::ps_round(Tools::convertPriceFull($price, $context_currency, $currency_to_convert), _PS_PRICE_COMPUTE_PRECISION_);
@@ -469,15 +506,14 @@ class MethodBT extends AbstractMethodPaypal
     /**
      * @param $cart
      * @param $token_payment
-     * @param $device_data
      * @return bool|mixed
      * @throws Exception
      * @throws PaypalException
      */
-    public function sale($cart, $token_payment, $device_data)
+    public function sale($cart, $token_payment)
     {
         $this->initConfig();
-        $bt_method = Tools::getValue('payment_method_bt');
+        $bt_method = $this->payment_method_bt;
         $vault_token = '';
         if ($bt_method == BT_PAYPAL_PAYMENT) {
             $options = array(
@@ -498,7 +534,7 @@ class MethodBT extends AbstractMethodPaypal
         $address_shipping = new Address($cart->id_address_delivery);
         $country_shipping = new Country($address_shipping->id_country);
         $amount = $this->formatPrice($cart->getOrderTotal());
-        $paypal = Module::getInstanceByName('paypal');
+        $paypal = Module::getInstanceByName($this->name);
         $currency = $paypal->getPaymentCurrencyIso();
         $iso_state = '';
         if ($address_shipping->id_state) {
@@ -534,7 +570,7 @@ class MethodBT extends AbstractMethodPaypal
                 'countryCodeAlpha2' => $country_shipping->iso_code,
                 'region'            => $iso_state,
             ),
-            "deviceData"            => $device_data,
+            "deviceData"            => '',
         );
 
         $paypal_customer = PaypalCustomer::loadCustomerByMethod(Context::getContext()->customer->id, 'BT');
@@ -547,9 +583,9 @@ class MethodBT extends AbstractMethodPaypal
         $paypal = Module::getInstanceByName($this->name);
         if (Configuration::get('PAYPAL_VAULTING')) {
             if ($bt_method == BT_CARD_PAYMENT) {
-                $vault_token = Tools::getValue('bt_vaulting_token');
+                $vault_token = $this->bt_vaulting_token;
             } elseif ($bt_method == BT_PAYPAL_PAYMENT) {
-                $vault_token = Tools::getValue('pbt_vaulting_token');
+                $vault_token = $this->pbt_vaulting_token;
             }
 
             if ($vault_token && $paypal_customer->id) {
@@ -557,8 +593,8 @@ class MethodBT extends AbstractMethodPaypal
                     $data['paymentMethodToken'] = $vault_token;
                 }
             } else {
-                if (Tools::getValue('save_card_in_vault') || Tools::getValue('save_account_in_vault')) {
-                    if (Configuration::get('PAYPAL_BT_CARD_VERIFICATION') && Tools::getValue('save_card_in_vault')) {
+                if ($this->save_card_in_vault || $this->save_account_in_vault) {
+                    if (Configuration::get('PAYPAL_BT_CARD_VERIFICATION') && $this->save_card_in_vault) {
                         $payment_method = $this->gateway->paymentMethod()->create(array(
                             'customerId' => $paypal_customer->reference,
                             'paymentMethodNonce' => $token_payment,
@@ -571,7 +607,7 @@ class MethodBT extends AbstractMethodPaypal
                             if ($payment_method->verification->gatewayRejectionReason) {
                                 $error_msg .= $paypal->l('Rejection reason : ').' '.$payment_method->verification->gatewayRejectionReason;
                             }
-                            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $error_msg)));
+                            throw new Exception($error_msg, '00000');
                         }
                         $paymentMethodToken = $payment_method->paymentMethod->token;
                     }
@@ -598,8 +634,8 @@ class MethodBT extends AbstractMethodPaypal
 
         if (($result instanceof Braintree_Result_Successful) && $result->success && $this->isValidStatus($result->transaction->status)) {
             if (Configuration::get('PAYPAL_VAULTING')
-                && ((Tools::getValue('save_card_in_vault') && $bt_method == BT_CARD_PAYMENT)
-                    || (Tools::getValue('save_account_in_vault') && $bt_method == BT_PAYPAL_PAYMENT))
+                && (($this->save_card_in_vault && $bt_method == BT_CARD_PAYMENT)
+                    || ($this->save_account_in_vault && $bt_method == BT_PAYPAL_PAYMENT))
                 && !PaypalVaulting::vaultingExist($result->transaction->creditCard['token'], $paypal_customer->id)) {
                 $this->createVaulting($result, $paypal_customer);
             }
@@ -625,14 +661,14 @@ class MethodBT extends AbstractMethodPaypal
     {
         $vaulting = new PaypalVaulting();
         $vaulting->id_paypal_customer = $paypal_customer->id;
-        $vaulting->payment_tool = Tools::getValue('payment_method_bt');
-        if (Tools::getValue('payment_method_bt') == BT_CARD_PAYMENT) {
+        $vaulting->payment_tool = $this->payment_method_bt;
+        if ($vaulting->payment_tool == BT_CARD_PAYMENT) {
             $vaulting->token = $result->transaction->creditCard['token'];
             $vaulting->info = $result->transaction->creditCard['cardType'].': *';
             $vaulting->info .= $result->transaction->creditCard['last4'].' ';
             $vaulting->info .= $result->transaction->creditCard['expirationMonth'].'/';
             $vaulting->info .= $result->transaction->creditCard['expirationYear'];
-        } elseif (Tools::getValue('payment_method_bt') == BT_PAYPAL_PAYMENT) {
+        } elseif ($vaulting->payment_tool == BT_PAYPAL_PAYMENT) {
             $vaulting->token = $result->transaction->paypal['token'];
             $vaulting->info = $result->transaction->paypal['payerFirstName'].' ';
             $vaulting->info .= $result->transaction->paypal['payerLastName'].' ';
@@ -708,7 +744,9 @@ class MethodBT extends AbstractMethodPaypal
         return in_array($status, array('submitted_for_settlement','authorized','settled', 'settling'));
     }
 
-
+    /**
+     * @see AbstractMethodPaypal::confirmCapture()
+     */
     public function confirmCapture()
     {
         $this->initConfig();
@@ -753,10 +791,9 @@ class MethodBT extends AbstractMethodPaypal
         }
     }
 
-    public function check()
-    {
-    }
-
+    /**
+     * @see AbstractMethodPaypal::refund()
+     */
     public function refund()
     {
         $this->initConfig();
@@ -808,6 +845,9 @@ class MethodBT extends AbstractMethodPaypal
         }
     }
 
+    /**
+     * @see AbstractMethodPaypal::partialRefund()
+     */
     public function partialRefund($params)
     {
         $this->initConfig();
@@ -858,6 +898,9 @@ class MethodBT extends AbstractMethodPaypal
         }
     }
 
+    /**
+     * @see AbstractMethodPaypal::void()
+     */
     public function void($authorization)
     {
         $this->initConfig();

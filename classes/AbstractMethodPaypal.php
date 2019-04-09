@@ -26,15 +26,60 @@
 
 abstract class AbstractMethodPaypal
 {
+    /** @var string module name */
+    public $name = 'paypal';
+
     // Force les classes filles à définir cette méthode
-    abstract public function init($params);
+
+    /**
+     * Init payment method
+     * @return string|array
+     */
+    abstract public function init();
+
+    /**
+     * Validate payment
+     * @return Exception
+     */
     abstract public function validation();
+
+    /**
+     * Capture authorized transaction
+     * @return array|Exception
+     */
     abstract public function confirmCapture();
-    abstract public function check();
+
+    /**
+     * Refund settled transaction
+     * @return mixed
+     */
     abstract public function refund();
+
+    /**
+     * Update configuration (postProcess)
+     * @param $params array
+     * @return mixed
+     */
     abstract public function setConfig($params);
+
+    /**
+     * Generate getContent
+     * @param Paypal $module
+     * @return mixed
+     */
     abstract public function getConfig(Paypal $module);
+
+    /**
+     * Void authorized transaction (cancel payment)
+     * @param $params string Authorization ID
+     * @return mixed
+     */
     abstract public function void($params);
+
+    /**
+     * @param $params array hookActionOrderSlipAdd parameters
+     * @return mixed
+     */
     abstract public function partialRefund($params);
 
     /**

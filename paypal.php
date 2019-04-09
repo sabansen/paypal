@@ -963,8 +963,8 @@ class PayPal extends PaymentModule
     {
         $ppplus = AbstractMethodPaypal::load('PPP');
         try {
-            $result = $ppplus->init(true);
-            $this->context->cookie->__set('paypal_plus_payment', $result['payment_id']);
+            $approval_url = $ppplus->init();
+            $this->context->cookie->__set('paypal_plus_payment', $ppplus->paymentId);
         } catch (Exception $e) {
             return false;
         }
@@ -973,7 +973,7 @@ class PayPal extends PaymentModule
 
         $this->context->smarty->assign(array(
             'pppSubmitUrl'=> $this->context->link->getModuleLink('paypal', 'pppValidation', array(), true),
-            'approval_url_ppp'=> $result['approval_url'],
+            'approval_url_ppp'=> $approval_url,
             'baseDir' => $this->context->link->getBaseLink($this->context->shop->id, true),
             'path' => $this->_path,
             'mode' => Configuration::get('PAYPAL_SANDBOX')  ? 'sandbox' : 'live',
@@ -993,7 +993,7 @@ class PayPal extends PaymentModule
         $amount = $this->context->cart->getOrderTotal();
 
         $braintree = AbstractMethodPaypal::load('BT');
-        $clientToken = $braintree->init(true);
+        $clientToken = $braintree->init();
 
         if (isset($clientToken['error_code'])) {
             $this->context->smarty->assign(array(
@@ -1032,7 +1032,7 @@ class PayPal extends PaymentModule
         $amount = $this->context->cart->getOrderTotal();
         $braintree = AbstractMethodPaypal::load('BT');
 
-        $clientToken = $braintree->init(true);
+        $clientToken = $braintree->init();
 
         if (isset($clientToken['error_code'])) {
             $this->context->smarty->assign(array(
@@ -1149,7 +1149,7 @@ class PayPal extends PaymentModule
             $amount_paid_curr = Tools::ps_round($amount_paid, 2);
         }
         $amount_paid = Tools::ps_round($amount_paid, 2);
-        $this->amount_paid_paypal = (float)$amount_paid;
+
         $cart = new Cart((int) $id_cart);
         $total_ps = (float)$cart->getOrderTotal(true, Cart::BOTH);
         if ($amount_paid_curr > $total_ps+0.10 || $amount_paid_curr < $total_ps-0.10) {
@@ -1203,7 +1203,6 @@ class PayPal extends PaymentModule
             $paypal_order->id_cart = $id_cart;
             $paypal_order->id_transaction = $transaction['transaction_id'];
             $paypal_order->id_payment = $transaction['id_payment'];
-            $paypal_order->client_token = $transaction['client_token'];
             $paypal_order->payment_method = $transaction['payment_method'];
             $paypal_order->currency = $transaction['currency'];
             $paypal_order->total_paid = (float) $amount_paid;

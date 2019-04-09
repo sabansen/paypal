@@ -25,42 +25,57 @@
  */
 
 include_once _PS_MODULE_DIR_.'paypal/classes/AbstractMethodPaypal.php';
+include_once _PS_MODULE_DIR_.'paypal/controllers/front/abstract.php';
 
 /**
  * Update PrestaShop Order after return from PayPal
  */
-class PaypalEcScOrderModuleFrontController extends ModuleFrontController
+class PaypalEcScOrderModuleFrontController extends PaypalAbstarctModuleFrontController
 {
-    public $name = 'paypal';
+    public function init()
+    {
+        parent::init();
+        $this->values['payment_token'] = Tools::getvalue('token');
+    }
 
+    /**
+     * @see FrontController::postProcess()
+     */
     public function postProcess()
     {
         $method = AbstractMethodPaypal::load('EC');
-        $paypal = Module::getInstanceByName('paypal');
+        $paypal = Module::getInstanceByName($this->name);
 
         try {
-            $info = $method->getInfo(array('token'=>Tools::getValue('token')));
+            $method->setParameters($this->values);
+            $info = $method->getInfo();
+            $this->prepareOrder($info);
+            $this->redirectUrl = $this->context->link->getPageLink('order', null, null, array('step'=>2));
         } catch (PayPal\Exception\PPConnectionException $e) {
-            $ex_detailed_message = $paypal->l('Error connecting to ') . $e->getUrl();
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $ex_detailed_message)));
+            $this->errors['error_msg'] = $paypal->l('Error connecting to ') . $e->getUrl();
         } catch (PayPal\Exception\PPMissingCredentialException $e) {
-            $ex_detailed_message = $e->errorMessage();
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $ex_detailed_message)));
+            $this->errors['error_msg'] = $e->errorMessage();
         } catch (PayPal\Exception\PPConfigurationException $e) {
-            $ex_detailed_message = $paypal->l('Invalid configuration. Please check your configuration file');
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $ex_detailed_message)));
+            $this->errors['error_msg'] = $paypal->l('Invalid configuration. Please check your configuration file');
         } catch (PaypalAddons\classes\PaypalException $e) {
-            Tools::redirect(Context::getContext()->link->getModuleLink(
-                'paypal',
-                'error',
-                array(
-                    'error_code' => $e->getCode(),
-                    'error_msg' => $e->getMessage(),
-                    'msg_long' => $e->getMessageLong()
-                )
-            ));
+            $this->errors['error_code'] = $e->getCode();
+            $this->errors['error_msg'] = $e->getMessage();
+            $this->errors['msg_long'] = $e->getMessageLong();
+        } catch (Exception $e) {
+            $this->errors['error_code'] = $e->getCode();
+            $this->errors['error_msg'] = $e->getMessage();
         }
 
+        if (!empty($this->errors)) {
+            $this->redirectUrl = Context::getContext()->link->getModuleLink($this->name, 'error', $this->errors);
+        }
+    }
+
+    /**
+     * @param $info object transaction
+     */
+    public function prepareOrder($info)
+    {
         $payer_info = $info->GetExpressCheckoutDetailsResponseDetails->PayerInfo;
         $ship_addr = $info->GetExpressCheckoutDetailsResponseDetails->PaymentDetails[0]->ShipToAddress;
 
@@ -174,6 +189,5 @@ class PaypalEcScOrderModuleFrontController extends ModuleFrontController
         $this->context->cookie->__set('paypal_ecs', $info->GetExpressCheckoutDetailsResponseDetails->Token);
         $this->context->cookie->__set('paypal_ecs_payerid', $info->GetExpressCheckoutDetailsResponseDetails->PayerInfo->PayerID);
         $this->context->cookie->__set('paypal_ecs_email', $info->GetExpressCheckoutDetailsResponseDetails->PayerInfo->Payer);
-        Tools::redirect($this->context->link->getPageLink('order', null, null, array('step'=>2)));
     }
 }

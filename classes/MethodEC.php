@@ -55,9 +55,6 @@ require_once(_PS_MODULE_DIR_.'paypal/sdk/paypalNVP/PPBootStrap.php');
  */
 class MethodEC extends AbstractMethodPaypal
 {
-    /** @var string module name*/
-    public $name = 'paypal';
-
     /** @var string token. for in-context */
     public $token;
 
@@ -70,6 +67,33 @@ class MethodEC extends AbstractMethodPaypal
     /** @var float total cart taxes */
     private $_taxTotalValue = 0;
 
+    /** @var boolean pay with card without pp account */
+    public $use_card;
+
+    /** @var boolean shortcut payment from product or cart page*/
+    public $short_cut;
+
+    /** @var string payment token returned by paypal*/
+    private $payment_token;
+
+    /** @var string payment payer ID returned by paypal*/
+    private $payerId;
+
+    /**
+     * @param $values array replace for tools::getValues()
+     */
+    public function setParameters($values)
+    {
+        foreach ($values as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
+        }
+    }
+
+    /**
+     * @see AbstractMethodPaypal::getConfig()
+     */
     public function getConfig(PayPal $module)
     {
         $mode = Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
@@ -334,6 +358,9 @@ class MethodEC extends AbstractMethodPaypal
         return $helper->generateForm($fields_form);
     }
 
+    /**
+     * @see AbstractMethodPaypal::setConfig()
+     */
     public function setConfig($params)
     {
         $mode = Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
@@ -417,16 +444,17 @@ class MethodEC extends AbstractMethodPaypal
         }
     }
 
-    /*
-    * The SetExpressCheckout API operation initiates an Express Checkout transaction
-    */
-    public function init($data)
+    /**
+     * The SetExpressCheckout API operation initiates an Express Checkout transaction
+     * @see AbstractMethodPaypal::init()
+     */
+    public function init()
     {
         // details about payment
         $this->_paymentDetails = new PaymentDetailsType();
 
         // shipping address
-        if (!isset($data['short_cut']) && !Context::getContext()->cart->isVirtualCart()) {
+        if (!$this->short_cut && !Context::getContext()->cart->isVirtualCart()) {
             $address = $this->_getShippingAddress();
             $this->_paymentDetails->ShipToAddress = $address;
         }
@@ -442,9 +470,9 @@ class MethodEC extends AbstractMethodPaypal
         $setECReqDetails->NoShipping = 1;
         $setECReqDetails->AddressOverride = 1;
         $setECReqDetails->ReqConfirmShipping = 0;
-        $setECReqDetails->LandingPage = ((isset($data['use_card']) && $data['use_card']) ? 'Billing' : 'Login');
+        $setECReqDetails->LandingPage = ($this->use_card ? 'Billing' : 'Login');
 
-        if (isset($data['short_cut'])) {
+        if ($this->short_cut) {
             $setECReqDetails->ReturnURL = Context::getContext()->link->getModuleLink($this->name, 'ecScOrder', array(), true);
             $setECReqDetails->NoShipping = 2;
         }
@@ -481,9 +509,12 @@ class MethodEC extends AbstractMethodPaypal
         return $this->redirectToAPI('setExpressCheckout');
     }
 
+    /**
+     * Collect items information
+     */
     private function _getPaymentDetails()
     {
-        $paypal = Module::getInstanceByName('paypal');
+        $paypal = Module::getInstanceByName($this->name);
         $currency = $paypal->getPaymentCurrencyIso();
         $this->_getProductsList($currency);
         $this->_getDiscountsList($currency);
@@ -491,6 +522,9 @@ class MethodEC extends AbstractMethodPaypal
         $this->_getPaymentValues($currency);
     }
 
+    /**
+     * @param $currency string
+     */
     private function _getProductsList($currency)
     {
         $products = Context::getContext()->cart->getProducts();
@@ -511,11 +545,16 @@ class MethodEC extends AbstractMethodPaypal
         }
     }
 
+    /**
+     * Convert and format price
+     * @param $price
+     * @return float|int|string
+     */
     public function formatPrice($price)
     {
         $context = Context::getContext();
         $context_currency = $context->currency;
-        $paypal = Module::getInstanceByName('paypal');
+        $paypal = Module::getInstanceByName($this->name);
         if ($id_currency_to = $paypal->needConvert()) {
             $currency_to_convert = new Currency($id_currency_to);
             $price = Tools::convertPriceFull($price, $context_currency, $currency_to_convert);
@@ -562,6 +601,10 @@ class MethodEC extends AbstractMethodPaypal
         }
     }
 
+    /**
+     * Set total payment values
+     * @param $currency
+     */
     private function _getPaymentValues($currency)
     {
         $context = Context::getContext();
@@ -641,7 +684,7 @@ class MethodEC extends AbstractMethodPaypal
         if (($method == 'SetExpressCheckout') && ($this->type == 'payment_cart')) {
             $url .= '&useraction=commit';
         }
-        $paypal = Module::getInstanceByName('paypal');
+        $paypal = Module::getInstanceByName($this->name);
         return $paypal->getUrl().$url.'&token='.urldecode($this->token);
     }
 
@@ -684,6 +727,9 @@ class MethodEC extends AbstractMethodPaypal
         return $params;
     }
 
+    /**
+     * @see AbstractMethodPaypal::validation()
+     */
     public function validation()
     {
         $context = Context::getContext();
@@ -698,8 +744,8 @@ class MethodEC extends AbstractMethodPaypal
         $this->_getPaymentDetails();
 
         $DoECRequestDetails = new DoExpressCheckoutPaymentRequestDetailsType();
-        $DoECRequestDetails->PayerID = Tools::getValue('shortcut') ? $context->cookie->paypal_ecs_payerid : Tools::getValue('PayerID');
-        $DoECRequestDetails->Token = Tools::getValue('shortcut') ? $context->cookie->paypal_ecs : Tools::getValue('token');
+        $DoECRequestDetails->PayerID = $this->short_cut ? $context->cookie->paypal_ecs_payerid : $this->payerId;
+        $DoECRequestDetails->Token = $this->short_cut ? $context->cookie->paypal_ecs : $this->payment_token;
         $DoECRequestDetails->ButtonSource = 'PrestaShop_Cart_'.(getenv('PLATEFORM') == 'PSREADY' ? 'Ready_':'').'EC';
         $DoECRequestDetails->PaymentAction = Tools::ucfirst(Configuration::get('PAYPAL_API_INTENT'));
         $DoECRequestDetails->PaymentDetails[0] = $this->_paymentDetails;
@@ -720,13 +766,13 @@ class MethodEC extends AbstractMethodPaypal
         $cart = $context->cart;
         $customer = new Customer($cart->id_customer);
         if (!Validate::isLoadedObject($customer)) {
-            Tools::redirect('index.php?controller=order');
+            throw new Exception('Customer is not loaded object');
         }
         $currency = $context->currency;
         $payment_info = $exec_payment->DoExpressCheckoutPaymentResponseDetails->PaymentInfo[0];
 
         $total = $payment_info->GrossAmount->value;
-        $paypal = Module::getInstanceByName('paypal');
+        $paypal = Module::getInstanceByName($this->name);
         if (Configuration::get('PAYPAL_API_INTENT') == "sale") {
             $order_state = Configuration::get('PS_OS_PAYMENT');
         } else {
@@ -734,7 +780,6 @@ class MethodEC extends AbstractMethodPaypal
         }
         $transactionDetail = $this->getDetailsTransaction($exec_payment->DoExpressCheckoutPaymentResponseDetails);
         $paypal->validateOrder($cart->id, $order_state, $total, 'PayPal', null, $transactionDetail, (int)$currency->id, false, $customer->secure_key);
-        return true;
     }
 
     /**
@@ -752,12 +797,13 @@ class MethodEC extends AbstractMethodPaypal
             'payment_status' => $payment_info->PaymentStatus,
             'payment_method' => $payment_info->PaymentType,
             'id_payment' => pSQL($transaction->Token),
-            'client_token' => "",
             'capture' =>$payment_info->PaymentStatus == "Pending" && $payment_info->PendingReason == "authorization" ? true : false,
         );
     }
 
-
+    /**
+     * @see AbstractMethodPaypal::confirmCapture()
+     */
     public function confirmCapture()
     {
         $paypal_order = PaypalOrder::loadByOrderId(Tools::getValue('id_order'));
@@ -804,10 +850,9 @@ class MethodEC extends AbstractMethodPaypal
         return $result;
     }
 
-    public function check()
-    {
-    }
-
+    /**
+     * @see AbstractMethodPaypal::refund()
+     */
     public function refund()
     {
         $paypal_order = PaypalOrder::loadByOrderId(Tools::getValue('id_order'));
@@ -850,6 +895,9 @@ class MethodEC extends AbstractMethodPaypal
         return $result;
     }
 
+    /**
+     * @see AbstractMethodPaypal::partialRefund()
+     */
     public function partialRefund($params)
     {
         $paypal_order = PaypalOrder::loadByOrderId($params['order']->id);
@@ -899,6 +947,9 @@ class MethodEC extends AbstractMethodPaypal
         return $result;
     }
 
+    /**
+     * @see AbstractMethodPaypal::void()
+     */
     public function void($authorization)
     {
         $doVoidReqType = new DoVoidRequestType();
@@ -947,7 +998,7 @@ class MethodEC extends AbstractMethodPaypal
             'PayPal_payment_type' => $type,
             'PayPal_tracking_code' => 'PRESTASHOP_ECM',
             'PayPal_img_esc' => $shop_url.$img_esc,
-            'action_url' => $context->link->getModuleLink('paypal', 'ScInit', array(), true),
+            'action_url' => $context->link->getModuleLink($this->name, 'ScInit', array(), true),
             'ec_sc_in_context' => Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT'),
             'merchant_id' => Configuration::get('PAYPAL_MERCHANT_ID_'.Tools::strtoupper($environment)),
             'environment' => $environment,
@@ -964,28 +1015,12 @@ class MethodEC extends AbstractMethodPaypal
     }
 
     /**
-     * @param $response
-     */
-    public function processCheckoutSc($response)
-    {
-        if (!isset($response['L_ERRORCODE0'])) {
-            if (Tools::getvalue('getToken')) {
-                die($this->token);
-            }
-            Tools::redirect($response);
-        } else {
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_code' => $response['L_ERRORCODE0'])));
-        }
-    }
-
-    /**
-     * @param $params
      * @return \PayPal\PayPalAPI\GetExpressCheckoutDetailsResponseType
      * @throws Exception
      */
-    public function getInfo($params)
+    public function getInfo()
     {
-        $getExpressCheckoutDetailsRequest = new GetExpressCheckoutDetailsRequestType($params['token']);
+        $getExpressCheckoutDetailsRequest = new GetExpressCheckoutDetailsRequestType($this->payment_token);
         $getExpressCheckoutReq = new GetExpressCheckoutDetailsReq();
         $getExpressCheckoutReq->GetExpressCheckoutDetailsRequest = $getExpressCheckoutDetailsRequest;
         $paypalService = new PayPalAPIInterfaceServiceService($this->_getCredentialsInfo());

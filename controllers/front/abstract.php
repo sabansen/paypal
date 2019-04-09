@@ -31,11 +31,19 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  */
 abstract class PaypalAbstarctModuleFrontController extends ModuleFrontController
 {
+    /** @var string module name */
     public $name = 'paypal';
 
+    /** @var  array Contain ajax response. */
     public $jsonValues;
+
+    /** @var  array  POST and GET values defined in init function */
     public $values;
+
+    /** @var  string Contain redirect URL.. */
     public $redirectUrl;
+
+    /** @var  array An array of error information : error_msg, error_code, msg_long. */
     public $errors;
 
     /**
