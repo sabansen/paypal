@@ -13,6 +13,9 @@ Associated table name : paypal_log.
 Use Helper list and Helper Options.
 
 Helper list :
+
+|Name|Description|
+|------|------|
 |id_paypal_log|ID|
 |id_order|Redirect to Order|
 |id_cart|Redirect to cart|
@@ -25,5 +28,6 @@ Helper list :
 
 Configurations:
 
-PAYPAL_REMOVE_LOG_DAYS - number of days, after which remove the logs
+PAYPAL_REMOVE_LOG_DAYS - number of days, after which remove the logs (90 by default)
+PAYPAL_REMOVE_LOG_AUTO - delete the logs (enabled by default)
 
