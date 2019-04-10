@@ -29,7 +29,7 @@ use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
 if (!defined('_PS_VERSION_')) {
     exit;
 }
-use PaypalClasslib\Install\Installer;
+use PaypalClasslib\Module\PaymentModule;
 include_once(_PS_MODULE_DIR_.'paypal/sdk/BraintreeSiSdk.php');
 include_once(_PS_MODULE_DIR_.'paypal/vendor/autoload.php');
 include_once 'classes/AbstractMethodPaypal.php';
@@ -68,7 +68,7 @@ class PayPal extends PaymentModule
     /**
      * List of admin tabs used in this Module
      */
-     public $tabs = array(
+     public $moduleAdminControllers = array(
          array(
              'name' => array(
                  'en' => 'PayPal and Braintree Official',
@@ -157,11 +157,6 @@ class PayPal extends PaymentModule
         ) {
             return false;
         }
-
-        $installer = new Installer();
-        $installer->setModule($this);
-        $installer->installObjectModels();
-        $installer->installModuleAdminControllers();
 
         return true;
     }
@@ -335,10 +330,6 @@ class PayPal extends PaymentModule
         foreach ($config as $var) {
             Configuration::deleteByName($var);
         }
-
-        $installer = new Installer();
-        $installer->uninstallObjectModels();
-        $installer->uninstallModuleAdminControllers();
 
         // Uninstall default
         if (!parent::uninstall()) {
