@@ -29,7 +29,7 @@ use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
 if (!defined('_PS_VERSION_')) {
     exit;
 }
-
+use PaypalClasslib\Install\Installer;
 include_once(_PS_MODULE_DIR_.'paypal/sdk/BraintreeSiSdk.php');
 include_once(_PS_MODULE_DIR_.'paypal/vendor/autoload.php');
 include_once 'classes/AbstractMethodPaypal.php';
@@ -53,6 +53,41 @@ class PayPal extends PaymentModule
     public $module_link;
     public $errors;
     public $bt_countries = array("FR", "GB", "IT", "ES", "US");
+
+    /**
+     * List of objectModel used in this Module
+     * @var array
+     */
+     public $objectModels = array(
+          'PaypalCapture',
+          'PaypalOrder',
+          'PaypalVaulting',
+          'PaypalCustomer'
+     );
+
+    /**
+     * List of admin tabs used in this Module
+     */
+     public $tabs = array(
+         array(
+             'name' => array(
+                 'en' => 'PayPal and Braintree Official',
+                 'fr' => 'PayPal et Braintree Officiel'
+             ),
+             'class_name' => 'AdminParentPaypalConfiguration',
+             'parent_class_name' => 'IMPROVE',
+             'visible' => true,
+         ),
+         array(
+             'name' => array(
+                 'en' => 'Configuration',
+                 'fr' => 'Configuration'
+             ),
+             'class_name' => 'AdminPaypalConfiguration',
+             'parent_class_name' => 'AdminParentPaypalConfiguration',
+             'visible' => true,
+         ),
+     );
 
 
     public function __construct()
@@ -86,10 +121,6 @@ class PayPal extends PaymentModule
     {
         // Install default
         if (!parent::install()) {
-            return false;
-        }
-        // install DataBase
-        if (!$this->installSQL()) {
             return false;
         }
         // Registration order status
@@ -127,75 +158,10 @@ class PayPal extends PaymentModule
             return false;
         }
 
-        return true;
-    }
-
-    /**
-     * Install DataBase table
-     * @return boolean if install was successfull
-     */
-    private function installSQL()
-    {
-        $sql = array();
-
-        $sql[] = "CREATE TABLE IF NOT EXISTS `"._DB_PREFIX_."paypal_order` (
-              `id_paypal_order` INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-              `id_order` INT(11),
-              `id_cart` INT(11),
-              `id_transaction` VARCHAR(55),
-              `id_payment` VARCHAR(55),
-              `client_token` VARCHAR(255),
-              `payment_method` VARCHAR(255),
-              `currency` VARCHAR(21),
-              `total_paid` FLOAT(11),
-              `payment_status` VARCHAR(255),
-              `total_prestashop` FLOAT(11),
-              `method` VARCHAR(255),
-              `payment_tool` VARCHAR(255),
-              `date_add` DATETIME,
-              `date_upd` DATETIME
-        ) ENGINE = "._MYSQL_ENGINE_;
-
-        $sql[] = "CREATE TABLE IF NOT EXISTS `" . _DB_PREFIX_ . "paypal_capture` (
-              `id_paypal_capture` INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-              `id_capture` VARCHAR(55),
-              `id_paypal_order` INT(11),
-              `capture_amount` FLOAT(11),
-              `result` VARCHAR(255),
-              `date_add` DATETIME,
-              `date_upd` DATETIME
-        ) ENGINE = " . _MYSQL_ENGINE_ ;
-
-        $sql[] = "CREATE TABLE IF NOT EXISTS `" . _DB_PREFIX_ . "paypal_customer` (
-              `id_paypal_customer` INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-              `id_customer` INT(11),
-              `reference` VARCHAR(55),
-              `method` VARCHAR(55),
-              `date_add` DATETIME,
-              `date_upd` DATETIME
-        ) ENGINE = " . _MYSQL_ENGINE_ ;
-
-        $sql[] = "CREATE TABLE IF NOT EXISTS `" . _DB_PREFIX_ . "paypal_vaulting` (
-              `id_paypal_vaulting` INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-              `id_paypal_customer` INT(11),
-              `token` VARCHAR(255),
-              `name` VARCHAR(255),
-              `info` VARCHAR(255),
-              `payment_tool` VARCHAR(255),
-              `date_add` DATETIME,
-              `date_upd` DATETIME
-        ) ENGINE = " . _MYSQL_ENGINE_ ;
-
-
-        foreach ($sql as $q) {
-            if (!DB::getInstance()->execute($q)) {
-                return false;
-            }
-        }
-
-        if (!$this->updateRadioCurrencyRestrictionsForModule()) {
-            return false;
-        }
+        $installer = new Installer();
+        $installer->setModule($this);
+        $installer->installObjectModels();
+        $installer->installModuleAdminControllers();
 
         return true;
     }
@@ -370,36 +336,14 @@ class PayPal extends PaymentModule
             Configuration::deleteByName($var);
         }
 
-        //Uninstall DataBase
-        if (!$this->uninstallSQL()) {
-            return false;
-        }
+        $installer = new Installer();
+        $installer->uninstallObjectModels();
+        $installer->uninstallModuleAdminControllers();
 
         // Uninstall default
         if (!parent::uninstall()) {
             return false;
         }
-        return true;
-    }
-
-    /**
-     * Uninstall DataBase table
-     * @return boolean if install was successfull
-     */
-    private function uninstallSQL()
-    {
-        $sql = array();
-        $sql[] = "DROP TABLE IF EXISTS `"._DB_PREFIX_."paypal_capture`";
-        $sql[] = "DROP TABLE IF EXISTS `"._DB_PREFIX_."paypal_order`";
-        $sql[] = "DROP TABLE IF EXISTS `"._DB_PREFIX_."paypal_customer`";
-        $sql[] = "DROP TABLE IF EXISTS `"._DB_PREFIX_."paypal_vaulting`";
-
-        foreach ($sql as $q) {
-            if (!DB::getInstance()->execute($q)) {
-                return false;
-            }
-        }
-
         return true;
     }
 
@@ -526,7 +470,8 @@ class PayPal extends PaymentModule
             'PAYPAL_LIVE_CLIENTID' => Configuration::get('PAYPAL_LIVE_CLIENTID'),
             'PAYPAL_LIVE_SECRET' => Configuration::get('PAYPAL_LIVE_SECRET'),
             'ssl_active' => Configuration::get('PS_SSL_ENABLED'),
-            'country_iso' => $this->context->country->iso_code
+            'country_iso' => $this->context->country->iso_code,
+            'mode' => Configuration::get('PAYPAL_SANDBOX')  ? 'SANDBOX' : 'LIVE',
         ));
 
 
