@@ -1,14 +1,14 @@
 ---
-name: Admin menu
-category: Admin Log controller
+name: Admin log
+category: Admin controllers
 ---
 
 ## Definition
 
-ModuleAdminController from PPBTlib SDK. 
+AdminPaypalProcessLoggerController from PPBTlib SDK. 
 
-Associated object class name : PaypalLog.
-Associated table name : paypal_log.
+Associated object class name : ProcessLogger.
+Associated table name : paypal_processlogger.
 
 Use Helper list and Helper Options.
 

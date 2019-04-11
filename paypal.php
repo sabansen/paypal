@@ -29,7 +29,8 @@ use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
 if (!defined('_PS_VERSION_')) {
     exit;
 }
-use PaypalClasslib\Module\PaymentModule;
+use PaypalPPBTlib\Module\PaymentModule;
+use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerExtension;
 include_once(_PS_MODULE_DIR_.'paypal/sdk/BraintreeSiSdk.php');
 include_once(_PS_MODULE_DIR_.'paypal/vendor/autoload.php');
 include_once 'classes/AbstractMethodPaypal.php';
@@ -64,6 +65,10 @@ class PayPal extends PaymentModule
           'PaypalVaulting',
           'PaypalCustomer'
      );
+
+    public $extensions = array(
+        PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerExtension::class,
+    );
 
     /**
      * List of admin tabs used in this Module

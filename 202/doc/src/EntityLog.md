@@ -9,8 +9,8 @@ Before all logs was savec in Prestashop Messages (SAV). In 4.5 we don't more use
 Everywhere we used Messages we replace by saving the logs to our table. All front errors during the checkout must be also logged 
 (use Error controller to save the logs). 
 
-* Entity name: PaypalLog
-* Table: paypal_log
+* Entity name: ProcessLogger
+* Table: paypal_processlogger
 * Fields:
 
 |Name|Type|Description|Validateur|
