@@ -19,15 +19,11 @@ This module contain composer.json file.
 See the [composer documentation][composer-doc] to learn more about the composer.json file.
 The module namespace is : `PaypalAddons`.
 
-Starting from the 4.5 version, PayPal module for PrestaShop will use Classlib v2
-and PPBTlib.
-
-**Classlib** is the internal 202 repository of PHP classes providing solutions for
-recurring use-cases in PrestaShop modules development. These solutions are
-useful for reducing the code and the probability of errors.
+Starting from the 4.5 version, PayPal module for PrestaShop will use PPBTlib.
 
 **PPBTlib** is the internal 202 library of common PHP classes for PayPal and
-Braintree modules. Using this library, we avoid code duplication. This library
+Braintree modules. Using this library, we avoid code duplication. These solutions are 
+useful for reducing the code and the probability of errors. This library
 will contain new evolutions for 4.5 (for example, Log System, Menu, Common
 configurations etc). Some old code can be also placed to this library (for
 example, Error front controller, Abstract classes etc).
@@ -47,6 +43,12 @@ versions will updated automatically in next module releases.
 For classes and controllers the corresponded test classes must be created. 
 Class PpConfiguration is test class which configure module with test credentials. 
 Class PpCustomer is tools for create test customer and cart.
+
+For rendre the module more testable we need : 
+- don't use redirects and die() functions inside front controllers and method classes. 
+- extend more the PaypalAbstarctModuleFrontController by front controllers
+- all functions Tools::getValue() must be in front controllers and not in method classes.
+
 
 [composer-doc]: https://getcomposer.org/doc/04-schema.md
 [addons]: https://addons.prestashop.com/en/payment-card-wallet/1748-paypal-braintree-official.html

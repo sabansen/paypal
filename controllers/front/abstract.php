@@ -24,44 +24,12 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-use Symfony\Component\HttpFoundation\JsonResponse;
+use PaypalPPBTlib\CommonAbstarctModuleFrontController;
 
 /**
  * Class PaypalAbstarctModuleFrontController
  */
-abstract class PaypalAbstarctModuleFrontController extends ModuleFrontController
+abstract class PaypalAbstarctModuleFrontController extends CommonAbstarctModuleFrontController
 {
-    /** @var string module name */
-    public $name = 'paypal';
 
-    /** @var  array Contain ajax response. */
-    public $jsonValues;
-
-    /** @var  array  POST and GET values defined in init function */
-    public $values;
-
-    /** @var  string Contain redirect URL.. */
-    public $redirectUrl;
-
-    /** @var  array An array of error information : error_msg, error_code, msg_long. */
-    public $errors;
-
-    /**
-     * @see ModuleFrontController::run
-     */
-    public function run()
-    {
-        $this->init();
-        if ($this->checkAccess()) {
-            // postProcess handles ajaxProcess
-            $this->postProcess();
-        }
-        if (!empty($this->redirectUrl)) {
-            Tools::redirect($this->redirectUrl);
-        }
-        if (!empty($this->jsonValues)) {
-            $response = new JsonResponse($this->jsonValues);
-            return $response->send();
-        }
-    }
 }

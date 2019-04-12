@@ -29,10 +29,13 @@ use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
 if (!defined('_PS_VERSION_')) {
     exit;
 }
+include_once(_PS_MODULE_DIR_.'paypal/vendor/autoload.php');
 use PaypalPPBTlib\Module\PaymentModule;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerExtension;
+
+
 include_once(_PS_MODULE_DIR_.'paypal/sdk/BraintreeSiSdk.php');
-include_once(_PS_MODULE_DIR_.'paypal/vendor/autoload.php');
+
 include_once 'classes/AbstractMethodPaypal.php';
 include_once 'classes/PaypalCapture.php';
 include_once 'classes/PaypalOrder.php';
@@ -56,19 +59,46 @@ class PayPal extends PaymentModule
     public $bt_countries = array("FR", "GB", "IT", "ES", "US");
 
     /**
-     * List of objectModel used in this Module
-     * @var array
-     */
-     public $objectModels = array(
-          'PaypalCapture',
-          'PaypalOrder',
-          'PaypalVaulting',
-          'PaypalCustomer'
-     );
+    * List of objectModel used in this Module
+    * @var array
+    */
+    public $objectModels = array(
+        'PaypalCapture',
+        'PaypalOrder',
+        'PaypalVaulting',
+        'PaypalCustomer'
+    );
 
+    /**
+     * List of ppbtlib extentions
+     */
     public $extensions = array(
         PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerExtension::class,
     );
+
+    /**
+     * List of hooks used in this Module
+     */
+     public $hooks = array(
+         'paymentOptions',
+         'paymentReturn',
+         'displayOrderConfirmation',
+         'displayAdminOrder',
+         'actionOrderStatusPostUpdate',
+         'actionOrderStatusUpdate',
+         'header',
+         'actionObjectCurrencyAddAfter',
+         'displayBackOfficeHeader',
+         'displayFooterProduct',
+         'actionBeforeCartUpdateQty',
+         'displayReassurance',
+         'displayInvoiceLegalFreeText',
+         'actionAdminControllerSetMedia',
+         'displayMyAccountBlock',
+         'displayCustomerAccount',
+         'displayShoppingCartFooter',
+         'actionOrderSlipAdd'
+     );
 
     /**
      * List of admin tabs used in this Module
@@ -128,12 +158,9 @@ class PayPal extends PaymentModule
         if (!parent::install()) {
             return false;
         }
+
         // Registration order status
         if (!$this->installOrderState()) {
-            return false;
-        }
-        // Registration hook
-        if (!$this->registrationHook()) {
             return false;
         }
 

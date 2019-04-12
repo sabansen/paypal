@@ -24,74 +24,9 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-abstract class AbstractMethodPaypal
+use PaypalPPBTlib\AbstractMethod;
+
+abstract class AbstractMethodPaypal extends AbstractMethod
 {
-    /** @var string module name */
-    public $name = 'paypal';
 
-    // Force les classes filles à définir cette méthode
-
-    /**
-     * Init payment method
-     * @return string|array
-     */
-    abstract public function init();
-
-    /**
-     * Validate payment
-     * @return Exception
-     */
-    abstract public function validation();
-
-    /**
-     * Capture authorized transaction
-     * @return array|Exception
-     */
-    abstract public function confirmCapture();
-
-    /**
-     * Refund settled transaction
-     * @return mixed
-     */
-    abstract public function refund();
-
-    /**
-     * Update configuration (postProcess)
-     * @param $params array
-     * @return mixed
-     */
-    abstract public function setConfig($params);
-
-    /**
-     * Generate getContent
-     * @param Paypal $module
-     * @return mixed
-     */
-    abstract public function getConfig(Paypal $module);
-
-    /**
-     * Void authorized transaction (cancel payment)
-     * @param $params string Authorization ID
-     * @return mixed
-     */
-    abstract public function void($params);
-
-    /**
-     * @param $params array hookActionOrderSlipAdd parameters
-     * @return mixed
-     */
-    abstract public function partialRefund($params);
-
-    /**
-     * @param string $method method alias like BT, EC, PPP
-     * @return stdClass Method class
-     */
-    public static function load($method)
-    {
-        if (preg_match('/^[a-zA-Z0-9_-]+$/', $method) && file_exists(_PS_MODULE_DIR_.'paypal/classes/Method'.$method.'.php')) {
-            include_once _PS_MODULE_DIR_.'paypal/classes/Method'.$method.'.php';
-            $method_class = 'Method'.$method;
-            return new $method_class();
-        }
-    }
 }

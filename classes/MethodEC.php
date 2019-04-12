@@ -94,7 +94,7 @@ class MethodEC extends AbstractMethodPaypal
     /**
      * @see AbstractMethodPaypal::getConfig()
      */
-    public function getConfig(PayPal $module)
+    public function getConfig(\PayPal $module)
     {
         $mode = Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
         $params = array('inputs' => array(
