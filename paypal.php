@@ -39,6 +39,8 @@ include_once(_PS_MODULE_DIR_.'paypal/sdk/BraintreeSiSdk.php');
 include_once 'classes/AbstractMethodPaypal.php';
 include_once 'classes/PaypalCapture.php';
 include_once 'classes/PaypalOrder.php';
+include_once 'classes/PaypalCustomer.php';
+include_once 'classes/PaypalVaulting.php';
 
 const BT_CARD_PAYMENT = 'card-braintree';
 const BT_PAYPAL_PAYMENT = 'paypal-braintree';
