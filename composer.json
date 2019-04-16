@@ -10,7 +10,7 @@
     },
     "scripts": {
         "pre-autoload-dump": [
-            "php ${PPBTCLASSLIB_DEV_PATH}/PPBTlib//refresh.php ."
+            "if [ ${PPBTCLASSLIB_DEV_PATH} ]; then php ${PPBTCLASSLIB_DEV_PATH}/PPBTlib/refresh.php .; fi"
         ]
     }
 }
