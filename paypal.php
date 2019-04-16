@@ -114,6 +114,7 @@ class PayPal extends PaymentModule
              'class_name' => 'AdminParentPaypalConfiguration',
              'parent_class_name' => 'IMPROVE',
              'visible' => true,
+             'icon' => 'payment'
          ),
          array(
              'name' => array(
@@ -121,6 +122,15 @@ class PayPal extends PaymentModule
                  'fr' => 'Configuration'
              ),
              'class_name' => 'AdminPaypalConfiguration',
+             'parent_class_name' => 'AdminParentPaypalConfiguration',
+             'visible' => true,
+         ),
+         array(
+             'name' => array(
+                 'en' => 'Rapport PayPal',
+                 'fr' => 'Rapport PayPal'
+             ),
+             'class_name' => 'AdminPaypalStats',
              'parent_class_name' => 'AdminParentPaypalConfiguration',
              'visible' => true,
          ),
