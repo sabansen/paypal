@@ -29,5 +29,21 @@ use \ObjectModel;
 
 class ProcessLoggerObjectModel extends ObjectModel
 {
+    /** @var string log */
+    public $log;
 
+    /**
+     * @see \ObjectModel::$definition
+     */
+    public static $definition = array(
+        'table'        => 'paypal_processlogger',
+        'primary'      => 'id_paypal_processlogger',
+        'fields'       => array(
+            'log'     => array(
+                'type'     => ObjectModel::TYPE_STRING,
+                'validate' => 'isGenericName',
+                'size'     => 100,
+            ),
+        ),
+    );
 }
