@@ -302,79 +302,9 @@ class PayPal extends PaymentModule
         return true;
     }
 
-    /**
-     * [registrationHook description]
-     * @return [type] [description]
-     */
-    private function registrationHook()
-    {
-        if (!$this->registerHook('paymentOptions')
-            || !$this->registerHook('paymentReturn')
-            || !$this->registerHook('displayOrderConfirmation')
-            || !$this->registerHook('displayAdminOrder')
-            || !$this->registerHook('actionOrderStatusPostUpdate')
-            || !$this->registerHook('actionOrderStatusUpdate')
-            || !$this->registerHook('header')
-            || !$this->registerHook('actionObjectCurrencyAddAfter')
-            || !$this->registerHook('displayBackOfficeHeader')
-            || !$this->registerHook('displayFooterProduct')
-            || !$this->registerHook('actionBeforeCartUpdateQty')
-            || !$this->registerHook('displayReassurance')
-            || !$this->registerHook('displayInvoiceLegalFreeText')
-            || !$this->registerHook('actionAdminControllerSetMedia')
-            || !$this->registerHook('displayMyAccountBlock')
-            || !$this->registerHook('displayCustomerAccount')
-            || !$this->registerHook('displayShoppingCartFooter')
-            || !$this->registerHook('actionOrderSlipAdd')
-        ) {
-            return false;
-        }
-
-        return true;
-    }
-
-
 
     public function uninstall()
     {
-        $config = array(
-            'PAYPAL_SANDBOX',
-            'PAYPAL_API_INTENT',
-            'PAYPAL_API_ADVANTAGES',
-            'PAYPAL_API_CARD',
-            'PAYPAL_USERNAME_SANDBOX',
-            'PAYPAL_PSWD_SANDBOX',
-            'PAYPAL_SIGNATURE_SANDBOX',
-            'PAYPAL_SANDBOX_ACCESS',
-            'PAYPAL_USERNAME_LIVE',
-            'PAYPAL_PSWD_LIVE',
-            'PAYPAL_SIGNATURE_LIVE',
-            'PAYPAL_LIVE_ACCESS',
-            'PAYPAL_METHOD',
-            'PAYPAL_MERCHANT_ID',
-            'PAYPAL_LIVE_BRAINTREE_ACCESS_TOKEN',
-            'PAYPAL_LIVE_BRAINTREE_EXPIRES_AT',
-            'PAYPAL_LIVE_BRAINTREE_REFRESH_TOKEN',
-            'PAYPAL_LIVE_BRAINTREE_MERCHANT_ID',
-            'PAYPAL_BRAINTREE_ENABLED',
-            'PAYPAL_SANDBOX_BRAINTREE_ACCESS_TOKEN',
-            'PAYPAL_SANDBOX_BRAINTREE_EXPIRES_AT',
-            'PAYPAL_SANDBOX_BRAINTREE_REFRESH_TOKEN',
-            'PAYPAL_SANDBOX_BRAINTREE_MERCHANT_ID',
-            'PAYPAL_BY_BRAINTREE',
-            'PAYPAL_CRON_TIME',
-            'PAYPAL_EXPRESS_CHECKOUT',
-            'PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT',
-            'PAYPAL_VAULTING',
-            'PAYPAL_CONFIG_BRAND',
-            'PAYPAL_CONFIG_LOGO',
-            'PAYPAL_REQUIREMENTS'
-        );
-
-        foreach ($config as $var) {
-            Configuration::deleteByName($var);
-        }
-
         // Uninstall default
         if (!parent::uninstall()) {
             return false;
