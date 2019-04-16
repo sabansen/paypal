@@ -28,10 +28,29 @@ class AdminPaypalStatsController extends \ModuleAdminController {
     /** @var Module Instance of your module automatically set by ModuleAdminController */
     public $module;
 
+    /** @var string redirection link */
+    public $report_link;
+
     public function __construct()
     {
         parent::__construct();
-        #TODO : get the good link
-        Tools::redirect("https://business.sandbox.paypal.com/merchantdata/reportHome");
+        Tools::redirect($this->getReportLink());
+    }
+
+    public function getReportLink()
+    {
+        if (Configuration::get('PAYPAL_METHOD') == 'BT') {
+            if (Configuration::get('PAYPAL_SANDBOX')) {
+                $this->report_link = "https://sandbox.braintreegateway.com/merchants/".Configuration::get('PAYPAL_SANDBOX_BRAINTREE_MERCHANT_ID')."/transactions/advanced_search";
+            } else {
+                $this->report_link = "https://www.braintreegateway.com/merchants/".Configuration::get('PAYPAL_LIVE_BRAINTREE_MERCHANT_ID')."/transactions/advanced_search";
+            }
+        } else {
+            if (Configuration::get('PAYPAL_SANDBOX')) {
+                $this->report_link = "https://business.sandbox.paypal.com/merchantdata/reportHome";
+            } else {
+                $this->report_link = "https://business.paypal.com/merchantdata/reportHome";
+            }
+        }
     }
 }

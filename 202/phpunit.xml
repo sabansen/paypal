@@ -20,10 +20,9 @@
 
     <testsuites>
         <testsuite name="Paypal Module Test Suite">
-            <directory suffix=".php">tests</directory>
+            <directory suffix=".php">tests/</directory>
         </testsuite>
     </testsuites>
-
     <filter>
         <whitelist>
             <directory>./build/prestashop/modules/paypal</directory>

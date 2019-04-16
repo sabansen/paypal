@@ -112,7 +112,7 @@ class PayPal extends PaymentModule
                  'fr' => 'PayPal et Braintree Officiel'
              ),
              'class_name' => 'AdminParentPaypalConfiguration',
-             'parent_class_name' => 'IMPROVE',
+             'parent_class_name' => 'SELL',
              'visible' => true,
              'icon' => 'payment'
          ),
@@ -127,7 +127,7 @@ class PayPal extends PaymentModule
          ),
          array(
              'name' => array(
-                 'en' => 'Rapport PayPal',
+                 'en' => 'Report PayPal',
                  'fr' => 'Rapport PayPal'
              ),
              'class_name' => 'AdminPaypalStats',
