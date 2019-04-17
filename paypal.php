@@ -1155,7 +1155,9 @@ class PayPal extends PaymentModule
         if (!Validate::isLoadedObject($paypal_order)) {
             return false;
         }
-
+        if ($paypal_order->sandbox) {
+            $this->context->controller->warnings[] = $this->l('[SANDBOX] Please pay attention that payment for this order was made via PayPal Sandbox mode.');
+        }
         if (Tools::getValue('not_payed_capture')) {
             $paypal_msg .= $this->displayWarning(
                 '<p class="paypal-warning">'.$this->l('You couldn\'t refund order, it\'s not payed yet.').'</p>'
