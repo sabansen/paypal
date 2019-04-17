@@ -60,9 +60,10 @@ abstract class AbstractMethod
 
     /**
      * Capture authorized transaction
+     * @param $orderPayPal PaypalOrder object
      * @return array|Exception
      */
-    abstract public function confirmCapture();
+    abstract public function confirmCapture($orderPayPal);
 
     /**
      * Refund settled transaction

@@ -719,7 +719,7 @@ class MethodPPP extends AbstractMethodPaypal
     /**
      * @see AbstractMethodPaypal::confirmCapture()
      */
-    public function confirmCapture()
+    public function confirmCapture($orderPayPal)
     {
     }
 

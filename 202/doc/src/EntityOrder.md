@@ -24,7 +24,7 @@ Entity for orders payment related information.
 |total_prestashop|float|Total amount calculating by PS||
 |method|string|Method alias||
 |payment_tool|string|BT tool (cards or paypal)||
-|mode|boolean|Sandbox or live|Added in v. 4.5|
+|sandbox|boolean|Sandbox or live|Added in v. 4.5|
 |date_add|datetime|Date of the creation||
 |date_upd|datetime|Date of the update||
 
