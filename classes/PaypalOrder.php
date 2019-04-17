@@ -62,6 +62,9 @@ class PaypalOrder extends ObjectModel
     /** @var string BT tool (cards or paypal) */
     public $payment_tool;
 
+    /** @var bool mode of payment (sandbox or live) */
+    public $sandbox;
+
     /** @var string Object creation date */
     public $date_add;
 
@@ -87,6 +90,7 @@ class PaypalOrder extends ObjectModel
             'total_prestashop' => array('type' => self::TYPE_FLOAT),
             'method' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
             'payment_tool' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
+            'sandbox' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
             'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
         )

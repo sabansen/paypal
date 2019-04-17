@@ -322,9 +322,12 @@ class MethodPPP extends AbstractMethodPaypal
     /**
      * @return ApiContext
      */
-    public function _getCredentialsInfo()
+    public function _getCredentialsInfo($mode_order = null)
     {
-        switch (Configuration::get('PAYPAL_SANDBOX')) {
+        if ($mode_order === null) {
+            $mode_order = (int) Configuration::get('PAYPAL_SANDBOX');
+        }
+        switch ($mode_order) {
             case 0:
                 $apiContext = new ApiContext(
                     new OAuthTokenCredential(
@@ -345,7 +348,7 @@ class MethodPPP extends AbstractMethodPaypal
 
         $apiContext->setConfig(
             array(
-                'mode' => Configuration::get('PAYPAL_SANDBOX') ? 'sandbox' : 'live',
+                'mode' => $mode_order ? 'sandbox' : 'live',
                 'log.LogEnabled' => false,
                 'cache.enabled' => true,
             )
@@ -727,7 +730,7 @@ class MethodPPP extends AbstractMethodPaypal
     {
         $paypal_order = PaypalOrder::loadByOrderId(Tools::getValue('id_order'));
 
-        $sale = Sale::get($paypal_order->id_transaction, $this->_getCredentialsInfo());
+        $sale = Sale::get($paypal_order->id_transaction, $this->_getCredentialsInfo($paypal_order->sandbox));
 
         // Includes both the refunded amount (to Payer)
         // and refunded fee (to Payee). Use the $amt->details

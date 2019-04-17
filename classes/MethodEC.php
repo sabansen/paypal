@@ -706,23 +706,26 @@ class MethodEC extends AbstractMethodPaypal
     /**
      * @return array Merchant Credentiales
      */
-    public function _getCredentialsInfo()
+    public function _getCredentialsInfo($mode_order = null)
     {
+        if ($mode_order === null) {
+            $mode_order = (int) Configuration::get('PAYPAL_SANDBOX');
+        }
         $params = array();
-        switch (Configuration::get('PAYPAL_SANDBOX')) {
+        switch ($mode_order) {
             case 0:
                 $params['acct1.UserName'] = Configuration::get('PAYPAL_USERNAME_LIVE');
                 $params['acct1.Password'] = Configuration::get('PAYPAL_PSWD_LIVE');
                 $params['acct1.Signature'] = Configuration::get('PAYPAL_SIGNATURE_LIVE');
                 $params['acct1.Signature'] = Configuration::get('PAYPAL_SIGNATURE_LIVE');
-                $params['mode'] = Configuration::get('PAYPAL_SANDBOX') ? 'sandbox' : 'live';
+                $params['mode'] = $mode_order ? 'sandbox' : 'live';
                 $params['log.LogEnabled'] = false;
                 break;
             case 1:
                 $params['acct1.UserName'] = Configuration::get('PAYPAL_USERNAME_SANDBOX');
                 $params['acct1.Password'] = Configuration::get('PAYPAL_PSWD_SANDBOX');
                 $params['acct1.Signature'] = Configuration::get('PAYPAL_SIGNATURE_SANDBOX');
-                $params['mode'] = Configuration::get('PAYPAL_SANDBOX') ? 'sandbox' : 'live';
+                $params['mode'] = $mode_order ? 'sandbox' : 'live';
                 $params['log.LogEnabled'] = false;
                 break;
         }
@@ -869,7 +872,7 @@ class MethodEC extends AbstractMethodPaypal
         $refundTransactionReq = new RefundTransactionReq();
         $refundTransactionReq->RefundTransactionRequest = $refundTransactionReqType;
 
-        $paypalService = new PayPalAPIInterfaceServiceService($this->_getCredentialsInfo());
+        $paypalService = new PayPalAPIInterfaceServiceService($this->_getCredentialsInfo($paypal_order->sandbox));
         $response = $paypalService->RefundTransaction($refundTransactionReq);
 
         if ($response instanceof PayPal\PayPalAPI\RefundTransactionResponseType) {
@@ -952,14 +955,14 @@ class MethodEC extends AbstractMethodPaypal
     /**
      * @see AbstractMethodPaypal::void()
      */
-    public function void($authorization)
+    public function void($authorization, $mode_order)
     {
         $doVoidReqType = new DoVoidRequestType();
         $doVoidReqType->AuthorizationID = $authorization;
         $doVoidReq = new DoVoidReq();
         $doVoidReq->DoVoidRequest = $doVoidReqType;
 
-        $paypalService = new PayPalAPIInterfaceServiceService($this->_getCredentialsInfo());
+        $paypalService = new PayPalAPIInterfaceServiceService($this->_getCredentialsInfo($mode_order));
         $response = $paypalService->DoVoid($doVoidReq);
 
         if ($response instanceof PayPal\PayPalAPI\DoVoidResponseType) {

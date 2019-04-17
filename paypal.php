@@ -1120,8 +1120,8 @@ class PayPal extends PaymentModule
             $paypal_order->total_prestashop = (float) $total_ps;
             $paypal_order->method = $transaction['method'];
             $paypal_order->payment_tool = isset($transaction['payment_tool']) ? $transaction['payment_tool'] : '';
+            $paypal_order->sandbox = (int) Configuration::get('PAYPAL_SANDBOX');
             $paypal_order->save();
-
 
             if ($transaction['capture']) {
                 $paypal_capture = new PaypalCapture();
@@ -1355,7 +1355,7 @@ class PayPal extends PaymentModule
             }
 
             try {
-                $response_void = $method->void(array('authorization_id'=>$orderPayPal->id_transaction));
+                $response_void = $method->void(array('authorization_id'=>$orderPayPal->id_transaction), $orderPayPal->sandbox);
             } catch (PayPal\Exception\PPConnectionException $e) {
                 $ex_detailed_message = $this->l('Error connecting to ') . $e->getUrl();
             } catch (PayPal\Exception\PPMissingCredentialException $e) {
@@ -1417,7 +1417,7 @@ class PayPal extends PaymentModule
 
             if ($paypal_order->method == "BT" && $status == "submitted_for_settlement") {
                 try {
-                    $refund_response = $method->void(array('authorization_id'=>$paypal_order->id_transaction));
+                    $refund_response = $method->void(array('authorization_id'=>$paypal_order->id_transaction), $orderPayPal->sandbox);
                 } catch (PayPal\Exception\PPConnectionException $e) {
                     $ex_detailed_message = $this->l('Error connecting to ') . $e->getUrl();
                 } catch (PayPal\Exception\PPMissingCredentialException $e) {

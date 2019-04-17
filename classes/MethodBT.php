@@ -348,9 +348,13 @@ class MethodBT extends AbstractMethodPaypal
     /**
      * Init class configurations
      */
-    private function initConfig()
+    private function initConfig($order_mode = null)
     {
-        $this->mode = Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
+        if ($order_mode !== null) {
+            $this->mode = $order_mode ? 'SANDBOX' : 'LIVE';
+        } else {
+            $this->mode = Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
+        }
         $this->gateway = new Braintree_Gateway(array('accessToken' => Configuration::get('PAYPAL_'.$this->mode.'_BRAINTREE_ACCESS_TOKEN')));
         $this->error = '';
     }
@@ -798,9 +802,9 @@ class MethodBT extends AbstractMethodPaypal
      */
     public function refund()
     {
-        $this->initConfig();
         try {
             $paypal_order = PaypalOrder::loadByOrderId(Tools::getValue('id_order'));
+            $this->initConfig($paypal_order->sandbox);
             $capture = PaypalCapture::loadByOrderPayPalId($paypal_order->id);
             $id_transaction = Validate::isLoadedObject($capture) ? $capture->id_capture : $paypal_order->id_transaction;
 
@@ -903,9 +907,9 @@ class MethodBT extends AbstractMethodPaypal
     /**
      * @see AbstractMethodPaypal::void()
      */
-    public function void($authorization)
+    public function void($authorization, $mode_order)
     {
-        $this->initConfig();
+        $this->initConfig($mode_order);
         try {
             $result = $this->gateway->transaction()->void($authorization['authorization_id']);
             if ($result instanceof Braintree_Result_Successful && $result->success) {

@@ -87,9 +87,10 @@ abstract class AbstractMethod
     /**
      * Void authorized transaction (cancel payment)
      * @param $params string Authorization ID
+     * @param $mode_order bool use mode sandbox or live
      * @return mixed
      */
-    abstract public function void($params);
+    abstract public function void($params, $mode_order);
 
     /**
      * @param $params array hookActionOrderSlipAdd parameters
