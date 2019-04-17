@@ -69,6 +69,8 @@ class MethodPPP extends AbstractMethodPaypal
     /** payment Object IDl*/
     public $paymentId;
 
+    protected $payment_method = 'PayPal';
+
     /**
      * @param $values array replace for tools::getValues()
      */
@@ -692,7 +694,7 @@ class MethodPPP extends AbstractMethodPaypal
         $paypal = Module::getInstanceByName($this->name);
         $order_state = Configuration::get('PS_OS_PAYMENT');
         $transactionDetail = $this->getDetailsTransaction($exec_payment);
-        $paypal->validateOrder($cart->id, $order_state, $total, 'PayPal', null, $transactionDetail, (int)$currency->id, false, $customer->secure_key);
+        $paypal->validateOrder($cart->id, $order_state, $total, $this->getPaymentMethod(), null, $transactionDetail, (int)$currency->id, false, $customer->secure_key);
     }
 
     public function getDetailsTransaction($transaction)

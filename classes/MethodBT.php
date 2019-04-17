@@ -60,6 +60,8 @@ class MethodBT extends AbstractMethodPaypal
     /** @var  bool vaulting checkbox */
     private $save_account_in_vault;
 
+    protected $payment_method = 'Braintree';
+
     /**
      * @param $values array replace for tools::getValues()
      */
@@ -459,7 +461,7 @@ class MethodBT extends AbstractMethodPaypal
         } else {
             $order_state = Configuration::get('PAYPAL_BRAINTREE_OS_AWAITING');
         }
-        $paypal->validateOrder(context::getContext()->cart->id, $order_state, $transaction->amount, 'Braintree', $paypal->l('Payment accepted.'), $transactionDetail, context::getContext()->cart->id_currency, false, context::getContext()->customer->secure_key);
+        $paypal->validateOrder(context::getContext()->cart->id, $order_state, $transaction->amount, $this->getPaymentMethod(), $paypal->l('Payment accepted.'), $transactionDetail, context::getContext()->cart->id_currency, false, context::getContext()->customer->secure_key);
     }
 
     /**

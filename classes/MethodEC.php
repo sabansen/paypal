@@ -79,6 +79,8 @@ class MethodEC extends AbstractMethodPaypal
     /** @var string payment payer ID returned by paypal*/
     private $payerId;
 
+    protected $payment_method = 'PayPal';
+
     /**
      * @param $values array replace for tools::getValues()
      */
@@ -779,7 +781,7 @@ class MethodEC extends AbstractMethodPaypal
             $order_state = Configuration::get('PAYPAL_OS_WAITING');
         }
         $transactionDetail = $this->getDetailsTransaction($exec_payment->DoExpressCheckoutPaymentResponseDetails);
-        $paypal->validateOrder($cart->id, $order_state, $total, 'PayPal', null, $transactionDetail, (int)$currency->id, false, $customer->secure_key);
+        $paypal->validateOrder($cart->id, $order_state, $total, $this->getPaymentMethod(), null, $transactionDetail, (int)$currency->id, false, $customer->secure_key);
     }
 
     /**

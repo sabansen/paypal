@@ -56,7 +56,7 @@ abstract class CommonAbstarctModuleFrontController extends ModuleFrontController
             $this->postProcess();
         }
         if (!empty($this->redirectUrl)) {
-            Tools::redirect($this->redirectUrl);
+            \Tools::redirect($this->redirectUrl);
         }
         if (!empty($this->jsonValues)) {
             $response = new JsonResponse($this->jsonValues);
