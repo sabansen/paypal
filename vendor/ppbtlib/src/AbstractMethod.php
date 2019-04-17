@@ -33,6 +33,19 @@ abstract class AbstractMethod
 
     // Force les classes filles à définir cette méthode
 
+    /** @var string payment method */
+    protected $payment_method;
+
+    /** @return string*/
+    protected function getPaymentMethod()
+    {
+        if ((int)\Configuration::get('PAYPAL_SANDBOX')) {
+            return $this->payment_method . ' - SANDBOX';
+        } else {
+            return $this->payment_method;
+        }
+    }
+
     /**
      * Init payment method
      * @return string|array

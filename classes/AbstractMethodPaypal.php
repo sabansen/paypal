@@ -28,14 +28,5 @@ use PaypalPPBTlib\AbstractMethod;
 
 abstract class AbstractMethodPaypal extends AbstractMethod
 {
-    protected $payment_method;
 
-    protected function getPaymentMethod()
-    {
-        if ((int)Configuration::get('PAYPAL_SANDBOX')) {
-            return $this->payment_method . ' - SANDBOX';
-        } else {
-            return $this->payment_method;
-        }
-    }
 }
