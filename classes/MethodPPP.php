@@ -726,10 +726,8 @@ class MethodPPP extends AbstractMethodPaypal
     /**
      * @see AbstractMethodPaypal::refund()
      */
-    public function refund()
+    public function refund($paypal_order)
     {
-        $paypal_order = PaypalOrder::loadByOrderId(Tools::getValue('id_order'));
-
         $sale = Sale::get($paypal_order->id_transaction, $this->_getCredentialsInfo($paypal_order->sandbox));
 
         // Includes both the refunded amount (to Payer)
@@ -762,7 +760,7 @@ class MethodPPP extends AbstractMethodPaypal
     {
         $paypal_order = PaypalOrder::loadByOrderId(Tools::getValue('id_order'));
 
-        $sale = Sale::get($paypal_order->id_transaction, $this->_getCredentialsInfo());
+        $sale = Sale::get($paypal_order->id_transaction, $this->_getCredentialsInfo($paypal_order->sandbox));
 
         $amount = 0;
         foreach ($params['productList'] as $product) {
@@ -795,7 +793,7 @@ class MethodPPP extends AbstractMethodPaypal
     /**
      * @see AbstractMethodPaypal::void()
      */
-    public function void($params)
+    public function void($orderPayPal)
     {
     }
 

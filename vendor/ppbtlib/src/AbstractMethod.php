@@ -66,9 +66,10 @@ abstract class AbstractMethod
 
     /**
      * Refund settled transaction
+     * @param $orderPayPal PaypalOrder object
      * @return mixed
      */
-    abstract public function refund();
+    abstract public function refund($orderPayPal);
 
     /**
      * Update configuration (postProcess)
@@ -86,11 +87,10 @@ abstract class AbstractMethod
 
     /**
      * Void authorized transaction (cancel payment)
-     * @param $params string Authorization ID
-     * @param $mode_order bool use mode sandbox or live
+     * @param $orderPayPal PaypalOrder object
      * @return mixed
      */
-    abstract public function void($params, $mode_order);
+    abstract public function void($orderPayPal);
 
     /**
      * @param $params array hookActionOrderSlipAdd parameters

@@ -1331,21 +1331,20 @@ class PayPal extends PaymentModule
 
     public function hookActionOrderStatusUpdate(&$params)
     {
-        $paypal_order = PaypalOrder::loadByOrderId($params['id_order']);
-        if (!Validate::isLoadedObject($paypal_order)) {
+        $orderPayPal = PaypalOrder::loadByOrderId($params['id_order']);
+        if (!Validate::isLoadedObject($orderPayPal)) {
             return false;
         }
-        $method = AbstractMethodPaypal::load($paypal_order->method);
+        $method = AbstractMethodPaypal::load($orderPayPal->method);
         $orderMessage = new CustomerMessage();
         $orderMessage->message = "";
         $ex_detailed_message = '';
         if ($params['newOrderStatus']->id == Configuration::get('PS_OS_CANCELED')) {
-            if ($paypal_order->method == "PPP" || $paypal_order->payment_status == "refunded") {
+            if ($orderPayPal->method == "PPP" || $orderPayPal->payment_status == "refunded") {
                 return;
             }
-            $orderPayPal = PaypalOrder::loadByOrderId($params['id_order']);
             $paypalCapture = PaypalCapture::loadByOrderPayPalId($orderPayPal->id);
-            if ($paypal_order->method == "EC" && $paypal_order->payment_status != "refunded" && ((!Validate::isLoadedObject($paypalCapture))
+            if ($orderPayPal->method == "EC" && $orderPayPal->payment_status != "refunded" && ((!Validate::isLoadedObject($paypalCapture))
             || (Validate::isLoadedObject($paypalCapture) && $paypalCapture->id_capture))) {
                 $orderMessage->message = $this->l('You canceled the order that hadn\'t been refunded yet');
                 $orderMessage->id_customer_thread = $this->createOrderThread($params['id_order']);
@@ -1357,7 +1356,7 @@ class PayPal extends PaymentModule
             }
 
             try {
-                $response_void = $method->void(array('authorization_id'=>$orderPayPal->id_transaction), $orderPayPal->sandbox);
+                $response_void = $method->void($orderPayPal);
             } catch (PayPal\Exception\PPConnectionException $e) {
                 $ex_detailed_message = $this->l('Error connecting to ') . $e->getUrl();
             } catch (PayPal\Exception\PPMissingCredentialException $e) {
@@ -1401,7 +1400,7 @@ class PayPal extends PaymentModule
         }
 
         if ($params['newOrderStatus']->id == Configuration::get('PS_OS_REFUND')) {
-            $capture = PaypalCapture::loadByOrderPayPalId($paypal_order->id);
+            $capture = PaypalCapture::loadByOrderPayPalId($orderPayPal->id);
             if (Validate::isLoadedObject($capture) && !$capture->id_capture) {
                 $orderMessage = new Message();
                 $orderMessage->id_customer_thread = $this->createOrderThread($params['id_order']);
@@ -1413,13 +1412,13 @@ class PayPal extends PaymentModule
                 Tools::redirect($_SERVER['HTTP_REFERER'].'&not_payed_capture=1');
             }
             $status = '';
-            if ($paypal_order->method == "BT") {
-                $status = $method->getTransactionStatus($paypal_order->id_transaction);
+            if ($orderPayPal->method == "BT") {
+                $status = $method->getTransactionStatus($orderPayPal->id_transaction);
             }
 
-            if ($paypal_order->method == "BT" && $status == "submitted_for_settlement") {
+            if ($orderPayPal->method == "BT" && $status == "submitted_for_settlement") {
                 try {
-                    $refund_response = $method->void(array('authorization_id'=>$paypal_order->id_transaction), $orderPayPal->sandbox);
+                    $refund_response = $method->void($orderPayPal);
                 } catch (PayPal\Exception\PPConnectionException $e) {
                     $ex_detailed_message = $this->l('Error connecting to ') . $e->getUrl();
                 } catch (PayPal\Exception\PPMissingCredentialException $e) {
@@ -1429,11 +1428,11 @@ class PayPal extends PaymentModule
                 }
                 if ($refund_response['success']) {
                     $capture->result = 'voided';
-                    $paypal_order->payment_status = 'voided';
+                    $orderPayPal->payment_status = 'voided';
                 }
             } else {
                 try {
-                    $refund_response = $method->refund();
+                    $refund_response = $method->refund($orderPayPal);
                 } catch (PayPal\Exception\PPConnectionException $e) {
                     $ex_detailed_message = $this->l('Error connecting to ') . $e->getUrl();
                 } catch (PayPal\Exception\PPMissingCredentialException $e) {
@@ -1453,13 +1452,13 @@ class PayPal extends PaymentModule
 
                 if ($refund_response['success']) {
                     $capture->result = 'refunded';
-                    $paypal_order->payment_status = 'refunded';
+                    $orderPayPal->payment_status = 'refunded';
                 }
             }
 
             if ($refund_response['success']) {
                 $capture->save();
-                $paypal_order->save();
+                $orderPayPal->save();
             }
 
             if ($ex_detailed_message) {
@@ -1483,7 +1482,7 @@ class PayPal extends PaymentModule
         }
 
         if ($params['newOrderStatus']->id == Configuration::get('PS_OS_PAYMENT')) {
-            $capture = PaypalCapture::loadByOrderPayPalId($paypal_order->id);
+            $capture = PaypalCapture::loadByOrderPayPalId($orderPayPal->id);
             if (!Validate::isLoadedObject($capture)) {
                 return false;
             }
@@ -1499,8 +1498,8 @@ class PayPal extends PaymentModule
             }
 
             if (isset($capture_response['success'])) {
-                $paypal_order->payment_status = $capture_response['status'];
-                $paypal_order->save();
+                $orderPayPal->payment_status = $capture_response['status'];
+                $orderPayPal->save();
             }
             if ($ex_detailed_message) {
                 $orderMessage->message = $ex_detailed_message;

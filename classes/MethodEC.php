@@ -858,9 +858,8 @@ class MethodEC extends AbstractMethodPaypal
     /**
      * @see AbstractMethodPaypal::refund()
      */
-    public function refund()
+    public function refund($paypal_order)
     {
-        $paypal_order = PaypalOrder::loadByOrderId(Tools::getValue('id_order'));
         $id_paypal_order = $paypal_order->id;
         $capture = PaypalCapture::loadByOrderPayPalId($id_paypal_order);
 
@@ -924,7 +923,7 @@ class MethodEC extends AbstractMethodPaypal
         $refundTransactionReq = new RefundTransactionReq();
         $refundTransactionReq->RefundTransactionRequest = $refundTransactionReqType;
 
-        $paypalService = new PayPalAPIInterfaceServiceService($this->_getCredentialsInfo());
+        $paypalService = new PayPalAPIInterfaceServiceService($this->_getCredentialsInfo($paypal_order->sandbox));
         $response = $paypalService->RefundTransaction($refundTransactionReq);
 
         if ($response instanceof PayPal\PayPalAPI\RefundTransactionResponseType) {
@@ -955,14 +954,14 @@ class MethodEC extends AbstractMethodPaypal
     /**
      * @see AbstractMethodPaypal::void()
      */
-    public function void($authorization, $mode_order)
+    public function void($orderPayPal)
     {
         $doVoidReqType = new DoVoidRequestType();
-        $doVoidReqType->AuthorizationID = $authorization;
+        $doVoidReqType->AuthorizationID = array('authorization_id'=>$orderPayPal->id_transaction);
         $doVoidReq = new DoVoidReq();
         $doVoidReq->DoVoidRequest = $doVoidReqType;
 
-        $paypalService = new PayPalAPIInterfaceServiceService($this->_getCredentialsInfo($mode_order));
+        $paypalService = new PayPalAPIInterfaceServiceService($this->_getCredentialsInfo($orderPayPal->sandbox));
         $response = $paypalService->DoVoid($doVoidReq);
 
         if ($response instanceof PayPal\PayPalAPI\DoVoidResponseType) {
