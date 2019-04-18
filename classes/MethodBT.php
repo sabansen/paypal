@@ -431,14 +431,14 @@ class MethodBT extends AbstractMethodPaypal
 
     /**
      * Get current Transaction status from BT
-     * @param string $transactionId
+     * @param PaypalOrder $orderPayPal
      * @return string|boolean
      */
-    public function getTransactionStatus($transactionId)
+    public function getTransactionStatus($orderPayPal)
     {
-        $this->initConfig();
+        $this->initConfig($orderPayPal->sandbox);
         try {
-            $result = $this->gateway->transaction()->find($transactionId);
+            $result = $this->gateway->transaction()->find($orderPayPal->id_transaction);
             return $result->status;
         } catch (Exception $e) {
             return false;

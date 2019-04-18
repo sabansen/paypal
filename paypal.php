@@ -1413,7 +1413,7 @@ class PayPal extends PaymentModule
             }
             $status = '';
             if ($orderPayPal->method == "BT") {
-                $status = $method->getTransactionStatus($orderPayPal->id_transaction);
+                $status = $method->getTransactionStatus($orderPayPal);
             }
 
             if ($orderPayPal->method == "BT" && $status == "submitted_for_settlement") {
@@ -1488,7 +1488,7 @@ class PayPal extends PaymentModule
             }
 
             try {
-                $capture_response = $method->confirmCapture();
+                $capture_response = $method->confirmCapture($orderPayPal);
             } catch (PayPal\Exception\PPConnectionException $e) {
                 $ex_detailed_message = $this->l('Error connecting to ') . $e->getUrl();
             } catch (PayPal\Exception\PPMissingCredentialException $e) {
