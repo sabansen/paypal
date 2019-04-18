@@ -22,7 +22,7 @@ Everywhere we used Messages we replace by saving the logs to our table. All fron
 |id_transaction|string|transaction id from API response||
 |log|string|Log message, like API response or error. Example: error code - short message - message long|Required |
 |status|string|Info or Error||
-|mode|boolean|Sandbox or Live||
+|sandbox|boolean|Sandbox or Live||
 |tools|string|Cards, paypal, google or apple pay|Not required|
 |date_add|datetime|Date of the creation||
 
