@@ -32,6 +32,30 @@ class ProcessLoggerObjectModel extends ObjectModel
     /** @var string log */
     public $log;
 
+    /* @var int id_order*/
+    public $id_order;
+
+    /* @var int id_cart*/
+    public $id_cart;
+
+    /* @var int id_shop*/
+    public $id_shop;
+
+    /* @var string id_transaction*/
+    public $id_transaction;
+
+    /* @var string status*/
+    public $status;
+
+    /* @var bool sandbox*/
+    public $sandbox;
+
+    /* @var string tools*/
+    public $tools;
+
+    /* @var string creation date*/
+    public $date_add;
+
     /**
      * @see \ObjectModel::$definition
      */
@@ -39,10 +63,48 @@ class ProcessLoggerObjectModel extends ObjectModel
         'table'        => 'paypal_processlogger',
         'primary'      => 'id_paypal_processlogger',
         'fields'       => array(
+            'id_order'     => array(
+                'type'     => ObjectModel::TYPE_INT,
+                'validate' => 'isUnsignedId',
+                'size'     => 11,
+            ),
+            'id_cart'     => array(
+                'type'     => ObjectModel::TYPE_INT,
+                'validate' => 'isUnsignedId',
+                'size'     => 11,
+            ),
+            'id_shop'     => array(
+                'type'     => ObjectModel::TYPE_INT,
+                'validate' => 'isUnsignedId',
+                'size'     => 11,
+            ),
+            'id_transaction'     => array(
+                'type'     => ObjectModel::TYPE_STRING,
+                'validate' => 'isGenericName',
+                'size'     => 50,
+            ),
             'log'     => array(
                 'type'     => ObjectModel::TYPE_STRING,
                 'validate' => 'isGenericName',
                 'size'     => 100,
+            ),
+            'status'     => array(
+                'type'     => ObjectModel::TYPE_STRING,
+                'validate' => 'isGenericName',
+                'size'     => 20,
+            ),
+            'sandbox'     => array(
+                'type'     => ObjectModel::TYPE_BOOL,
+                'validate' => 'isBool'
+            ),
+            'tools'     => array(
+                'type'     => ObjectModel::TYPE_STRING,
+                'validate' => 'isGenericName',
+                'size'     => 50,
+            ),
+            'date_add'     => array(
+                'type'     => ObjectModel::TYPE_DATE,
+                'validate' => 'isDate',
             ),
         ),
     );

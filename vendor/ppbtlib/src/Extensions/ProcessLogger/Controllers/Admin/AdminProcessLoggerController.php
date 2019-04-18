@@ -66,7 +66,55 @@ class AdminProcessLoggerController extends \ModuleAdminController
     {
         parent::__construct();
 
+        $this->addRowAction('delete');
 
+        $this->bulk_actions = array(
+            'delete' => array(
+                'text' => $this->module->l('Delete selected', 'AdminProcessLoggerController'),
+                'confirm' => $this->module->l(
+                    'Would you like to delete the selected items?',
+                    'AdminProcessLoggerController'
+                ),
+            )
+        );
+
+        $this->fields_list = array(
+            'id_paypal_processlogger' => array(
+                'title'  => $this->module->l('ID', 'AdminProcessLoggerController'),
+                'align'  => 'center',
+                'class'  => 'fixed-width-xs',
+                'search' => true,
+            ),
+            'sandbox' => array(
+                'title' => $this->module->l('Mode', 'AdminProcessLoggerController'),
+            ),
+            'tools' => array(
+                'title' => $this->module->l('Payment tools', 'AdminProcessLoggerController'),
+            ),
+            'id_cart' => array(
+                'title'    => $this->module->l('ID cart', 'AdminProcessLoggerController'),
+                'callback' => 'getLevel',
+            ),
+            'id_order' => array(
+                'title' => $this->module->l('ID order', 'AdminProcessLoggerController'),
+            ),
+            'id_transaction' => array(
+                'title'    => $this->module->l('Transaction ID', 'AdminProcessLoggerController'),
+                'callback' => 'getObjectId',
+            ),
+            'status' => array(
+                'title' => $this->module->l('Level', 'AdminProcessLoggerController'),
+            ),
+            'log' => array(
+                'title' => $this->module->l('Message (AIP PayPal/Braintree response)', 'AdminProcessLoggerController'),
+            ),
+            'id_shop' => array(
+                'title' => $this->module->l('Shop ID', 'AdminProcessLoggerController'),
+            ),
+            'date_add' => array(
+                'title' => $this->module->l('Date', 'AdminProcessLoggerController'),
+            ),
+        );
     }
 
     /**
@@ -160,7 +208,7 @@ class AdminProcessLoggerController extends \ModuleAdminController
         foreach ($shops as $shop) {
             $extlogs_erasing_daysmax = Tools::getValue('PAYPAL_EXTLOGS_ERASING_DAYSMAX');
             $extlogs_erasing_disabled = Tools::getValue('PAYPAL_EXTLOGS_ERASING_DISABLED');
-
+            
             Configuration::updateValue(
                 'PAYPAL_EXTLOGS_ERASING_DISABLED',
                 ($extlogs_erasing_disabled ? true : false),

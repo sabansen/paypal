@@ -25,6 +25,7 @@
  */
 
 use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
+use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -32,6 +33,7 @@ if (!defined('_PS_VERSION_')) {
 include_once(_PS_MODULE_DIR_.'paypal/vendor/autoload.php');
 use PaypalPPBTlib\Module\PaymentModule;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerExtension;
+
 
 
 include_once(_PS_MODULE_DIR_.'paypal/sdk/BraintreeSiSdk.php');
