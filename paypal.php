@@ -685,10 +685,10 @@ class PayPal extends PaymentModule
                 if (Configuration::get('PAYPAL_PLUS_ENABLED') && $this->assignInfoPaypalPlus()) {
                     $payment_options = new PaymentOption();
                     $action_text = $this->l('Pay with PayPal Plus');
-                    $payment_options->setCallToActionText($action_text);
                     if (Configuration::get('PAYPAL_API_ADVANTAGES')) {
                         $action_text .= ' | '.$this->l('It\'s easy, simple and secure');
                     }
+                    $payment_options->setCallToActionText($action_text);
                     $payment_options->setModuleName('paypal_plus');
                     $payment_options->setAction('javascript:doPatchPPP();');
                     try {

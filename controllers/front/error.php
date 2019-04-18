@@ -30,6 +30,17 @@
 class PaypalErrorModuleFrontController extends ModuleFrontController
 {
     /**
+     * @see ModuleFrontController::init()
+     */
+    public function init()
+    {
+        parent::init();
+        $this->values['error_msg'] = Tools::getvalue('error_msg');
+        $this->values['msg_long'] = Tools::getvalue('msg_long');
+        $this->values['error_code'] = Tools::getvalue('error_code');
+        $this->values['no_retry'] = Tools::getvalue('no_retry');
+    }
+    /**
      * @see FrontController::initContent()
      */
     public function initContent()
@@ -37,10 +48,10 @@ class PaypalErrorModuleFrontController extends ModuleFrontController
         parent::initContent();
 
         Context::getContext()->smarty->assign(array(
-            'error_msg' => Tools::getValue('error_msg'),
-            'msg_long' => Tools::getValue('msg_long'),
-            'error_code' => Tools::getValue('error_code'),
-            'show_retry' => (Context::getContext()->cart->nbProducts() > 0 && !Tools::getValue('no_retry')) ? true : false,
+            'error_msg' => $this->values['error_msg'],
+            'msg_long' => $this->values['msg_long'],
+            'error_code' => $this->values['error_code'],
+            'show_retry' => (Context::getContext()->cart->nbProducts() > 0 && !$this->values['no_retry']) ? true : false,
             'method' => Configuration::get('PAYPAL_METHOD'),
         ));
 
