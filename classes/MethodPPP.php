@@ -776,7 +776,7 @@ class MethodPPP extends AbstractMethodPaypal
         $refundRequest = new RefundRequest();
         $refundRequest->setAmount($amt);
 
-        $response = $sale->refundSale($refundRequest, $this->_getCredentialsInfo());
+        $response = $sale->refundSale($refundRequest, $this->_getCredentialsInfo($paypal_order->sandbox));
 
         $result =  array(
             'success' => true,
