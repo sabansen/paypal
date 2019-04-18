@@ -38,6 +38,9 @@ class PaypalCustomer extends ObjectModel
     /** @var string BT, EC, etc... */
     public $method;
 
+    /** @var bool mode of customer (sandbox or live) */
+    public $sandbox;
+
     /** @var string Object creation date */
     public $date_add;
 
@@ -55,6 +58,7 @@ class PaypalCustomer extends ObjectModel
             'id_customer' => array('type' => self::TYPE_INT),
             'reference' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
             'method' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
+            'sandbox' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
             'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
         )
@@ -64,15 +68,18 @@ class PaypalCustomer extends ObjectModel
      * Load customer object by ID
      * @param integer $id_customer PrestaShop Customer ID
      * @param string $method method alias
+     * @param bool $sandbox mode of customer
      * @return object PaypalCustomer
      */
-    public static function loadCustomerByMethod($id_customer, $method)
+    public static function loadCustomerByMethod($id_customer, $method, $sandbox)
     {
         $db = Db::getInstance();
         $query = new DbQuery();
         $query->select('id_paypal_customer');
         $query->from('paypal_customer');
-        $query->where('id_customer = '.(int)$id_customer. ' AND method = "'.pSQL($method).'"');
+        $query->where('id_customer = '.(int)$id_customer);
+        $query->where('method = "'.pSQL($method).'"');
+        $query->where('sandbox = ' . (int)$sandbox);
         $id = $db->getValue($query);
         return new PaypalCustomer($id);
     }

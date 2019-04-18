@@ -579,11 +579,11 @@ class MethodBT extends AbstractMethodPaypal
             "deviceData"            => '',
         );
 
-        $paypal_customer = PaypalCustomer::loadCustomerByMethod(Context::getContext()->customer->id, 'BT');
+        $paypal_customer = PaypalCustomer::loadCustomerByMethod(Context::getContext()->customer->id, 'BT', (int)Configuration::get('PAYPAL_SANDBOX'));
         if (!$paypal_customer->id) {
             $paypal_customer = $this->createCustomer();
         } else {
-            $this->updateCustomer($paypal_customer->reference);
+            $this->updateCustomer($paypal_customer);
         }
 
         $paypal = Module::getInstanceByName($this->name);
@@ -685,10 +685,10 @@ class MethodBT extends AbstractMethodPaypal
 
     /**
      * Update customer info on BT
-     * @param string $id_customer BT customer reference
+     * @param PaypalCustomer $paypal_customer
      * @throws Exception
      */
-    public function updateCustomer($id_customer)
+    public function updateCustomer($paypal_customer)
     {
         $context = Context::getContext();
         $data = array(
@@ -697,8 +697,10 @@ class MethodBT extends AbstractMethodPaypal
             'email' => $context->customer->email
         );
         try {
-            $this->gateway->customer()->update($id_customer, $data);
+            $this->gateway->customer()->update($paypal_customer->reference, $data);
         } catch (Braintree\Exception\NotFound $e) {
+            $paypal_customer->sandbox = !$paypal_customer->sandbox;
+            $paypal_customer->save();
             $paypal = Module::getInstanceByName($this->name);
             $mode  = Configuration::get('PAYPAL_SANDBOX') ? 'Sandbox' : 'Live';
             $mode2  = !Configuration::get('PAYPAL_SANDBOX') ? 'Sandbox' : 'Live';
@@ -726,6 +728,7 @@ class MethodBT extends AbstractMethodPaypal
         $customer->id_customer = $context->customer->id;
         $customer->reference = $result->customer->id;
         $customer->method = 'BT';
+        $customer->sandbox = (int) Configuration::get('PAYPAL_SANDBOX');
         $customer->save();
         return $customer;
     }

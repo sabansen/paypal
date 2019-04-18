@@ -33,6 +33,7 @@ function upgrade_module_4_5_0($module)
 {
     $installer = new Installer();
     $installer->installObjectModel('PaypalOrder');
+    $installer->installObjectModel('PaypalCustomer');
     $installer->installModuleAdminControllers();
     return true;
 }

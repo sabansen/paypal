@@ -16,7 +16,7 @@ Only for Braintree.
 |id_customer|integer|PS customer ID|isUnsignedId|
 |reference|string|Unique customer reference in Braintree|
 |method|string|Method alias||
-|mode|boolean|Sandbox or live|Added in v. 4.5|
+|sandbox|boolean|Sandbox or live|Added in v. 4.5|
 |date_add|datetime|Date of the creation||
 |date_upd|datetime|Date of the update||
 
