@@ -1082,13 +1082,34 @@ class PayPal extends PaymentModule
                 $shop
             );
         } catch (Exception $e) {
+            ProcessLoggerHandler::openLogger();
+            ProcessLoggerHandler::logError(
+                'Order validation error : ' . $e->getMessage(),
+                isset($transaction['transaction_id']) ? $transaction['transaction_id'] : null,
+                null,
+                (int)$id_cart,
+                $this->context->shop->id,
+                $payment_method,
+                (int)Configuration::get('PAYPAL_SANDBOX')
+            );
+            ProcessLoggerHandler::closeLogger();
             $msg = $this->l('Order validation error : ').$e->getMessage().'. ';
             if (isset($transaction['transaction_id']) && $id_order_state != Configuration::get('PS_OS_ERROR')) {
                 $msg .= $this->l('Attention, your payment is made. Please, contact customer support. Your transaction ID is  : ').$transaction['transaction_id'];
             }
             Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $msg, 'no_retry' => true)));
         }
-
+        ProcessLoggerHandler::openLogger();
+        ProcessLoggerHandler::logInfo(
+            'Success',
+            isset($transaction['transaction_id']) ? $transaction['transaction_id'] : null,
+            $this->currentOrder,
+            (int)$id_cart,
+            $this->context->shop->id,
+            $payment_method,
+            (int)Configuration::get('PAYPAL_SANDBOX')
+        );
+        ProcessLoggerHandler::closeLogger();
         if (Tools::version_compare(_PS_VERSION_, '1.7.1.0', '>')) {
             $order = Order::getByCartId($id_cart);
         } else {
@@ -1382,6 +1403,17 @@ class PayPal extends PaymentModule
                 if ($orderMessage->message) {
                     $orderMessage->save();
                 }
+                ProcessLoggerHandler::openLogger();
+                ProcessLoggerHandler::logError(
+                    $orderMessage->message,
+                    $orderPayPal->id_transaction,
+                    $orderPayPal->id_order,
+                    $orderPayPal->id_cart,
+                    $this->context->shop->id,
+                    null,
+                    $orderPayPal->sandbox
+                );
+                ProcessLoggerHandler::closeLogger();
                 Tools::redirect($_SERVER['HTTP_REFERER'].'&cancel_failed=1');
             }
 
@@ -1399,6 +1431,17 @@ class PayPal extends PaymentModule
             if ($orderMessage->message) {
                 $orderMessage->save();
             }
+            ProcessLoggerHandler::openLogger();
+            ProcessLoggerHandler::logInfo(
+                $orderMessage->message,
+                $orderPayPal->id_transaction,
+                $orderPayPal->id_order,
+                $orderPayPal->id_cart,
+                $this->context->shop->id,
+                null,
+                $orderPayPal->sandbox
+            );
+            ProcessLoggerHandler::closeLogger();
         }
 
         if ($params['newOrderStatus']->id == Configuration::get('PS_OS_REFUND')) {
@@ -1479,7 +1522,30 @@ class PayPal extends PaymentModule
             }
 
             if (!isset($refund_response['already_refunded']) && !isset($refund_response['success'])) {
+                ProcessLoggerHandler::openLogger();
+                ProcessLoggerHandler::logError(
+                    $orderMessage->message,
+                    $orderPayPal->id_transaction,
+                    $orderPayPal->id_order,
+                    $orderPayPal->id_cart,
+                    $this->context->shop->id,
+                    null,
+                    $orderPayPal->sandbox
+                );
+                ProcessLoggerHandler::closeLogger();
                 Tools::redirect($_SERVER['HTTP_REFERER'].'&error_refund=1');
+            } else {
+                ProcessLoggerHandler::openLogger();
+                ProcessLoggerHandler::logInfo(
+                    $orderMessage->message,
+                    $orderPayPal->id_transaction,
+                    $orderPayPal->id_order,
+                    $orderPayPal->id_cart,
+                    $this->context->shop->id,
+                    null,
+                    $orderPayPal->sandbox
+                );
+                ProcessLoggerHandler::closeLogger();
             }
         }
 
@@ -1520,7 +1586,30 @@ class PayPal extends PaymentModule
             }
 
             if (!isset($capture_response['already_captured']) && !isset($capture_response['success'])) {
+                ProcessLoggerHandler::openLogger();
+                ProcessLoggerHandler::logError(
+                    $orderMessage->message,
+                    $orderPayPal->id_transaction,
+                    $orderPayPal->id_order,
+                    $orderPayPal->id_cart,
+                    $this->context->shop->id,
+                    null,
+                    $orderPayPal->sandbox
+                );
+                ProcessLoggerHandler::closeLogger();
                 Tools::redirect($_SERVER['HTTP_REFERER'].'&error_capture=1');
+            } else {
+                ProcessLoggerHandler::openLogger();
+                ProcessLoggerHandler::logInfo(
+                    $orderMessage->message,
+                    $orderPayPal->id_transaction,
+                    $orderPayPal->id_order,
+                    $orderPayPal->id_cart,
+                    $this->context->shop->id,
+                    null,
+                    $orderPayPal->sandbox
+                );
+                ProcessLoggerHandler::closeLogger();
             }
         }
     }

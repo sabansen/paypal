@@ -40,6 +40,7 @@ use PayPal\Api\PaymentExecution;
 use PayPal\Api\Refund;
 use PayPal\Api\RefundRequest;
 use PayPal\Api\Sale;
+use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 
 require(_PS_MODULE_DIR_.'paypal/sdk/paypalREST/vendor/autoload.php');
 

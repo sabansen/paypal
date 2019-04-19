@@ -64,6 +64,7 @@ class PaypalEcValidationModuleFrontController extends PaypalAbstarctModuleFrontC
             $this->errors['error_msg'] = $e->getMessage();
             $this->errors['msg_long'] = $e->getMessageLong();
         } catch (Exception $e) {
+            \Symfony\Component\VarDumper\VarDumper::dump(array($e->getMessage(), $e->getFile(), $e->getLine())); die;
             $this->errors['error_code'] = $e->getCode();
             $this->errors['error_msg'] = $e->getMessage();
         }

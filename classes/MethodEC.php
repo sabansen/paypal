@@ -45,6 +45,7 @@ use PayPal\PayPalAPI\GetExpressCheckoutDetailsRequestType;
 use PayPal\PayPalAPI\GetExpressCheckoutDetailsReq;
 use PayPal\Service\PayPalAPIInterfaceServiceService;
 use PaypalAddons\classes\PaypalException;
+use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 
 require_once(_PS_MODULE_DIR_.'paypal/sdk/paypalNVP/PPBootStrap.php');
 
@@ -761,13 +762,22 @@ class MethodEC extends AbstractMethodPaypal
         $DoECReq->DoExpressCheckoutPaymentRequest = $DoECRequest;
 
         $paypalService = new PayPalAPIInterfaceServiceService($this->_getCredentialsInfo());
-
         $exec_payment = $paypalService->DoExpressCheckoutPayment($DoECReq);
 
         if (isset($exec_payment->Errors)) {
+            ProcessLoggerHandler::openLogger();
+            ProcessLoggerHandler::logError(
+                $exec_payment->Errors[0]->LongMessage,
+                $exec_payment->DoExpressCheckoutPaymentResponseDetails->PaymentInfo[0]->TransactionID,
+                null,
+                $context->cart->id,
+                $context->shop->id,
+                $this->payment_method,
+                (int)Configuration::get('PAYPAL_SANDBOX')
+            );
+            ProcessLoggerHandler::closeLogger();
             throw new PaypalException($exec_payment->Errors[0]->ErrorCode, $exec_payment->Errors[0]->ShortMessage, $exec_payment->Errors[0]->LongMessage);
         }
-
         $cart = $context->cart;
         $customer = new Customer($cart->id_customer);
         if (!Validate::isLoadedObject($customer)) {

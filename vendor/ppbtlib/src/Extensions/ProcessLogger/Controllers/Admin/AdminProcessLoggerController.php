@@ -87,6 +87,7 @@ class AdminProcessLoggerController extends \ModuleAdminController
             ),
             'sandbox' => array(
                 'title' => $this->module->l('Mode', 'AdminProcessLoggerController'),
+                'callback' => 'getMode',
             ),
             'tools' => array(
                 'title' => $this->module->l('Payment tools', 'AdminProcessLoggerController'),
@@ -104,6 +105,7 @@ class AdminProcessLoggerController extends \ModuleAdminController
             ),
             'status' => array(
                 'title' => $this->module->l('Level', 'AdminProcessLoggerController'),
+                'callback' => 'getLevel'
             ),
             'log' => array(
                 'title' => $this->module->l('Message (AIP PayPal/Braintree response)', 'AdminProcessLoggerController'),
@@ -129,6 +131,21 @@ class AdminProcessLoggerController extends \ModuleAdminController
     }
 
     /**
+     * @param $sandbox int Value of field
+     * @param $tr array All data of the row
+     * @return string
+     */
+    public function getMode($sandbox, $tr)
+    {
+        unset($tr);
+        if ((int)$sandbox) {
+            return 'Sandbox';
+        } else {
+            return 'Live';
+        }
+    }
+
+    /**
      * @param $echo string Value of field
      * @param $tr array All data of the row
      * @return string
@@ -136,7 +153,7 @@ class AdminProcessLoggerController extends \ModuleAdminController
     public function getLevel($echo, $tr)
     {
         unset($tr);
-        switch ($echo) {
+        switch (strtolower($echo)) {
             case 'info':
                 $echo = '<span class="badge badge-info">'.$echo.'</span>';
                 break;

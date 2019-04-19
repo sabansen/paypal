@@ -77,7 +77,7 @@ class CustomerVaultingEntityTest extends TestCase
 
     public function testCustomerRequests()
     {
-        $customer = \PaypalCustomer::loadCustomerByMethod(1, 'BT');
+        $customer = \PaypalCustomer::loadCustomerByMethod(1, 'BT', \Configuration::get('PAYPAL_SANDBOX'));
         $this->assertEquals(1, $customer->id_customer);
     }
 

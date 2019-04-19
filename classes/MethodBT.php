@@ -29,6 +29,7 @@ include_once 'PaypalCustomer.php';
 include_once 'PaypalVaulting.php';
 
 use PaypalAddons\classes\PaypalException;
+use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 
 /**
  * Class MethodBT
@@ -613,6 +614,17 @@ class MethodBT extends AbstractMethodPaypal
                             if ($payment_method->verification->gatewayRejectionReason) {
                                 $error_msg .= $paypal->l('Rejection reason : ').' '.$payment_method->verification->gatewayRejectionReason;
                             }
+                            ProcessLoggerHandler::openLogger();
+                            ProcessLoggerHandler::logError(
+                                $error_msg,
+                                null,
+                                null,
+                                Context::getContext()->cart->id,
+                                Context::getContext()->shop->id,
+                                $this->payment_method,
+                                (int)Configuration::get('PAYPAL_SANDBOX')
+                            );
+                            ProcessLoggerHandler::closeLogger();
                             throw new Exception($error_msg, '00000');
                         }
                         $paymentMethodToken = $payment_method->paymentMethod->token;
@@ -635,6 +647,17 @@ class MethodBT extends AbstractMethodPaypal
         try {
             $result = $this->gateway->transaction()->sale($data);
         } catch (Braintree\Exception\Authorization $e) {
+            ProcessLoggerHandler::openLogger();
+            ProcessLoggerHandler::logError(
+                'Braintree Authorization exception : ' . $e->getMessage(),
+                null,
+                null,
+                Context::getContext()->cart->id,
+                Context::getContext()->shop->id,
+                $this->payment_method,
+                (int)Configuration::get('PAYPAL_SANDBOX')
+            );
+            ProcessLoggerHandler::closeLogger();
             throw new Exception('Braintree Authorization exception', '00000');
         }
 
@@ -649,8 +672,30 @@ class MethodBT extends AbstractMethodPaypal
         } else {
             $errors = $result->errors->deepAll();
             if ($errors) {
+                ProcessLoggerHandler::openLogger();
+                ProcessLoggerHandler::logError(
+                    $errors[0]->message,
+                    null,
+                    null,
+                    Context::getContext()->cart->id,
+                    Context::getContext()->shop->id,
+                    $this->payment_method,
+                    (int)Configuration::get('PAYPAL_SANDBOX')
+                );
+                ProcessLoggerHandler::closeLogger();
                 throw new PaypalException($errors[0]->code, $errors[0]->message);
             } else {
+                ProcessLoggerHandler::openLogger();
+                ProcessLoggerHandler::logError(
+                    $result->message,
+                    null,
+                    null,
+                    Context::getContext()->cart->id,
+                    Context::getContext()->shop->id,
+                    $this->payment_method,
+                    (int)Configuration::get('PAYPAL_SANDBOX')
+                );
+                ProcessLoggerHandler::closeLogger();
                 throw new PaypalException($result->transaction->processorResponseCode, $result->message);
             }
         }
