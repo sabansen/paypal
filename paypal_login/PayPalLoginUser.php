@@ -127,6 +127,9 @@ class PaypalLoginUser extends ObjectModel
 
     public static function getByIdCustomer($id_customer)
     {
+    	if (!Validate::isInt($id_customer) || $id_customer < 1) {
+		    return false;
+	    }
         $login = self::getPaypalLoginUsers(false, $id_customer);
 
         if ($login && count($login)) {
