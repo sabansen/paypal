@@ -43,6 +43,7 @@ include_once 'classes/PaypalCapture.php';
 include_once 'classes/PaypalOrder.php';
 include_once 'classes/PaypalCustomer.php';
 include_once 'classes/PaypalVaulting.php';
+include_once 'classes/PaypalLog.php';
 
 const BT_CARD_PAYMENT = 'card-braintree';
 const BT_PAYPAL_PAYMENT = 'paypal-braintree';
@@ -101,7 +102,10 @@ class PayPal extends PaymentModule
          'displayMyAccountBlock',
          'displayCustomerAccount',
          'displayShoppingCartFooter',
-         'actionOrderSlipAdd'
+         'actionOrderSlipAdd',
+         'displayAdminCartsView',
+         'displayAdminOrderTabOrder',
+         'displayAdminOrderContentOrder'
      );
 
     /**
@@ -1101,7 +1105,7 @@ class PayPal extends PaymentModule
         }
         ProcessLoggerHandler::openLogger();
         ProcessLoggerHandler::logInfo(
-            'Success',
+            'Payment successful',
             isset($transaction['transaction_id']) ? $transaction['transaction_id'] : null,
             $this->currentOrder,
             (int)$id_cart,
@@ -1406,7 +1410,7 @@ class PayPal extends PaymentModule
                 ProcessLoggerHandler::openLogger();
                 ProcessLoggerHandler::logError(
                     $orderMessage->message,
-                    $orderPayPal->id_transaction,
+                    null,
                     $orderPayPal->id_order,
                     $orderPayPal->id_cart,
                     $this->context->shop->id,
@@ -1434,7 +1438,7 @@ class PayPal extends PaymentModule
             ProcessLoggerHandler::openLogger();
             ProcessLoggerHandler::logInfo(
                 $orderMessage->message,
-                $orderPayPal->id_transaction,
+                null,
                 $orderPayPal->id_order,
                 $orderPayPal->id_cart,
                 $this->context->shop->id,
@@ -1525,7 +1529,7 @@ class PayPal extends PaymentModule
                 ProcessLoggerHandler::openLogger();
                 ProcessLoggerHandler::logError(
                     $orderMessage->message,
-                    $orderPayPal->id_transaction,
+                    null,
                     $orderPayPal->id_order,
                     $orderPayPal->id_cart,
                     $this->context->shop->id,
@@ -1699,5 +1703,18 @@ class PayPal extends PaymentModule
         if (Configuration::get('PAYPAL_METHOD') == 'BT' && Configuration::get('PAYPAL_VAULTING')) {
             return $this->display(__FILE__, 'my-account-footer.tpl');
         }
+    }
+
+    public function hookDisplayAdminOrderTabOrder($params)
+    {
+        return $this->display(__FILE__, 'displayAdminOrderTabOrder.tpl');
+    }
+
+    public function hookDisplayAdminOrderContentOrder($params)
+    {
+        $collectionLogs = new PrestaShopCollection('PaypalLog');
+        $collectionLogs->where('id_order', '=', $params['order']->id);
+        $this->context->smarty->assign('logs', $collectionLogs->getResults());
+        return $this->display(__FILE__, 'displayAdminOrderContentOrder.tpl');
     }
 }
