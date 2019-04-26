@@ -27,6 +27,7 @@
     <thead>
         <tr>
             <th>{l s='Timestamp' mod='paypal'}</th>
+            <th>{l s='Timestamp PayPal' mod='paypal'}</th>
             <th>{l s='Transaction ID' mod='paypal'}</th>
             <th>{l s='Payment tool' mod='paypal'}</th>
             <th>{l s='Description' mod='paypal'}</th>
@@ -37,6 +38,9 @@
             <tr>
                 <td>
                     {$log->date_add|escape:'html':'utf-8'}
+                </td>
+                <td>
+                    {$log->getTimePayPal()|escape:'html':'utf-8'}
                 </td>
                 <td>
                     {$log->id_transaction|escape:'html':'utf-8'}

@@ -103,7 +103,6 @@ class PayPal extends PaymentModule
          'displayCustomerAccount',
          'displayShoppingCartFooter',
          'actionOrderSlipAdd',
-         'displayAdminCartsView',
          'displayAdminOrderTabOrder',
          'displayAdminOrderContentOrder'
      );

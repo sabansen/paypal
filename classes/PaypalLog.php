@@ -29,5 +29,14 @@ use PaypalPPBTlib\Extensions\ProcessLogger\Classes\ProcessLoggerObjectModel;
  */
 class PaypalLog extends ProcessLoggerObjectModel
 {
-
+    public function getTimePayPal()
+    {
+        $dateServer = DateTime::createFromFormat('Y-m-d H:i:s', $this->date_add);
+        if ($dateServer == false) {
+            return '';
+        }
+        $timeZonePayPal = new DateTimeZone('PST');
+        $dateServer->setTimezone($timeZonePayPal);
+        return $dateServer->format('Y-m-d H:i:s');
+    }
 }
