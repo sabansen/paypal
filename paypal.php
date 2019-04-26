@@ -442,6 +442,7 @@ class PayPal extends PaymentModule
             'ssl_active' => Configuration::get('PS_SSL_ENABLED'),
             'country_iso' => $this->context->country->iso_code,
             'mode' => Configuration::get('PAYPAL_SANDBOX')  ? 'SANDBOX' : 'LIVE',
+            'AdminPaypalProcessLogger_link' => $this->context->link->getAdminLink('AdminPaypalProcessLogger'),
         ));
 
 
