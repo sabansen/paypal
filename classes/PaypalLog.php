@@ -39,4 +39,15 @@ class PaypalLog extends ProcessLoggerObjectModel
         $dateServer->setTimezone($timeZonePayPal);
         return $dateServer->format('Y-m-d H:i:s');
     }
+
+    public function getLinkToTransaction()
+    {
+        if ($this->sandbox) {
+            $url = 'https://www.sandbox.paypal.com/myaccount/transactions/?free_text_search=';
+        } else {
+            $url = 'https://www.paypal.com/myaccount/transactions/?free_text_search=';
+        }
+
+        return $url . $this->id_transaction;
+    }
 }
