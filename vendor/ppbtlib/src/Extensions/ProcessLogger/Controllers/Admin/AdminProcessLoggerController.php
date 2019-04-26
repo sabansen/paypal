@@ -117,6 +117,49 @@ class AdminProcessLoggerController extends \ModuleAdminController
                 'title' => $this->module->l('Date', 'AdminProcessLoggerController'),
             ),
         );
+
+        $this->fields_options = array(
+            'processLogger' => array(
+                'image'       => '../img/admin/cog.gif',
+                'title'       => $this->module->l('Process Logger Settings', 'AdminProcessLoggerController'),
+                'description' => $this->module->l(
+                    'Here you can change the default configuration for this Process Logger',
+                    'AdminProcessLoggerController'
+                ),
+                'fields'      => array(
+                    'PAYPAL_EXTLOGS_ERASING_DISABLED' => array(
+                        'title'        => $this->module->l(
+                            'Disable auto erasing',
+                            'AdminProcessLoggerController'
+                        ),
+                        'hint'         => $this->module->l(
+                            'If disabled, logs will be automatically erased after the delay',
+                            'AdminProcessLoggerController'
+                        ),
+                        'validation'   => 'isBool',
+                        'cast'         => 'intval',
+                        'type'         => 'bool',
+                    ),
+                    'PAYPAL_EXTLOGS_ERASING_DAYSMAX' => array(
+                        'title'        => $this->module->l(
+                            'Auto erasing delay (in days)',
+                            'AdminProcessLoggerController'
+                        ),
+                        'hint'         => $this->module->l(
+                            'Choose the number of days you want to keep logs in database',
+                            'AdminProcessLoggerController'
+                        ),
+                        'validation'   => 'isInt',
+                        'cast'         => 'intval',
+                        'type'         => 'text',
+                        'defaultValue' => 5,
+                    ),
+                ),
+                'submit'      => array(
+                    'title' => $this->module->l('Save', 'AdminProcessLoggerController'),
+                    'name' => 'submitSaveConf'),
+            ),
+        );
     }
 
     /**
@@ -221,10 +264,10 @@ class AdminProcessLoggerController extends \ModuleAdminController
 
     public function saveConfiguration()
     {
-        $shops = Shop::getShops();
+        $shops = \Shop::getShops();
         foreach ($shops as $shop) {
-            $extlogs_erasing_daysmax = Tools::getValue('PAYPAL_EXTLOGS_ERASING_DAYSMAX');
-            $extlogs_erasing_disabled = Tools::getValue('PAYPAL_EXTLOGS_ERASING_DISABLED');
+            $extlogs_erasing_daysmax = \Tools::getValue('PAYPAL_EXTLOGS_ERASING_DAYSMAX');
+            $extlogs_erasing_disabled = \Tools::getValue('PAYPAL_EXTLOGS_ERASING_DISABLED');
             
             Configuration::updateValue(
                 'PAYPAL_EXTLOGS_ERASING_DISABLED',
@@ -240,7 +283,7 @@ class AdminProcessLoggerController extends \ModuleAdminController
                     'AdminProcessLoggerController'
                 );
             } else {
-                Configuration::updateValue(
+                \Configuration::updateValue(
                     'PAYPAL_EXTLOGS_ERASING_DAYSMAX',
                     $extlogs_erasing_daysmax,
                     false,
