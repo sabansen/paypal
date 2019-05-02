@@ -165,8 +165,8 @@
 
 							if(ThreeDSecureerror)
 							{
+                                document.getElementById('braintree_submit').removeAttribute('disabled');
 								switch (ThreeDSecureerror.code) {
-                                    document.getElementById('braintree_submit').removeAttribute('disabled');
 									case 'THREEDS_HTTPS_REQUIRED':
 										popup_message = "{/literal}{l s='3D Secure requires HTTPS.' mod='paypal'}{literal}";
 										break;
