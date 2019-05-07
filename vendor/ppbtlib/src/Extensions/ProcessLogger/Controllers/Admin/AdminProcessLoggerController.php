@@ -116,6 +116,9 @@ class AdminProcessLoggerController extends \ModuleAdminController
             'date_add' => array(
                 'title' => $this->module->l('Date', 'AdminProcessLoggerController'),
             ),
+            'date_transaction' => array(
+                'title' => $this->module->l('Transaction date', 'AdminProcessLoggerController'),
+            ),
         );
 
         $this->fields_options = array(

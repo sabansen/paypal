@@ -56,6 +56,9 @@ class ProcessLoggerObjectModel extends ObjectModel
     /* @var string creation date*/
     public $date_add;
 
+    /* @var string date of transaction*/
+    public $date_transaction;
+
     /**
      * @see \ObjectModel::$definition
      */
@@ -103,6 +106,10 @@ class ProcessLoggerObjectModel extends ObjectModel
                 'size'     => 50,
             ),
             'date_add'     => array(
+                'type'     => ObjectModel::TYPE_DATE,
+                'validate' => 'isDate',
+            ),
+            'date_transaction'     => array(
                 'type'     => ObjectModel::TYPE_DATE,
                 'validate' => 'isDate',
             ),

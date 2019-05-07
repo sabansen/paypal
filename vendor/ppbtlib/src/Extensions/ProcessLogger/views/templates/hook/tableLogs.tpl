@@ -40,7 +40,7 @@
                     {$log->date_add|escape:'html':'utf-8'}
                 </td>
                 <td>
-                    {$log->getTimePayPal()|escape:'html':'utf-8'}
+                    {$log->date_transaction|escape:'html':'utf-8'}
                 </td>
                 <td>
                     <a href="{$log->getLinkToTransaction()|addslashes}" target="_blank">{$log->id_transaction|escape:'html':'utf-8'}</a>

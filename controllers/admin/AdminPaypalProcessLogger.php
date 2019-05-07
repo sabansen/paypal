@@ -27,21 +27,5 @@ use PaypalPPBTlib\Extensions\ProcessLogger\Controllers\Admin\AdminProcessLoggerC
 
 class AdminPaypalProcessLoggerController extends AdminProcessLoggerController
 {
-    public function __construct()
-    {
-        parent::__construct();
 
-        $this->fields_list['date_paypal'] = array(
-            'title' => $this->module->l('Date Paypal', 'AdminProcessLoggerController'),
-            'callback' => 'getDatePayPal',
-        );
-
-        $this->_select = '"" as date_paypal';
-    }
-
-    public function getDatePayPal($value, $row)
-    {
-        $log = new PaypalLog((int)$row['id_paypal_processlogger']);
-        return $log->getTimePayPal();
-    }
 }

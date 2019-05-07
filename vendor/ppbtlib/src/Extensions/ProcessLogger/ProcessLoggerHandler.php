@@ -60,6 +60,7 @@ class ProcessLoggerHandler
      * @param int|null $id_shop
      * @param string|null $tools (Cards, paypal, google ...)
      * @param bool|null $sandbox (Sandbox/Live)
+     * @param string $date_transaction date of transaction
      * @param string|null status (info or error)
      */
     public static function addLog(
@@ -70,6 +71,7 @@ class ProcessLoggerHandler
         $id_shop = null,
         $tools = null,
         $sandbox = null,
+        $date_transaction = null,
         $status = null
     )
     {
@@ -82,7 +84,8 @@ class ProcessLoggerHandler
             'status' => pSQL($status),
             'sandbox' => (int)$sandbox,
             'tools' => pSQL($tools),
-            'date_add' => date("Y-m-d H:i:s")
+            'date_add' => date("Y-m-d H:i:s"),
+            'date_transaction' => pSQL($date_transaction)
         );
 
         if (100 === count(self::$logs)) {
@@ -98,6 +101,7 @@ class ProcessLoggerHandler
      * @param int|null $id_shop
      * @param string|null $tools (Cards, paypal, google ...)
      * @param bool|null $sandbox (Sandbox/Live)
+     * @param string $date_transaction date of transaction
      */
     public static function logInfo(
         $msg,
@@ -106,7 +110,8 @@ class ProcessLoggerHandler
         $id_cart = null,
         $id_shop = null,
         $tools = null,
-        $sandbox = null
+        $sandbox = null,
+        $date_transaction = null
     )
     {
         self::addLog(
@@ -117,6 +122,7 @@ class ProcessLoggerHandler
             $id_shop,
             $tools,
             $sandbox,
+            $date_transaction,
             $status = 'Info'
         );
     }
@@ -129,6 +135,7 @@ class ProcessLoggerHandler
      * @param int|null $id_shop
      * @param string|null $tools (Cards, paypal, google ...)
      * @param bool|null $sandbox (Sandbox/Live)
+     * @param string $date_transaction date of transaction
      */
     public static function logError(
         $msg,
@@ -137,7 +144,8 @@ class ProcessLoggerHandler
         $id_cart = null,
         $id_shop = null,
         $tools = null,
-        $sandbox = null
+        $sandbox = null,
+        $date_transaction = null
     )
     {
         self::addLog(
@@ -148,6 +156,7 @@ class ProcessLoggerHandler
             $id_shop,
             $tools,
             $sandbox,
+            $date_transaction,
             $status = 'Error'
         );
     }

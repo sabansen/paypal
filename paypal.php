@@ -104,7 +104,8 @@ class PayPal extends PaymentModule
          'displayShoppingCartFooter',
          'actionOrderSlipAdd',
          'displayAdminOrderTabOrder',
-         'displayAdminOrderContentOrder'
+         'displayAdminOrderContentOrder',
+         'displayAdminCartsView'
      );
 
     /**
@@ -1094,7 +1095,8 @@ class PayPal extends PaymentModule
                 (int)$id_cart,
                 $this->context->shop->id,
                 $payment_method,
-                (int)Configuration::get('PAYPAL_SANDBOX')
+                (int)Configuration::get('PAYPAL_SANDBOX'),
+                isset($transaction['date_transaction']) ? $transaction['date_transaction'] : null
             );
             ProcessLoggerHandler::closeLogger();
             $msg = $this->l('Order validation error : ').$e->getMessage().'. ';
@@ -1111,7 +1113,8 @@ class PayPal extends PaymentModule
             (int)$id_cart,
             $this->context->shop->id,
             $payment_method,
-            (int)Configuration::get('PAYPAL_SANDBOX')
+            (int)Configuration::get('PAYPAL_SANDBOX'),
+            isset($transaction['date_transaction']) ? $transaction['date_transaction'] : null
         );
         ProcessLoggerHandler::closeLogger();
         if (Tools::version_compare(_PS_VERSION_, '1.7.1.0', '>')) {
@@ -1707,14 +1710,28 @@ class PayPal extends PaymentModule
 
     public function hookDisplayAdminOrderTabOrder($params)
     {
-        return $this->display(__FILE__, 'displayAdminOrderTabOrder.tpl');
+        if ($result = $this->handleExtensionsHook(__FUNCTION__, $params)) {
+            if (!is_null($result)) {
+                return $result;
+            }
+        }
     }
 
     public function hookDisplayAdminOrderContentOrder($params)
     {
-        $collectionLogs = new PrestaShopCollection('PaypalLog');
-        $collectionLogs->where('id_order', '=', $params['order']->id);
-        $this->context->smarty->assign('logs', $collectionLogs->getResults());
-        return $this->display(__FILE__, 'displayAdminOrderContentOrder.tpl');
+        if ($result = $this->handleExtensionsHook(__FUNCTION__, $params)) {
+            if (!is_null($result)) {
+                return $result;
+            }
+        }
+    }
+
+    public function hookDisplayAdminCartsView($params)
+    {
+        if ($result = $this->handleExtensionsHook(__FUNCTION__, $params)) {
+            if (!is_null($result)) {
+                return $result;
+            }
+        }
     }
 }

@@ -813,7 +813,16 @@ class MethodEC extends AbstractMethodPaypal
             'payment_method' => $payment_info->PaymentType,
             'id_payment' => pSQL($transaction->Token),
             'capture' =>$payment_info->PaymentStatus == "Pending" && $payment_info->PendingReason == "authorization" ? true : false,
+            'date_transaction' => $this->getDateTransaction()
         );
+    }
+
+    public function getDateTransaction()
+    {
+        $dateServer = new DateTime();
+        $timeZonePayPal = new DateTimeZone('PST');
+        $dateServer->setTimezone($timeZonePayPal);
+        return $dateServer->format('Y-m-d H:i:s');
     }
 
     /**
