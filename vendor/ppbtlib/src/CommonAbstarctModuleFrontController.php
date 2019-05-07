@@ -27,6 +27,7 @@
 namespace PaypalPPBTlib;
 use \ModuleFrontController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 
 abstract class CommonAbstarctModuleFrontController extends ModuleFrontController
 {
@@ -45,6 +46,9 @@ abstract class CommonAbstarctModuleFrontController extends ModuleFrontController
     /** @var  array An array of error information : error_msg, error_code, msg_long. */
     public $errors;
 
+    /** @var  array An array of transaction information : method, currency, transaction_id, payment_status, payment_method, id_payment, capture, payment_tool, date_transaction. */
+    public $transaction_detail = array();
+
     /**
      * @see ModuleFrontController::run
      */
@@ -55,6 +59,32 @@ abstract class CommonAbstarctModuleFrontController extends ModuleFrontController
             // postProcess handles ajaxProcess
             $this->postProcess();
         }
+
+        if (empty($this->errors) == false) {
+            $message = '';
+            if (isset($this->errors['error_code'])) {
+                $message .= 'Error code: ' . $this->errors['error_code'] . '.';
+            }
+            if (isset($this->errors['error_msg'])) {
+                $message .= 'Short message: ' . $this->errors['error_msg'] . '.';
+            }
+            if (isset($this->errors['msg_long'])) {
+                $message .= 'Long message: ' . $this->errors['msg_long'] . '.';
+            }
+            \ProcessLoggerHandler::openLogger();
+            \ProcessLoggerHandler::logError(
+                $message,
+                null,
+                isset($this->transaction_detail['payment_tool']) ? $this->transaction_detail['payment_tool'] : null,
+                \Context::getContext()->cart->id,
+                \Context::getContext()->shop->id,
+                isset($this->transaction_detail['transaction_id']) ? $this->transaction_detail['transaction_id'] : null,
+                (int)\Configuration::get('PAYPAL_SANDBOX'),
+                isset($this->transaction_detail['date_transaction']) ? $this->transaction_detail['date_transaction'] : null
+            );
+            \ProcessLoggerHandler::closeLogger();
+        }
+
         if (!empty($this->redirectUrl)) {
             \Tools::redirect($this->redirectUrl);
         }

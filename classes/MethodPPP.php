@@ -688,7 +688,7 @@ class MethodPPP extends AbstractMethodPaypal
         // based on the shipping address or any other reason, you could
         // do that by passing the transaction object with just `amount` field in it.
         $exec_payment = $payment->execute($execution, $this->_getCredentialsInfo());
-
+        $this->setDetailsTransaction($exec_payment);
         $customer = new Customer($cart->id_customer);
         if (!Validate::isLoadedObject($customer)) {
             throw new Exception('Customer is not loaded object');
@@ -697,15 +697,14 @@ class MethodPPP extends AbstractMethodPaypal
         $total = (float)$exec_payment->transactions[0]->amount->total;
         $paypal = Module::getInstanceByName($this->name);
         $order_state = Configuration::get('PS_OS_PAYMENT');
-        $transactionDetail = $this->getDetailsTransaction($exec_payment);
-        $paypal->validateOrder($cart->id, $order_state, $total, $this->getPaymentMethod(), null, $transactionDetail, (int)$currency->id, false, $customer->secure_key);
+        $paypal->validateOrder($cart->id, $order_state, $total, $this->getPaymentMethod(), null, $this->getDetailsTransaction(), (int)$currency->id, false, $customer->secure_key);
     }
 
-    public function getDetailsTransaction($transaction)
+    public function setDetailsTransaction($transaction)
     {
         $payment_info = $transaction->transactions[0];
 
-        return array(
+        $this->transaction_detail = array(
             'method' => 'PPP',
             'currency' => $payment_info->amount->currency,
             'transaction_id' => pSQL($payment_info->related_resources[0]->sale->id),

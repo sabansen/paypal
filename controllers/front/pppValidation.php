@@ -65,6 +65,8 @@ class PaypalPppValidationModuleFrontController extends PaypalAbstarctModuleFront
         } catch (Exception $e) {
             $this->errors['error_code'] = $e->getCode();
             $this->errors['error_msg'] = $e->getMessage();
+        } finally {
+            $this->transaction_detail = $method_ppp->getDetailsTransaction();
         }
 
         Context::getContext()->cookie->__unset('paypal_plus_payment');

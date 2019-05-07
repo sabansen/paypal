@@ -1094,7 +1094,7 @@ class PayPal extends PaymentModule
                 null,
                 (int)$id_cart,
                 $this->context->shop->id,
-                $payment_method,
+                isset($transaction['payment_tool']) ? $transaction['payment_tool'] : null,
                 (int)Configuration::get('PAYPAL_SANDBOX'),
                 isset($transaction['date_transaction']) ? $transaction['date_transaction'] : null
             );
@@ -1112,7 +1112,7 @@ class PayPal extends PaymentModule
             $this->currentOrder,
             (int)$id_cart,
             $this->context->shop->id,
-            $payment_method,
+            isset($transaction['payment_tool']) ? $transaction['payment_tool'] : null,
             (int)Configuration::get('PAYPAL_SANDBOX'),
             isset($transaction['date_transaction']) ? $transaction['date_transaction'] : null
         );

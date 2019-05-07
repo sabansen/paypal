@@ -47,7 +47,6 @@ class PaypalEcValidationModuleFrontController extends PaypalAbstarctModuleFrontC
         $method_ec = AbstractMethodPaypal::load('EC');
         $paypal = Module::getInstanceByName($this->name);
         try {
-
             $method_ec->setParameters($this->values);
             $method_ec->validation();
             $cart = Context::getContext()->cart;
@@ -64,9 +63,10 @@ class PaypalEcValidationModuleFrontController extends PaypalAbstarctModuleFrontC
             $this->errors['error_msg'] = $e->getMessage();
             $this->errors['msg_long'] = $e->getMessageLong();
         } catch (Exception $e) {
-            \Symfony\Component\VarDumper\VarDumper::dump(array($e->getMessage(), $e->getFile(), $e->getLine())); die;
             $this->errors['error_code'] = $e->getCode();
             $this->errors['error_msg'] = $e->getMessage();
+        } finally {
+            $this->transaction_detail = $method_ec->getDetailsTransaction();
         }
 
         //unset cookie of payment init

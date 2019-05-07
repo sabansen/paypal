@@ -61,6 +61,8 @@ class PaypalBtValidationModuleFrontController extends PaypalAbstarctModuleFrontC
         } catch (Exception $e) {
             $this->errors['error_code'] = $e->getCode();
             $this->errors['error_msg'] = $e->getMessage();
+        } finally {
+            $this->transaction_detail = $method_bt->getDetailsTransaction();
         }
 
         if (!empty($this->errors)) {

@@ -36,6 +36,9 @@ abstract class AbstractMethod
     /** @var string payment method */
     protected $payment_method;
 
+    /** @var  array An array of transaction information : method, currency, transaction_id, payment_status, payment_method, id_payment, capture, payment_tool, date_transaction. */
+    protected $transaction_detail = array();
+
     /** @return string*/
     protected function getPaymentMethod()
     {
@@ -111,4 +114,20 @@ abstract class AbstractMethod
             return new $method_class();
         }
     }
+
+    /**
+     * Get Transaction details for order
+     * @return array
+     */
+    public function getDetailsTransaction()
+    {
+        return $this->transaction_detail;
+    }
+
+    /**
+     * Get Transaction details for order
+     * @param object $transaction
+     * @return array
+     */
+    abstract function setDetailsTransaction($transaction);
 }

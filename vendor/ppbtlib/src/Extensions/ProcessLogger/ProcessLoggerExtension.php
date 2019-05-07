@@ -27,7 +27,6 @@ namespace PaypalPPBTlib\Extensions\ProcessLogger;
 use PaypalPPBTlib\Extensions\AbstractModuleExtension;
 use PaypalPPBTlib\Extensions\ProcessLogger\Controllers\Admin\AdminProcessLoggerController;
 use PaypalPPBTlib\Extensions\ProcessLogger\Classes\ProcessLoggerObjectModel;
-use Symfony\Component\VarDumper\VarDumper;
 
 class ProcessLoggerExtension extends AbstractModuleExtension
 {
@@ -61,6 +60,7 @@ class ProcessLoggerExtension extends AbstractModuleExtension
     {
         return \Context::getContext()->smarty->fetch(dirname(__FILE__) . '/views/templates/hook/displayAdminOrderTabOrder.tpl');
     }
+
     public function hookDisplayAdminCartsView($params)
     {
         $collectionLogs = new \PrestaShopCollection('PaypalLog');
@@ -68,5 +68,4 @@ class ProcessLoggerExtension extends AbstractModuleExtension
         \Context::getContext()->smarty->assign('logs', $collectionLogs->getResults());
         return \Context::getContext()->smarty->fetch(dirname(__FILE__) . '/views/templates/hook/displayAdminCartsView.tpl');
     }
-
 }

@@ -765,19 +765,9 @@ class MethodEC extends AbstractMethodPaypal
         $exec_payment = $paypalService->DoExpressCheckoutPayment($DoECReq);
 
         if (isset($exec_payment->Errors)) {
-            ProcessLoggerHandler::openLogger();
-            ProcessLoggerHandler::logError(
-                $exec_payment->Errors[0]->LongMessage,
-                $exec_payment->DoExpressCheckoutPaymentResponseDetails->PaymentInfo[0]->TransactionID,
-                null,
-                $context->cart->id,
-                $context->shop->id,
-                $this->payment_method,
-                (int)Configuration::get('PAYPAL_SANDBOX')
-            );
-            ProcessLoggerHandler::closeLogger();
             throw new PaypalException($exec_payment->Errors[0]->ErrorCode, $exec_payment->Errors[0]->ShortMessage, $exec_payment->Errors[0]->LongMessage);
         }
+        $this->setDetailsTransaction($exec_payment->DoExpressCheckoutPaymentResponseDetails);
         $cart = $context->cart;
         $customer = new Customer($cart->id_customer);
         if (!Validate::isLoadedObject($customer)) {
@@ -793,19 +783,14 @@ class MethodEC extends AbstractMethodPaypal
         } else {
             $order_state = Configuration::get('PAYPAL_OS_WAITING');
         }
-        $transactionDetail = $this->getDetailsTransaction($exec_payment->DoExpressCheckoutPaymentResponseDetails);
-        $paypal->validateOrder($cart->id, $order_state, $total, $this->getPaymentMethod(), null, $transactionDetail, (int)$currency->id, false, $customer->secure_key);
+
+        $paypal->validateOrder($cart->id, $order_state, $total, $this->getPaymentMethod(), null, $this->getDetailsTransaction(), (int)$currency->id, false, $customer->secure_key);
     }
 
-    /**
-     * Get Transaction details for order
-     * @param object $transaction
-     * @return array
-     */
-    public function getDetailsTransaction($transaction)
+    public function setDetailsTransaction($transaction)
     {
         $payment_info = $transaction->PaymentInfo[0];
-        return array(
+        $this->transaction_detail = array(
             'method' => 'EC',
             'currency' => $payment_info->GrossAmount->currencyID,
             'transaction_id' => pSQL($payment_info->TransactionID),
