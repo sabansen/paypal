@@ -28,6 +28,9 @@ use PaypalPPBTlib\Extensions\AbstractModuleExtension;
 use PaypalPPBTlib\Extensions\ProcessLogger\Controllers\Admin\AdminProcessLoggerController;
 use PaypalPPBTlib\Extensions\ProcessLogger\Classes\ProcessLoggerObjectModel;
 
+/**
+ * @import 'paypal/views/templates/hook/tableLogs.tpl'
+ */
 class ProcessLoggerExtension extends AbstractModuleExtension
 {
     public $name = 'process_logger';
@@ -53,12 +56,12 @@ class ProcessLoggerExtension extends AbstractModuleExtension
         $collectionLogs = new \PrestaShopCollection('PaypalLog');
         $collectionLogs->where('id_order', '=', $params['order']->id);
         \Context::getContext()->smarty->assign('logs', $collectionLogs->getResults());
-        return \Context::getContext()->smarty->fetch(dirname(__FILE__) . '/views/templates/hook/displayAdminOrderContentOrder.tpl');
+        return \Context::getContext()->smarty->fetch(_PS_MODULE_DIR_ . 'paypal/views/templates/hook/displayAdminOrderContentOrder.tpl');
     }
 
     public function hookDisplayAdminOrderTabOrder($params)
     {
-        return \Context::getContext()->smarty->fetch(dirname(__FILE__) . '/views/templates/hook/displayAdminOrderTabOrder.tpl');
+        return \Context::getContext()->smarty->fetch(_PS_MODULE_DIR_ . 'paypal/views/templates/hook/displayAdminOrderTabOrder.tpl');
     }
 
     public function hookDisplayAdminCartsView($params)
@@ -66,6 +69,6 @@ class ProcessLoggerExtension extends AbstractModuleExtension
         $collectionLogs = new \PrestaShopCollection('PaypalLog');
         $collectionLogs->where('id_cart', '=', $params['cart']->id);
         \Context::getContext()->smarty->assign('logs', $collectionLogs->getResults());
-        return \Context::getContext()->smarty->fetch(dirname(__FILE__) . '/views/templates/hook/displayAdminCartsView.tpl');
+        return \Context::getContext()->smarty->fetch(_PS_MODULE_DIR_ . 'paypal/views/templates/hook/displayAdminCartsView.tpl');
     }
 }
