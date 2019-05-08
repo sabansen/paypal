@@ -870,8 +870,8 @@ class MethodBT extends AbstractMethodPaypal
             if ($result->success) {
                 $response =  array(
                     'success' => true,
-                    'refund_id' => $result->transaction->refundedTransactionId,
-                    'transaction_id' => $result->transaction->id,
+                    'refundedTransactionId' => $result->transaction->refundedTransactionId,
+                    'refund_id' => $result->transaction->id,
                     'status' => $result->transaction->status,
                     'amount' => $result->transaction->amount,
                     'currency' => $result->transaction->currencyIsoCode,
@@ -882,7 +882,7 @@ class MethodBT extends AbstractMethodPaypal
                 $errors = $result->errors->deepAll();
                 foreach ($errors as $error) {
                     $response = array(
-                        'transaction_id' => $result->transaction->refundedTransactionId,
+                        'refundedTransactionId' => $result->transaction->refundedTransactionId,
                         'status' => 'Failure',
                         'error_code' => $error->code,
                         'error_message' => $error->message,

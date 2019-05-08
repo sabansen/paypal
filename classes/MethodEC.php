@@ -975,7 +975,7 @@ class MethodEC extends AbstractMethodPaypal
                 );
             } else {
                 $response =  array(
-                    'authorization_id' => $response->AuthorizationID,
+                    'transaction_id' => $response->AuthorizationID,
                     'status' => $response->Ack,
                     'success' => true,
                 );
