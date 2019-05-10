@@ -71,8 +71,8 @@ abstract class CommonAbstarctModuleFrontController extends ModuleFrontController
             if (isset($this->errors['msg_long'])) {
                 $message .= 'Long message: ' . $this->errors['msg_long'] . '.';
             }
-            \ProcessLoggerHandler::openLogger();
-            \ProcessLoggerHandler::logError(
+            ProcessLoggerHandler::openLogger();
+            ProcessLoggerHandler::logError(
                 $message,
                 null,
                 isset($this->transaction_detail['payment_tool']) ? $this->transaction_detail['payment_tool'] : null,
@@ -82,7 +82,7 @@ abstract class CommonAbstarctModuleFrontController extends ModuleFrontController
                 (int)\Configuration::get('PAYPAL_SANDBOX'),
                 isset($this->transaction_detail['date_transaction']) ? $this->transaction_detail['date_transaction'] : null
             );
-            \ProcessLoggerHandler::closeLogger();
+            ProcessLoggerHandler::closeLogger();
         }
 
         if (!empty($this->redirectUrl)) {

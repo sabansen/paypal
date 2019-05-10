@@ -480,7 +480,13 @@ class MethodBT extends AbstractMethodPaypal
             'id_payment' => $this->payment_method_nonce,
             'capture' => $transaction->status == "authorized" ? true : false,
             'payment_tool' => $transaction->paymentInstrumentType,
+            'date_transaction' => $this->getDateTransaction($transaction)
         );
+    }
+
+    public function getDateTransaction($transaction)
+    {
+        return $transaction->createdAt->format('Y-m-d H:i:s');
     }
 
     /**
