@@ -53,7 +53,12 @@ class ProcessLoggerExtension extends AbstractModuleExtension
 
     public function hookDisplayAdminOrderContentOrder($params)
     {
-        $collectionLogs = new \PrestaShopCollection('PaypalLog');
+        if (isset($params['class_logger']) && is_subclass_of($params['class_logger'], ProcessLoggerObjectModel::class)) {
+            $class_logger = $params['class_logger'];
+        } else {
+            $class_logger = ProcessLoggerObjectModel::class;
+        }
+        $collectionLogs = new \PrestaShopCollection($class_logger);
         $collectionLogs->where('id_order', '=', $params['order']->id);
         \Context::getContext()->smarty->assign('logs', $collectionLogs->getResults());
         return \Context::getContext()->smarty->fetch(_PS_MODULE_DIR_ . 'paypal/views/templates/hook/displayAdminOrderContentOrder.tpl');
@@ -66,7 +71,12 @@ class ProcessLoggerExtension extends AbstractModuleExtension
 
     public function hookDisplayAdminCartsView($params)
     {
-        $collectionLogs = new \PrestaShopCollection('PaypalLog');
+        if (isset($params['class_logger']) && is_subclass_of($params['class_logger'], ProcessLoggerObjectModel::class)) {
+            $class_logger = $params['class_logger'];
+        } else {
+            $class_logger = ProcessLoggerObjectModel::class;
+        }
+        $collectionLogs = new \PrestaShopCollection($class_logger);
         $collectionLogs->where('id_cart', '=', $params['cart']->id);
         \Context::getContext()->smarty->assign('logs', $collectionLogs->getResults());
         return \Context::getContext()->smarty->fetch(_PS_MODULE_DIR_ . 'paypal/views/templates/hook/displayAdminCartsView.tpl');

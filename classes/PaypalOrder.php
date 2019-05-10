@@ -141,6 +141,16 @@ class PaypalOrder extends ObjectModel
         return new self($id_paypal_order);
     }
 
+    public static function loadByTransactionId($transaction_id)
+    {
+        $query = new DBQuery();
+        $query->from('paypal_order');
+        $query->select('id_paypal_order');
+        $query->where('id_transaction = ' . (int)$transaction_id);
+        $id_paypal_order = DB::getInstance()->getValue($query);
+        return new self($id_paypal_order);
+    }
+
     /**
      * Get BT records
      * @return array all BT transaction IDs

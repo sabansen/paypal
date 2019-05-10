@@ -1790,6 +1790,7 @@ class PayPal extends PaymentModule
 
     public function hookDisplayAdminOrderContentOrder($params)
     {
+        $params['class_logger'] = 'PaypalLog';
         if ($result = $this->handleExtensionsHook(__FUNCTION__, $params)) {
             if (!is_null($result)) {
                 return $result;
@@ -1799,6 +1800,7 @@ class PayPal extends PaymentModule
 
     public function hookDisplayAdminCartsView($params)
     {
+        $params['class_logger'] = 'PaypalLog';
         if ($result = $this->handleExtensionsHook(__FUNCTION__, $params)) {
             if (!is_null($result)) {
                 return $result;

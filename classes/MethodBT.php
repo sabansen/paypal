@@ -963,4 +963,17 @@ class MethodBT extends AbstractMethodPaypal
         $nonce = $this->gateway->paymentMethodNonce()->create($token);
         return $nonce->paymentMethodNonce->nonce;
     }
+
+    /**
+     * @see AbstractMethodPaypal::getLinkToTransaction()
+     */
+    public function getLinkToTransaction($id_transaction, $sandbox)
+    {
+        if ($sandbox) {
+            $url = 'https://sandbox.braintreegateway.com/merchants/' . Configuration::get('PAYPAL_SANDBOX_BRAINTREE_MERCHANT_ID') . '/transactions/';
+        } else {
+            $url = 'https://www.braintreegateway.com/merchants/' . Configuration::get('PAYPAL_LIVE_BRAINTREE_MERCHANT_ID') . '/transactions/';
+        }
+        return $url . $id_transaction;
+    }
 }

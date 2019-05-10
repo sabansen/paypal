@@ -130,4 +130,12 @@ abstract class AbstractMethod
      * @return array
      */
     abstract function setDetailsTransaction($transaction);
+
+    /**
+     * Get link to transaction
+     * @param string $id_transaction
+     * @param bool $sandbox mode (sandbox/live)
+     * @return string
+     */
+    abstract public function getLinkToTransaction($id_transaction, $sandbox);
 }

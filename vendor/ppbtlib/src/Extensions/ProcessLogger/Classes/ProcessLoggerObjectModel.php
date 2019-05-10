@@ -115,4 +115,9 @@ class ProcessLoggerObjectModel extends ObjectModel
             ),
         ),
     );
+
+    public function getLinkToTransaction()
+    {
+        throw new \Exception('Need to define the method ' . __FUNCTION__);
+    }
 }

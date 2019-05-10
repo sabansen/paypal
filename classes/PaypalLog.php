@@ -24,30 +24,28 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 use PaypalPPBTlib\Extensions\ProcessLogger\Classes\ProcessLoggerObjectModel;
+use PaypalAddons\services\ServicePaypalLog;
 /**
  * Class PaypalLog.
  */
 class PaypalLog extends ProcessLoggerObjectModel
 {
-    public function getTimePayPal()
+    /* @var object object service*/
+    protected $serviceLog;
+
+    public function __construct($id = null, $id_lang = null, $id_shop = null)
     {
-        $dateServer = DateTime::createFromFormat('Y-m-d H:i:s', $this->date_add);
-        if ($dateServer == false) {
-            return '';
-        }
-        $timeZonePayPal = new DateTimeZone('PST');
-        $dateServer->setTimezone($timeZonePayPal);
-        return $dateServer->format('Y-m-d H:i:s');
+        parent::__construct($id, $id_lang, $id_shop);
+        $this->setServiceLog(new ServicePaypalLog());
+    }
+
+    public function setServiceLog($service)
+    {
+        $this->serviceLog = $service;
     }
 
     public function getLinkToTransaction()
     {
-        if ($this->sandbox) {
-            $url = 'https://www.sandbox.paypal.com/myaccount/transactions/?free_text_search=';
-        } else {
-            $url = 'https://www.paypal.com/myaccount/transactions/?free_text_search=';
-        }
-
-        return $url . $this->id_transaction;
+        return $this->serviceLog->getLinkToTransaction($this);
     }
 }

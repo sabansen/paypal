@@ -836,4 +836,17 @@ class MethodPPP extends AbstractMethodPaypal
             return $context->smarty->fetch('module:paypal/views/templates/hook/cart_shortcut.tpl');
         }
     }
+
+    /**
+     * @see AbstractMethodPaypal::getLinkToTransaction()
+     */
+    public function getLinkToTransaction($id_transaction, $sandbox)
+    {
+        if ($sandbox) {
+            $url = 'https://www.sandbox.paypal.com/myaccount/transactions/?free_text_search=';
+        } else {
+            $url = 'https://www.paypal.com/myaccount/transactions/?free_text_search=';
+        }
+        return $url . $id_transaction;
+    }
 }
