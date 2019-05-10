@@ -713,7 +713,14 @@ class MethodPPP extends AbstractMethodPaypal
             'id_payment' => pSQL($transaction->id),
             'capture' => false,
             'payment_tool' => isset($transaction->payment_instruction)?$transaction->payment_instruction->instruction_type:'',
+            'date_transaction' => $this->getDateTransaction($transaction)
         );
+    }
+
+    public function getDateTransaction($transaction)
+    {
+        $dateServer = DateTime::createFromFormat(DateTime::ISO8601, $transaction->create_time);
+        return $dateServer->format('Y-m-d H:i:s');
     }
 
     /**
