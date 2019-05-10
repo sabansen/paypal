@@ -96,20 +96,20 @@ class MethodPPP extends AbstractMethodPaypal
             Configuration::updateValue('PAYPAL_PPP_CONFIG_BRAND', $params['ppp_config_brand']);
             if (isset($_FILES['ppp_config_logo']['tmp_name']) && $_FILES['ppp_config_logo']['tmp_name'] != '') {
                 if (!in_array($_FILES['ppp_config_logo']['type'], array('image/gif', 'image/png', 'image/jpeg'))) {
-                    $paypal->errors .= $paypal->displayError($paypal->l('Use a valid graphics format, such as .gif, .jpg, or .png.'));
+                    $paypal->errors .= $paypal->displayError(Translate::getModuleTranslation($this->name, 'Use a valid graphics format, such as .gif, .jpg, or .png.', get_class($this)));
                     return;
                 }
                 $size = getimagesize($_FILES['ppp_config_logo']['tmp_name']);
                 if ($size[0] > 190 || $size[1] > 60) {
-                    $paypal->errors .= $paypal->displayError($paypal->l('Limit the image to 190 pixels wide by 60 pixels high.'));
+                    $paypal->errors .= $paypal->displayError(Translate::getModuleTranslation($this->name, 'Limit the image to 190 pixels wide by 60 pixels high.', get_class($this)));
                     return;
                 }
                 if (!($tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS')) ||
                 !move_uploaded_file($_FILES['ppp_config_logo']['tmp_name'], $tmpName)) {
-                    $paypal->errors .= $paypal->displayError($paypal->l('An error occurred while copying the image.'));
+                    $paypal->errors .= $paypal->displayError(Translate::getModuleTranslation($this->name, 'An error occurred while copying the image.', get_class($this)));
                 }
                 if (!ImageManager::resize($tmpName, _PS_MODULE_DIR_.'paypal/views/img/ppp_logo'.Context::getContext()->shop->id.'.png')) {
-                    $paypal->errors .= $paypal->displayError($paypal->l('An error occurred while copying the image.'));
+                    $paypal->errors .= $paypal->displayError(Translate::getModuleTranslation($this->name, 'An error occurred while copying the image.', get_class($this)));
                 }
                 Configuration::updateValue('PAYPAL_PPP_CONFIG_LOGO', _PS_MODULE_DIR_.'paypal/views/img/ppp_logo'.Context::getContext()->shop->id.'.png');
             }
@@ -119,7 +119,7 @@ class MethodPPP extends AbstractMethodPaypal
                 if ($experience_web) {
                     Configuration::updateValue('PAYPAL_PLUS_EXPERIENCE', $experience_web->id);
                 } else {
-                    $paypal->errors .= $paypal->displayError($paypal->l('An error occurred while creating your web experience. Check your credentials.'));
+                    $paypal->errors .= $paypal->displayError(Translate::getModuleTranslation($this->name, 'An error occurred while creating your web experience. Check your credentials.', get_class($this)));
                 }
             }
         }
@@ -152,17 +152,17 @@ class MethodPPP extends AbstractMethodPaypal
                 if ($experience_web) {
                     Configuration::updateValue('PAYPAL_PLUS_EXPERIENCE', $experience_web->id);
                 } else {
-                    $paypal->errors .= $paypal->displayError($paypal->l('An error occurred while creating your web experience. Check your credentials.'));
+                    $paypal->errors .= $paypal->displayError(Translate::getModuleTranslation($this->name, 'An error occurred while creating your web experience. Check your credentials.', get_class($this)));
                 }
             }
         }
 
         $mode = Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
         if ($mode == 'SANDBOX' && (!Configuration::get('PAYPAL_SANDBOX_CLIENTID') || !Configuration::get('PAYPAL_SANDBOX_SECRET'))) {
-            $paypal->errors .= $paypal->displayError($paypal->l('You are trying to switch to sandbox account. You should use your test credentials. Please go to the "Products" tab and click on "Modify\' for activating the sandbox version of the selected product.'));
+            $paypal->errors .= $paypal->displayError(Translate::getModuleTranslation($this->name, 'You are trying to switch to sandbox account. You should use your test credentials. Please go to the "Products" tab and click on "Modify\' for activating the sandbox version of the selected product.', get_class($this)));
         }
         if ($mode == 'LIVE' && (!Configuration::get('PAYPAL_LIVE_CLIENTID') || !Configuration::get('PAYPAL_LIVE_SECRET'))) {
-            $paypal->errors .= $paypal->displayError($paypal->l('You are trying to switch to production account. You should use your production credentials. Please go to the "Products" tab and click on "Modify\' for activating the production version of the selected product.'));
+            $paypal->errors .= $paypal->displayError(Translate::getModuleTranslation($this->name, 'You are trying to switch to production account. You should use your production credentials. Please go to the "Products" tab and click on "Modify\' for activating the production version of the selected product.', get_class($this)));
         }
     }
 
@@ -174,43 +174,43 @@ class MethodPPP extends AbstractMethodPaypal
         $params = array('inputs' => array(
             array(
                 'type' => 'text',
-                'label' => $module->l('Title'),
+                'label' => Translate::getModuleTranslation($module, 'Title', get_class($this)),
                 'name' => 'ppp_config_title',
-                'placeholder' => $module->l('Leave it empty to use default PayPal payment method title'),
+                'placeholder' => Translate::getModuleTranslation($module, 'Leave it empty to use default PayPal payment method title', get_class($this)),
             ),
             array(
                 'type' => 'text',
-                'label' => $module->l('Brand name'),
+                'label' => Translate::getModuleTranslation($module, 'Brand name', get_class($this)),
                 'name' => 'ppp_config_brand',
-                'placeholder' => $module->l('Leave it empty to use your Shop name'),
-                'hint' => $module->l('A label that overrides the business name in the PayPal account on the PayPal pages.'),
+                'placeholder' => Translate::getModuleTranslation($module, 'Leave it empty to use your Shop name', get_class($this)),
+                'hint' => Translate::getModuleTranslation($module, 'A label that overrides the business name in the PayPal account on the PayPal pages.', get_class($this)),
             ),
             array(
                 'type' => 'file',
-                'label' => $module->l('Shop logo field'),
+                'label' => Translate::getModuleTranslation($module, 'Shop logo field', get_class($this)),
                 'name' => 'ppp_config_logo',
                 'display_image' => true,
                 'delete_url' => $module->module_link.'&deleteLogoPp=1',
-                'hint' => $module->l('An image must be stored on a secure (https) server. Use a valid graphics format, such as .gif, .jpg, or .png. Limit the image to 190 pixels wide by 60 pixels high. PayPal crops images that are larger. This logo will replace brand name  at the top of the cart review area.'),
+                'hint' => Translate::getModuleTranslation($module, 'An image must be stored on a secure (https) server. Use a valid graphics format, such as .gif, .jpg, or .png. Limit the image to 190 pixels wide by 60 pixels high. PayPal crops images that are larger. This logo will replace brand name  at the top of the cart review area.', get_class($this)),
                 'image' => file_exists(_PS_MODULE_DIR_.'paypal/views/img/ppp_logo'.Context::getContext()->shop->id.'.png')?'<img src="'.Context::getContext()->link->getBaseLink().'modules/paypal/views/img/ppp_logo'.Context::getContext()->shop->id.'.png" class="img img-thumbnail" />':''
             ),
             array(
                 'type' => 'switch',
-                'label' => $module->l('Show PayPal benefits to your customers'),
+                'label' => Translate::getModuleTranslation($module, 'Show PayPal benefits to your customers', get_class($this)),
                 'name' => 'paypal_show_advantage',
-                'desc' => $module->l(''),
+                'desc' => Translate::getModuleTranslation($module, '', get_class($this)),
                 'is_bool' => true,
-                'hint' => $module->l('You can increase your conversion rate by presenting PayPal benefits to your customers on payment methods selection page.'),
+                'hint' => Translate::getModuleTranslation($module, 'You can increase your conversion rate by presenting PayPal benefits to your customers on payment methods selection page.', get_class($this)),
                 'values' => array(
                     array(
                         'id' => 'paypal_show_advantage_on',
                         'value' => 1,
-                        'label' => $module->l('Enabled'),
+                        'label' => Translate::getModuleTranslation($module, 'Enabled', get_class($this)),
                     ),
                     array(
                         'id' => 'paypal_show_advantage_off',
                         'value' => 0,
-                        'label' => $module->l('Disabled'),
+                        'label' => Translate::getModuleTranslation($module, 'Disabled', get_class($this)),
                     )
                 ),
             ),
@@ -240,11 +240,11 @@ class MethodPPP extends AbstractMethodPaypal
         $fields_form = array();
         $fields_form[0]['form'] = array(
             'legend' => array(
-                'title' => $module->l('PayPal Express Shortcut'),
+                'title' => Translate::getModuleTranslation($module, 'PayPal Express Shortcut', get_class($this)),
                 'icon' => 'icon-cogs',
             ),
             'submit' => array(
-                'title' => $module->l('Save'),
+                'title' => Translate::getModuleTranslation($module, 'Save', get_class($this)),
                 'class' => 'btn btn-default pull-right button',
             ),
         );
@@ -253,43 +253,43 @@ class MethodPPP extends AbstractMethodPaypal
             array(
                 'type' => 'html',
                 'name' => 'paypal_desc_shortcut',
-                'html_content' => $module->l('The PayPal shortcut is displayed directly in the cart or on your product pages, allowing a faster checkout experience for your buyers. It requires fewer pages, clicks and seconds in order to finalize the payment. PayPal provides you with the client’s billing and shipping information so that you don’t have to collect it yourself.'),
+                'html_content' => Translate::getModuleTranslation($module, 'The PayPal shortcut is displayed directly in the cart or on your product pages, allowing a faster checkout experience for your buyers. It requires fewer pages, clicks and seconds in order to finalize the payment. PayPal provides you with the client’s billing and shipping information so that you don’t have to collect it yourself.', get_class($this)),
             ),
             array(
                 'type' => 'switch',
-                'label' => $module->l('Display the shortcut on product pages'),
+                'label' => Translate::getModuleTranslation($module,'Display the shortcut on product pages', get_class($this)),
                 'name' => 'paypal_show_shortcut',
                 'is_bool' => true,
-                'hint' => $module->l('Recommended for mono-product websites.'),
+                'hint' => Translate::getModuleTranslation($module, 'Recommended for mono-product websites.', get_class($this)),
                 'values' => array(
                     array(
                         'id' => 'paypal_show_shortcut_on',
                         'value' => 1,
-                        'label' => $module->l('Enabled'),
+                        'label' => Translate::getModuleTranslation($module, 'Enabled', get_class($this)),
                     ),
                     array(
                         'id' => 'paypal_show_shortcut_off',
                         'value' => 0,
-                        'label' => $module->l('Disabled'),
+                        'label' => Translate::getModuleTranslation($module, 'Disabled', get_class($this)),
                     )
                 ),
             ),
             array(
                 'type' => 'switch',
-                'label' => $module->l('Display shortcut in the cart'),
+                'label' => Translate::getModuleTranslation($module, 'Display shortcut in the cart', get_class($this)),
                 'name' => 'paypal_show_shortcut_cart',
                 'is_bool' => true,
-                'hint' => $module->l('Recommended for multi-products websites.'),
+                'hint' => Translate::getModuleTranslation($module, 'Recommended for multi-products websites.', get_class($this)),
                 'values' => array(
                     array(
                         'id' => 'paypal_show_shortcut_cart_on',
                         'value' => 1,
-                        'label' => $module->l('Enabled'),
+                        'label' => Translate::getModuleTranslation($module, 'Enabled', get_class($this)),
                     ),
                     array(
                         'id' => 'paypal_show_shortcut_cart_off',
                         'value' => 0,
-                        'label' => $module->l('Disabled'),
+                        'label' => Translate::getModuleTranslation($module, 'Disabled', get_class($this)),
                     )
                 ),
             ),
