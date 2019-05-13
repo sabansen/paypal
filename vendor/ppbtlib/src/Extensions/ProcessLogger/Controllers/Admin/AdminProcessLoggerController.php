@@ -87,6 +87,10 @@ class AdminProcessLoggerController extends \ModuleAdminController
             ),
             'sandbox' => array(
                 'title' => $this->module->l('Mode', 'AdminProcessLoggerController'),
+                'type' => 'select',
+                'list' => array(1 => 'Sandbox', 0 => 'Live'),
+                'filter_key' => 'a!sandbox',
+                'filter_type' => 'int',
                 'callback' => 'getMode',
             ),
             'tools' => array(
@@ -94,10 +98,11 @@ class AdminProcessLoggerController extends \ModuleAdminController
             ),
             'id_cart' => array(
                 'title'    => $this->module->l('ID cart', 'AdminProcessLoggerController'),
-                'callback' => 'getLevel',
+                'callback' => 'getCartLink',
             ),
             'id_order' => array(
                 'title' => $this->module->l('ID order', 'AdminProcessLoggerController'),
+                'callback' => 'getOrderLink',
             ),
             'id_transaction' => array(
                 'title'    => $this->module->l('Transaction ID', 'AdminProcessLoggerController'),
@@ -174,6 +179,22 @@ class AdminProcessLoggerController extends \ModuleAdminController
     {
         unset($tr);
         return empty($echo) ? '' : $echo;
+    }
+
+    public function getCartLink($id_cart)
+    {
+        if ((int)$id_cart) {
+            $link = \Context::getContext()->link->getAdminLink('AdminCarts', true, array(), array('id_cart' => (int)$id_cart, 'viewcart' => 1));
+            return '<a href="' . $link . '" target="_blank">' . $id_cart . '</a>';
+        }
+    }
+
+    public function getOrderLink($id_order)
+    {
+        if ((int)$id_order) {
+            $link = \Context::getContext()->link->getAdminLink('AdminOrders', true, array(), array('id_order' => (int)$id_order, 'vieworder' => 1));
+            return '<a href="' . $link . '" target="_blank">' . $id_order . '</a>';
+        }
     }
 
     /**

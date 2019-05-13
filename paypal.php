@@ -1098,7 +1098,7 @@ PayPal payment solution: No changes & no impacts on your business. You can simpl
                 null,
                 (int)$id_cart,
                 $this->context->shop->id,
-                isset($transaction['payment_tool']) ? $transaction['payment_tool'] : null,
+                isset($transaction['payment_tool']) && $transaction['payment_tool'] ? $transaction['payment_tool'] : 'PayPal',
                 (int)Configuration::get('PAYPAL_SANDBOX'),
                 isset($transaction['date_transaction']) ? $transaction['date_transaction'] : null
             );
@@ -1116,7 +1116,7 @@ PayPal payment solution: No changes & no impacts on your business. You can simpl
             $this->currentOrder,
             (int)$id_cart,
             $this->context->shop->id,
-            isset($transaction['payment_tool']) ? $transaction['payment_tool'] : null,
+            isset($transaction['payment_tool']) && $transaction['payment_tool'] ? $transaction['payment_tool'] : 'PayPal',
             (int)Configuration::get('PAYPAL_SANDBOX'),
             isset($transaction['date_transaction']) ? $transaction['date_transaction'] : null
         );
