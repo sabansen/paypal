@@ -32,7 +32,7 @@
         },
         {
             "type": "vcs",
-            "url": "https://developers.braintreepayments.com/start/hello-server/php"
+            "url": "https://github.com/braintree/braintree_php"
         }
     ]
 }
