@@ -53,13 +53,98 @@ class PayPal extends PaymentModule
     public $module_link;
     public $errors;
     public $bt_countries = array("FR", "GB", "IT", "ES", "US");
-
+    /** @var array matrix of state iso codes between paypal and prestashop */
+    public static $state_iso_code_matrix = array(
+        'MX' => array(
+            'AGS' => 'AGS',
+            'BCN' => 'BC',
+            'BCS' => 'BCS',
+            'CAM' => 'CAMP',
+            'CHP' => 'CHIS',
+            'CHH' => 'CHIH',
+            'COA' => 'COAH',
+            'COL' => 'COL',
+            'DIF' => 'DF',
+            'DUR' => 'DGO',
+            'GUA' => 'GTO',
+            'GRO' => 'GRO',
+            'HID' => 'HGO',
+            'JAL' => 'JAL',
+            'MEX' => 'MEX',
+            'MIC' => 'MICH',
+            'MOR' => 'MOR',
+            'NAY' => 'NAY',
+            'NLE' => 'NL',
+            'OAX' => 'OAX',
+            'PUE' => 'PUE',
+            'QUE' => 'QRO',
+            'ROO' => 'Q ROO',
+            'SLP' => 'SLP',
+            'SIN' => 'SIN',
+            'SON' => 'SON',
+            'TAB' => 'TAB',
+            'TAM' => 'TAMPS',
+            'TLA' => 'TLAX',
+            'VER' => 'VER',
+            'YUC' => 'YUC',
+            'ZAC' => 'ZAC',
+        ),
+        'JP' => array(
+            'Aichi' => 'Aichi-KEN',
+            'Akita' => 'Akita-KEN',
+            'Aomori' => 'Aomori-KEN',
+            'Chiba' => 'Chiba-KEN',
+            'Ehime' => 'Ehime-KEN',
+            'Fukui' => 'Fukui-KEN',
+            'Fukuoka' => 'Fukuoka-KEN',
+            'Fukushima' => 'Fukushima-KEN',
+            'Gifu' => 'Gifu-KEN',
+            'Gunma' => 'Gunma-KEN',
+            'Hiroshima' => 'Hiroshima-KEN',
+            'Hokkaido' => 'Hokkaido-KEN',
+            'Hyogo' => 'Hyogo-KEN',
+            'Ibaraki' => 'Ibaraki-KEN',
+            'Ishikawa' => 'Ishikawa-KEN',
+            'Iwate' => 'Iwate-KEN',
+            'Kagawa' => 'Kagawa-KEN',
+            'Kagoshima' => 'Kagoshima-KEN',
+            'Kanagawa' => 'Kanagawa-KEN',
+            'Kochi' => 'Kochi-KEN',
+            'Kumamoto' => 'Kumamoto-KEN',
+            'Kyoto' => 'Kyoto-KEN',
+            'Mie' => 'Mie-KEN',
+            'Miyagi' => 'Miyagi-KEN',
+            'Miyazaki' => 'Miyazaki-KEN',
+            'Nagano' => 'Nagano-KEN',
+            'Nagasaki' => 'Nagasaki-KEN',
+            'Nara' => 'Nara-KEN',
+            'Niigata' => 'Niigata-KEN',
+            'Oita' => 'Oita-KEN',
+            'Okayama' => 'Okayama-KEN',
+            'Okinawa' => 'Okinawa-KEN',
+            'Osaka' => 'Osaka-KEN',
+            'Saga' => 'Saga-KEN',
+            'Saitama' => 'Saitama-KEN',
+            'Shiga' => 'Shiga-KEN',
+            'Shimane' => 'Shimane-KEN',
+            'Shizuoka' => 'Shizuoka-KEN',
+            'Tochigi' => 'Tochigi-KEN',
+            'Tokushima' => 'Tokushima-KEN',
+            'Tokyo' => 'Tokyo-KEN',
+            'Tottori' => 'Tottori-KEN',
+            'Toyama' => 'Toyama-KEN',
+            'Wakayama' => 'Wakayama-KEN',
+            'Yamagata' => 'Yamagata-KEN',
+            'Yamaguchi' => 'Yamaguchi-KEN',
+            'Yamanashi' => 'Yamanashi-KEN'
+        )
+    );
 
     public function __construct()
     {
         $this->name = 'paypal';
         $this->tab = 'payments_gateways';
-        $this->version = '4.4.4';
+        $this->version = '4.4.5';
         $this->author = 'PrestaShop';
         $this->display = 'view';
         $this->module_key = '336225a5988ad434b782f2d868d7bfcd';
@@ -1698,5 +1783,51 @@ class PayPal extends PaymentModule
         if (Configuration::get('PAYPAL_METHOD') == 'BT' && Configuration::get('PAYPAL_VAULTING')) {
             return $this->display(__FILE__, 'my-account-footer.tpl');
         }
+    }
+
+    /**
+     * Get State ID
+     * @param $ship_addr_state string state code from PayPal
+     * @param $ship_addr_country string delivery country iso code from PayPal
+     * @return int id state
+     */
+    public static function getIdStateByPaypalCode($ship_addr_state, $ship_addr_country)
+    {
+        $id_state = 0;
+        $id_country = Country::getByIso($ship_addr_country);
+        if (Country::containsStates($id_country)) {
+            if ($matrix = PayPal::$state_iso_code_matrix[$ship_addr_country]) {
+                $ship_addr_state = array_search(strtolower($ship_addr_state), array_map('strtolower', $matrix));
+            }
+            if ($id_state = (int)State::getIdByIso(Tools::strtoupper($ship_addr_state), $id_country)) {
+                $id_state = $id_state;
+            } elseif ($id_state = State::getIdByName(pSQL(trim($ship_addr_state)))) {
+                $state = new State((int)$id_state);
+                if ($state->id_country == $id_country) {
+                    $id_state= $state->id;
+                }
+            }
+        }
+        return $id_state;
+    }
+
+    /**
+     * Get delivery state code in paypal format
+     * @param $address Address object
+     * @return string state code
+     */
+    public static function getPaypalStateCode($address)
+    {
+        $ship_addr_state = '';
+        if ($address->id_state) {
+            $country = new Country((int) $address->id_country);
+            $state = new State((int) $address->id_state);
+            if ($matrix = PayPal::$state_iso_code_matrix[$country->iso_code]) {
+                $ship_addr_state = $matrix[$state->iso_code] ? $matrix[$state->iso_code] : $matrix[$state->name];
+            } else {
+                $ship_addr_state = $state->iso_code;
+            }
+        }
+        return $ship_addr_state;
     }
 }

@@ -619,16 +619,14 @@ class MethodEC extends AbstractMethodPaypal
             $id_address = Address::getFirstCustomerAddressId($customer->id);
         }
         $address = new Address($id_address);
-        $state = '';
-        if ($address->id_state) {
-            $state = new State((int) $address->id_state);
-        }
         $country = new Country((int) $address->id_country);
+        $ship_addr_state = PayPal::getPaypalStateCode($address);
+
         $address_pp = new AddressType();
         $address_pp->CityName = $address->city;
         $address_pp->Name = $address->firstname.' '.$address->lastname;
         $address_pp->Street1 = $address->address1;
-        $address_pp->StateOrProvince = $state ? $state->iso_code : '';
+        $address_pp->StateOrProvince = $ship_addr_state;
         $address_pp->PostalCode = $address->postcode;
         $address_pp->Country = $country->iso_code;
         $address_pp->Phone = (empty($address->phone)) ? $address->phone_mobile : $address->phone;
