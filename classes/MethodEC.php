@@ -571,20 +571,29 @@ class MethodEC extends AbstractMethodPaypal
     private function _getDiscountsList($currency)
     {
         $discounts = Context::getContext()->cart->getCartRules();
+        $order_total = Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
+        $order_total_with_reduction = $order_total;
         if (count($discounts) > 0) {
             foreach ($discounts as $discount) {
                 if (isset($discount['description']) && !empty($discount['description'])) {
                     $discount['description'] = Tools::substr(strip_tags($discount['description']), 0, 50).'...';
                 }
-                $discount['tax'] = -1 * $this->formatPrice($discount['value_real'] - $discount['value_tax_exc']);
-                $discount['value_tax_exc'] = -1 * $this->formatPrice($discount['value_tax_exc']);
+                // It's needed to take a percentage of the order amount, taking into account the others discounts
+                if ((int)$discount['reduction_percent'] > 0) {
+                    $discount['value_real'] = $order_total_with_reduction * ($discount['value_real'] / $order_total);
+                    $order_total_with_reduction -= $discount['value_real'];
+                } else {
+                    $order_total_with_reduction -= $discount['value_real'];
+                }
+
+                $discount['value_real'] = -1 * $this->formatPrice($discount['value_real']);
                 $itemDetails = new PaymentDetailsItemType();
                 $itemDetails->Name = $discount['name'];
-                $itemDetails->Amount = new BasicAmountType($currency, $discount['value_tax_exc']);
+                $itemDetails->Amount = new BasicAmountType($currency, $discount['value_real']);
                 $itemDetails->Tax = new BasicAmountType($currency, $discount['tax']);
                 $itemDetails->Quantity = 1;
                 $this->_paymentDetails->PaymentDetailsItem[] = $itemDetails;
-                $this->_itemTotalValue += $discount['value_tax_exc'];
+                $this->_itemTotalValue += $discount['value_real'];
                 $this->_taxTotalValue += $discount['tax'];
             }
         }
