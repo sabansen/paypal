@@ -52,11 +52,11 @@ class PaypalEcScOrderModuleFrontController extends PaypalAbstarctModuleFrontCont
             $this->prepareOrder($info);
             $this->redirectUrl = $this->context->link->getPageLink('order', null, null, array('step'=>2));
         } catch (PayPal\Exception\PPConnectionException $e) {
-            $this->errors['error_msg'] = $paypal->l('Error connecting to ') . $e->getUrl();
+            $this->errors['error_msg'] = $paypal->l('Error connecting to ', pathinfo(__FILE__)['filename']) . $e->getUrl();
         } catch (PayPal\Exception\PPMissingCredentialException $e) {
             $this->errors['error_msg'] = $e->errorMessage();
         } catch (PayPal\Exception\PPConfigurationException $e) {
-            $this->errors['error_msg'] = $paypal->l('Invalid configuration. Please check your configuration file');
+            $this->errors['error_msg'] = $paypal->l('Invalid configuration. Please check your configuration file', pathinfo(__FILE__)['filename']);
         } catch (PaypalAddons\classes\PaypalException $e) {
             $this->errors['error_code'] = $e->getCode();
             $this->errors['error_msg'] = $e->getMessage();
