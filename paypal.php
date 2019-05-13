@@ -412,6 +412,10 @@ class PayPal extends PaymentModule
 
     public function getContent()
     {
+        $alertMessage = 'Starting July 1st, 2019, Braintree payment solution will be separated from PayPal module. There will be 2 different modules: PayPal official (v5.x) and Braintree official (v1.x). Both modules will be available for free on Prestashop Addons.
+Braintree users: you’ll be required to install the new module (Braintree official (v1.x). It will be possible to transfer quickly your current module configurations from the current version of the PayPal module to the new Braintree module without any impact to your business. New exciting features will come soon!.
+PayPal payment solution: No changes & no impacts on your business. You can simply update the module to latest version (PayPal official (v5.x)) for getting new features & bug fixes.';
+        $this->context->controller->errors[] = $this->l($alertMessage);
         $requirements = '';
         if (!Configuration::get('PAYPAL_REQUIREMENTS')) {
             $requirements = $this->_checkRequirements();
