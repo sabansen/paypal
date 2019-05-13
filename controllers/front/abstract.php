@@ -24,36 +24,12 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-use Symfony\Component\HttpFoundation\JsonResponse;
+use PaypalPPBTlib\CommonAbstarctModuleFrontController;
 
 /**
  * Class PaypalAbstarctModuleFrontController
  */
-abstract class PaypalAbstarctModuleFrontController extends ModuleFrontController
+abstract class PaypalAbstarctModuleFrontController extends CommonAbstarctModuleFrontController
 {
-    public $name = 'paypal';
 
-    public $jsonValues;
-    public $values;
-    public $redirectUrl;
-    public $errors;
-
-    /**
-     * @see ModuleFrontController::run
-     */
-    public function run()
-    {
-        $this->init();
-        if ($this->checkAccess()) {
-            // postProcess handles ajaxProcess
-            $this->postProcess();
-        }
-        if (!empty($this->redirectUrl)) {
-            Tools::redirect($this->redirectUrl);
-        }
-        if (!empty($this->jsonValues)) {
-            $response = new JsonResponse($this->jsonValues);
-            return $response->send();
-        }
-    }
 }

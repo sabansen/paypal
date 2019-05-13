@@ -341,7 +341,7 @@
                     <li class="paypal-bold li-padding">{l s='Discover module ducumentation before configuration' mod='paypal'}</li>
                     <div class="btn-padding form-group"">
                         <a target="_blank" href="https://addons.prestashop.com/documentation/e582dd0854d8994e815d6c0e8886e703bfdf7713" class="btn btn-default">
-                            {l s='Download User Documentation' mod='paypal'}
+                            {l s='Access user documentation for module configuration.' mod='paypal'}
                         </a>
                     </div>
                     <li class="paypal-bold li-padding">{l s='Check requirements before installation' mod='paypal'}</li>
@@ -351,6 +351,14 @@
                         <br><br>
                         <div class="action_response"></div>
                     </div>
+
+                    <li class="paypal-bold li-padding">{l s='Check your transactions history log and potential errors.' mod='paypal'}</li>
+                    <div class="btn-padding form-group"">
+                        <a href="{$AdminPaypalProcessLogger_link|addslashes}"
+                           class="btn btn-default"
+                           target="_blank">{l s='Transaction log' mod='paypal'}</a>
+                    </div>
+
                     <li class="paypal-bold li-padding">{l s='Do you still have any questions?' mod='paypal'}</li>
                     {l s='Contact us! We will be happy to help!' mod='paypal'}
                     <div class="btn-padding form-group"">

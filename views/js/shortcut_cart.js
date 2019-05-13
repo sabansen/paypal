@@ -33,7 +33,7 @@ function EcCheckProductAvailability() {
         type: "POST",
         data: 'checkAvailability=1&source_page=cart',
         success: function (json) {
-            if (json == 1) {
+            if (json.success) {
                 $('#container_express_checkout').show();
             } else {
                 $('#container_express_checkout').hide();

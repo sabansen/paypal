@@ -3,6 +3,8 @@ name: Abstract
 category: Front controllers
 ---
 
+In version 4.5 the controller is replaced to PPBTlib.
+
 ## Definition
 PaypalAbstarctModuleFrontController
 

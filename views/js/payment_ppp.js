@@ -51,8 +51,10 @@ function doPatchPPP() {
             url     : ajax_patch_url,
             dataType: 'json',
             success : function (json) {
-                if (json && json.success) {
+                if (json.success) {
                     ppp.doCheckout();
+                } else {
+                    window.location.replace(json.redirect_link);
                 }
             },
             error   : function (xhr, ajaxOptions, thrownError) {

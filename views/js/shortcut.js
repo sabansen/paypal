@@ -35,7 +35,7 @@ function EcCheckProductAvailability(qty, productId, id_product_attribute) {
         type: "POST",
         data: 'checkAvailability=1&source_page=product&id_product='+productId+'&quantity='+qty+'&product_attribute='+id_product_attribute,
         success: function (json) {
-            if (json == 1) {
+            if (json.success) {
                 $('#container_express_checkout').show();
             } else {
                 $('#container_express_checkout').hide();
@@ -74,9 +74,14 @@ function ECSInContext(combination) {
         url: ec_sc_action_url,
         type: "GET",
         data: 'getToken=1&source_page=product&id_product='+$('#paypal_payment_form_cart input[name="id_product"]').val()+'&quantity='+$('[name="qty"]').val()+'&combination='+combination.join('|'),
-        success: function (token) {
-            var url = paypal.checkout.urlPrefix +token;
-            paypal.checkout.startFlow(url);
+        success: function (json) {
+            if (json.success) {
+                var url = paypal.checkout.urlPrefix +json.token;
+                paypal.checkout.startFlow(url);
+            } else {
+                paypal.checkout.closeFlow();
+                window.location.replace(json.redirect_link);
+            }
         },
         error: function (responseData, textStatus, errorThrown) {
             alert("Error in ajax post"+responseData.statusText);

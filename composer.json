@@ -1,7 +1,38 @@
 {
-  "autoload": {
-    "psr-4": {
-      "PaypalAddons\\": "."
-    }
-  }
+    "config": {
+        "vendor-dir": "vendor"
+    },
+    "autoload": {
+        "psr-4": {
+            "PaypalPPBTlib\\": "vendor/ppbtlib/src/",
+            "PaypalAddons\\": "."
+        }
+    },
+    "scripts": {
+        "pre-autoload-dump": [
+            "if [ ${PPBTCLASSLIB_DEV_PATH} ]; then php ${PPBTCLASSLIB_DEV_PATH}/PPBTlib/refresh.php .; fi"
+        ]
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/paypal/PayPal-PHP-SDK"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/paypal/permissions-sdk-php"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/paypal/merchant-sdk-php"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/paypal/sdk-core-php"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/braintree/braintree_php"
+        }
+    ]
 }
