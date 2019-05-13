@@ -83,19 +83,19 @@ class MethodBT extends AbstractMethodPaypal
         $params = array('inputs' => array(
             array(
                 'type' => 'select',
-                'label' => Translate::getModuleTranslation($this->name, 'Payment action', get_class($this)),
+                'label' => $module->l('Payment action', get_class($this)),
                 'name' => 'paypal_intent',
-                'desc' => Translate::getModuleTranslation($this->name, '', get_class($this)),
-                'hint' => Translate::getModuleTranslation($this->name, 'Sale: the money moves instantly from the buyer\'s account to the seller\'s account at the time of payment. Authorization/capture: The authorized mode is a deferred mode of payment that requires the funds to be collected manually when you want to transfer the money. This mode is used if you want to ensure that you have the merchandise before depositing the money, for example. Be careful, you have 29 days to collect the funds.', get_class($this)),
+                'desc' => $module->l('', get_class($this)),
+                'hint' => $module->l('Sale: the money moves instantly from the buyer\'s account to the seller\'s account at the time of payment. Authorization/capture: The authorized mode is a deferred mode of payment that requires the funds to be collected manually when you want to transfer the money. This mode is used if you want to ensure that you have the merchandise before depositing the money, for example. Be careful, you have 29 days to collect the funds.', get_class($this)),
                 'options' => array(
                     'query' => array(
                         array(
                             'id' => 'sale',
-                            'name' => Translate::getModuleTranslation($this->name, 'Sale', get_class($this))
+                            'name' => $module->l('Sale', get_class($this))
                         ),
                         array(
                             'id' => 'authorization',
-                            'name' => Translate::getModuleTranslation($this->name, 'Authorize', get_class($this))
+                            'name' => $module->l('Authorize', get_class($this))
                         )
                     ),
                     'id' => 'id',
@@ -104,105 +104,105 @@ class MethodBT extends AbstractMethodPaypal
             ),
             array(
                 'type' => 'switch',
-                'label' => Translate::getModuleTranslation($this->name, 'Show PayPal benefits to your customers', get_class($this)),
+                'label' => $module->l('Show PayPal benefits to your customers', get_class($this)),
                 'name' => 'paypal_show_advantage',
-                'desc' => Translate::getModuleTranslation($this->name, '', get_class($this)),
+                'desc' => $module->l('', get_class($this)),
                 'is_bool' => true,
-                'hint' => Translate::getModuleTranslation($this->name, 'You can increase your conversion rate by presenting PayPal benefits to your customers on payment methods selection page.', get_class($this)),
+                'hint' => $module->l('You can increase your conversion rate by presenting PayPal benefits to your customers on payment methods selection page.', get_class($this)),
                 'values' => array(
                     array(
                         'id' => 'paypal_show_advantage_on',
                         'value' => 1,
-                        'label' => Translate::getModuleTranslation($this->name, 'Enabled', get_class($this)),
+                        'label' => $module->l('Enabled', get_class($this)),
                     ),
                     array(
                         'id' => 'paypal_show_advantage_off',
                         'value' => 0,
-                        'label' => Translate::getModuleTranslation($this->name, 'Disabled', get_class($this)),
+                        'label' => $module->l('Disabled', get_class($this)),
                     )
                 ),
             ),
             array(
                 'type' => 'switch',
-                'label' => Translate::getModuleTranslation($this->name, 'Accept PayPal Payments', get_class($this)),
+                'label' => $module->l('Accept PayPal Payments', get_class($this)),
                 'name' => 'activate_paypal',
-                'desc' => Translate::getModuleTranslation($this->name, '', get_class($this)),
+                'desc' => $module->l('', get_class($this)),
                 'is_bool' => true,
                 'values' => array(
                     array(
                         'id' => 'activate_paypal_on',
                         'value' => 1,
-                        'label' => Translate::getModuleTranslation($this->name, 'Enabled', get_class($this)),
+                        'label' => $module->l('Enabled', get_class($this)),
                     ),
                     array(
                         'id' => 'activate_paypal_off',
                         'value' => 0,
-                        'label' => Translate::getModuleTranslation($this->name, 'Disabled', get_class($this)),
+                        'label' => $module->l('Disabled', get_class($this)),
                     )
                 ),
             ),
             array(
                 'type' => 'switch',
-                'label' => Translate::getModuleTranslation($this->name, 'Enable Vault', get_class($this)),
+                'label' => $module->l('Enable Vault', get_class($this)),
                 'name' => 'paypal_vaulting',
                 'is_bool' => true,
-                'hint' => Translate::getModuleTranslation($this->name, 'The Vault is used to process payments so your customers don\'t need to re-enter their information each time they make a purchase from you.', get_class($this)),
+                'hint' => $module->l('The Vault is used to process payments so your customers don\'t need to re-enter their information each time they make a purchase from you.', get_class($this)),
                 'values' => array(
                     array(
                         'id' => 'paypal_vaulting_on',
                         'value' => 1,
-                        'label' => Translate::getModuleTranslation($this->name, 'Enabled', get_class($this)),
+                        'label' => $module->l('Enabled', get_class($this)),
                     ),
                     array(
                         'id' => 'paypal_vaulting_off',
                         'value' => 0,
-                        'label' => Translate::getModuleTranslation($this->name, 'Disabled', get_class($this)),
+                        'label' => $module->l('Disabled', get_class($this)),
                     )
                 ),
             ),
             array(
                 'type' => 'switch',
-                'label' => Translate::getModuleTranslation($this->name, 'Enable Card verification', get_class($this)),
+                'label' => $module->l('Enable Card verification', get_class($this)),
                 'name' => 'card_verification',
                 'is_bool' => true,
-                'hint' => Translate::getModuleTranslation($this->name,  'Card verification is a strong first-line defense against potentially fraudulent cards. It ensures that the credit card number provided is associated with a valid, open account and can be stored in the Vault and charged successfully.', get_class($this)),
+                'hint' => $module->l('Card verification is a strong first-line defense against potentially fraudulent cards. It ensures that the credit card number provided is associated with a valid, open account and can be stored in the Vault and charged successfully.', get_class($this)),
                 'values' => array(
                     array(
                         'id' => 'card_verification_on',
                         'value' => 1,
-                        'label' => Translate::getModuleTranslation($this->name, 'Enabled', get_class($this)),
+                        'label' => $module->l('Enabled', get_class($this)),
                     ),
                     array(
                         'id' => 'card_verification_off',
                         'value' => 0,
-                        'label' => Translate::getModuleTranslation($this->name, 'Disabled', get_class($this)),
+                        'label' => $module->l('Disabled', get_class($this)),
                     )
                 ),
             ),
             array(
                 'type' => 'switch',
-                'label' => Translate::getModuleTranslation($this->name, 'Activate 3D Secure for Braintree', get_class($this)),
+                'label' => $module->l('Activate 3D Secure for Braintree', get_class($this)),
                 'name' => 'paypal_3DSecure',
-                'desc' => Translate::getModuleTranslation($this->name, '', get_class($this)),
+                'desc' => $module->l('', get_class($this)),
                 'is_bool' => true,
                 'values' => array(
                     array(
                         'id' => 'paypal_3DSecure_on',
                         'value' => 1,
-                        'label' => Translate::getModuleTranslation($this->name, 'Enabled', get_class($this)),
+                        'label' => $module->l('Enabled', get_class($this)),
                     ),
                     array(
                         'id' => 'paypal_3DSecure_off',
                         'value' => 0,
-                        'label' => Translate::getModuleTranslation($this->name, 'Disabled', get_class($this)),
+                        'label' => $module->l('Disabled', get_class($this)),
                     )
                 ),
             ),
             array(
                 'type' => 'text',
-                'label' => Translate::getModuleTranslation($this->name, 'Amount for 3DS in ', get_class($this)).Currency::getCurrency(Configuration::get('PS_CURRENCY_DEFAULT'))['iso_code'],
+                'label' => $module->l('Amount for 3DS in ', get_class($this)).Currency::getCurrency(Configuration::get('PS_CURRENCY_DEFAULT'))['iso_code'],
                 'name' => 'paypal_3DSecure_amount',
-                'hint' => Translate::getModuleTranslation($this->name, 'Activate 3D Secure only for orders which total is bigger that this amount in your context currency', get_class($this)),
+                'hint' => $module->l('Activate 3D Secure only for orders which total is bigger that this amount in your context currency', get_class($this)),
             ),
         ));
 
@@ -236,7 +236,7 @@ class MethodBT extends AbstractMethodPaypal
         $fields_form2 = array();
         $fields_form2[0]['form'] = array(
             'legend' => array(
-                'title' => Translate::getModuleTranslation($this->name, 'Braintree merchant accounts', get_class($this)),
+                'title' => $module->l('Braintree merchant accounts', get_class($this)),
                 'icon' => 'icon-cogs',
             ),
         );
@@ -245,14 +245,14 @@ class MethodBT extends AbstractMethodPaypal
             $fields_form2[0]['form']['input'][] =
                 array(
                     'type' => 'text',
-                    'label' => Translate::getModuleTranslation($this->name, 'Merchant account Id for ', get_class($this)).$curr['iso_code'],
+                    'label' => $module->l('Merchant account Id for ', get_class($this)).$curr['iso_code'],
                     'name' => 'braintree_curr_'.$curr['iso_code'],
                     'value' => isset($merchant_accounts[$curr['iso_code']])?$merchant_accounts[$curr['iso_code']] : ''
                 );
             $fields_value['braintree_curr_'.$curr['iso_code']] =  isset($merchant_accounts[$curr['iso_code']])?$merchant_accounts[$curr['iso_code']] : '';
         }
         $fields_form2[0]['form']['submit'] = array(
-            'title' => Translate::getModuleTranslation($this->name, 'Save', get_class($this)),
+            'title' => $module->l('Save', get_class($this)),
             'class' => 'btn btn-default pull-right button',
         );
 
@@ -329,7 +329,7 @@ class MethodBT extends AbstractMethodPaypal
                 $response = $paypal->getBtConnectUrl();
                 $result = Tools::jsonDecode($response);
                 if ($result->error) {
-                    $paypal->errors .= $paypal->displayError(Translate::getModuleTranslation($this->name, 'Error onboarding Braintree : ', get_class($this)) . $result->error);
+                    $paypal->errors .= $paypal->displayError($paypal->l('Error onboarding Braintree : ', get_class($this)) . $result->error);
                 } elseif (isset($result->data->url_connect)) {
                     Tools::redirectLink($result->data->url_connect);
                 }
@@ -338,11 +338,11 @@ class MethodBT extends AbstractMethodPaypal
 
         if ($mode == 'SANDBOX' && (!Configuration::get('PAYPAL_'.$mode.'_BRAINTREE_ACCESS_TOKEN') || !Configuration::get('PAYPAL_'.$mode.'_BRAINTREE_EXPIRES_AT')
             || !Configuration::get('PAYPAL_'.$mode.'_BRAINTREE_MERCHANT_ID'))) {
-            $paypal->errors .= $paypal->displayError(Translate::getModuleTranslation($this->name, 'You are trying to switch to sandbox account. You should use your test credentials. Please go to the "Products" tab and click on "Modify\' for activating the sandbox version of the selected product.', get_class($this)));
+            $paypal->errors .= $paypal->displayError($paypal->l('You are trying to switch to sandbox account. You should use your test credentials. Please go to the "Products" tab and click on "Modify\' for activating the sandbox version of the selected product.', get_class($this)));
         }
         if ($mode == 'LIVE' && (!Configuration::get('PAYPAL_'.$mode.'_BRAINTREE_ACCESS_TOKEN') || !Configuration::get('PAYPAL_'.$mode.'_BRAINTREE_EXPIRES_AT')
                 || !Configuration::get('PAYPAL_'.$mode.'_BRAINTREE_MERCHANT_ID'))) {
-            $paypal->errors .= $paypal->displayError(Translate::getModuleTranslation($this->name, 'You are trying to switch to production account. You should use your production credentials. Please go to the "Products" tab and click on "Modify\' for activating the production version of the selected product.', get_class($this)));
+            $paypal->errors .= $paypal->displayError($paypal->l('You are trying to switch to production account. You should use your production credentials. Please go to the "Products" tab and click on "Modify\' for activating the production version of the selected product.', get_class($this)));
         }
     }
 
@@ -466,7 +466,7 @@ class MethodBT extends AbstractMethodPaypal
         } else {
             $order_state = Configuration::get('PAYPAL_BRAINTREE_OS_AWAITING');
         }
-        $paypal->validateOrder(context::getContext()->cart->id, $order_state, $transaction->amount, $this->getPaymentMethod(), Translate::getModuleTranslation($this->name, 'Payment accepted.', get_class($this)), $this->getDetailsTransaction(), context::getContext()->cart->id_currency, false, context::getContext()->customer->secure_key);
+        $paypal->validateOrder(context::getContext()->cart->id, $order_state, $transaction->amount, $this->getPaymentMethod(), $paypal->l('Payment accepted.', get_class($this)), $this->getDetailsTransaction(), context::getContext()->cart->id_currency, false, context::getContext()->customer->secure_key);
     }
 
     public function setDetailsTransaction($transaction)
@@ -610,10 +610,10 @@ class MethodBT extends AbstractMethodPaypal
                         ));
 
                         if (isset($payment_method->verification) && $payment_method->verification->status != 'verified') {
-                            $error_msg = Translate::getModuleTranslation($this->name, 'Card verification repond with status', get_class($this)).' '.$payment_method->verification->status.'. ';
-                            $error_msg .= Translate::getModuleTranslation($this->name, 'The reason : ', get_class($this)).' '.$payment_method->verification->processorResponseText.'. ';
+                            $error_msg = $paypal->l('Card verification repond with status', get_class($this)).' '.$payment_method->verification->status.'. ';
+                            $error_msg .= $paypal->l('The reason : ', get_class($this)).' '.$payment_method->verification->processorResponseText.'. ';
                             if ($payment_method->verification->gatewayRejectionReason) {
-                                $error_msg .= Translate::getModuleTranslation($this->name, 'Rejection reason : ', get_class($this)).' '.$payment_method->verification->gatewayRejectionReason;
+                                $error_msg .= $paypal->l('Rejection reason : ', get_class($this)).' '.$payment_method->verification->gatewayRejectionReason;
                             }
                             throw new Exception($error_msg, '00000');
                         }
@@ -706,8 +706,8 @@ class MethodBT extends AbstractMethodPaypal
             $paypal = Module::getInstanceByName($this->name);
             $mode  = Configuration::get('PAYPAL_SANDBOX') ? 'Sandbox' : 'Live';
             $mode2  = !Configuration::get('PAYPAL_SANDBOX') ? 'Sandbox' : 'Live';
-            $msg = sprintf(Translate::getModuleTranslation($this->name, 'This client is not found in %s mode.', get_class($this)), $mode);
-            $msg .= sprintf(Translate::getModuleTranslation($this->name, 'Probably this customer has been already created in %s mode. Please create new prestashop client for this mode.', get_class($this)), $mode2);
+            $msg = sprintf($paypal->l('This client is not found in %s mode.', get_class($this)), $mode);
+            $msg .= sprintf($paypal->l('Probably this customer has been already created in %s mode. Please create new prestashop client for this mode.', get_class($this)), $mode2);
             throw new Exception($msg);
         }
     }

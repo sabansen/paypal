@@ -61,7 +61,7 @@ class PaypalPppValidationModuleFrontController extends PaypalAbstarctModuleFront
         } catch (PayPal\Exception\PayPalInvalidCredentialException $e) {
             $this->errors['error_msg'] = $e->errorMessage();
         } catch (PayPal\Exception\PayPalMissingCredentialException $e) {
-            $this->errors['error_msg'] = $paypal->l('Invalid configuration. Please check your configuration file');
+            $this->errors['error_msg'] = $paypal->l('Invalid configuration. Please check your configuration file (test translation)', pathinfo(__FILE__)['filename']);
         } catch (Exception $e) {
             $this->errors['error_code'] = $e->getCode();
             $this->errors['error_msg'] = $e->getMessage();
@@ -73,7 +73,6 @@ class PaypalPppValidationModuleFrontController extends PaypalAbstarctModuleFront
         Context::getContext()->cookie->__unset('paypal_pSc');
         Context::getContext()->cookie->__unset('paypal_pSc_payerid');
         Context::getContext()->cookie->__unset('paypal_pSc_email');
-
         if (!empty($this->errors)) {
             $this->redirectUrl = Context::getContext()->link->getModuleLink($this->name, 'error', $this->errors);
         }

@@ -59,7 +59,7 @@ class PaypalPppScOrderModuleFrontController extends PaypalAbstarctModuleFrontCon
         } catch (PayPal\Exception\PayPalInvalidCredentialException $e) {
             $this->errors['error_msg'] = $e->errorMessage();
         } catch (PayPal\Exception\PayPalMissingCredentialException $e) {
-            $this->errors['error_msg'] = $paypal->l('Invalid configuration. Please check your configuration file');
+            $this->errors['error_msg'] = $paypal->l('Invalid configuration. Please check your configuration file', pathinfo(__FILE__)['filename']);
         } catch (Exception $e) {
             $this->errors['error_code'] = $e->getCode();
             $this->errors['error_msg'] = $e->getMessage();
