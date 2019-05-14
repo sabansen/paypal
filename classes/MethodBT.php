@@ -914,7 +914,7 @@ class MethodBT extends AbstractMethodPaypal
     {
         $this->initConfig($orderPayPal->sandbox);
         try {
-            $result = $this->gateway->transaction()->void(array('authorization_id'=>$orderPayPal->id_transaction));
+            $result = $this->gateway->transaction()->void($orderPayPal->id_transaction);
             if ($result instanceof Braintree_Result_Successful && $result->success) {
                 $response =  array(
                     'success' => true,
