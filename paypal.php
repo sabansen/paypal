@@ -897,6 +897,9 @@ class PayPal extends PaymentModule
         if (Tools::getValue('controller') == "order") {
             $active = false;
             $modules = Hook::getHookModuleExecList('paymentOptions');
+            if (empty($modules)) {
+                return;
+            }
             foreach ($modules as $module) {
                 if ($module['module'] == 'paypal') {
                     $active = true;
