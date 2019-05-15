@@ -106,7 +106,7 @@ class AdminProcessLoggerController extends \ModuleAdminController
             ),
             'id_transaction' => array(
                 'title'    => $this->module->l('Transaction ID', 'AdminProcessLoggerController'),
-                'callback' => 'getObjectId',
+                'callback' => 'getLinkToTransaction',
             ),
             'status' => array(
                 'title' => $this->module->l('Level', 'AdminProcessLoggerController'),
@@ -179,6 +179,21 @@ class AdminProcessLoggerController extends \ModuleAdminController
     {
         unset($tr);
         return empty($echo) ? '' : $echo;
+    }
+
+    public function getLinkToTransaction($id_transaction, $tr)
+    {
+        if ($id_transaction == false || (int)$tr['id_paypal_processlogger'] == false) {
+            return '';
+        }
+        $collectionLogs = new \PrestaShopCollection($this->className);
+        $collectionLogs->where('id_paypal_processlogger', '=', (int)$tr['id_paypal_processlogger']);
+        $log = $collectionLogs->getFirst();
+        if (\Validate::isLoadedObject($log) == false) {
+            return '';
+        }
+        $link = $log->getLinkToTransaction();
+        return '<a href="' . $link . '" target="_blank">' . $log->id_transaction . '</a>';
     }
 
     public function getCartLink($id_cart)

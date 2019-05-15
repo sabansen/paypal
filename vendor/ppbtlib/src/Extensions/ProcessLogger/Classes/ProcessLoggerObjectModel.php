@@ -89,7 +89,7 @@ class ProcessLoggerObjectModel extends ObjectModel
             'log'     => array(
                 'type'     => ObjectModel::TYPE_STRING,
                 'validate' => 'isGenericName',
-                'size'     => 100,
+                'size'     => 250,
             ),
             'status'     => array(
                 'type'     => ObjectModel::TYPE_STRING,

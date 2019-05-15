@@ -27,5 +27,9 @@ use PaypalPPBTlib\Extensions\ProcessLogger\Controllers\Admin\AdminProcessLoggerC
 
 class AdminPaypalProcessLoggerController extends AdminProcessLoggerController
 {
-
+    public function __construct()
+    {
+        parent::__construct();
+        $this->className = 'PaypalLog';
+    }
 }
