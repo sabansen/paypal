@@ -1801,6 +1801,11 @@ PayPal payment solution: No changes & no impacts on your business. You can simpl
 
     public function hookDisplayAdminOrderTabOrder($params)
     {
+        /** @var $order Order*/
+        $order = $params['order'];
+        if ($order->module != 'paypal') {
+            return;
+        }
         if ($result = $this->handleExtensionsHook(__FUNCTION__, $params)) {
             if (!is_null($result)) {
                 return $result;
@@ -1810,6 +1815,10 @@ PayPal payment solution: No changes & no impacts on your business. You can simpl
 
     public function hookDisplayAdminOrderContentOrder($params)
     {
+        $order = $params['order'];
+        if ($order->module != 'paypal') {
+            return;
+        }
         $params['class_logger'] = 'PaypalLog';
         if ($result = $this->handleExtensionsHook(__FUNCTION__, $params)) {
             if (!is_null($result)) {
@@ -1820,6 +1829,12 @@ PayPal payment solution: No changes & no impacts on your business. You can simpl
 
     public function hookDisplayAdminCartsView($params)
     {
+        /** @var $cart Cart */
+        $cart = $params['cart'];
+        $order = new Order((int)Order::getIdByCartId($cart->id));
+        if ($order->module != 'paypal') {
+            return;
+        }
         $params['class_logger'] = 'PaypalLog';
         if ($result = $this->handleExtensionsHook(__FUNCTION__, $params)) {
             if (!is_null($result)) {
