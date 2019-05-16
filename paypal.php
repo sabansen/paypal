@@ -897,6 +897,9 @@ class PayPal extends PaymentModule
         if (Tools::getValue('controller') == "order") {
             $active = false;
             $modules = Hook::getHookModuleExecList('paymentOptions');
+            if (empty($modules)) {
+                return;
+            }
             foreach ($modules as $module) {
                 if ($module['module'] == 'paypal') {
                     $active = true;
@@ -1764,7 +1767,9 @@ class PayPal extends PaymentModule
     {
         $paypal = Module::getInstanceByName('paypal');
         $currency_wt_decimal = array('HUF', 'JPY', 'TWD');
-        if (in_array($paypal->getPaymentCurrencyIso(), $currency_wt_decimal)) {
+        if (in_array($paypal->getPaymentCurrencyIso(), $currency_wt_decimal) ||
+            (int)Configuration::get('PS_PRICE_DISPLAY_PRECISION') == 0)
+        {
             return (int)0;
         } else {
             return (int)2;
