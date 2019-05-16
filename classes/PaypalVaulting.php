@@ -44,6 +44,9 @@ class PaypalVaulting extends ObjectModel
     /** @var string card ou paypal, etc... */
     public $payment_tool;
 
+    /** @var bool mode of payment (sandbox or live) */
+    public $sandbox;
+
     /** @var string Object creation date */
     public $date_add;
 
@@ -63,6 +66,7 @@ class PaypalVaulting extends ObjectModel
             'name' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
             'info' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
             'payment_tool' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
+            'sandbox' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
             'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
         )
@@ -96,7 +100,10 @@ class PaypalVaulting extends ObjectModel
         $query->select('*');
         $query->from('paypal_vaulting', 'pv');
         $query->leftJoin('paypal_customer', 'pc', 'pv.id_paypal_customer = pc.id_paypal_customer');
-        $query->where('pc.id_customer = '.(int)$customer.' AND pv.payment_tool = "'.pSQL($method).'"');
+        //$query->where('pc.id_customer = '.(int)$customer.' AND pv.payment_tool = "'.pSQL($method).'"');
+        $query->where('pc.id_customer = '.(int)$customer);
+        $query->where('pv.payment_tool = "'.pSQL($method).'"');
+        $query->where('pv.sandbox = ' . (int)Configuration::get('PAYPAL_SANDBOX'));
         $result = $db->executeS($query);
         return $result;
     }
