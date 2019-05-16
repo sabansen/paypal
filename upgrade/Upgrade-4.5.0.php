@@ -34,6 +34,7 @@ function upgrade_module_4_5_0($module)
     $installer = new Installer();
     $installer->installObjectModel('PaypalOrder');
     $installer->installObjectModel('PaypalCustomer');
+    $installer->installObjectModel('PaypalVaulting');
     $installer->installModuleAdminControllers();
     return true;
 }
