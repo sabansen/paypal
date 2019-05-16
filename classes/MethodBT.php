@@ -982,4 +982,16 @@ class MethodBT extends AbstractMethodPaypal
         }
         return $url . $id_transaction;
     }
+
+    /**
+     * @return bool
+     */
+    public function isConfigured()
+    {
+        if (Configuration::get('PAYPAL_SANDBOX')) {
+            return (bool)Configuration::get('PAYPAL_SANDBOX_BRAINTREE_MERCHANT_ID');
+        } else {
+            return (bool)Configuration::get('PAYPAL_LIVE_BRAINTREE_MERCHANT_ID');
+        }
+    }
 }

@@ -857,4 +857,16 @@ class MethodPPP extends AbstractMethodPaypal
         }
         return $url . $id_transaction;
     }
+
+    /**
+     * @return bool
+     */
+    public function isConfigured()
+    {
+        if (Configuration::get('PAYPAL_SANDBOX')) {
+            return (bool)Configuration::get('PAYPAL_SANDBOX_CLIENTID') && (bool)Configuration::get('PAYPAL_SANDBOX_SECRET');
+        } else {
+            return (bool)Configuration::get('PAYPAL_LIVE_CLIENTID') && (bool)Configuration::get('PAYPAL_LIVE_SECRET');
+        }
+    }
 }

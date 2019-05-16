@@ -796,6 +796,22 @@ PayPal payment solution: No changes & no impacts on your business. You can simpl
 
     public function hookDisplayBackOfficeHeader()
     {
+        $tab = Tab::getInstanceFromClassName('AdminPaypalStats');
+        if (Validate::isLoadedObject($tab)) {
+            if ($tab->active && (bool)Configuration::get('PAYPAL_METHOD') == false) {
+                $tab->active = false;
+                $tab->save();
+            } elseif ($method_payment = Configuration::get('PAYPAL_METHOD')) {
+                $method = AbstractMethodPaypal::load($method_payment);
+                if ($tab->active == false && $method->isConfigured() == true) {
+                    $tab->active = true;
+                    $tab->save();
+                } elseif ($tab->active == true && $method->isConfigured() == false) {
+                    $tab->active = false;
+                    $tab->save();
+                }
+            }
+        }
         if (Configuration::get('PAYPAL_METHOD') == 'BT') {
             $diff_cron_time = date_diff(date_create('now'), date_create(Configuration::get('PAYPAL_CRON_TIME')));
             if ($diff_cron_time->d > 0 || $diff_cron_time->h > 4) {

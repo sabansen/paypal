@@ -1059,4 +1059,16 @@ class MethodEC extends AbstractMethodPaypal
         }
         return $url . $id_transaction;
     }
+
+    /**
+     * @return bool
+     */
+    public function isConfigured()
+    {
+        if (Configuration::get('PAYPAL_SANDBOX')) {
+            return (bool)Configuration::get('PAYPAL_MERCHANT_ID_SANDBOX');
+        } else {
+            return (bool)Configuration::get('PAYPAL_MERCHANT_ID_LIVE');
+        }
+    }
 }
