@@ -55,19 +55,6 @@
 
 
 	{if $PayPal_allowed_methods}
-		{if $default_lang_iso == 'fr'}
-			<div class="paypal-clear"></div><hr />
-			<div class="box">
-			{l s='Download the ' mod='paypal'}<a href="http://altfarm.mediaplex.com/ad/ck/3484-197941-8030-54"> {l s='Paypal Integration Guide' mod='paypal'}</a> {l s='on PrestaShop and follow the configuration step by step' mod='paypal'}
-
-			</div>
-		{else}
-			<div class="paypal-clear"></div><hr />
-			<div class="box">
-			{l s='Download the ' mod='paypal'}<a href="http://altfarm.mediaplex.com/ad/ck/3484-197941-8030-169"> {l s='Paypal Integration Guide' mod='paypal'}</a> {l s='on PrestaShop and follow the configuration step by step' mod='paypal'}
-
-			</div>
-		{/if}
 		<div class="paypal-clear"></div><hr>
 
 		<form method="post" action="{$smarty.server.REQUEST_URI|escape:'htmlall':'UTF-8'}" id="paypal_configuration">

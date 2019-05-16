@@ -131,7 +131,7 @@
 
         function doPatch(ppp) {
             jQuery.ajax({
-                url : "{/literal}{$ajaxUrl|escape:'htmlall':'UTF-8'}{literal}",
+                url : "{/literal}{$ajaxUrl|addslashes}{literal}",
                 success: function(){
                    ppp.doCheckout();
                }

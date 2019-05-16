@@ -41,7 +41,7 @@
 	<link rel="stylesheet" href="{$base_dir|escape:'htmlall':'UTF-8'}modules/paypal/views/css/paypal_1_4.css">
 {/if}
 
-{$paypal_cart_summary|escape:'htmlall':'UTF-8'}
+{$paypal_cart_summary nofilter}
 <div class="inforeturn"></div>
 <div class="confirm_PPP">
     
