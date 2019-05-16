@@ -851,9 +851,9 @@ class MethodPPP extends AbstractMethodPaypal
     public function getLinkToTransaction($id_transaction, $sandbox)
     {
         if ($sandbox) {
-            $url = 'https://www.sandbox.paypal.com/myaccount/transactions/?free_text_search=';
+            $url = 'https://www.sandbox.paypal.com/activity/payment/';
         } else {
-            $url = 'https://www.paypal.com/myaccount/transactions/?free_text_search=';
+            $url = 'https://www.paypal.com/activity/payment/';
         }
         return $url . $id_transaction;
     }

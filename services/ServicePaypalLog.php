@@ -37,11 +37,11 @@ class ServicePaypalLog
      */
     public function getLinkToTransaction($log)
     {
-        if ($log->id_transaction == false) {
+        if ($log->id_transaction == false || $log->id_order == false) {
             return '';
         }
         /** @var $paypalOrder \PaypalOrder object*/
-        $paypalOrder = \PaypalOrder::loadByTransactionId($log->id_transaction);
+        $paypalOrder = \PaypalOrder::loadByOrderId($log->id_order);
         if (\Validate::isLoadedObject($paypalOrder) == false) {
             return '';
         }

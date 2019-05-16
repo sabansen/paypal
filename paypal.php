@@ -1153,7 +1153,7 @@ PayPal payment solution: No changes & no impacts on your business. You can simpl
             $paypal_order->payment_status = $transaction['payment_status'];
             $paypal_order->total_prestashop = (float) $total_ps;
             $paypal_order->method = $transaction['method'];
-            $paypal_order->payment_tool = isset($transaction['payment_tool']) ? $transaction['payment_tool'] : '';
+            $paypal_order->payment_tool = isset($transaction['payment_tool']) ? $transaction['payment_tool'] : 'PayPal';
             $paypal_order->sandbox = (int) Configuration::get('PAYPAL_SANDBOX');
             $paypal_order->save();
 
