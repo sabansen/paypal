@@ -600,11 +600,7 @@ class MethodPPP extends AbstractMethodPaypal
         $cart = new Cart(Context::getContext()->cart->id);
         $address_delivery = new Address($cart->id_address_delivery);
 
-        $state = '';
-        if ($address_delivery->id_state) {
-            $state = new State((int) $address_delivery->id_state);
-        }
-        $state_name = $state ? $state->iso_code : '';
+        $state_name = $ship_addr_state = PayPal::getPaypalStateCode($address_delivery);
 
         $this->_itemList = new ItemList();
         $this->_amount = new Amount();

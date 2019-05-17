@@ -120,18 +120,7 @@ class PaypalEcScOrderModuleFrontController extends PaypalAbstarctModuleFrontCont
             $payer_phone = $info->GetExpressCheckoutDetailsResponseDetails->ContactPhone;
         }
 
-        $id_state = 0;
-        $ship_addr_country = Country::getByIso($ship_addr->Country);
-        if (Country::containsStates($ship_addr_country)) {
-            if ($id_state = (int)State::getIdByIso(Tools::strtoupper($ship_addr->StateOrProvince), $ship_addr_country)) {
-                $id_state = $id_state;
-            } elseif ($id_state = State::getIdByName(pSQL(trim($ship_addr->StateOrProvince)))) {
-                $state = new State((int)$id_state);
-                if ($state->id_country == $ship_addr_country) {
-                    $id_state= $state->id;
-                }
-            }
-        }
+        $id_state = PayPal::getIdStateByPaypalCode($ship_addr->StateOrProvince, $ship_addr->Country);
 
         foreach ($addresses as $address) {
             if ($address['firstname'].' '.$address['lastname'] == $ship_addr->Name

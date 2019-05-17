@@ -75,18 +75,7 @@ class PaypalPppScOrderModuleFrontController extends PaypalAbstarctModuleFrontCon
         $payer_info = $info->payer->payer_info;
         $ship_addr = $info->transactions[0]->item_list->shipping_address;
 
-        $id_state = 0;
-        $ship_addr_country = Country::getByIso($ship_addr->country_code);
-        if (Country::containsStates($ship_addr_country)) {
-            if ($id_state = (int)State::getIdByIso(Tools::strtoupper($ship_addr->state), $ship_addr_country)) {
-                $id_state = $id_state;
-            } elseif ($id_state = State::getIdByName(pSQL(trim($ship_addr->state)))) {
-                $state = new State((int)$id_state);
-                if ($state->id_country == $ship_addr_country) {
-                    $id_state= $state->id;
-                }
-            }
-        }
+        $id_state = PayPal::getIdStateByPaypalCode($ship_addr->state, $ship_addr->country_code);
 
         if ($this->context->cookie->logged) {
             $customer = $this->context->customer;
