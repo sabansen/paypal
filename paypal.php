@@ -1796,11 +1796,6 @@ class PayPal extends PaymentModule
 
     public function hookDisplayAdminOrderTabOrder($params)
     {
-        /** @var $order Order*/
-        $order = $params['order'];
-        if ($order->module != 'paypal') {
-            return;
-        }
         if ($result = $this->handleExtensionsHook(__FUNCTION__, $params)) {
             if (!is_null($result)) {
                 return $result;
@@ -1810,10 +1805,6 @@ class PayPal extends PaymentModule
 
     public function hookDisplayAdminOrderContentOrder($params)
     {
-        $order = $params['order'];
-        if ($order->module != 'paypal') {
-            return;
-        }
         $params['class_logger'] = 'PaypalLog';
         if ($result = $this->handleExtensionsHook(__FUNCTION__, $params)) {
             if (!is_null($result)) {
@@ -1824,12 +1815,6 @@ class PayPal extends PaymentModule
 
     public function hookDisplayAdminCartsView($params)
     {
-        /** @var $cart Cart */
-        $cart = $params['cart'];
-        $order = new Order((int)Order::getIdByCartId($cart->id));
-        if ($order->module != 'paypal') {
-            return;
-        }
         $params['class_logger'] = 'PaypalLog';
         if ($result = $this->handleExtensionsHook(__FUNCTION__, $params)) {
             if (!is_null($result)) {

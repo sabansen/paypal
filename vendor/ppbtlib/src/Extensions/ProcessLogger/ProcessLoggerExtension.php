@@ -53,6 +53,11 @@ class ProcessLoggerExtension extends AbstractModuleExtension
 
     public function hookDisplayAdminOrderContentOrder($params)
     {
+        /** @var $order \Order*/
+        $order = $params['order'];
+        if ($order->module != 'paypal') {
+            return;
+        }
         if (isset($params['class_logger']) && is_subclass_of($params['class_logger'], ProcessLoggerObjectModel::class)) {
             $class_logger = $params['class_logger'];
         } else {
@@ -66,11 +71,23 @@ class ProcessLoggerExtension extends AbstractModuleExtension
 
     public function hookDisplayAdminOrderTabOrder($params)
     {
+        /** @var $order \Order*/
+        $order = $params['order'];
+        if ($order->module != 'paypal') {
+            return;
+        }
         return \Context::getContext()->smarty->fetch(_PS_MODULE_DIR_ . 'paypal/views/templates/hook/displayAdminOrderTabOrder.tpl');
     }
 
     public function hookDisplayAdminCartsView($params)
     {
+
+        /** @var $cart Cart */
+        $cart = $params['cart'];
+        $order = new \Order((int)\Order::getIdByCartId($cart->id));
+        if ($order->module != 'paypal') {
+            return;
+        }
         if (isset($params['class_logger']) && is_subclass_of($params['class_logger'], ProcessLoggerObjectModel::class)) {
             $class_logger = $params['class_logger'];
         } else {
