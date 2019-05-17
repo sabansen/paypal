@@ -1,6 +1,6 @@
 {
   "name": "paypal",
-  "version": "4.4.5",
+  "version": "4.5.0",
   "description": "PayPal & Braintree official Module",
   "directories": {
     "doc": "202/doc"

@@ -41,9 +41,6 @@ class PaypalOrder extends ObjectModel
     /** @var string Payment ID */
     public $id_payment;
 
-    /** @var string BT gateway client token */
-    public $client_token;
-
     /** @var string Transaction type returned by API */
     public $payment_method;
 
@@ -65,6 +62,9 @@ class PaypalOrder extends ObjectModel
     /** @var string BT tool (cards or paypal) */
     public $payment_tool;
 
+    /** @var bool mode of payment (sandbox or live) */
+    public $sandbox;
+
     /** @var string Object creation date */
     public $date_add;
 
@@ -83,14 +83,14 @@ class PaypalOrder extends ObjectModel
             'id_cart' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
             'id_transaction' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
             'id_payment' => array('type' => self::TYPE_STRING),
-            'client_token' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
             'payment_method' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
             'currency' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
-            'total_paid' => array('type' => self::TYPE_FLOAT),
+            'total_paid' => array('type' => self::TYPE_FLOAT, 'size' => 10, 'scale' => 2),
             'payment_status' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
-            'total_prestashop' => array('type' => self::TYPE_FLOAT),
+            'total_prestashop' => array('type' => self::TYPE_FLOAT, 'size' => 10, 'scale' => 2),
             'method' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
             'payment_tool' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
+            'sandbox' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
             'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
         )

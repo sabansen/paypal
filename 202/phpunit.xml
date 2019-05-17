@@ -18,12 +18,6 @@
         <env name="addon_name" value="paypal"/>
     </php>
 
-    <testsuites>
-        <testsuite name="Paypal Module Test Suite">
-            <directory suffix=".php">tests</directory>
-        </testsuite>
-    </testsuites>
-
     <filter>
         <whitelist>
             <directory>./build/prestashop/modules/paypal</directory>

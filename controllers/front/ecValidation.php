@@ -25,60 +25,57 @@
  */
 
 include_once _PS_MODULE_DIR_.'paypal/classes/AbstractMethodPaypal.php';
+include_once _PS_MODULE_DIR_.'paypal/controllers/front/abstract.php';
 
 /**
  * Validate EC payment
  */
-class PaypalEcValidationModuleFrontController extends ModuleFrontController
+class PaypalEcValidationModuleFrontController extends PaypalAbstarctModuleFrontController
 {
-    public $name = 'paypal';
-
+    public function init()
+    {
+        parent::init();
+        $this->values['short_cut'] = Tools::getvalue('short_cut');
+        $this->values['payerId'] = Tools::getvalue('PayerID');
+        $this->values['payment_token'] = Tools::getvalue('token');
+    }
     /**
      * @see FrontController::postProcess()
      */
     public function postProcess()
     {
         $method_ec = AbstractMethodPaypal::load('EC');
-        $paypal = Module::getInstanceByName('paypal');
+        $paypal = Module::getInstanceByName($this->name);
         try {
+            $method_ec->setParameters($this->values);
             $method_ec->validation();
+            $cart = Context::getContext()->cart;
+            $customer = new Customer($cart->id_customer);
+            $this->redirectUrl = 'index.php?controller=order-confirmation&id_cart='.$cart->id.'&id_module='.$paypal->id.'&id_order='.$paypal->currentOrder.'&key='.$customer->secure_key;
         } catch (PayPal\Exception\PPConnectionException $e) {
-            $ex_detailed_message = $paypal->l('Error connecting to ') . $e->getUrl();
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $ex_detailed_message)));
+            $this->errors['error_msg'] = $paypal->l('Error connecting to ', pathinfo(__FILE__)['filename']) . $e->getUrl();
         } catch (PayPal\Exception\PPMissingCredentialException $e) {
-            $ex_detailed_message = $e->errorMessage();
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $ex_detailed_message)));
+            $this->errors['error_msg'] = $e->errorMessage();
         } catch (PayPal\Exception\PPConfigurationException $e) {
-            $ex_detailed_message = $paypal->l('Invalid configuration. Please check your configuration file');
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $ex_detailed_message)));
+            $this->errors['error_msg'] = $paypal->l('Invalid configuration. Please check your configuration file', pathinfo(__FILE__)['filename']);
         } catch (PaypalAddons\classes\PaypalException $e) {
-            Tools::redirect(Context::getContext()->link->getModuleLink(
-                'paypal',
-                'error',
-                array(
-                    'error_code' => $e->getCode(),
-                    'error_msg' => $e->getMessage(),
-                    'msg_long' => $e->getMessageLong()
-                )
-            ));
+            $this->errors['error_code'] = $e->getCode();
+            $this->errors['error_msg'] = $e->getMessage();
+            $this->errors['msg_long'] = $e->getMessageLong();
         } catch (Exception $e) {
-            Tools::redirect(Context::getContext()->link->getModuleLink(
-                'paypal',
-                'error',
-                array(
-                    'error_code' => $e->getCode(),
-                    'error_msg' => $e->getMessage()
-                )
-            ));
+            $this->errors['error_code'] = $e->getCode();
+            $this->errors['error_msg'] = $e->getMessage();
+        } finally {
+            $this->transaction_detail = $method_ec->getDetailsTransaction();
         }
 
-        $cart = Context::getContext()->cart;
-        $customer = new Customer($cart->id_customer);
         //unset cookie of payment init
         Context::getContext()->cookie->__unset('paypal_ecs');
         Context::getContext()->cookie->__unset('paypal_ecs_payerid');
         Context::getContext()->cookie->__unset('paypal_ecs_email');
 
-        Tools::redirect('index.php?controller=order-confirmation&id_cart='.$cart->id.'&id_module='.$paypal->id.'&id_order='.$paypal->currentOrder.'&key='.$customer->secure_key);
+        if (!empty($this->errors)) {
+            $this->redirectUrl = Context::getContext()->link->getModuleLink($this->name, 'error', $this->errors);
+        }
     }
 }

@@ -27,13 +27,18 @@
 use PayPal\Api\Payment;
 
 include_once _PS_MODULE_DIR_.'paypal/classes/AbstractMethodPaypal.php';
+include_once _PS_MODULE_DIR_.'paypal/controllers/front/abstract.php';
 
 /**
  * Update PrestaShop Order after return from PayPal Plus
  */
-class PaypalPppScOrderModuleFrontController extends ModuleFrontController
+class PaypalPppScOrderModuleFrontController extends PaypalAbstarctModuleFrontController
 {
-    public $name = 'paypal';
+    public function init()
+    {
+        parent::init();
+        $this->values['paymentId'] = Tools::getvalue('paymentId');
+    }
 
     /**
      *  @see FrontController::postProcess()
@@ -41,31 +46,32 @@ class PaypalPppScOrderModuleFrontController extends ModuleFrontController
     public function postProcess()
     {
         $method = AbstractMethodPaypal::load('PPP');
-        $paypal = Module::getInstanceByName('paypal');
-        $paymentId = Tools::getValue('paymentId');
+        $paypal = Module::getInstanceByName($this->name);
         try {
-            $info = Payment::get($paymentId, $method->_getCredentialsInfo());
+            $info = Payment::get($this->values['paymentId'], $method->_getCredentialsInfo());
+            $this->prepareOrder($info);
+            $this->redirectUrl = $this->context->link->getPageLink('order', null, null, array('step'=>2));
         } catch (PayPal\Exception\PayPalConnectionException $e) {
             $decoded_message = Tools::jsonDecode($e->getData());
-            Tools::redirect(Context::getContext()->link->getModuleLink(
-                'paypal',
-                'error',
-                array(
-                    'error_code' => $e->getCode(),
-                    'error_msg' => $decoded_message->message,
-                    'msg_long' => $decoded_message->name.' - '.$decoded_message->details[0]->issue
-                )
-            ));
+            $this->errors['error_code'] = $e->getCode();
+            $this->errors['error_msg'] = $decoded_message->message;
+            $this->errors['msg_long'] = $decoded_message->name.' - '.$decoded_message->details[0]->issue;
         } catch (PayPal\Exception\PayPalInvalidCredentialException $e) {
-            $ex_detailed_message = $e->errorMessage();
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $ex_detailed_message)));
+            $this->errors['error_msg'] = $e->errorMessage();
         } catch (PayPal\Exception\PayPalMissingCredentialException $e) {
-            $ex_detailed_message = $paypal->l('Invalid configuration. Please check your configuration file');
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $ex_detailed_message)));
+            $this->errors['error_msg'] = $paypal->l('Invalid configuration. Please check your configuration file', pathinfo(__FILE__)['filename']);
         } catch (Exception $e) {
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_code' => $e->getCode(), 'error_msg' => $e->getMessage())));
+            $this->errors['error_code'] = $e->getCode();
+            $this->errors['error_msg'] = $e->getMessage();
         }
 
+        if (!empty($this->errors)) {
+            $this->redirectUrl = Context::getContext()->link->getModuleLink($this->name, 'error', $this->errors);
+        }
+    }
+
+    public function prepareOrder($info)
+    {
         $payer_info = $info->payer->payer_info;
         $ship_addr = $info->transactions[0]->item_list->shipping_address;
 
@@ -149,6 +155,5 @@ class PaypalPppScOrderModuleFrontController extends ModuleFrontController
         $this->context->cookie->__set('paypal_pSc', $info->id);
         $this->context->cookie->__set('paypal_pSc_payerid', $payer_info->payer_id);
         $this->context->cookie->__set('paypal_pSc_email', $payer_info->email);
-        Tools::redirect($this->context->link->getPageLink('order', null, null, array('step'=>2)));
     }
 }

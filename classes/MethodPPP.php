@@ -40,6 +40,7 @@ use PayPal\Api\PaymentExecution;
 use PayPal\Api\Refund;
 use PayPal\Api\RefundRequest;
 use PayPal\Api\Sale;
+use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 
 require(_PS_MODULE_DIR_.'paypal/sdk/paypalREST/vendor/autoload.php');
 
@@ -50,8 +51,6 @@ require(_PS_MODULE_DIR_.'paypal/sdk/paypalREST/vendor/autoload.php');
  */
 class MethodPPP extends AbstractMethodPaypal
 {
-    public $name = 'paypal';
-
     private $_items = array();
 
     private $_itemTotalValue = 0;
@@ -62,6 +61,32 @@ class MethodPPP extends AbstractMethodPaypal
 
     private $_amount;
 
+    /** @var boolean shortcut payment from product or cart page*/
+    public $short_cut;
+
+    /** @var string payment payer ID returned by paypal*/
+    private $payerId;
+
+    /** payment Object IDl*/
+    public $paymentId;
+
+    protected $payment_method = 'PayPal';
+
+    /**
+     * @param $values array replace for tools::getValues()
+     */
+    public function setParameters($values)
+    {
+        foreach ($values as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
+        }
+    }
+
+    /**
+     * @see AbstractMethodPaypal::setConfig()
+     */
     public function setConfig($params)
     {
         $paypal = Module::getInstanceByName($this->name);
@@ -71,20 +96,20 @@ class MethodPPP extends AbstractMethodPaypal
             Configuration::updateValue('PAYPAL_PPP_CONFIG_BRAND', $params['ppp_config_brand']);
             if (isset($_FILES['ppp_config_logo']['tmp_name']) && $_FILES['ppp_config_logo']['tmp_name'] != '') {
                 if (!in_array($_FILES['ppp_config_logo']['type'], array('image/gif', 'image/png', 'image/jpeg'))) {
-                    $paypal->errors .= $paypal->displayError($paypal->l('Use a valid graphics format, such as .gif, .jpg, or .png.'));
+                    $paypal->errors .= $paypal->displayError($paypal->l('Use a valid graphics format, such as .gif, .jpg, or .png.', get_class($this)));
                     return;
                 }
                 $size = getimagesize($_FILES['ppp_config_logo']['tmp_name']);
                 if ($size[0] > 190 || $size[1] > 60) {
-                    $paypal->errors .= $paypal->displayError($paypal->l('Limit the image to 190 pixels wide by 60 pixels high.'));
+                    $paypal->errors .= $paypal->displayError($paypal->l('Limit the image to 190 pixels wide by 60 pixels high.', get_class($this)));
                     return;
                 }
                 if (!($tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS')) ||
                 !move_uploaded_file($_FILES['ppp_config_logo']['tmp_name'], $tmpName)) {
-                    $paypal->errors .= $paypal->displayError($paypal->l('An error occurred while copying the image.'));
+                    $paypal->errors .= $paypal->displayError($paypal->l('An error occurred while copying the image.', get_class($this)));
                 }
                 if (!ImageManager::resize($tmpName, _PS_MODULE_DIR_.'paypal/views/img/ppp_logo'.Context::getContext()->shop->id.'.png')) {
-                    $paypal->errors .= $paypal->displayError($paypal->l('An error occurred while copying the image.'));
+                    $paypal->errors .= $paypal->displayError($paypal->l('An error occurred while copying the image.', get_class($this)));
                 }
                 Configuration::updateValue('PAYPAL_PPP_CONFIG_LOGO', _PS_MODULE_DIR_.'paypal/views/img/ppp_logo'.Context::getContext()->shop->id.'.png');
             }
@@ -94,7 +119,7 @@ class MethodPPP extends AbstractMethodPaypal
                 if ($experience_web) {
                     Configuration::updateValue('PAYPAL_PLUS_EXPERIENCE', $experience_web->id);
                 } else {
-                    $paypal->errors .= $paypal->displayError($paypal->l('An error occurred while creating your web experience. Check your credentials.'));
+                    $paypal->errors .= $paypal->displayError($paypal->l('An error occurred while creating your web experience. Check your credentials.', get_class($this)));
                 }
             }
         }
@@ -127,62 +152,66 @@ class MethodPPP extends AbstractMethodPaypal
                 if ($experience_web) {
                     Configuration::updateValue('PAYPAL_PLUS_EXPERIENCE', $experience_web->id);
                 } else {
-                    $paypal->errors .= $paypal->displayError($paypal->l('An error occurred while creating your web experience. Check your credentials.'));
+                    $paypal->errors .= $paypal->displayError($paypal->l('An error occurred while creating your web experience. Check your credentials.', get_class($this)));
                 }
             }
         }
 
         $mode = Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
         if ($mode == 'SANDBOX' && (!Configuration::get('PAYPAL_SANDBOX_CLIENTID') || !Configuration::get('PAYPAL_SANDBOX_SECRET'))) {
-            $paypal->errors .= $paypal->displayError($paypal->l('You are trying to switch to sandbox account. You should use your test credentials. Please go to the "Products" tab and click on "Modify\' for activating the sandbox version of the selected product.'));
+            $paypal->errors .= $paypal->displayError($paypal->l('You are trying to switch to sandbox account. You should use your test credentials. Please go to the "Products" tab and click on "Modify\' for activating the sandbox version of the selected product.', get_class($this)));
         }
         if ($mode == 'LIVE' && (!Configuration::get('PAYPAL_LIVE_CLIENTID') || !Configuration::get('PAYPAL_LIVE_SECRET'))) {
-            $paypal->errors .= $paypal->displayError($paypal->l('You are trying to switch to production account. You should use your production credentials. Please go to the "Products" tab and click on "Modify\' for activating the production version of the selected product.'));
+            $paypal->errors .= $paypal->displayError($paypal->l('You are trying to switch to production account. You should use your production credentials. Please go to the "Products" tab and click on "Modify\' for activating the production version of the selected product.', get_class($this)));
         }
     }
 
+    /**
+     * @see AbstractMethodPaypal::getConfig()
+     */
     public function getConfig(Paypal $module)
     {
+        /*$module->l('Test t');*/
         $params = array('inputs' => array(
             array(
                 'type' => 'text',
-                'label' => $module->l('Title'),
+                'label' => $module->l('Title', get_class($this)),
                 'name' => 'ppp_config_title',
-                'placeholder' => $module->l('Leave it empty to use default PayPal payment method title'),
+                'placeholder' => $module->l('Leave it empty to use default PayPal payment method title', get_class($this)),
             ),
             array(
                 'type' => 'text',
-                'label' => $module->l('Brand name'),
+                'label' => $module->l('Brand name', get_class($this)),
                 'name' => 'ppp_config_brand',
-                'placeholder' => $module->l('Leave it empty to use your Shop name'),
-                'hint' => $module->l('A label that overrides the business name in the PayPal account on the PayPal pages.'),
+                'placeholder' => $module->l('Leave it empty to use your Shop name', get_class($this)),
+                'hint' => $module->l('A label that overrides the business name in the PayPal account on the PayPal pages.', get_class($this)),
             ),
             array(
                 'type' => 'file',
-                'label' => $module->l('Shop logo field'),
+                'label' => $module->l('Shop logo field', get_class($this)),
                 'name' => 'ppp_config_logo',
                 'display_image' => true,
                 'delete_url' => $module->module_link.'&deleteLogoPp=1',
-                'hint' => $module->l('An image must be stored on a secure (https) server. Use a valid graphics format, such as .gif, .jpg, or .png. Limit the image to 190 pixels wide by 60 pixels high. PayPal crops images that are larger. This logo will replace brand name  at the top of the cart review area.'),
+                'hint' => $module->l('An image must be stored on a secure (https) server. Use a valid graphics format, such as .gif, .jpg, or .png. Limit the image to 190 pixels wide by 60 pixels high. PayPal crops images that are larger. This logo will replace brand name  at the top of the cart review area.', get_class($this)),
                 'image' => file_exists(_PS_MODULE_DIR_.'paypal/views/img/ppp_logo'.Context::getContext()->shop->id.'.png')?'<img src="'.Context::getContext()->link->getBaseLink().'modules/paypal/views/img/ppp_logo'.Context::getContext()->shop->id.'.png" class="img img-thumbnail" />':''
             ),
             array(
                 'type' => 'switch',
-                'label' => $module->l('Show PayPal benefits to your customers'),
+                'label' => $module->l('Show PayPal benefits to your customers', get_class($this)),
                 'name' => 'paypal_show_advantage',
-                'desc' => $module->l(''),
+                'desc' => $module->l('', get_class($this)),
                 'is_bool' => true,
-                'hint' => $module->l('You can increase your conversion rate by presenting PayPal benefits to your customers on payment methods selection page.'),
+                'hint' => $module->l('You can increase your conversion rate by presenting PayPal benefits to your customers on payment methods selection page.', get_class($this)),
                 'values' => array(
                     array(
                         'id' => 'paypal_show_advantage_on',
                         'value' => 1,
-                        'label' => $module->l('Enabled'),
+                        'label' => $module->l('Enabled', get_class($this)),
                     ),
                     array(
                         'id' => 'paypal_show_advantage_off',
                         'value' => 0,
-                        'label' => $module->l('Disabled'),
+                        'label' => $module->l('Disabled', get_class($this)),
                     )
                 ),
             ),
@@ -212,11 +241,11 @@ class MethodPPP extends AbstractMethodPaypal
         $fields_form = array();
         $fields_form[0]['form'] = array(
             'legend' => array(
-                'title' => $module->l('PayPal Express Shortcut'),
+                'title' => $module->l('PayPal Express Shortcut', get_class($this)),
                 'icon' => 'icon-cogs',
             ),
             'submit' => array(
-                'title' => $module->l('Save'),
+                'title' => $module->l('Save', get_class($this)),
                 'class' => 'btn btn-default pull-right button',
             ),
         );
@@ -225,43 +254,43 @@ class MethodPPP extends AbstractMethodPaypal
             array(
                 'type' => 'html',
                 'name' => 'paypal_desc_shortcut',
-                'html_content' => $module->l('The PayPal shortcut is displayed directly in the cart or on your product pages, allowing a faster checkout experience for your buyers. It requires fewer pages, clicks and seconds in order to finalize the payment. PayPal provides you with the client’s billing and shipping information so that you don’t have to collect it yourself.'),
+                'html_content' => $module->l('The PayPal shortcut is displayed directly in the cart or on your product pages, allowing a faster checkout experience for your buyers. It requires fewer pages, clicks and seconds in order to finalize the payment. PayPal provides you with the client’s billing and shipping information so that you don’t have to collect it yourself.', get_class($this)),
             ),
             array(
                 'type' => 'switch',
-                'label' => $module->l('Display the shortcut on product pages'),
+                'label' => $module->l('Display the shortcut on product pages', get_class($this)),
                 'name' => 'paypal_show_shortcut',
                 'is_bool' => true,
-                'hint' => $module->l('Recommended for mono-product websites.'),
+                'hint' => $module->l('Recommended for mono-product websites.', get_class($this)),
                 'values' => array(
                     array(
                         'id' => 'paypal_show_shortcut_on',
                         'value' => 1,
-                        'label' => $module->l('Enabled'),
+                        'label' => $module->l('Enabled', get_class($this)),
                     ),
                     array(
                         'id' => 'paypal_show_shortcut_off',
                         'value' => 0,
-                        'label' => $module->l('Disabled'),
+                        'label' => $module->l('Disabled', get_class($this)),
                     )
                 ),
             ),
             array(
                 'type' => 'switch',
-                'label' => $module->l('Display shortcut in the cart'),
+                'label' => $module->l('Display shortcut in the cart', get_class($this)),
                 'name' => 'paypal_show_shortcut_cart',
                 'is_bool' => true,
-                'hint' => $module->l('Recommended for multi-products websites.'),
+                'hint' => $module->l('Recommended for multi-products websites.', get_class($this)),
                 'values' => array(
                     array(
                         'id' => 'paypal_show_shortcut_cart_on',
                         'value' => 1,
-                        'label' => $module->l('Enabled'),
+                        'label' => $module->l('Enabled', get_class($this)),
                     ),
                     array(
                         'id' => 'paypal_show_shortcut_cart_off',
                         'value' => 0,
-                        'label' => $module->l('Disabled'),
+                        'label' => $module->l('Disabled', get_class($this)),
                     )
                 ),
             ),
@@ -295,9 +324,12 @@ class MethodPPP extends AbstractMethodPaypal
     /**
      * @return ApiContext
      */
-    public function _getCredentialsInfo()
+    public function _getCredentialsInfo($mode_order = null)
     {
-        switch (Configuration::get('PAYPAL_SANDBOX')) {
+        if ($mode_order === null) {
+            $mode_order = (int) Configuration::get('PAYPAL_SANDBOX');
+        }
+        switch ($mode_order) {
             case 0:
                 $apiContext = new ApiContext(
                     new OAuthTokenCredential(
@@ -318,7 +350,7 @@ class MethodPPP extends AbstractMethodPaypal
 
         $apiContext->setConfig(
             array(
-                'mode' => Configuration::get('PAYPAL_SANDBOX') ? 'sandbox' : 'live',
+                'mode' => $mode_order ? 'sandbox' : 'live',
                 'log.LogEnabled' => false,
                 'cache.enabled' => true,
             )
@@ -382,7 +414,10 @@ class MethodPPP extends AbstractMethodPaypal
         return $createProfileResponse;
     }
 
-    public function init($params)
+    /**
+     * @see AbstractMethodPaypal::init()
+     */
+    public function init()
     {
         $payer = new Payer();
         $payer->setPaymentMethod("paypal");
@@ -411,7 +446,7 @@ class MethodPPP extends AbstractMethodPaypal
         // payment approval/ cancellation.
 
         $redirectUrls = new RedirectUrls();
-        if ($params['short_cut']) {
+        if ($this->short_cut) {
             $return_url = Context::getContext()->link->getModuleLink($this->name, 'pppScOrder', array(), true);
         } else {
             $return_url = Context::getContext()->link->getModuleLink($this->name, 'pppValidation', array(), true);
@@ -441,14 +476,15 @@ class MethodPPP extends AbstractMethodPaypal
         // ### Get redirect url
         // The API response provides the url that you must redirect
         // the buyer to. Retrieve the url from the $payment->getApprovalLink() method
-        return array('approval_url' => $payment->getApprovalLink(), 'payment_id' => $payment->id);
+        $this->paymentId = $payment->id;
+        return $payment->getApprovalLink();
     }
 
     public function formatPrice($price)
     {
         $context = Context::getContext();
         $context_currency = $context->currency;
-        $paypal = Module::getInstanceByName('paypal');
+        $paypal = Module::getInstanceByName($this->name);
         if ($id_currency_to = $paypal->needConvert()) {
             $currency_to_convert = new Currency($id_currency_to);
             $price = Tools::convertPriceFull($price, $context_currency, $currency_to_convert);
@@ -459,7 +495,7 @@ class MethodPPP extends AbstractMethodPaypal
 
     private function _getPaymentDetails()
     {
-        $paypal = Module::getInstanceByName('paypal');
+        $paypal = Module::getInstanceByName($this->name);
         $currency = $paypal->getPaymentCurrencyIso();
         $this->_getProductsList($currency);
         //$this->_getDiscountsList($items, $total_products);
@@ -595,6 +631,9 @@ class MethodPPP extends AbstractMethodPaypal
         return $payment->update($patchRequest, $this->_getCredentialsInfo());
     }
 
+    /**
+     * @see AbstractMethodPaypal::validation()
+     */
     public function validation()
     {
         $context = Context::getContext();
@@ -602,9 +641,9 @@ class MethodPPP extends AbstractMethodPaypal
         // Get the payment Object by passing paymentId
         // payment id was previously stored in session in
         // CreatePaymentUsingPayPal.php
-        $paymentId = Tools::getValue('shortcut') ? $context->cookie->paypal_pSc : Tools::getValue('paymentId');
+        $paymentId = $this->short_cut ? $context->cookie->paypal_pSc : $this->paymentId;
         $payment = Payment::get($paymentId, $this->_getCredentialsInfo());
-        if (Tools::getValue('shortcut')) {
+        if ($this->short_cut) {
             $discounts = Context::getContext()->cart->getCartRules();
             if (count($discounts) > 0) {
                 Context::getContext()->cookie->__unset('paypal_pSc');
@@ -640,55 +679,60 @@ class MethodPPP extends AbstractMethodPaypal
         // The payer_id is added to the request query parameters
         // when the user is redirected from paypal back to your site
         $execution = new PaymentExecution();
-        $execution->setPayerId(Tools::getValue('shortcut') ? $context->cookie->paypal_pSc_payerid : Tools::getValue('PayerID'));
+        $execution->setPayerId($this->short_cut ? $context->cookie->paypal_pSc_payerid : $this->payerId);
         // ### Optional Changes to Amount
         // If you wish to update the amount that you wish to charge the customer,
         // based on the shipping address or any other reason, you could
         // do that by passing the transaction object with just `amount` field in it.
         $exec_payment = $payment->execute($execution, $this->_getCredentialsInfo());
-
+        $this->setDetailsTransaction($exec_payment);
         $customer = new Customer($cart->id_customer);
         if (!Validate::isLoadedObject($customer)) {
-            Tools::redirect('index.php?controller=order&step=1');
+            throw new Exception('Customer is not loaded object');
         }
         $currency = $context->currency;
         $total = (float)$exec_payment->transactions[0]->amount->total;
-        $paypal = Module::getInstanceByName('paypal');
+        $paypal = Module::getInstanceByName($this->name);
         $order_state = Configuration::get('PS_OS_PAYMENT');
-        $transactionDetail = $this->getDetailsTransaction($exec_payment);
-        $paypal->validateOrder($cart->id, $order_state, $total, 'PayPal', null, $transactionDetail, (int)$currency->id, false, $customer->secure_key);
-        return true;
+        $paypal->validateOrder($cart->id, $order_state, $total, $this->getPaymentMethod(), null, $this->getDetailsTransaction(), (int)$currency->id, false, $customer->secure_key);
     }
 
-    public function getDetailsTransaction($transaction)
+    public function setDetailsTransaction($transaction)
     {
         $payment_info = $transaction->transactions[0];
 
-        return array(
+        $this->transaction_detail = array(
             'method' => 'PPP',
             'currency' => $payment_info->amount->currency,
             'transaction_id' => pSQL($payment_info->related_resources[0]->sale->id),
             'payment_status' => $transaction->state,
             'payment_method' => $transaction->payer->payment_method,
             'id_payment' => pSQL($transaction->id),
-            'client_token' => "",
             'capture' => false,
             'payment_tool' => isset($transaction->payment_instruction)?$transaction->payment_instruction->instruction_type:'',
+            'date_transaction' => $this->getDateTransaction($transaction)
         );
     }
 
-    public function confirmCapture()
+    public function getDateTransaction($transaction)
     {
+        $dateServer = DateTime::createFromFormat(DateTime::ISO8601, $transaction->create_time);
+        return $dateServer->format('Y-m-d H:i:s');
     }
-    public function check()
+
+    /**
+     * @see AbstractMethodPaypal::confirmCapture()
+     */
+    public function confirmCapture($orderPayPal)
     {
     }
 
-    public function refund()
+    /**
+     * @see AbstractMethodPaypal::refund()
+     */
+    public function refund($paypal_order)
     {
-        $paypal_order = PaypalOrder::loadByOrderId(Tools::getValue('id_order'));
-
-        $sale = Sale::get($paypal_order->id_transaction, $this->_getCredentialsInfo());
+        $sale = Sale::get($paypal_order->id_transaction, $this->_getCredentialsInfo($paypal_order->sandbox));
 
         // Includes both the refunded amount (to Payer)
         // and refunded fee (to Payee). Use the $amt->details
@@ -699,7 +743,7 @@ class MethodPPP extends AbstractMethodPaypal
         $refundRequest = new RefundRequest();
         $refundRequest->setAmount($amt);
 
-        $response = $sale->refundSale($refundRequest, $this->_getCredentialsInfo());
+        $response = $sale->refundSale($refundRequest, $this->_getCredentialsInfo($paypal_order->sandbox));
 
         $result =  array(
             'success' => true,
@@ -713,11 +757,14 @@ class MethodPPP extends AbstractMethodPaypal
         return $result;
     }
 
+    /**
+     * @see AbstractMethodPaypal::partialRefund()
+     */
     public function partialRefund($params)
     {
         $paypal_order = PaypalOrder::loadByOrderId(Tools::getValue('id_order'));
 
-        $sale = Sale::get($paypal_order->id_transaction, $this->_getCredentialsInfo());
+        $sale = Sale::get($paypal_order->id_transaction, $this->_getCredentialsInfo($paypal_order->sandbox));
 
         $amount = 0;
         foreach ($params['productList'] as $product) {
@@ -733,7 +780,7 @@ class MethodPPP extends AbstractMethodPaypal
         $refundRequest = new RefundRequest();
         $refundRequest->setAmount($amt);
 
-        $response = $sale->refundSale($refundRequest, $this->_getCredentialsInfo());
+        $response = $sale->refundSale($refundRequest, $this->_getCredentialsInfo($paypal_order->sandbox));
 
         $result =  array(
             'success' => true,
@@ -747,7 +794,10 @@ class MethodPPP extends AbstractMethodPaypal
         return $result;
     }
 
-    public function void($params)
+    /**
+     * @see AbstractMethodPaypal::void()
+     */
+    public function void($orderPayPal)
     {
     }
 
@@ -776,7 +826,7 @@ class MethodPPP extends AbstractMethodPaypal
             'shop_url' => $shop_url,
             'PayPal_payment_type' => $type,
             'PayPal_img_esc' => $shop_url.$img_esc,
-            'action_url' => $context->link->getModuleLink('paypal', 'ScInit', array(), true),
+            'action_url' => $context->link->getModuleLink($this->name, 'ScInit', array(), true),
             'environment' => $environment,
             'PayPal_tracking_code' => '',
         ));
@@ -792,14 +842,27 @@ class MethodPPP extends AbstractMethodPaypal
     }
 
     /**
-     * @param $response
+     * @see AbstractMethodPaypal::getLinkToTransaction()
      */
-    public function processCheckoutSc($response)
+    public function getLinkToTransaction($id_transaction, $sandbox)
     {
-        if (isset($response['approval_url'])) {
-            Tools::redirect($response['approval_url']);
+        if ($sandbox) {
+            $url = 'https://www.sandbox.paypal.com/activity/payment/';
         } else {
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_code' => '00000')));
+            $url = 'https://www.paypal.com/activity/payment/';
+        }
+        return $url . $id_transaction;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isConfigured()
+    {
+        if (Configuration::get('PAYPAL_SANDBOX')) {
+            return (bool)Configuration::get('PAYPAL_SANDBOX_CLIENTID') && (bool)Configuration::get('PAYPAL_SANDBOX_SECRET');
+        } else {
+            return (bool)Configuration::get('PAYPAL_LIVE_CLIENTID') && (bool)Configuration::get('PAYPAL_LIVE_SECRET');
         }
     }
 }
