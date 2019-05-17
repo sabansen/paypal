@@ -670,7 +670,6 @@ class MethodBT extends AbstractMethodPaypal
         $vaulting = new PaypalVaulting();
         $vaulting->id_paypal_customer = $paypal_customer->id;
         $vaulting->payment_tool = $this->payment_method_bt;
-        $vaulting->sandbox = (int)Configuration::get('PAYPAL_SANDBOX');
         if ($vaulting->payment_tool == BT_CARD_PAYMENT) {
             $vaulting->token = $result->transaction->creditCard['token'];
             $vaulting->info = $result->transaction->creditCard['cardType'].': *';
