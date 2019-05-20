@@ -62,9 +62,12 @@ function ECSInContext() {
         url: ec_sc_action_url,
         type: "GET",
         data: 'getToken=1',
-        success: function (token) {
-            var url = paypal.checkout.urlPrefix +token;
-            paypal.checkout.startFlow(url);
+        success: function (data) {
+            if (data.success == true) {
+                var url = paypal.checkout.urlPrefix + data.token;
+                console.log(url);
+                paypal.checkout.startFlow(url);
+            }
         },
         error: function (responseData, textStatus, errorThrown) {
             alert("Error in ajax post"+responseData.statusText);

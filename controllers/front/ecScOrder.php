@@ -162,6 +162,24 @@ class PaypalEcScOrderModuleFrontController extends PaypalAbstarctModuleFrontCont
 
             $orderAddress->id_customer = $customer->id;
             $orderAddress->alias = 'Paypal_Address '.($count);
+            $validationMessage = $orderAddress->validateFields(false, true);
+            if (is_string($validationMessage)) {
+                $var = array(
+                    'newAddress' => 'delivery',
+                    'address1' => $orderAddress->address1,
+                    'firstname' => $orderAddress->firstname,
+                    'lastname' => $orderAddress->lastname,
+                    'postcode' => $orderAddress->postcode,
+                    'id_country' => $orderAddress->id_country,
+                    'city' => $orderAddress->city,
+                    'phone' => $orderAddress->phone,
+                    'address2' => $orderAddress->address2
+                );
+                session_start();
+                $_SESSION['notifications'] = Tools::jsonEncode(array('error' => $validationMessage));
+                $url = Context::getContext()->link->getPageLink('order') . '&' . http_build_query($var);
+                Tools::redirect($url);
+            }
             $orderAddress->save();
             $id_address = $orderAddress->id;
         }
