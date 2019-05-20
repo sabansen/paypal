@@ -24,7 +24,7 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-include_once(_PS_MODULE_DIR_.'paypal/sdk/braintree/lib/Braintree.php');
+include_once(_PS_MODULE_DIR_.'paypal/vendor/braintree/braintree_php/lib/Braintree.php');
 include_once 'PaypalCustomer.php';
 include_once 'PaypalVaulting.php';
 

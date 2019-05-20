@@ -42,8 +42,6 @@ use PayPal\Api\RefundRequest;
 use PayPal\Api\Sale;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 
-require(_PS_MODULE_DIR_.'paypal/sdk/paypalREST/vendor/autoload.php');
-
 /**
  * Class MethodPPP
  * @see https://paypal.github.io/PayPal-PHP-SDK/ REST API sdk doc

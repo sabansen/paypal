@@ -47,8 +47,6 @@ use PayPal\Service\PayPalAPIInterfaceServiceService;
 use PaypalAddons\classes\PaypalException;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 
-require_once(_PS_MODULE_DIR_.'paypal/sdk/paypalNVP/PPBootStrap.php');
-
 /**
  * Class MethodEC.
  * @see https://developer.paypal.com/docs/classic/api/ NVP SOAP SDK
