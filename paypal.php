@@ -1205,6 +1205,7 @@ class PayPal extends PaymentModule
             isset($transaction['date_transaction']) ? $transaction['date_transaction'] : null
         );
         ProcessLoggerHandler::closeLogger();
+
         if (Tools::version_compare(_PS_VERSION_, '1.7.1.0', '>')) {
             $order = Order::getByCartId($id_cart);
         } else {
@@ -1212,7 +1213,7 @@ class PayPal extends PaymentModule
             $order = new Order($id_order);
         }
 
-        if (isset($amount_paid_curr) && $amount_paid_curr != 0 && $order->total_paid != $amount_paid_curr) {
+        if (isset($amount_paid_curr) && $amount_paid_curr != 0 && $order->total_paid != $amount_paid_curr && $this->isOneOrder($order->reference)) {
             $order->total_paid = $amount_paid_curr;
             $order->total_paid_real = $amount_paid_curr;
             $order->total_paid_tax_incl = $amount_paid_curr;
@@ -1963,5 +1964,15 @@ class PayPal extends PaymentModule
                 }
             }
         }
+    }
+
+    public function isOneOrder($order_reference)
+    {
+        $query = new DBQuery();
+        $query->select('COUNT(*)');
+        $query->from('orders');
+        $query->where('reference = "' . pSQL($order_reference) . '"');
+        $countOrders = (int)DB::getInstance()->getValue($query);
+        return $countOrders == 1;
     }
 }
