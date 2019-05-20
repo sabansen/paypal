@@ -76,6 +76,7 @@ class PaypalEcScOrderModuleFrontController extends PaypalAbstarctModuleFrontCont
      */
     public function prepareOrder($info)
     {
+        $module = Module::getInstanceByName($this->name);
         $payer_info = $info->GetExpressCheckoutDetailsResponseDetails->PayerInfo;
         $ship_addr = $info->GetExpressCheckoutDetailsResponseDetails->PaymentDetails[0]->ShipToAddress;
 
@@ -163,6 +164,13 @@ class PaypalEcScOrderModuleFrontController extends PaypalAbstarctModuleFrontCont
             $orderAddress->id_customer = $customer->id;
             $orderAddress->alias = 'Paypal_Address '.($count);
             $validationMessage = $orderAddress->validateFields(false, true);
+            if (Country::containsStates($orderAddress->id_country) && $orderAddress->id_state == false) {
+                $validationMessage = $module->l('Address->id_state is empty', pathinfo(__FILE__)['filename']);
+            }
+            $country = new Country($orderAddress->id_country);
+            if ($country->active == false) {
+                $validationMessage = $module->l('Country is not active', pathinfo(__FILE__)['filename']);
+            }
             if (is_string($validationMessage)) {
                 $var = array(
                     'newAddress' => 'delivery',
@@ -173,7 +181,8 @@ class PaypalEcScOrderModuleFrontController extends PaypalAbstarctModuleFrontCont
                     'id_country' => $orderAddress->id_country,
                     'city' => $orderAddress->city,
                     'phone' => $orderAddress->phone,
-                    'address2' => $orderAddress->address2
+                    'address2' => $orderAddress->address2,
+                    'id_state' => $orderAddress->id_state
                 );
                 session_start();
                 $_SESSION['notifications'] = Tools::jsonEncode(array('error' => $validationMessage));
