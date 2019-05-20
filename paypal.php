@@ -1904,8 +1904,8 @@ class PayPal extends PaymentModule
     {
         $ship_addr_state = '';
         if ($address->id_state) {
-            $country = new Country((int) $address->id_country);
-            $state = new State((int) $address->id_state);
+            $country = new Country((int)$address->id_country);
+            $state = new State((int)$address->id_state);
             if ($matrix = PayPal::$state_iso_code_matrix[$country->iso_code]) {
                 $ship_addr_state = $matrix[$state->iso_code] ? $matrix[$state->iso_code] : $matrix[$state->name];
             } else {
@@ -1913,6 +1913,7 @@ class PayPal extends PaymentModule
             }
         }
         return $ship_addr_state;
+    }
 
     public function hookDisplayAdminOrderTabOrder($params)
     {
