@@ -13,26 +13,11 @@
             "if [ ${PPBTCLASSLIB_DEV_PATH} ]; then php ${PPBTCLASSLIB_DEV_PATH}/PPBTlib/refresh.php .; fi"
         ]
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/paypal/PayPal-PHP-SDK"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/paypal/permissions-sdk-php"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/paypal/merchant-sdk-php"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/paypal/sdk-core-php"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/braintree/braintree_php"
-        }
-    ]
+    "require": {
+      "paypal/sdk-core-php": "~3.4",
+      "paypal/merchant-sdk-php": "~3.12",
+      "paypal/permissions-sdk-php": "~3.9",
+      "braintree/braintree_php": "~3.40",
+      "paypal/rest-api-sdk-php": "1.*"
+    }
 }
