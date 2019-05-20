@@ -266,7 +266,7 @@ class PayPal extends PaymentModule
         if (!$this->installOrderState()) {
             return false;
         }
-
+        $this->checkPaypalStats();
         if (!Configuration::updateValue('PAYPAL_MERCHANT_ID_SANDBOX', '')
             || !Configuration::updateValue('PAYPAL_MERCHANT_ID_LIVE', '')
             || !Configuration::updateValue('PAYPAL_USERNAME_SANDBOX', '')
@@ -662,6 +662,7 @@ class PayPal extends PaymentModule
             $method = AbstractMethodPaypal::load($method_name);
             $method->setConfig(Tools::getAllValues());
         }
+        $this->checkPaypalStats();
     }
     /**
      * Get url for BT onboarding
@@ -879,22 +880,6 @@ class PayPal extends PaymentModule
 
     public function hookDisplayBackOfficeHeader()
     {
-        $tab = Tab::getInstanceFromClassName('AdminPaypalStats');
-        if (Validate::isLoadedObject($tab)) {
-            if ($tab->active && (bool)Configuration::get('PAYPAL_METHOD') == false) {
-                $tab->active = false;
-                $tab->save();
-            } elseif ($method_payment = Configuration::get('PAYPAL_METHOD')) {
-                $method = AbstractMethodPaypal::load($method_payment);
-                if ($tab->active == false && $method->isConfigured() == true) {
-                    $tab->active = true;
-                    $tab->save();
-                } elseif ($tab->active == true && $method->isConfigured() == false) {
-                    $tab->active = false;
-                    $tab->save();
-                }
-            }
-        }
         if (Configuration::get('PAYPAL_METHOD') == 'BT') {
             $diff_cron_time = date_diff(date_create('now'), date_create(Configuration::get('PAYPAL_CRON_TIME')));
             if ($diff_cron_time->d > 0 || $diff_cron_time->h > 4) {
@@ -1957,5 +1942,25 @@ class PayPal extends PaymentModule
             }
         }
 
+    }
+
+    public function checkPaypalStats()
+    {
+        $tab = Tab::getInstanceFromClassName('AdminPaypalStats');
+        if (Validate::isLoadedObject($tab)) {
+            if ($tab->active && (bool)Configuration::get('PAYPAL_METHOD') == false) {
+                $tab->active = false;
+                $tab->save();
+            } elseif ($method_payment = Configuration::get('PAYPAL_METHOD')) {
+                $method = AbstractMethodPaypal::load($method_payment);
+                if ($tab->active == false && $method->isConfigured() == true) {
+                    $tab->active = true;
+                    $tab->save();
+                } elseif ($tab->active == true && $method->isConfigured() == false) {
+                    $tab->active = false;
+                    $tab->save();
+                }
+            }
+        }
     }
 }
