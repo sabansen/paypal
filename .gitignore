@@ -7,3 +7,4 @@ api/Results.txt
 /sdk/paypalREST/vendor/paypal/rest-api-sdk-php/var/*
 vendor/
 !vendor/ppbtlib
+node_modules/

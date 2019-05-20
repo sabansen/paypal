@@ -1880,7 +1880,8 @@ class PayPal extends PaymentModule
         $id_state = 0;
         $id_country = Country::getByIso($ship_addr_country);
         if (Country::containsStates($id_country)) {
-            if ($matrix = PayPal::$state_iso_code_matrix[$ship_addr_country]) {
+            if (isset(PayPal::$state_iso_code_matrix[$ship_addr_country])) {
+                $matrix = PayPal::$state_iso_code_matrix[$ship_addr_country]
                 $ship_addr_state = array_search(strtolower($ship_addr_state), array_map('strtolower', $matrix));
             }
             if ($id_state = (int)State::getIdByIso(Tools::strtoupper($ship_addr_state), $id_country)) {
@@ -1906,7 +1907,8 @@ class PayPal extends PaymentModule
         if ($address->id_state) {
             $country = new Country((int)$address->id_country);
             $state = new State((int)$address->id_state);
-            if ($matrix = PayPal::$state_iso_code_matrix[$country->iso_code]) {
+            if (isset(PayPal::$state_iso_code_matrix[$country->iso_code])) {
+                $matrix = PayPal::$state_iso_code_matrix[$country->iso_code]
                 $ship_addr_state = $matrix[$state->iso_code] ? $matrix[$state->iso_code] : $matrix[$state->name];
             } else {
                 $ship_addr_state = $state->iso_code;

@@ -65,7 +65,6 @@ function ECSInContext() {
         success: function (data) {
             if (data.success == true) {
                 var url = paypal.checkout.urlPrefix + data.token;
-                console.log(url);
                 paypal.checkout.startFlow(url);
             }
         },
