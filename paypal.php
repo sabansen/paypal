@@ -1344,26 +1344,6 @@ class PayPal extends PaymentModule
         }
     }
 
-    /**
-     * Check if we need convert currency
-     * @param integer $id_order
-     * @return integer ID thread
-     */
-    public function createOrderThread($id_order)
-    {
-        $orderThread = new CustomerThread();
-        $orderThread->id_shop = $this->context->shop->id;
-        $orderThread->id_lang = $this->context->language->id;
-        $orderThread->id_contact = 0;
-        $orderThread->id_order = $id_order;
-        $orderThread->id_customer = $this->context->customer->id;
-        $orderThread->status = 'open';
-        $orderThread->email = $this->context->customer->email;
-        $orderThread->token = Tools::passwdGen(12);
-        $orderThread->add();
-        return (int)$orderThread->id;
-    }
-
     public function hookActionOrderSlipAdd($params)
     {
         if (Tools::isSubmit('doPartialRefundPaypal')) {
@@ -1882,7 +1862,7 @@ class PayPal extends PaymentModule
         $id_country = Country::getByIso($ship_addr_country);
         if (Country::containsStates($id_country)) {
             if (isset(PayPal::$state_iso_code_matrix[$ship_addr_country])) {
-                $matrix = PayPal::$state_iso_code_matrix[$ship_addr_country]
+                $matrix = PayPal::$state_iso_code_matrix[$ship_addr_country];
                 $ship_addr_state = array_search(strtolower($ship_addr_state), array_map('strtolower', $matrix));
             }
             if ($id_state = (int)State::getIdByIso(Tools::strtoupper($ship_addr_state), $id_country)) {
@@ -1909,7 +1889,7 @@ class PayPal extends PaymentModule
             $country = new Country((int)$address->id_country);
             $state = new State((int)$address->id_state);
             if (isset(PayPal::$state_iso_code_matrix[$country->iso_code])) {
-                $matrix = PayPal::$state_iso_code_matrix[$country->iso_code]
+                $matrix = PayPal::$state_iso_code_matrix[$country->iso_code];
                 $ship_addr_state = $matrix[$state->iso_code] ? $matrix[$state->iso_code] : $matrix[$state->name];
             } else {
                 $ship_addr_state = $state->iso_code;
