@@ -107,6 +107,10 @@ class PaypalEcScOrderModuleFrontController extends PaypalAbstarctModuleFrontCont
         CartRule::autoRemoveFromCart($this->context);
         CartRule::autoAddToCart($this->context);
         // END Login
+        $this->context->cookie->__set('paypal_ecs', $info->GetExpressCheckoutDetailsResponseDetails->Token);
+        $this->context->cookie->__set('paypal_ecs_payerid', $info->GetExpressCheckoutDetailsResponseDetails->PayerInfo->PayerID);
+        $this->context->cookie->__set('paypal_ecs_email', $info->GetExpressCheckoutDetailsResponseDetails->PayerInfo->Payer);
+
         $addresses = $this->context->customer->getAddresses($this->context->language->id);
         $address_exist = false;
         $count = 1;
@@ -201,9 +205,6 @@ class PaypalEcScOrderModuleFrontController extends PaypalAbstarctModuleFrontCont
         }
 
         $this->context->cart->save();
-
-        $this->context->cookie->__set('paypal_ecs', $info->GetExpressCheckoutDetailsResponseDetails->Token);
-        $this->context->cookie->__set('paypal_ecs_payerid', $info->GetExpressCheckoutDetailsResponseDetails->PayerInfo->PayerID);
-        $this->context->cookie->__set('paypal_ecs_email', $info->GetExpressCheckoutDetailsResponseDetails->PayerInfo->Payer);
     }
 }
+
