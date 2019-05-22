@@ -634,8 +634,8 @@ class PayPal extends PaymentModule
         $result = $this->message;
 
         $result .= $this->display(__FILE__, 'views/templates/admin/configuration.tpl').$form;
-        if (isset($config['shortcut'])) {
-            $result .= $config['shortcut'];
+        if (isset($config['short_cut'])) {
+            $result .= $config['short_cut'];
         }
         if (isset($config['form'])) {
             $result .= $config['form'];
@@ -735,7 +735,7 @@ class PayPal extends PaymentModule
                         $action_text = $this->l('Pay with paypal express checkout');
                         $payment_options->setCallToActionText($action_text);
                         $payment_options->setModuleName('express_checkout_schortcut');
-                        $payment_options->setAction($this->context->link->getModuleLink($this->name, 'ecValidation', array('shortcut'=>'1'), true));
+                        $payment_options->setAction($this->context->link->getModuleLink($this->name, 'ecValidation', array('short_cut'=>'1'), true));
                         $this->context->smarty->assign(array(
                             'paypal_account_email' => $this->context->cookie->paypal_ecs_email,
                         ));
@@ -794,7 +794,7 @@ class PayPal extends PaymentModule
                         $action_text = $this->l('Pay with paypal plus shortcut');
                         $payment_options->setCallToActionText($action_text);
                         $payment_options->setModuleName('paypal_plus_schortcut');
-                        $payment_options->setAction($this->context->link->getModuleLink($this->name, 'pppValidation', array('shortcut'=>'1'), true));
+                        $payment_options->setAction($this->context->link->getModuleLink($this->name, 'pppValidation', array('short_cut'=>'1'), true));
                         $this->context->smarty->assign(array(
                             'paypal_account_email' => $this->context->cookie->paypal_pSc_email,
                         ));

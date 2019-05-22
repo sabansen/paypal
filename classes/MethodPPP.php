@@ -222,7 +222,7 @@ class MethodPPP extends AbstractMethodPaypal
             'paypal_show_advantage' => Configuration::get('PAYPAL_API_ADVANTAGES'),
         );
 
-        $params['shortcut'] = $this->createShortcutForm($module);
+        $params['short_cut'] = $this->createShortcutForm($module);
 
 
         $context = Context::getContext();

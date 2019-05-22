@@ -231,7 +231,7 @@ class MethodEC extends AbstractMethodPaypal
 
         $params['form'] = $this->getApiUserName($module);
 
-        $params['shortcut'] = $this->createShortcutForm($module);
+        $params['short_cut'] = $this->createShortcutForm($module);
 
         return $params;
     }
