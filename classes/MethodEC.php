@@ -433,7 +433,6 @@ class MethodEC extends AbstractMethodPaypal
 
         /** The total cost of the transaction to the buyer. If shipping cost and tax charges are known, include them in this value. If not, this value should be the current subtotal of the order. If the transaction includes one or more one-time purchases, this field must be equal to the sum of the purchases. If the transaction does not include a one-time purchase such as when you set up a billing agreement for a recurring payment, set this field to 0.*/
         $this->_getPaymentDetails();
-
         $this->_paymentDetails->PaymentAction = Tools::ucfirst(Configuration::get('PAYPAL_API_INTENT'));
         $setECReqDetails = new SetExpressCheckoutRequestDetailsType();
         $setECReqDetails->PaymentDetails[0] = $this->_paymentDetails;
@@ -504,7 +503,7 @@ class MethodEC extends AbstractMethodPaypal
             $itemDetails->Name = $product['name'];
             $itemDetails->Amount = $itemAmount;
             $itemDetails->Quantity = $product['quantity'];
-            $itemDetails->Tax = new BasicAmountType($currency, $product['product_tax']);
+            $itemDetails->Tax = new BasicAmountType($currency, $this->formatPrice($product['product_tax']));
             $this->_paymentDetails->PaymentDetailsItem[] = $itemDetails;
             $this->_itemTotalValue += $this->formatPrice($product['price']) * $product['quantity'];
             $this->_taxTotalValue += $product['product_tax'] * $product['quantity'];
@@ -548,11 +547,11 @@ class MethodEC extends AbstractMethodPaypal
                 $itemDetails = new PaymentDetailsItemType();
                 $itemDetails->Name = $discount['name'];
                 $itemDetails->Amount = new BasicAmountType($currency, $discount['value_real']);
-                $itemDetails->Tax = new BasicAmountType($currency, $discount['tax']);
+                $itemDetails->Tax = new BasicAmountType($currency, $this->formatPrice($discount['tax']));
                 $itemDetails->Quantity = 1;
                 $this->_paymentDetails->PaymentDetailsItem[] = $itemDetails;
                 $this->_itemTotalValue += $discount['value_real'];
-                $this->_taxTotalValue += $discount['tax'];
+                $this->_taxTotalValue += $this->formatPrice($discount['tax']);
             }
         }
     }
