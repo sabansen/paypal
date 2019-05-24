@@ -622,9 +622,9 @@ class PayPal extends PaymentModule
             $this->message .= $this->errors;
         } elseif (Configuration::get('PAYPAL_METHOD') && Configuration::get('PAYPAL_SANDBOX') == 1) {
             if (Configuration::get('PAYPAL_METHOD') == 'BT') {
-                $this->message .= $this->displayWarning($this->l('Your Braintree account is currently configured to accept payments on the Sandbox (test environment). Any transaction will be fictitious. Disable the option, to accept actual payments (production environment) and log in with your Braintree credentials'));
+                $this->message .= $this->display(__FILE__, 'views/templates/admin/_partials/messages/warningSandboxBraintree.tpl');
             } else {
-                $this->message .= $this->displayWarning($this->l('Your PayPal account is currently configured to accept payments on the Sandbox (test environment). Any transaction will be fictitious. Disable the option, to accept actual payments (production environment) and log in with your PayPal credentials'));
+                $this->message .= $this->display(__FILE__, 'views/templates/admin/_partials/messages/warningSandboxPayPal.tpl');
             }
         } elseif (Configuration::get('PAYPAL_METHOD') && Configuration::get('PAYPAL_SANDBOX') == 0) {
             if (Configuration::get('PAYPAL_METHOD') == 'BT') {
