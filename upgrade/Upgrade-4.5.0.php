@@ -27,7 +27,7 @@
 if (!defined('_PS_VERSION_')) {
     exit;
 }
-use PaypalClasslib\Install\Installer;
+use PaypalPPBTlib\Install\ModuleInstaller;
 
 /**
  * @param $module PayPal
@@ -35,10 +35,11 @@ use PaypalClasslib\Install\Installer;
  */
 function upgrade_module_4_5_0($module)
 {
-    $installer = new Installer();
+    $installer = new ModuleInstaller($module);
     $installer->installObjectModel('PaypalOrder');
     $installer->installObjectModel('PaypalCustomer');
-    $installer->installModuleAdminControllers();
+    $installer->installAdminControllers();
+    $installer->installExtensions();
     $module->checkPaypalStats();
     return true;
 }
