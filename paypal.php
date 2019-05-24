@@ -480,7 +480,11 @@ class PayPal extends PaymentModule
                 }
             }
         } else {
-            $error = $paypal->l('TLS version is not compatible');
+            if (version_compare(curl_version()['version'], '7.34.0', '<')) {
+                $error = $paypal->l(' You are using an old version of cURL. Please update your cURL extension to version 7.34.0 or higher.');
+            } else {
+                $error = $paypal->l('TLS version is not compatible');
+            }
         }
         return $error;
     }
