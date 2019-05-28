@@ -1,3 +1,98 @@
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = "./_dev/js/shortcut_cart.js");
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ "./_dev/js/shortcut_cart.js":
+/*!**********************************!*\
+  !*** ./_dev/js/shortcut_cart.js ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
 /**
  * 2007-2019 PrestaShop
  *
@@ -13,65 +108,67 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 // init incontext
-document.addEventListener("DOMContentLoaded", function(){
-    if (typeof ec_sc_in_context != "undefined" && ec_sc_in_context) {
-        window.paypalCheckoutReady = function () {
-            paypal.checkout.setup(merchant_id, {
-                environment: ec_sc_environment,
-            });
-        };
-    }
-    prestashop.on('updateCart', function (event) {
-        EcCheckProductAvailability();
-    });
+document.addEventListener("DOMContentLoaded", function () {
+  if (typeof ec_sc_in_context != "undefined" && ec_sc_in_context) {
+    window.paypalCheckoutReady = function () {
+      paypal.checkout.setup(merchant_id, {
+        environment: ec_sc_environment
+      });
+    };
+  }
 
+  prestashop.on('updateCart', function (event) {
+    EcCheckProductAvailability();
+  });
 });
 
 function EcCheckProductAvailability() {
-    $.ajax({
-        url: sc_init_url,
-        type: "POST",
-        data: 'checkAvailability=1&source_page=cart',
-        success: function (json) {
-            if (json.success) {
-                $('#container_express_checkout').show();
-            } else {
-                $('#container_express_checkout').hide();
-            }
-        },
-        error: function (responseData, textStatus, errorThrown) {
-        }
-    });
+  $.ajax({
+    url: sc_init_url,
+    type: "POST",
+    data: 'checkAvailability=1&source_page=cart',
+    success: function success(json) {
+      if (json.success) {
+        $('#container_express_checkout').show();
+      } else {
+        $('#container_express_checkout').hide();
+      }
+    },
+    error: function error(responseData, textStatus, errorThrown) {}
+  });
 }
 
-function setInput()
-{
-    $('#paypal_url_page').val(document.location.href);
-    if (typeof ec_sc_in_context != "undefined" && ec_sc_in_context) {
-        ECSInContext();
-    } else {
-        $('#paypal_payment_form_cart').submit();
-    }
+function setInput() {
+  $('#paypal_url_page').val(document.location.href);
 
+  if (typeof ec_sc_in_context != "undefined" && ec_sc_in_context) {
+    ECSInContext();
+  } else {
+    $('#paypal_payment_form_cart').submit();
+  }
 }
 
 function ECSInContext() {
-    paypal.checkout.initXO();
-    $.support.cors = true;
-    $.ajax({
-        url: ec_sc_action_url,
-        type: "GET",
-        data: 'getToken=1',
-        success: function (data) {
-            if (data.success == true) {
-                var url = paypal.checkout.urlPrefix + data.token;
-                paypal.checkout.startFlow(url);
-            }
-        },
-        error: function (responseData, textStatus, errorThrown) {
-            alert("Error in ajax post"+responseData.statusText);
-
-            paypal.checkout.closeFlow();
-        }
-    });
+  paypal.checkout.initXO();
+  $.support.cors = true;
+  $.ajax({
+    url: ec_sc_action_url,
+    type: "GET",
+    data: 'getToken=1',
+    success: function success(data) {
+      if (data.success == true) {
+        var url = paypal.checkout.urlPrefix + data.token;
+        paypal.checkout.startFlow(url);
+      }
+    },
+    error: function error(responseData, textStatus, errorThrown) {
+      alert("Error in ajax post" + responseData.statusText);
+      paypal.checkout.closeFlow();
+    }
+  });
 }
+
+/***/ })
+
+/******/ });
+//# sourceMappingURL=shortcut_cart.js.map
