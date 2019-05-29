@@ -22,7 +22,7 @@
  * @license   Commercial license
  * @version   develop
  */
-
+include_once(_PS_MODULE_DIR_.'paypal/vendor/autoload.php');
 use PaypalPPBTlib\Extensions\ProcessLogger\Controllers\Admin\AdminProcessLoggerController;
 
 class AdminPaypalProcessLoggerController extends AdminProcessLoggerController

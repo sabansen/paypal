@@ -34,7 +34,7 @@
         </tr>
     </thead>
     <tbody>
-        {foreach from=$logs item=$log}
+        {foreach from=$logs item=log}
             <tr>
                 <td>
                     {$log->date_add|escape:'html':'utf-8'}
