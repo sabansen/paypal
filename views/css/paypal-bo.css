@@ -159,7 +159,8 @@
 .containerCentered {
   margin-right: auto;
   margin-left: auto;
-  box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+          box-sizing: content-box;
   max-width: 1150px;
   padding-left: 3%;
   padding-right: 3%; }
@@ -172,7 +173,8 @@
   transform: translate(0, 0);
   padding: 15px 0;
   width: 100%;
-  box-sizing: border-box; }
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box; }
 
 #rtb1.row-fluid, #rtb2.row-fluid {
   background: none; }
@@ -201,7 +203,8 @@ html[data-device-type="dedicated"] .sticky-nav-panel .btn, html[data-device-type
   float: left;
   margin-left: 2%;
   min-height: 1px;
-  box-sizing: border-box; }
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box; }
 
 p.contentPara {
   font-size: 14px; }
