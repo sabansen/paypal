@@ -633,7 +633,7 @@ class PayPal extends PaymentModule
                 $this->message .= $this->displayConfirmation($this->l('Your PayPal account is properly connected, you can now receive payments'));
             }
         }
-        $this->context->controller->addCSS($this->_path.'views/css/paypal-bo.css', 'all');
+        $this->context->controller->addCSS($this->_path.'views/css/main.css', 'all');
 
         $result = $this->message;
 
@@ -1813,12 +1813,12 @@ class PayPal extends PaymentModule
 
         $method = AbstractMethodPaypal::load('PPP');
         $information = $method->getInstructionInfo($paypal_order->id_payment);
-        $tab = $this->l('The bank name').' : '.$information->recipient_banking_instruction->bank_name.'; 
-        '.$this->l('Account holder name').' : '.$information->recipient_banking_instruction->account_holder_name.'; 
-        '.$this->l('IBAN').' : '.$information->recipient_banking_instruction->international_bank_account_number.'; 
-        '.$this->l('BIC').' : '.$information->recipient_banking_instruction->bank_identifier_code.'; 
+        $tab = $this->l('The bank name').' : '.$information->recipient_banking_instruction->bank_name.';
+        '.$this->l('Account holder name').' : '.$information->recipient_banking_instruction->account_holder_name.';
+        '.$this->l('IBAN').' : '.$information->recipient_banking_instruction->international_bank_account_number.';
+        '.$this->l('BIC').' : '.$information->recipient_banking_instruction->bank_identifier_code.';
         '.$this->l('Amount due / currency').' : '.$information->amount->value.' '.$information->amount->currency.';
-        '.$this->l('Payment due date').' : '.$information->payment_due_date.'; 
+        '.$this->l('Payment due date').' : '.$information->payment_due_date.';
         '.$this->l('Reference').' : '.$information->reference_number.'.';
         return $tab;
     }

@@ -24,7 +24,7 @@ const config = {
     'js/shortcut': './_dev/js/shortcut.js',
 
     'css/braintree': './_dev/scss/braintree.scss',
-    'css/paypal-bo': './_dev/scss/paypal-bo.scss',
+    'css/main': './_dev/scss/main.scss',
   },
 
   output: {

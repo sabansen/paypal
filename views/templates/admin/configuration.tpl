@@ -40,11 +40,11 @@
     {l s='Braintree users: you’ll be required to install the new module (Braintree official (v1.x). It will be possible to transfer quickly your current module configurations from the current version of the PayPal module to the new Braintree module without any impact to your business. New exciting features will come soon!.' mod='paypal'} </br>
     {l s='PayPal payment solution: No changes & no impacts on your business. You can simply update the module to latest version (PayPal official (v5.x)) for getting new features & bug fixes.' mod='paypal'}
 </div>
-<div class="container-fluid paypal-nav">
-    <ul class="nav nav-pills navbar-separator">
-        <li {if !isset($ec_paypal_active) && !isset($ec_card_active) && !isset($bt_active) && !isset($ppp_active)}class="active"{/if}><a data-toggle="pill" href="#paypal_conf"><span>{l s='Products' mod='paypal'}</span></a></li>
-        <li {if isset($ec_paypal_active) || isset($ec_card_active) || isset($bt_active) || isset($ppp_active)}class="active"{/if}><a data-toggle="pill" href="#paypal_params"><span>{l s='Settings' mod='paypal'}</span></a></li>
-        <li><a data-toggle="pill" href="#paypal_help"><span>{l s='Help' mod='paypal'}</span></a></li>
+<div class="container-fluid">
+    <ul class="paypal-nav nav nav-pills navbar-separator">
+        <li class="nav-item {if !isset($ec_paypal_active) && !isset($ec_card_active) && !isset($bt_active) && !isset($ppp_active)}active{/if}"><a data-toggle="pill" href="#paypal_conf" class="link"><span>{l s='Products' mod='paypal'}</span></a></li>
+        <li class="nav-item {if isset($ec_paypal_active) || isset($ec_card_active) || isset($bt_active) || isset($ppp_active)}active{/if}"><a data-toggle="pill" href="#paypal_params" class="link"><span>{l s='Settings' mod='paypal'}</span></a></li>
+        <li class="nav-item"><a data-toggle="pill" href="#paypal_help" class="link"><span>{l s='Help' mod='paypal'}</span></a></li>
     </ul>
     <div class="tab-content">
         <div id="paypal_conf"  class="tab-pane fade {if !isset($ec_paypal_active) && !isset($ec_card_active) && !isset($bt_active) && !isset($ppp_active)}in active{/if}">
