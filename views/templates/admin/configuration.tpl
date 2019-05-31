@@ -35,6 +35,13 @@
     </script>
 </div>
 
+<div class="alert alert-danger">
+    <button type="button" class="close" data-dismiss="alert">×</button>
+    {l s='Starting July 1st, 2019, Braintree payment solution will be separated from PayPal module. There will be 2 different modules: PayPal official (v5.x) and Braintree official (v1.x). Both modules will be available for free on Prestashop Addons.' mod='paypal'} </br>
+    {l s='Braintree users: you’ll be required to install the new module (Braintree official (v1.x). It will be possible to transfer quickly your current module configurations from the current version of the PayPal module to the new Braintree module without any impact to your business. New exciting features will come soon!.' mod='paypal'} </br>
+    {l s='PayPal payment solution: No changes & no impacts on your business. You can simply update the module to latest version (PayPal official (v5.x)) for getting new features & bug fixes.' mod='paypal'}
+</div>
+
 <div class="container-fluid paypal-nav">
     <ul class="nav nav-pills navbar-separator">
         <li {if !isset($ec_paypal_active) && !isset($ec_card_active) && !isset($bt_active) && !isset($ppp_active)}class="active"{/if}><a data-toggle="pill" href="#paypal_conf"><span>{l s='Products' mod='paypal'}</span></a></li>
