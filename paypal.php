@@ -1286,12 +1286,12 @@ class PayPal extends PaymentModule
         }
         if (Tools::getValue('error_refund')) {
             $paypal_msg .= $this->displayWarning(
-                '<p class="paypal-warning">'.$this->l('We have unexpected problem during refund operation. For more details please see the "PayPal" tab in the oreder details.').'</p>'
+                '<p class="paypal-warning">'.$this->l('We have unexpected problem during refund operation. For more details please see the "PayPal" tab in the order details.').'</p>'
             );
         }
         if (Tools::getValue('cancel_failed')) {
             $paypal_msg .= $this->displayWarning(
-                '<p class="paypal-warning">'.$this->l('We have unexpected problem during cancel operation. For more details please see the "PayPal" tab in the oreder details.').'</p>'
+                '<p class="paypal-warning">'.$this->l('We have unexpected problem during cancel operation. For more details please see the "PayPal" tab in the order details.').'</p>'
             );
         }
         if ($order->current_state == Configuration::get('PS_OS_REFUND') &&  $paypal_order->payment_status == 'Refunded') {
