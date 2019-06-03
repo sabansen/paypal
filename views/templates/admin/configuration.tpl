@@ -343,7 +343,7 @@
             {/if}
             <div class="panel help">
                 <ul class="tick">
-                    <li class="paypal-bold li-padding">{l s='Discover module ducumentation before configuration' mod='paypal'}</li>
+                    <li class="paypal-bold li-padding">{l s='Discover module documentation before configuration' mod='paypal'}</li>
                     <div class="btn-padding form-group"">
                         <a target="_blank" href="https://addons.prestashop.com/documentation/e582dd0854d8994e815d6c0e8886e703bfdf7713" class="btn btn-default">
                             {l s='Access user documentation for module configuration.' mod='paypal'}
