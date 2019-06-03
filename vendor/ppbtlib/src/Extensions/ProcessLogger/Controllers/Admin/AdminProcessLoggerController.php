@@ -134,6 +134,7 @@ class AdminProcessLoggerController extends \ModuleAdminController
                     'Here you can change the default configuration for this Process Logger',
                     'AdminProcessLoggerController'
                 ),
+                'info' => \Context::getContext()->smarty->fetch(_PS_MODULE_DIR_ . 'paypal/views/templates/admin/_partials/helperOptionInfo.tpl'),
                 'fields'      => array(
                     'PAYPAL_EXTLOGS_ERASING_DISABLED' => array(
                         'title'        => $this->module->l(
@@ -160,7 +161,7 @@ class AdminProcessLoggerController extends \ModuleAdminController
                         'validation'   => 'isInt',
                         'cast'         => 'intval',
                         'type'         => 'text',
-                        'defaultValue' => 5,
+                        'defaultValue' => 90,
                     ),
                 ),
                 'submit'      => array(
