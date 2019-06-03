@@ -52,5 +52,6 @@ class AdminPaypalStatsController extends \ModuleAdminController
                 $this->report_link = "https://business.paypal.com/merchantdata/reportHome";
             }
         }
+        return $this->report_link;
     }
 }
