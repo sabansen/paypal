@@ -634,6 +634,8 @@ class PayPal extends PaymentModule
             }
         }
         $this->context->controller->addCSS($this->_path.'views/css/main.css', 'all');
+        $this->context->controller->addJS($this->_path .'/views/js/paypal_bo.js');
+
 
         $result = $this->message;
 
@@ -829,6 +831,7 @@ class PayPal extends PaymentModule
             if (!$active) {
                 return;
             }
+
 
             if (Configuration::get('PAYPAL_METHOD') == 'BT') {
                 if (Configuration::get('PAYPAL_BRAINTREE_ENABLED')) {

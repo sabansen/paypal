@@ -97,7 +97,7 @@
                         <img src="{$img_checkout|escape:'html':'UTF-8'}" class="product-img">
                         <a class="btn btn-default pull-right"
                            {if $country_iso == 'BR' || $country_iso == 'IN' || $country_iso == 'MX'}
-                                 href="#" onclick="display_popup('EC', 0)"
+                                 href="#" data-display-popup data-method="EC" data-with-card="0"
                            {else}
                                  href="{$return_url|escape:'html':'UTF-8'}&method=EC&with_card=0{if isset($ec_paypal_active) &&  $ec_paypal_active}&modify=1{/if}"
                            {/if}>
@@ -134,7 +134,7 @@
                         <img src="{$path|escape:'html':'UTF-8'}/views/img/unionpay.svg" class="product-img">
                         <a class="btn btn-default pull-right"
                                 {if $country_iso == 'BR' || $country_iso == 'IN' || $country_iso == 'MX'}
-                            href="#" onclick="display_popup('EC', 1)"
+                            href="#" data-display-popup data-method="EC" data-with-card="1"
                                 {else}
                             href="{$return_url|escape:'html':'UTF-8'}&method=EC&with_card=1{if isset($ec_active) && $ec_active && isset($ec_card_active) && $ec_card_active}&modify=1{/if}"
                                 {/if}>
@@ -196,7 +196,7 @@
                         <img src="{$path|escape:'html':'UTF-8'}/views/img/amex.svg" class="product-img">
                         <img src="{$path|escape:'html':'UTF-8'}/views/img/ppp-bank-logo.png" class="product-img">
                         <img src="{$path|escape:'html':'UTF-8'}/views/img/kauf.png" class="product-img">
-                        <a class="btn btn-default pull-right" href="#" onclick="display_popup('PPP', 0)">{if isset($ppp_active)}{l s='Modify' mod='paypal'}{else}{l s='Activate' mod='paypal'}{/if}</a>
+                        <a class="btn btn-default pull-right" href="#" data-display-popup data-method="PPP" data-with-card="0">{if isset($ppp_active)}{l s='Modify' mod='paypal'}{else}{l s='Activate' mod='paypal'}{/if}</a>
                     </div>
                 </div>
             </div>
@@ -352,9 +352,9 @@
                     <li class="paypal-bold li-padding">{l s='Check requirements before installation' mod='paypal'}</li>
                     {l s='Are you using the required TLS version? Did you select a default country? Click on the button below and check if all requirements are completed!' mod='paypal'}
                     <div class="btn-padding form-group"">
-                        <button  name="submit-ckeck_requirements"  class="btn btn-default" id="ckeck_requirements">{l s='Check requirements' mod='paypal'}</button>
+                        <button name="submit-ckeck_requirements" class="btn btn-default" data-check-requirements>{l s='Check requirements' mod='paypal'}</button>
                         <br><br>
-                        <div class="action_response"></div>
+                        <div data-action-response"></div>
                     </div>
 
                     <li class="paypal-bold li-padding">{l s='Check your transactions history log and potential errors.' mod='paypal'}</li>
@@ -384,7 +384,7 @@
 
 {if isset($ppp_available)}
 <div style="display: none;">
-    <div id="content-fancybox-configuration-PPP">
+    <div id="content-fancybox-configuration-PPP" data-fancybox="PPP">
         <form action="{$return_url|escape:'javascript':'UTF-8'}" method="post" id="credential-configuration" class="bootstrap">
             <h4>{l s='API Credentials' mod='paypal'}</h4>
             <p>{l s='In order to accept PayPal Plus payments, please fill your API REST credentials.' mod='paypal'}</p>
@@ -396,7 +396,7 @@
                 <li>{l s='Copy/paste your « Client ID » and « Secret » below for each environment' mod='paypal'}</li>
             </ul>
             <hr/>
-            <input type="hidden" class="method" name="method"/>
+            <input type="hidden" class="method met" name="method"/>
             <h4>{l s='Sandbox' mod='paypal'}</h4>
             <p>
                 <label for="sandbox_client_id">{l s='Client ID' mod='paypal'}</label>
@@ -429,7 +429,7 @@
 {/if}
 {if $country_iso == 'BR' || $country_iso == 'IN' || $country_iso == 'MX'}
     <div style="display: none;">
-        <div id="content-fancybox-configuration-EC">
+        <div id="content-fancybox-configuration-EC" data-fancybox="EC">
             <form action="{$return_url|escape:'javascript':'UTF-8'}" method="post" id="credential-configuration" class="bootstrap">
                 <h4>{l s='API Credentials' mod='paypal'}</h4>
                 <p>{l s='In order to accept PayPal payments, please fill your API NVP credentials.' mod='paypal'}</p>
@@ -443,8 +443,8 @@
                     <li>{l s='Copy/paste your API credentials below for %s environment' sprintf=[$mode] mod='paypal'} </li>
                 </ul>
                 <hr/>
-                <input type="hidden" class="method" name="method"/>
-                <input type="hidden" id="with_card" name="with_card"/>
+                <input type="hidden" class="method" name="method" data-method />
+                <input type="hidden" id="with_card" name="with_card" data-with-card/>
                 <h4>{l s='API Credentials for' mod='paypal'} {$mode}</h4>
                 <p>
                     <label for="api_username">{l s='API username' mod='paypal'}</label>
@@ -472,78 +472,7 @@
     </div>
 {/if}
 
+{addJsDef ssl_active=$ssl_active|escape:'htmlall':'UTF-8'}
+{addJsDefL name='logoThumbnailsMessage'}{l s='An image is on a insecure (http) server and will not be shown on paypal' mode='paypal' js=1}{/addJsDefL}
+{addJsDefL name='checkRequirementsMessage'}{l s='Your shop configuration is OK. You can start to configure the PayPal module' mode='paypal' js=1}{/addJsDefL}
 
-<script type="text/javascript">
-
-    function display_popup(method, with_card)
-    {
-        $('.method').val(method);
-        $('#with_card').val(with_card);
-        $.fancybox.open([
-            {
-                type: 'inline',
-                autoScale: true,
-                minHeight: 30,
-                content: $('#content-fancybox-configuration-'+method).html(),
-            }
-        ]);
-    }
-
-    $(document).ready(function(){
-
-        $('#change_product').click(function(event) {
-            event.preventDefault();
-            $('a[href=#paypal_conf]').click();
-        });
-        $('.main_form').insertAfter($('.configuration-block'));
-        $('.bt_currency_form').insertAfter($('.main_form'));
-        $('.form_shortcut').insertAfter($('.main_form'));
-        $('.form_api_username').insertAfter($('.form_shortcut'));
-        $('input[name=paypal_ec_in_context]').on("change", function(){
-            if (this.value != 0) {
-                $('#config_logo-name').parents('.form-group').hide();
-            } else {
-                $('#config_logo-name').parents('.form-group').show();
-            }
-        });
-        if ($('input[name=paypal_ec_in_context]:checked').val() != 0) {
-            $('#config_logo-name').parents('.form-group').hide();
-        }
-        $('input[name=paypal_vaulting]').on("change", function(){
-            if (this.value == 0) {
-                $('#card_verification_on').parents('.form-group').hide();
-            } else {
-                $('#card_verification_on').parents('.form-group').show();
-            }
-        });
-        if ($('input[name=paypal_vaulting]:checked').val() == 0) {
-            $('#card_verification_on').parents('.form-group').hide();
-        }
-        var ssl_active = "{$ssl_active|escape:'htmlall':'UTF-8'}";
-        if ($('#config_logo-images-thumbnails').length && !ssl_active) {
-            $('#config_logo-images-thumbnails').after("{l s='An image is on a insecure (http) server and will not be shown on paypal' mod='paypal'}");
-        }
-    });
-
-    $("#ckeck_requirements").click( function() {
-        $.ajax({
-            url: 'ajax-tab.php',
-            dataType: 'json',
-            data : {
-                ajax : true,
-                controller: 'AdminModules',
-                configure:'paypal',
-                action : 'CheckRequirements',
-                token: token
-            },
-            success: function(data) {
-                if(data) {
-                    $('.action_response').html(data);
-                } else {
-                    $('.action_response').html('<p class="alert alert-success">{l s='Your shop configuration is OK. You can start to configure the PayPal module.' mod='paypal'}</p>');
-                }
-            }
-        });
-    });
-
-</script>
