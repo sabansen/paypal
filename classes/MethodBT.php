@@ -24,7 +24,7 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-include_once(_PS_MODULE_DIR_.'paypal/vendor/braintree/braintree_php/lib/Braintree.php');
+//include_once(_PS_MODULE_DIR_.'paypal/vendor/braintree/braintree_php/lib/Braintree.php');
 include_once 'PaypalCustomer.php';
 include_once 'PaypalVaulting.php';
 
@@ -812,7 +812,6 @@ class MethodBT extends AbstractMethodPaypal
             $id_transaction = Validate::isLoadedObject($capture) ? $capture->id_capture : $paypal_order->id_transaction;
 
             $result = $this->gateway->transaction()->refund($id_transaction, number_format($paypal_order->total_paid, 2, ".", ''));
-
             if ($result->success) {
                 $response =  array(
                     'success' => true,
@@ -823,6 +822,7 @@ class MethodBT extends AbstractMethodPaypal
                     'currency' => $result->transaction->currencyIsoCode,
                     'payment_type' => $result->transaction->payment_type,
                     'merchantAccountId' => $result->transaction->merchantAccountId,
+                    'date_transaction' => $this->getDateTransaction($result->transaction)
                 );
             } elseif ($result->transaction->status == Braintree_Transaction::SETTLEMENT_DECLINED) {
                 $order = new Order(Tools::getValue('id_order'));
@@ -922,6 +922,7 @@ class MethodBT extends AbstractMethodPaypal
                     'status' => $result->transaction->status,
                     'amount' => $result->transaction->amount,
                     'currency' => $result->transaction->currencyIsoCode,
+                    'date_transaction' => $this->getDateTransaction($result->transaction)
                 );
             } elseif ($result->transaction->status == Braintree_Transaction::SETTLEMENT_DECLINED) {
                 $order = new Order(Tools::getValue('id_order'));

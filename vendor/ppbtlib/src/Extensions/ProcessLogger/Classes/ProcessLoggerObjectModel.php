@@ -120,4 +120,12 @@ class ProcessLoggerObjectModel extends ObjectModel
     {
         throw new \Exception('Need to define the method ' . __FUNCTION__);
     }
+
+    public function getDateTransaction()
+    {
+        if ($this->date_transaction == '0000-00-00 00:00:00') {
+            return '';
+        }
+        return $this->date_transaction;
+    }
 }

@@ -1531,7 +1531,8 @@ class PayPal extends PaymentModule
                     $orderPayPal->id_cart,
                     $this->context->shop->id,
                     $orderPayPal->payment_tool,
-                    $orderPayPal->sandbox
+                    $orderPayPal->sandbox,
+                    $response_void['date_transaction']
                 );
                 ProcessLoggerHandler::closeLogger();
             } elseif (isset($response_void) && empty($response_void) == false) {
@@ -1612,7 +1613,8 @@ class PayPal extends PaymentModule
                         $orderPayPal->id_cart,
                         $this->context->shop->id,
                         $orderPayPal->payment_tool,
-                        $orderPayPal->sandbox
+                        $orderPayPal->sandbox,
+                        $response_void['date_transaction']
                     );
                     ProcessLoggerHandler::closeLogger();
                 }
@@ -1650,7 +1652,8 @@ class PayPal extends PaymentModule
                         $orderPayPal->id_cart,
                         $this->context->shop->id,
                         $orderPayPal->payment_tool,
-                        $orderPayPal->sandbox
+                        $orderPayPal->sandbox,
+                        $refund_response['date_transaction']
                     );
                     ProcessLoggerHandler::closeLogger();
                 }

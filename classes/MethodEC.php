@@ -900,6 +900,7 @@ class MethodEC extends AbstractMethodPaypal
                     'total_amount' => $response->TotalRefundedAmount->value,
                     'net_amount' => $response->NetRefundAmount->value,
                     'currency' => $response->TotalRefundedAmount->currencyID,
+                    'date_transaction' => $this->getDateTransaction()
                 );
             }
         }
@@ -983,6 +984,7 @@ class MethodEC extends AbstractMethodPaypal
                     'transaction_id' => $response->AuthorizationID,
                     'status' => $response->Ack,
                     'success' => true,
+                    'date_transaction' => $this->getDateTransaction()
                 );
             }
         }

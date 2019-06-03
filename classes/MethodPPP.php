@@ -750,6 +750,7 @@ class MethodPPP extends AbstractMethodPaypal
             'total_amount' => $response->total_refunded_amount->value,
             'currency' => $response->total_refunded_amount->currency,
             'saleId' => $response->sale_id,
+            'date_transaction' => $this->getDateTransaction($response)
         );
 
         return $result;

@@ -123,6 +123,7 @@ class AdminProcessLoggerController extends \ModuleAdminController
             ),
             'date_transaction' => array(
                 'title' => $this->module->l('Transaction date', 'AdminProcessLoggerController'),
+                'callback' => 'getDateTransaction',
             ),
         );
 
@@ -180,6 +181,20 @@ class AdminProcessLoggerController extends \ModuleAdminController
     {
         unset($tr);
         return empty($echo) ? '' : $echo;
+    }
+
+    public function getDateTransaction($date_transaction, $tr)
+    {
+        if ((int)$tr['id_paypal_processlogger'] == false) {
+            return '';
+        }
+        $collectionLogs = new \PrestaShopCollection($this->className);
+        $collectionLogs->where('id_paypal_processlogger', '=', (int)$tr['id_paypal_processlogger']);
+        $log = $collectionLogs->getFirst();
+        if (\Validate::isLoadedObject($log) == false) {
+            return '';
+        }
+        return $log->getDateTransaction();
     }
 
     public function getLinkToTransaction($id_transaction, $tr)
