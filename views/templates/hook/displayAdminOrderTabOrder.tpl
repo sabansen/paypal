@@ -27,5 +27,6 @@
 <li>
     <a href="#paypal">
         {l s='PayPal' mod='paypal'}
+        <span class="badge">{if isset($logs)}{$logs|@count}{else}0{/if}</span>
     </a>
 </li>
