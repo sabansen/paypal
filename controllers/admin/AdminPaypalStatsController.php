@@ -22,8 +22,8 @@
  * @license   Commercial license
  */
 
-
-class AdminPaypalStatsController extends \ModuleAdminController {
+class AdminPaypalStatsController extends \ModuleAdminController
+{
 
     /** @var Module Instance of your module automatically set by ModuleAdminController */
     public $module;

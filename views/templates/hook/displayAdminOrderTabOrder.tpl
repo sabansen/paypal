@@ -26,6 +26,6 @@
 
 <li>
     <a href="#paypal">
-        {l s='PayPal' mod='PayPal'}
+        {l s='PayPal' mod='paypal'}
     </a>
 </li>

@@ -47,11 +47,11 @@
 
 <script type="text/javascript">
     // no escape on url
-    var ppp_approval_url = '{$approval_url_ppp nofilter}';
+    var ppp_approval_url = '{$approval_url_ppp|addslashes}';
     var ppp_mode = '{$mode|escape:'htmlall':'UTF-8'}';
     var ppp_language_iso_code = '{$ppp_language_iso_code|escape:'htmlall':'UTF-8'}';
     var ppp_country_iso_code = '{$ppp_country_iso_code|escape:'htmlall':'UTF-8'}';
     // no escape on url
-    var ajax_patch_url = '{$ajax_patch_url nofilter}';
+    var ajax_patch_url = '{$ajax_patch_url|addslashes}';
     var waiting_redirection = "{l s='In few seconds you will be redirected to PayPal. Please wait.' mod='paypal'}";
 </script>

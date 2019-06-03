@@ -207,4 +207,3 @@ class PaypalEcScOrderModuleFrontController extends PaypalAbstarctModuleFrontCont
         $this->context->cart->save();
     }
 }
-

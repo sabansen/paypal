@@ -24,6 +24,6 @@
 *}
 
 <div class="panel">
-    <h3>{l s='Payment logs' mod='PayPal'}</h3>
+    <h3>{l s='Payment logs' mod='paypal'}</h3>
     {include file='./tableLogs.tpl'}
 </div>

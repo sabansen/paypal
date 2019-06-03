@@ -34,8 +34,6 @@ include_once(_PS_MODULE_DIR_.'paypal/vendor/autoload.php');
 use PaypalPPBTlib\Module\PaymentModule;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerExtension;
 
-
-
 include_once(_PS_MODULE_DIR_.'paypal/sdk/BraintreeSiSdk.php');
 
 include_once 'classes/AbstractMethodPaypal.php';
@@ -170,7 +168,7 @@ class PayPal extends PaymentModule
     /**
      * List of hooks used in this Module
      */
-     public $hooks = array(
+    public $hooks = array(
          'paymentOptions',
          'paymentReturn',
          'displayOrderConfirmation',
@@ -197,8 +195,8 @@ class PayPal extends PaymentModule
     /**
      * List of admin tabs used in this Module
      */
-     public $moduleAdminControllers = array(
-         array(
+    public $moduleAdminControllers = array(
+             array(
              'name' => array(
                  'en' => 'PayPal and Braintree Official',
                  'fr' => 'PayPal et Braintree Officiel'
@@ -1832,8 +1830,7 @@ class PayPal extends PaymentModule
         $paypal = Module::getInstanceByName('paypal');
         $currency_wt_decimal = array('HUF', 'JPY', 'TWD');
         if (in_array($paypal->getPaymentCurrencyIso(), $currency_wt_decimal) ||
-            (int)Configuration::get('PS_PRICE_DISPLAY_PRECISION') == 0)
-        {
+            (int)Configuration::get('PS_PRICE_DISPLAY_PRECISION') == 0) {
             return (int)0;
         } else {
             return (int)2;
@@ -1867,7 +1864,7 @@ class PayPal extends PaymentModule
         if (Country::containsStates($id_country)) {
             if (isset(PayPal::$state_iso_code_matrix[$ship_addr_country])) {
                 $matrix = PayPal::$state_iso_code_matrix[$ship_addr_country];
-                $ship_addr_state = array_search(strtolower($ship_addr_state), array_map('strtolower', $matrix));
+                $ship_addr_state = array_search(Tools::strtolower($ship_addr_state), array_map('strtolower', $matrix));
             }
             if ($id_state = (int)State::getIdByIso(Tools::strtoupper($ship_addr_state), $id_country)) {
                 $id_state = $id_state;
@@ -1929,7 +1926,6 @@ class PayPal extends PaymentModule
                 return $result;
             }
         }
-
     }
 
     public function checkPaypalStats()
