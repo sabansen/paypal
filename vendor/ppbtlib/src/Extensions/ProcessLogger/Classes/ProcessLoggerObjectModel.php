@@ -130,7 +130,7 @@ class ProcessLoggerObjectModel extends ObjectModel
         $datetime2 = new \DateTime($this->date_add);
         $interval = $datetime1->diff($datetime2);
         $diff = $interval->invert == 1 ? '-' : '+';
-        $diff .= $interval->format('%d%h%m');
+        $diff .= $interval->format('%h');
         $dateTimeZone = new \DateTimeZone($diff);
 
         $date = new \DateTime($this->date_transaction, $dateTimeZone);
