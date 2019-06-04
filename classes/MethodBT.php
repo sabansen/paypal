@@ -486,7 +486,7 @@ class MethodBT extends AbstractMethodPaypal
 
     public function getDateTransaction($transaction)
     {
-        return $transaction->createdAt->format('Y-m-d H:i:s');
+        return $transaction->updatedAt->format('Y-m-d H:i:s');
     }
 
     /**

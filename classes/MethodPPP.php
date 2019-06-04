@@ -714,7 +714,7 @@ class MethodPPP extends AbstractMethodPaypal
 
     public function getDateTransaction($transaction)
     {
-        $dateServer = DateTime::createFromFormat(DateTime::ISO8601, $transaction->create_time);
+        $dateServer = DateTime::createFromFormat(DateTime::ISO8601, $transaction->update_time);
         return $dateServer->format('Y-m-d H:i:s');
     }
 
