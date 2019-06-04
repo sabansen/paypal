@@ -126,6 +126,14 @@ class ProcessLoggerObjectModel extends ObjectModel
         if ($this->date_transaction == '0000-00-00 00:00:00') {
             return '';
         }
-        return $this->date_transaction;
+        $datetime1 = new \DateTime($this->date_transaction);
+        $datetime2 = new \DateTime($this->date_add);
+        $interval = $datetime1->diff($datetime2);
+        $diff = $interval->invert == 1 ? '-' : '+';
+        $diff .= $interval->format('%d%h%m');
+        $dateTimeZone = new \DateTimeZone($diff);
+
+        $date = new \DateTime($this->date_transaction, $dateTimeZone);
+        return $date->format('Y-m-d H:i:s T');
     }
 }
