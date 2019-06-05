@@ -208,7 +208,7 @@ class ProcessLoggerHandler
             return Db::getInstance()->delete(
                 'paypal_processlogger',
                 sprintf(
-                    'date_add <= NOW() - INTERVAL %d DAY AND id_order IS NULL',
+                    'date_add <= NOW() - INTERVAL %d DAY AND id_order = 0',
                     self::getAutoErasingDelayInDays()
                 )
             );
