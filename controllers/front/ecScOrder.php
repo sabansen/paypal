@@ -169,7 +169,7 @@ class PaypalEcScOrderModuleFrontController extends PaypalAbstarctModuleFrontCont
             $orderAddress->alias = 'Paypal_Address '.($count);
             $validationMessage = $orderAddress->validateFields(false, true);
             if (Country::containsStates($orderAddress->id_country) && $orderAddress->id_state == false) {
-                $validationMessage = $module->l('Address->id_state is empty', pathinfo(__FILE__)['filename']);
+                $validationMessage = $module->l('State is required in order to process payment. Please fill in state field.', pathinfo(__FILE__)['filename']);
             }
             $country = new Country($orderAddress->id_country);
             if ($country->active == false) {
