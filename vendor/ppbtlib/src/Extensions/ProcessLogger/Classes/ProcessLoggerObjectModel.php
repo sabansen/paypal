@@ -128,9 +128,16 @@ class ProcessLoggerObjectModel extends ObjectModel
         }
         $datetime1 = new \DateTime($this->date_transaction);
         $datetime2 = new \DateTime($this->date_add);
-        $interval = $datetime1->diff($datetime2);
-        $diff = $interval->invert == 1 ? '-' : '+';
-        $diff .= $interval->format('%h');
+        $diff = $datetime2->getOffset() / 3600;
+        $interval = $datetime2->diff($datetime1);
+        if ($interval->invert == 1) {
+            $diff -= (int)$interval->format('%h');
+        } else {
+            $diff += (int)$interval->format('%h');
+        }
+        if ($diff == 0) {
+            $diff = 'GMT';
+        }
         $dateTimeZone = new \DateTimeZone($diff);
 
         $date = new \DateTime($this->date_transaction, $dateTimeZone);
