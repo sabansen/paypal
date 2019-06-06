@@ -19,7 +19,6 @@ const config = {
     'js/payment_bt': './_dev/js/payment_bt.js',
     'js/payment_pbt': './_dev/js/payment_pbt.js',
     'js/payment_ppp': './_dev/js/payment_ppp.js',
-    'js/shortcut_cart': './_dev/js/shortcut_cart.js',
     'js/shortcut_payment': './_dev/js/shortcut_payment.js',
     'js/shortcut': './_dev/js/shortcut.js',
     'js/paypal_bo': './_dev/js/paypal_bo.js',
