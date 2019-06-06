@@ -108,15 +108,26 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 // init incontext
-document.addEventListener("DOMContentLoaded", function () {
-  var ec_sc_qty_wanted = $('#quantity_wanted').val();
-  var ec_sc_productId = $('#paypal_payment_form_cart input[name="id_product"]').val();
-  EcCheckProductAvailability(ec_sc_qty_wanted, ec_sc_productId, $('#es_cs_product_attribute').val());
-  prestashop.on('updatedProduct', function (e, xhr, settings) {
-    EcCheckProductAvailability(ec_sc_qty_wanted, ec_sc_productId, e.id_product_attribute);
-  });
+$(document).ready(function () {
+  var sourcePage = $('[data-container-express-checkout]').data('paypal-source-page');
 
-  if (typeof ec_sc_in_context != "undefined" && ec_sc_in_context) {
+  switch (sourcePage) {
+    case 'product':
+      var vars = getProductVars();
+      EcCheckProductAvailability(sourcePage, vars['qty'], vars['id_product'], vars['id_product_attribute']);
+      prestashop.on('updatedProduct', function (e, xhr, settings) {
+        EcCheckProductAvailability(sourcePage, vars['qty'], vars['id_product'], e.id_product_attribute);
+      });
+      break;
+
+    case 'cart':
+      prestashop.on('updateCart', function () {
+        return EcCheckProductAvailability(sourcePage);
+      });
+      break;
+  }
+
+  if (typeof ec_sc_in_context !== 'undefined' && ec_sc_in_context) {
     window.paypalCheckoutReady = function () {
       paypal.checkout.setup(merchant_id, {
         environment: ec_sc_environment
@@ -125,48 +136,80 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-function EcCheckProductAvailability(qty, productId, id_product_attribute) {
+var getProductVars = function getProductVars() {
+  var vars = new Object();
+  vars['qty'] = $('input[name="qty"]').val();
+  vars['id_product'] = $('[data-paypal-id-product]').val();
+  vars['id_product_attribute'] = $('[data-paypal-id-product-attribute]').val();
+  return vars;
+}; // Click on shortcut button
+
+
+$('[data-paypal-shortcut-btn]').on('click', function () {
+  var sourcePage = $('[data-container-express-checkout]').data('paypal-source-page');
+  $('[data-paypal-url-page]').val(document.location.href);
+
+  switch (sourcePage) {
+    case 'product':
+      var vars = getProductVars(),
+          combination = [],
+          re = /group\[([0-9]+)\]/;
+      $('[data-paypal-qty]').val(vars['qty']);
+      $.each($('#add-to-cart-or-refresh').serializeArray(), function (key, item) {
+        if (res = item.name.match(re)) {
+          combination.push("".concat(res[1], " : ").concat(item.value));
+        }
+      });
+      $('[data-paypal-combination]').val(combination.join('|'));
+
+      if (typeof ec_sc_in_context !== 'undefined' && ec_sc_in_context) {
+        ECSInContext(sourcePage, combination, vars['qty'], vars['id_product']);
+      } else {
+        $('[data-paypal-payment-form-cart]').submit();
+      }
+
+      break;
+
+    case 'cart':
+      if (typeof ec_sc_in_context !== 'undefined' && ec_sc_in_context) {
+        ECSInContext();
+      } else {
+        $('[data-paypal-payment-form-cart]').submit();
+      }
+
+      break;
+  }
+});
+
+var EcCheckProductAvailability = function EcCheckProductAvailability(sourcePage) {
+  var qty = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+  var productId = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+  var productIdAttr = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
   $.ajax({
     url: sc_init_url,
-    type: "POST",
-    data: 'checkAvailability=1&source_page=product&id_product=' + productId + '&quantity=' + qty + '&product_attribute=' + id_product_attribute,
+    type: 'POST',
+    data: "checkAvailability=1&source_page=".concat(sourcePage).concat(productId ? "&id_product=".concat(productId) : '').concat(qty ? "&quantity=".concat(qty) : '').concat(productIdAttr ? "&product_attribute=".concat(productIdAttr) : ''),
     success: function success(json) {
       if (json.success) {
-        $('#container_express_checkout').show();
+        $('[data-container-express-checkout]').show();
       } else {
-        $('#container_express_checkout').hide();
+        $('[data-container-express-checkout]').hide();
       }
-    },
-    error: function error(responseData, textStatus, errorThrown) {}
-  });
-}
-
-function setInput() {
-  $('#paypal_quantity').val($('[name="qty"]').val());
-  var combination = [];
-  var re = /group\[([0-9]+)\]/;
-  $.each($('#add-to-cart-or-refresh').serializeArray(), function (key, item) {
-    if (res = item.name.match(re)) {
-      combination.push(res[1] + ':' + item.value);
     }
   });
-  $('#paypal_url_page').val(document.location.href);
-  $('#paypal_combination').val(combination.join('|'));
+};
 
-  if (typeof ec_sc_in_context != "undefined" && ec_sc_in_context) {
-    ECSInContext(combination);
-  } else {
-    $('#paypal_payment_form_cart').submit();
-  }
-}
-
-function ECSInContext(combination) {
+var ECSInContext = function ECSInContext() {
+  var sourcePage = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+  var combination = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+  var qty = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+  var productId = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
   paypal.checkout.initXO();
   $.support.cors = true;
   $.ajax({
     url: ec_sc_action_url,
-    type: "GET",
-    data: 'getToken=1&source_page=product&id_product=' + $('#paypal_payment_form_cart input[name="id_product"]').val() + '&quantity=' + $('[name="qty"]').val() + '&combination=' + combination.join('|'),
+    type: 'GET',
+    data: "getToken=1&source_page=".concat(sourcePage).concat(productId ? "&id_product=".concat(productId) : '').concat(qty ? "&quantity=".concat(qty) : '').concat(combination ? "&combination=".concat(combination.join('|')) : ''),
     success: function success(json) {
       if (json.success) {
         var url = paypal.checkout.urlPrefix + json.token;
@@ -176,12 +219,12 @@ function ECSInContext(combination) {
         window.location.replace(json.redirect_link);
       }
     },
-    error: function error(responseData, textStatus, errorThrown) {
-      alert("Error in ajax post" + responseData.statusText);
+    error: function error(responseData) {
+      alert("Error in ajax post ".concat(responseData.statusText));
       paypal.checkout.closeFlow();
     }
   });
-}
+};
 
 /***/ })
 
