@@ -735,6 +735,7 @@ class MethodEC extends AbstractMethodPaypal
                 $params['log.LogEnabled'] = false;
                 break;
         }
+        $params['http.headers.PayPal-Partner-Attribution-Id'] = getenv('PLATEFORM') == 'PSREAD' ? 'PrestaShop_Cart_Ready_EC' : 'PrestaShop_Cart_EC';
         return $params;
     }
 
