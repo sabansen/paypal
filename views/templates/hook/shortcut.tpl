@@ -22,17 +22,22 @@
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<div data-container-express-checkout data-paypal-source-page='product' style="float:right; margin: 10px 40px 0 0">
+
+<div data-container-express-checkout data-paypal-source-page="{$source_page}" style="float:right; margin: 10px 40px 0 0">
     <form data-paypal-payment-form-cart class="paypal_payment_form" action="{$action_url|escape:'htmlall':'UTF-8'}" title="{l s='Pay with PayPal' mod='paypal'}" method="post" data-ajax="false">
-        <input type="hidden" name="id_product" data-paypal-id-product value="{$smarty.get.id_product|intval}" />
-        <input type="hidden" name="quantity" data-paypal-qty value=""/>
-        <input type="hidden" name="combination" data-paypal-combination value="" />
+        {if $source_page == 'product'}
+          <input type="hidden" name="id_product" data-paypal-id-product value="{$smarty.get.id_product|intval}" />
+          <input type="hidden" name="quantity" data-paypal-qty value=""/>
+          <input type="hidden" name="combination" data-paypal-combination value="" />
+          <input type="hidden" data-paypal-id-product-attribute value="{$es_cs_product_attribute|escape:'htmlall':'UTF-8'}" />
+        {/if}
         <input type="hidden" name="express_checkout" value="{$PayPal_payment_type|escape:'htmlall':'UTF-8'}"/>
         <input type="hidden" name="current_shop_url" data-paypal-url-page value="" />
-        <input type="hidden" name="bn" value="{$PayPal_tracking_code|escape:'htmlall':'UTF-8'}" />
-        <input type="hidden" id="in_context_checkout_enabled" value="0">
-        <input type="hidden" id="source_page"  name="source_page" value="product">
-        <input type="hidden" data-paypal-id-product-attribute value="{$es_cs_product_attribute|escape:'htmlall':'UTF-8'}" />
+        {if isset($PayPal_tracking_code) && !empty($PayPal_tracking_code)}
+          <input type="hidden" name="bn" value="{$PayPal_tracking_code|escape:'htmlall':'UTF-8'}" />
+          <input type="hidden" id="in_context_checkout_enabled" value="0">
+        {/if}
+        <input type="hidden" id="source_page" name="source_page" value="{$source_page}">
         <img src="{$PayPal_img_esc|escape:'htmlall':'UTF-8'}" data-paypal-shortcut-btn alt="{l s='PayPal' mod='paypal'}" style="cursor:pointer;"/>
     </form>
 </div>

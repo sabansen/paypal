@@ -17,7 +17,7 @@ $(document).ready( () => {
   let sourcePage = $('[data-container-express-checkout]').data('paypal-source-page');
   switch (sourcePage) {
     case 'product':
-      let vars = getProductVars();
+    let vars = getProductVars();
       EcCheckProductAvailability(sourcePage, vars['qty'], vars['id_product'], vars['id_product_attribute']);
       prestashop.on('updatedProduct', function(e, xhr, settings) {
           EcCheckProductAvailability(sourcePage, vars['qty'], vars['id_product'], e.id_product_attribute);
@@ -38,9 +38,9 @@ $(document).ready( () => {
 
 const getProductVars = () => {
   let vars = new Object();
-  vars['qty'] = $('input[name="qty"]').val();
-  vars['id_product'] = $('[data-paypal-id-product]').val();
-  vars['id_product_attribute'] = $('[data-paypal-id-product-attribute]').val();
+      vars['qty'] = $('input[name="qty"]').val();
+      vars['id_product'] = $('[data-paypal-id-product]').val();
+      vars['id_product_attribute'] = $('[data-paypal-id-product-attribute]').val();
   return vars;
 }
 
