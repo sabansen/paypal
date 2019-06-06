@@ -38,8 +38,8 @@ class ProcessLoggerExtension extends AbstractModuleExtension
     public $extensionAdminControllers = array(
         array(
             'name' => array(
-                'en' => 'Logger Paypal',
-                'fr' => 'Logger Paypal',
+                'en' => 'Logger',
+                'fr' => 'Logger',
             ),
             'class_name' => 'AdminPaypalProcessLogger',
             'parent_class_name' => 'AdminParentPaypalConfiguration',

@@ -198,7 +198,7 @@ class PayPal extends PaymentModule
     public $moduleAdminControllers = array(
              array(
              'name' => array(
-                 'en' => 'PayPal and Braintree Official',
+                 'en' => 'PayPal & Braintree Official',
                  'fr' => 'PayPal et Braintree Officiel'
              ),
              'class_name' => 'AdminParentPaypalConfiguration',
@@ -217,8 +217,8 @@ class PayPal extends PaymentModule
          ),
          array(
              'name' => array(
-                 'en' => 'Report PayPal',
-                 'fr' => 'Rapport PayPal'
+                 'en' => 'Report',
+                 'fr' => 'Rapport'
              ),
              'class_name' => 'AdminPaypalStats',
              'parent_class_name' => 'AdminParentPaypalConfiguration',
