@@ -847,12 +847,14 @@ class PayPal extends PaymentModule
                     Media::addJsDef(array(
                         'paypalCheckedMethod' => 'express_checkout_schortcut',
                     ));
+                    $cookie_paypal_email = $this->context->cookie->paypal_ecs_email;
                 } elseif (isset($this->context->cookie->paypal_pSc)) {
                     Media::addJsDef(array(
                         'paypalCheckedMethod' => 'paypal_plus_schortcut',
                     ));
+                    $cookie_paypal_email = $this->context->cookie->paypal_pSc_email;
                 }
-                Media::addJsDefL('scPaypalCheckedMsg', $this->l('You are about to pay with your PayPal account ').$this->context->cookie->paypal_ecs_email);
+                Media::addJsDefL('scPaypalCheckedMsg', $this->l('You are about to pay with your PayPal account ').$cookie_paypal_email);
             }
             if (Configuration::get('PAYPAL_METHOD') == 'EC' && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT')) {
                 $environment = (Configuration::get('PAYPAL_SANDBOX')?'sandbox':'live');
