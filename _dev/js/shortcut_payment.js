@@ -13,15 +13,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-$(document).ready(function(){
-    if ($('section#checkout-payment-step').hasClass('js-current-step')) {
-        $('.payment-options div').hide();
-        if ($('input[data-module-name=express_checkout_schortcut]').length > 0) {
-            $('input[data-module-name=express_checkout_schortcut]').click();
-            $('.payment-options').append($('#paypal-es-checked').show());
-        } else if($('input[data-module-name=paypal_plus_schortcut]').length > 0) {
-            $('input[data-module-name=paypal_plus_schortcut]').click();
-            $('.payment-options').append($('#paypal-ppp-checked').show());
-        }
+//  Show message of checked paypal method instead of payment options
+$(document).ready( ()=> {
+  if ($('section#checkout-payment-step').hasClass('js-current-step')) {
+    let el = $(`input[data-module-name="${paypalCheckedMethod}"]`);
+    $('.payment-options div').hide();
+    if (el.length > 0) {
+      el.click();
+      $('.payment-options').append($(`<p>${scPaypalCheckedMsg}</p>`));
     }
+  }
 });

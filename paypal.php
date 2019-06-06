@@ -742,10 +742,6 @@ class PayPal extends PaymentModule
                         $payment_options->setCallToActionText($action_text);
                         $payment_options->setModuleName('express_checkout_schortcut');
                         $payment_options->setAction($this->context->link->getModuleLink($this->name, 'ecValidation', array('short_cut'=>'1'), true));
-                        $this->context->smarty->assign(array(
-                            'paypal_account_email' => $this->context->cookie->paypal_ecs_email,
-                        ));
-                        $payment_options->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_sc.tpl'));
                         $payments_options[] = $payment_options;
                     }
                 }
@@ -801,10 +797,6 @@ class PayPal extends PaymentModule
                         $payment_options->setCallToActionText($action_text);
                         $payment_options->setModuleName('paypal_plus_schortcut');
                         $payment_options->setAction($this->context->link->getModuleLink($this->name, 'pppValidation', array('short_cut'=>'1'), true));
-                        $this->context->smarty->assign(array(
-                            'paypal_account_email' => $this->context->cookie->paypal_pSc_email,
-                        ));
-                        $payment_options->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_sc.tpl'));
                         $payments_options[] = $payment_options;
                     }
                 }
@@ -851,6 +843,16 @@ class PayPal extends PaymentModule
             }
             if ((Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART')) && (isset($this->context->cookie->paypal_ecs) || isset($this->context->cookie->paypal_pSc))) {
                 $this->context->controller->registerJavascript($this->name . '-paypal-ec-sc', 'modules/' . $this->name . '/views/js/shortcut_payment.js');
+                if (isset($this->context->cookie->paypal_ecs)) {
+                    Media::addJsDef(array(
+                        'paypalCheckedMethod' => 'express_checkout_schortcut',
+                    ));
+                } elseif (isset($this->context->cookie->paypal_pSc)) {
+                    Media::addJsDef(array(
+                        'paypalCheckedMethod' => 'paypal_plus_schortcut',
+                    ));
+                }
+                Media::addJsDefL('scPaypalCheckedMsg', $this->l('You are about to pay with your PayPal account ').$this->context->cookie->paypal_ecs_email);
             }
             if (Configuration::get('PAYPAL_METHOD') == 'EC' && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT')) {
                 $environment = (Configuration::get('PAYPAL_SANDBOX')?'sandbox':'live');
