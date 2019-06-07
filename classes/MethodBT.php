@@ -773,6 +773,7 @@ class MethodBT extends AbstractMethodPaypal
                     'currency' => $result->transaction->currencyIsoCode,
                     'payment_type' => isset($result->transaction->payment_type) ? $result->transaction->payment_type : '',
                     'merchantAccountId' => $result->transaction->merchantAccountId,
+                    'date_transaction' => $this->getDateTransaction($result->transaction)
                 );
             } else if ($result->transaction->status == Braintree_Transaction::SETTLEMENT_DECLINED) {
                 $order = new Order(Tools::getValue('id_order'));

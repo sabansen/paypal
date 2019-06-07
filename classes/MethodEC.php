@@ -857,6 +857,7 @@ class MethodEC extends AbstractMethodPaypal
                     'currency' => $payment_info->GrossAmount->currencyID,
                     'parent_payment' => $payment_info->ParentTransactionID,
                     'pending_reason' => $payment_info->PendingReason,
+                    'date_transaction' => $this->getDateTransaction()
                 );
             }
         }

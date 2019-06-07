@@ -1304,7 +1304,8 @@ class PayPal extends PaymentModule
                 '<p class="paypal-warning">'.$msg.'</p>'
             );
         }
-        if ($order->current_state == Configuration::get('PS_OS_PAYMENT') && Validate::isLoadedObject($paypal_capture) && $paypal_capture->id_capture) {
+
+        if ($order->getCurrentOrderState()->paid == 1 && Validate::isLoadedObject($paypal_capture) && $paypal_capture->id_capture) {
             if ($paypal_order->method == 'BT') {
                 $msg = $this->l('Your order is fully captured by Braintree.');
             } else {
@@ -1465,7 +1466,7 @@ class PayPal extends PaymentModule
 
     public function hookActionOrderStatusPostUpdate(&$params)
     {
-        if ($params['newOrderStatus']->id == Configuration::get('PS_OS_PAYMENT')) {
+        if ($params['newOrderStatus']->paid == 1) {
             $capture = PaypalCapture::getByOrderId($params['id_order']);
             $ps_order = new Order($params['id_order']);
             if ($capture['id_capture']) {
@@ -1697,7 +1698,7 @@ class PayPal extends PaymentModule
             }
         }
 
-        if ($params['newOrderStatus']->id == Configuration::get('PS_OS_PAYMENT')) {
+        if ($params['newOrderStatus']->paid == 1) {
             $capture = PaypalCapture::loadByOrderPayPalId($orderPayPal->id);
             if (!Validate::isLoadedObject($capture)) {
                 return false;
@@ -1741,7 +1742,8 @@ class PayPal extends PaymentModule
                     $orderPayPal->id_cart,
                     $this->context->shop->id,
                     $orderPayPal->payment_tool,
-                    $orderPayPal->sandbox
+                    $orderPayPal->sandbox,
+                    isset($capture_response['date_transaction']) ? $capture_response['date_transaction'] : null
                 );
                 ProcessLoggerHandler::closeLogger();
             }
