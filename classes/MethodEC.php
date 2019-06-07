@@ -747,6 +747,7 @@ class MethodEC extends AbstractMethodPaypal
         $context = Context::getContext();
 
         $this->_paymentDetails = new PaymentDetailsType();
+        $this->_paymentDetails->ButtonSource = 'PrestaShop_Cart_'.(getenv('PLATEFORM') == 'PSREADY' ? 'Ready_':'').'EC';
 
         if (!Context::getContext()->cart->isVirtualCart()) {
             $address = $this->_getShippingAddress();
@@ -764,6 +765,7 @@ class MethodEC extends AbstractMethodPaypal
 
         $DoECRequest = new DoExpressCheckoutPaymentRequestType();
         $DoECRequest->DoExpressCheckoutPaymentRequestDetails = $DoECRequestDetails;
+
         $DoECReq = new DoExpressCheckoutPaymentReq();
         $DoECReq->DoExpressCheckoutPaymentRequest = $DoECRequest;
 
