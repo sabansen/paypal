@@ -453,6 +453,7 @@ class MethodEC extends AbstractMethodPaypal
     {
         // details about payment
         $this->_paymentDetails = new PaymentDetailsType();
+        $this->_paymentDetails->ButtonSource = 'PrestaShop_Cart_'.(getenv('PLATEFORM') == 'PSREADY' ? 'Ready_':'').'EC';
 
         // shipping address
         if (!$this->short_cut && !Context::getContext()->cart->isVirtualCart()) {
