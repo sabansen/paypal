@@ -884,7 +884,7 @@ class PayPal extends PaymentModule
     {
         if (Configuration::get('PAYPAL_METHOD') == 'BT') {
             $diff_cron_time = date_diff(date_create('now'), date_create(Configuration::get('PAYPAL_CRON_TIME')));
-            if ($diff_cron_time->d > 0 || $diff_cron_time->h > 4) {
+            if ($diff_cron_time->d > 0 || $diff_cron_time->h > 4 || true) {
                 Configuration::updateValue('PAYPAL_CRON_TIME', date('Y-m-d H:i:s'));
                 $bt_orders = PaypalOrder::getPaypalBtOrdersIds();
                 if ($bt_orders) {

@@ -142,20 +142,15 @@ class PaypalOrder extends ObjectModel
     }
 
     /**
-     * Get BT records
-     * @return array all BT transaction IDs
+     * Get array of PaypalOrder for validation
+     * @return array PaypalOrder
      */
     public static function getPaypalBtOrdersIds()
     {
-        $ids = array();
-        $sql = new DbQuery();
-        $sql->select('id_transaction');
-        $sql->from('paypal_order');
-        $sql->where('method = "BT" AND payment_method = "sale" AND payment_tool = "paypal_account" AND (payment_status = "settling" OR payment_status = "submitted_for_settlement")');
-        $results = Db::getInstance()->executeS($sql);
-        foreach ($results as $result) {
-            $ids[] =  $result['id_transaction'];
-        }
-        return $ids;
+        $collection = new PrestaShopCollection('PaypalOrder');
+        $collection->where('payment_method', '=', 'sale');
+        $collection->where('payment_tool', '=', 'paypal_account');
+        $collection->where('payment_status', 'in', array('settling', 'submitted_for_settlement'));
+        return $collection->getResults();
     }
 }

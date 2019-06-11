@@ -951,13 +951,32 @@ class MethodBT extends AbstractMethodPaypal
      * @param array $ids
      * @return mixed
      */
-    public function searchTransactions($ids)
+    public function searchTransactions($paypalOrders)
     {
-        $this->initConfig();
-        //method Braintree_TransactionSearch::ids() exists in SDK, alias is used.
-        $ids_transaction =  Braintree_TransactionSearch::ids()->in($ids);
-        $collection = $this->gateway->transaction()->search(array($ids_transaction));
+        $collection = array();
+        foreach ($paypalOrders as $paypalOrder) {
+            $transaction = $this->searchTransaction($paypalOrder);
+            if ($transaction === false) {
+                continue;
+            }
+            $collection[] = $transaction;
+        }
         return $collection;
+    }
+
+    /**
+     * @param PaypalOrder $paypalOrder
+     * @return mixed
+     */
+    public function searchTransaction($paypalOrder)
+    {
+        $this->initConfig($paypalOrder->sandbox);
+        try {
+            $transaction = $this->gateway->transaction()->find($paypalOrder->id_transaction);
+            return $transaction;
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
     /**
