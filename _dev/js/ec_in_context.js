@@ -14,21 +14,26 @@
  */
 
 // init in-context
-document.addEventListener("DOMContentLoaded", function(){    window.paypalCheckoutReady = function() {
-        paypal.checkout.setup(merchant_id, {
-            environment: environment,
-        });
-    };
+$(document).ready( () => {
+  window.paypalCheckoutReady = () => paypal.checkout.setup(merchant_id, {environment: environment});
 });
 
-function ECInContext() {
+$('#payment-confirmation button').on('click', (e) => {
+  let selectedOption = $('input[name=payment-option]:checked').attr('id');
+  if ($(`#${selectedOption}-additional-information`).find($('[data-ec-in-context]')).length > 0) {
+    e.preventDefault();
+    e.stopPropagation();
+    ECInContext();
+  }
+});
+
+const ECInContext = () => {
     paypal.checkout.initXO();
     $.support.cors = true;
     $.ajax({
         url: url_token,
-        type: "GET",
-
-        success: function (json) {
+        type: 'GET',
+        success: (json) => {
             if (json.success) {
                 var url = paypal.checkout.urlPrefix +json.token;
                 paypal.checkout.startFlow(url);
@@ -38,7 +43,7 @@ function ECInContext() {
             }
         },
         error: function (responseData, textStatus, errorThrown) {
-            alert("Error in ajax post"+responseData.statusText);
+            alert(`Error in ajax post${responseData.statusText}`);
             paypal.checkout.closeFlow();
         }
     });

@@ -108,20 +108,29 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 // init in-context
-document.addEventListener("DOMContentLoaded", function () {
+$(document).ready(function () {
   window.paypalCheckoutReady = function () {
-    paypal.checkout.setup(merchant_id, {
+    return paypal.checkout.setup(merchant_id, {
       environment: environment
     });
   };
 });
+$('#payment-confirmation button').on('click', function (e) {
+  var selectedOption = $('input[name=payment-option]:checked').attr('id');
 
-function ECInContext() {
+  if ($("#".concat(selectedOption, "-additional-information")).find($('[data-ec-in-context]')).length > 0) {
+    e.preventDefault();
+    e.stopPropagation();
+    ECInContext();
+  }
+});
+
+var ECInContext = function ECInContext() {
   paypal.checkout.initXO();
   $.support.cors = true;
   $.ajax({
     url: url_token,
-    type: "GET",
+    type: 'GET',
     success: function success(json) {
       if (json.success) {
         var url = paypal.checkout.urlPrefix + json.token;
@@ -132,11 +141,11 @@ function ECInContext() {
       }
     },
     error: function error(responseData, textStatus, errorThrown) {
-      alert("Error in ajax post" + responseData.statusText);
+      alert("Error in ajax post".concat(responseData.statusText));
       paypal.checkout.closeFlow();
     }
   });
-}
+};
 
 /***/ })
 
