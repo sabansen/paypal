@@ -42,7 +42,7 @@ class PaypalScInitModuleFrontController extends PaypalAbstarctModuleFrontControl
         $this->values['quantity'] = Tools::getvalue('quantity');
         $this->values['combination'] = Tools::getvalue('combination');
         $this->values['getToken'] = Tools::getvalue('getToken');
-        $this->values['use_card'] = 0;
+        $this->values['credit_card'] = 0;
         $this->values['short_cut'] = 1;
     }
 

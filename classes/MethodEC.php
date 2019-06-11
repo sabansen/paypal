@@ -67,7 +67,7 @@ class MethodEC extends AbstractMethodPaypal
     private $_taxTotalValue = 0;
 
     /** @var boolean pay with card without pp account */
-    public $use_card;
+    public $credit_card;
 
     /** @var boolean shortcut payment from product or cart page*/
     public $short_cut;
@@ -472,7 +472,7 @@ class MethodEC extends AbstractMethodPaypal
         $setECReqDetails->NoShipping = 1;
         $setECReqDetails->AddressOverride = 1;
         $setECReqDetails->ReqConfirmShipping = 0;
-        $setECReqDetails->LandingPage = ($this->use_card ? 'Billing' : 'Login');
+        $setECReqDetails->LandingPage = ($this->credit_card ? 'Billing' : 'Login');
 
         if ($this->short_cut) {
             $setECReqDetails->ReturnURL = Context::getContext()->link->getModuleLink($this->name, 'ecScOrder', array(), true);
