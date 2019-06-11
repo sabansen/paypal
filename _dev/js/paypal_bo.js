@@ -1,5 +1,6 @@
 $(document).ready( () => {
   $('[data-display-popup]').on('click', function() {
+
     displayPopup($(this).data('method'), $(this).data('with-card'))
   });
 
@@ -64,8 +65,9 @@ const toggleElement = (val, el) => {
 }
 
 const displayPopup = (method, withCard) => {
-  $('[data-method]').val(method);
-  $('[data-with-card]').val(withCard);
+  $('[data-method-paypal]').val(method);
+  $('[data-with-card-paypal]').val(withCard);
+
   if ($('[data-fancybox]').data('fancybox') === method) {
     $.fancybox.open([
       {

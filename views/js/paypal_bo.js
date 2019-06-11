@@ -157,8 +157,8 @@ var toggleElement = function toggleElement(val, el) {
 };
 
 var displayPopup = function displayPopup(method, withCard) {
-  $('[data-method]').val(method);
-  $('[data-with-card]').val(withCard);
+  $('[data-method-paypal]').val(method);
+  $('[data-with-card-paypal]').val(withCard);
 
   if ($('[data-fancybox]').data('fancybox') === method) {
     $.fancybox.open([{

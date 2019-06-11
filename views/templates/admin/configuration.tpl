@@ -384,6 +384,7 @@
 
 {if isset($ppp_available)}
 <div style="display: none;">
+<pre> test</pre>
     <div id="content-fancybox-configuration-PPP" data-fancybox="PPP">
         <form action="{$return_url|escape:'javascript':'UTF-8'}" method="post" id="credential-configuration" class="bootstrap">
             <h4>{l s='API Credentials' mod='paypal'}</h4>
@@ -396,7 +397,7 @@
                 <li>{l s='Copy/paste your « Client ID » and « Secret » below for each environment' mod='paypal'}</li>
             </ul>
             <hr/>
-            <input type="hidden" class="method met" name="method"/>
+            <input type="hidden" class="method met" name="method" data-method-paypal/>
             <h4>{l s='Sandbox' mod='paypal'}</h4>
             <p>
                 <label for="sandbox_client_id">{l s='Client ID' mod='paypal'}</label>
@@ -443,8 +444,8 @@
                     <li>{l s='Copy/paste your API credentials below for %s environment' sprintf=[$mode] mod='paypal'} </li>
                 </ul>
                 <hr/>
-                <input type="hidden" class="method" name="method" data-method />
-                <input type="hidden" id="with_card" name="with_card" data-with-card/>
+                <input type="hidden" class="method" name="method" data-method-paypal />
+                <input type="hidden" id="with_card" name="with_card" data-with-card-paypal/>
                 <h4>{l s='API Credentials for' mod='paypal'} {$mode}</h4>
                 <p>
                     <label for="api_username">{l s='API username' mod='paypal'}</label>
