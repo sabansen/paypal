@@ -107,31 +107,45 @@
  * @license   http://addons.prestashop.com/en/content/12-terms-and-conditions-of-use
  * International Registered Trademark & Property of PrestaShop SA
  */
-var ppp;
+var ppp = {},
+    exec_ppp_payment = true;
 $(document).ready(function () {
   if ($('section#checkout-payment-step').hasClass('js-current-step')) {
-    if (ppp_mode == 'sandbox') showPui = true;else showPui = false;
+    var showPui = false;
+
+    if (modePPP == 'sandbox') {
+      showPui = true;
+    }
+
     ppp = PAYPAL.apps.PPP({
-      "approvalUrl": ppp_approval_url,
+      "approvalUrl": approvalUrlPPP,
       "placeholder": "ppplus",
-      "mode": ppp_mode,
-      "language": ppp_language_iso_code,
-      "country": ppp_country_iso_code,
+      "mode": modePPP,
+      "language": languageIsoCodePPP,
+      "country": countryIsoCodePPP,
       "buttonLocation": "outside",
       "useraction": "continue",
       "showPuiOnSandbox": showPui
     });
   }
 });
-exec_ppp_payment = true;
+$('#payment-confirmation button').on('click', function (e) {
+  var selectedOption = $('input[name=payment-option]:checked').attr('id');
 
-function doPatchPPP() {
+  if ($("#".concat(selectedOption, "-additional-information .payment_module")).hasClass('paypal-plus')) {
+    e.preventDefault();
+    e.stopPropagation();
+    doPatchPPP();
+  }
+});
+
+var doPatchPPP = function doPatchPPP() {
   if (exec_ppp_payment) {
     exec_ppp_payment = false;
     $.fancybox.open({
-      content: '<div id="popup-ppp-waiting"><p>' + waiting_redirection + '</p></div>',
+      content: "<div id=\"popup-ppp-waiting\"><p>".concat(waitingRedirectionMsg, "</p></div>"),
       closeClick: false,
-      height: "auto",
+      height: 'auto',
       helpers: {
         overlay: {
           closeClick: false
@@ -140,7 +154,7 @@ function doPatchPPP() {
     });
     $.ajax({
       type: 'POST',
-      url: ajax_patch_url,
+      url: ajaxPatchUrl,
       dataType: 'json',
       success: function success(json) {
         if (json.success) {
@@ -148,11 +162,10 @@ function doPatchPPP() {
         } else {
           window.location.replace(json.redirect_link);
         }
-      },
-      error: function error(xhr, ajaxOptions, thrownError) {}
+      }
     });
   }
-}
+};
 
 /***/ })
 

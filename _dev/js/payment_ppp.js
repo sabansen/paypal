@@ -12,55 +12,61 @@
  * @license   http://addons.prestashop.com/en/content/12-terms-and-conditions-of-use
  * International Registered Trademark & Property of PrestaShop SA
  */
-var ppp;
-$(document).ready(function() {
-    if ($('section#checkout-payment-step').hasClass('js-current-step')) {
-        if (ppp_mode == 'sandbox')
-            showPui = true
-        else
-            showPui = false
-
-        ppp = PAYPAL.apps.PPP({
-            "approvalUrl": ppp_approval_url,
-            "placeholder": "ppplus",
-            "mode": ppp_mode,
-            "language": ppp_language_iso_code,
-            "country": ppp_country_iso_code,
-            "buttonLocation": "outside",
-            "useraction": "continue",
-            "showPuiOnSandbox": showPui,
-        });
+let ppp = {},
+    exec_ppp_payment = true;
+$(document).ready( () => {
+  if ($('section#checkout-payment-step').hasClass('js-current-step')) {
+    let showPui = false;
+    if (modePPP == 'sandbox') {
+      showPui = true;
     }
+    ppp = PAYPAL.apps.PPP({
+      "approvalUrl": approvalUrlPPP,
+      "placeholder": "ppplus",
+      "mode": modePPP,
+      "language": languageIsoCodePPP,
+      "country": countryIsoCodePPP,
+      "buttonLocation": "outside",
+      "useraction": "continue",
+      "showPuiOnSandbox": showPui
+    });
+  }
 });
-exec_ppp_payment = true;
-function doPatchPPP() {
-    if (exec_ppp_payment) {
-        exec_ppp_payment = false;
-        $.fancybox.open({
-            content : '<div id="popup-ppp-waiting"><p>'+waiting_redirection+'</p></div>',
-            closeClick : false,
-            height : "auto",
-            helpers : {
-                overlay : {
-                    closeClick: false
-                }
-            },
-        });
-        $.ajax({
-            type    : 'POST',
-            url     : ajax_patch_url,
-            dataType: 'json',
-            success : function (json) {
-                if (json.success) {
-                    ppp.doCheckout();
-                } else {
-                    window.location.replace(json.redirect_link);
-                }
-            },
-            error   : function (xhr, ajaxOptions, thrownError) {
 
-            }
-        });
-    }
+$('#payment-confirmation button').on('click', (e) => {
+  let selectedOption = $('input[name=payment-option]:checked').attr('id');
+  if ($(`#${selectedOption}-additional-information .payment_module`).hasClass('paypal-plus')) {
+    e.preventDefault();
+    e.stopPropagation();
+    doPatchPPP();
+  }
+});
+
+const doPatchPPP = () => {
+  if (exec_ppp_payment) {
+    exec_ppp_payment = false;
+    $.fancybox.open({
+      content: `<div id="popup-ppp-waiting"><p>${waitingRedirectionMsg}</p></div>`,
+      closeClick: false,
+      height: 'auto',
+      helpers: {
+        overlay: {
+          closeClick: false
+        }
+      },
+    });
+    $.ajax({
+      type: 'POST',
+      url: ajaxPatchUrl,
+      dataType: 'json',
+      success: (json) => {
+        if (json.success) {
+          ppp.doCheckout();
+        } else {
+          window.location.replace(json.redirect_link);
+        }
+      }
+    });
+  }
 }
 

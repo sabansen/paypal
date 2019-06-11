@@ -776,7 +776,7 @@ class PayPal extends PaymentModule
                 }
                 break;
             case 'PPP':
-                if (Configuration::get('PAYPAL_PLUS_ENABLED') && $this->assignInfoPaypalPlus()) {
+                if (Configuration::get('PAYPAL_PLUS_ENABLED')) {
                     $payment_options = new PaymentOption();
                     $action_text = $this->l('Pay with PayPal Plus');
                     if (Configuration::get('PAYPAL_API_ADVANTAGES')) {
@@ -784,8 +784,8 @@ class PayPal extends PaymentModule
                     }
                     $payment_options->setCallToActionText($action_text);
                     $payment_options->setModuleName('paypal_plus');
-                    $payment_options->setAction('javascript:doPatchPPP();');
                     try {
+                        $this->context->smarty->assign('path', $this->_path);
                         $payment_options->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_ppp.tpl'));
                     } catch (Exception $e) {
                         die($e);
@@ -867,6 +867,7 @@ class PayPal extends PaymentModule
                 $this->context->controller->registerJavascript($this->name . '-paypal-checkout-in-context', 'modules/' . $this->name . '/views/js/ec_in_context.js');
             }
             if (Configuration::get('PAYPAL_METHOD') == 'PPP' && Configuration::get('PAYPAL_PLUS_ENABLED')) {
+                $this->assignJSvarsPaypalPlus();
                 $this->context->controller->registerJavascript($this->name . '-plus-minjs', 'https://www.paypalobjects.com/webstatic/ppplus/ppplus.min.js', array('server' => 'remote'));
                 $this->context->controller->registerJavascript($this->name . '-plus-payment-js', 'modules/' . $this->name . '/views/js/payment_ppp.js');
                 $this->context->controller->addJqueryPlugin('fancybox');
@@ -977,7 +978,7 @@ class PayPal extends PaymentModule
      * Assign form data for Paypal Plus payment option
      * @return boolean
      */
-    protected function assignInfoPaypalPlus()
+    protected function assignJSvarsPaypalPlus()
     {
         $ppplus = AbstractMethodPaypal::load('PPP');
         try {
@@ -989,16 +990,15 @@ class PayPal extends PaymentModule
         $address_invoice = new Address($this->context->cart->id_address_invoice);
         $country_invoice = new Country($address_invoice->id_country);
 
-        $this->context->smarty->assign(array(
-            'pppSubmitUrl'=> $this->context->link->getModuleLink('paypal', 'pppValidation', array(), true),
-            'approval_url_ppp'=> $approval_url,
-            'baseDir' => $this->context->link->getBaseLink($this->context->shop->id, true),
-            'path' => $this->_path,
-            'mode' => Configuration::get('PAYPAL_SANDBOX')  ? 'sandbox' : 'live',
-            'ppp_language_iso_code' => $this->context->language->iso_code,
-            'ppp_country_iso_code' => $country_invoice->iso_code,
-            'ajax_patch_url' => $this->context->link->getModuleLink('paypal', 'pppPatch', array(), true),
+        Media::addJsDef(array(
+            'approvalUrlPPP' => $approval_url,
+            'modePPP' => Configuration::get('PAYPAL_SANDBOX')  ? 'sandbox' : 'live',
+            'languageIsoCodePPP' => $this->context->language->iso_code,
+            'countryIsoCodePPP' => $country_invoice->iso_code,
+            'ajaxPatchUrl' => $this->context->link->getModuleLink('paypal', 'pppPatch', array(), true),
         ));
+        Media::addJsDefL('waitingRedirectionMsg', $this->l('In few seconds you will be redirected to PayPal. Please wait.'));
+
         return true;
     }
 
