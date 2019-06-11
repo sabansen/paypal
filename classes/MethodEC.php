@@ -1015,7 +1015,6 @@ class MethodEC extends AbstractMethodPaypal
         $context->smarty->assign(array(
             'shop_url' => $shop_url,
             'PayPal_payment_type' => $type,
-            'PayPal_tracking_code' => 'PRESTASHOP_ECM',
             'PayPal_img_esc' => $shop_url.$img_esc,
             'action_url' => $context->link->getModuleLink($this->name, 'ScInit', array(), true),
             'ec_sc_in_context' => Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT'),
