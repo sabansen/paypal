@@ -108,7 +108,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 $(document).ready(function () {
-  $('.page-order-confirmation #order-details ul').append($('#paypal_transaction_id'));
+  return $('.page-order-confirmation #order-details ul').append($('[data-paypal-transaction-id]'));
 });
 
 /***/ })

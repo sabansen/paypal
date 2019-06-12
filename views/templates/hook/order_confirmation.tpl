@@ -27,7 +27,7 @@
     {$error_msg|escape:'htmlall':'UTF-8'}
 </div>
 {/if}
-<li id="paypal_transaction_id">
+<li data-paypal-transaction-id>
     {if $method == 'BT'}
         {l s='Braintree transaction id :' mod='paypal'}
     {else}
