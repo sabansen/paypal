@@ -117,6 +117,7 @@ class PaypalVaulting extends ObjectModel
         $query->from('paypal_vaulting', 'pv');
         $query->leftJoin('paypal_customer', 'pc', 'pv.id_paypal_customer = pc.id_paypal_customer');
         $query->where('pc.id_customer = '.(int)$customer);
+        $query->where('pc.sandbox = ' . (int)Configuration::get('PAYPAL_SANDBOX'));
         $results = $db->query($query);
         while ($result = $db->nextRow($results)) {
             $methods[$result['payment_tool']][] = $result;
