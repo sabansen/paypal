@@ -103,6 +103,7 @@ $_MODULE['<{paypal}prestashop>methodec_7d2bb88089d1e3ea5fb6761ceb9b698f'] = 'Nom
 $_MODULE['<{paypal}prestashop>methodec_4345c12c15594256c785340b55bdfdf8'] = 'Nom d\'utilisateur API';
 $_MODULE['<{paypal}prestashop>methodec_6abfb4ec71d7997cbac540fedebdfe75'] = 'Raccourci PayPal Express';
 $_MODULE['<{paypal}prestashop>methodec_c9cc8cce247e49bae79f15173ce97354'] = 'Enregistrer';
+$_MODULE['<{paypal}prestashop>methodec_77d158990ea921239562c512c9ef30a8'] = 'Le raccourci PayPal s\'affiche directement dans le panier ou sur vos pages produits, et permet à vos acheteurs de payer plus rapidement. Moins de pages, de clics et de secondes sont nécessaires pour finaliser le paiement. PayPal vous fournit les informations de facturation et de livraison du client, de sorte que vous n\'avez pas besoin de les demander.';
 $_MODULE['<{paypal}prestashop>methodec_ae2b754aa0a223bc20da255acd9cf1e7'] = 'Afficher le raccourci sur vos pages produits';
 $_MODULE['<{paypal}prestashop>methodec_87f6d6e3db42a59602a705882352fd80'] = 'Recommandé pour les sites proposant un seul produit.';
 $_MODULE['<{paypal}prestashop>methodec_0b647d6310ace7e6a2d1dfdc9a2b669a'] = 'Afficher le raccourci dans le panier';
