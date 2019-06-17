@@ -1892,9 +1892,11 @@ class PayPal extends PaymentModule
     {
         $ship_addr_state = '';
         if ($address->id_state) {
-            $country = new Country((int)$address->id_country);
-            $state = new State((int)$address->id_state);
-            if (isset(PayPal::$state_iso_code_matrix[$country->iso_code])) {
+            $country = new Country((int) $address->id_country);
+            $state = new State((int) $address->id_state);
+            if (isset(PayPal::$state_iso_code_matrix[$country->iso_code]) &&
+                empty(PayPal::$state_iso_code_matrix[$country->iso_code]) == false)
+            {
                 $matrix = PayPal::$state_iso_code_matrix[$country->iso_code];
                 $ship_addr_state = $matrix[$state->iso_code] ? $matrix[$state->iso_code] : $matrix[$state->name];
             } else {

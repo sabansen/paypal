@@ -96,7 +96,7 @@
                     <div class="bottom">
                         <img src="{$img_checkout|escape:'html':'UTF-8'}" class="product-img">
                         <a class="btn btn-default pull-right"
-                           {if $country_iso == 'BR' || $country_iso == 'IN' || $country_iso == 'MX'}
+                           {if $country_iso == 'BR' || $country_iso == 'IN' || $country_iso == 'MX' || $country_iso == 'JP'}
                                  href="#" onclick="display_popup('EC', 0)"
                            {else}
                                  href="{$return_url|escape:'html':'UTF-8'}&method=EC&with_card=0{if isset($ec_paypal_active) &&  $ec_paypal_active}&modify=1{/if}"
@@ -133,7 +133,7 @@
                         <img src="{$path|escape:'html':'UTF-8'}/views/img/diners.svg" class="product-img">
                         <img src="{$path|escape:'html':'UTF-8'}/views/img/unionpay.svg" class="product-img">
                         <a class="btn btn-default pull-right"
-                                {if $country_iso == 'BR' || $country_iso == 'IN' || $country_iso == 'MX'}
+                                {if $country_iso == 'BR' || $country_iso == 'IN' || $country_iso == 'MX' || $country_iso == 'JP'}
                             href="#" onclick="display_popup('EC', 1)"
                                 {else}
                             href="{$return_url|escape:'html':'UTF-8'}&method=EC&with_card=1{if isset($ec_active) && $ec_active && isset($ec_card_active) && $ec_card_active}&modify=1{/if}"
@@ -427,7 +427,7 @@
     </div>
 </div>
 {/if}
-{if $country_iso == 'BR' || $country_iso == 'IN' || $country_iso == 'MX'}
+{if $country_iso == 'BR' || $country_iso == 'IN' || $country_iso == 'MX' || $country_iso == 'JP'}
     <div style="display: none;">
         <div id="content-fancybox-configuration-EC">
             <form action="{$return_url|escape:'javascript':'UTF-8'}" method="post" id="credential-configuration" class="bootstrap">
