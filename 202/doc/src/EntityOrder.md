@@ -17,7 +17,6 @@ Entity for orders payment related information.
 |id_cart|integer|ID of PS cart|isUnsignedId|
 |id_transaction|string|The payment-related transaction id|isString|
 |id_payment|string|ID of payment| |
-|client_token|string|BT gateway client token||
 |payment_method|string|Transaction type returned by API||
 |currency|string|Currency iso code|
 |total_paid|float|Amount really paid by customer||
@@ -25,7 +24,10 @@ Entity for orders payment related information.
 |total_prestashop|float|Total amount calculating by PS||
 |method|string|Method alias||
 |payment_tool|string|BT tool (cards or paypal)||
+|sandbox|boolean|Sandbox or live|Added in v. 4.5|
 |date_add|datetime|Date of the creation||
 |date_upd|datetime|Date of the update||
+
+
 
 

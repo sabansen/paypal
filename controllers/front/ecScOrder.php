@@ -25,42 +25,58 @@
  */
 
 include_once _PS_MODULE_DIR_.'paypal/classes/AbstractMethodPaypal.php';
+include_once _PS_MODULE_DIR_.'paypal/controllers/front/abstract.php';
 
 /**
  * Update PrestaShop Order after return from PayPal
  */
-class PaypalEcScOrderModuleFrontController extends ModuleFrontController
+class PaypalEcScOrderModuleFrontController extends PaypalAbstarctModuleFrontController
 {
-    public $name = 'paypal';
+    public function init()
+    {
+        parent::init();
+        $this->values['payment_token'] = Tools::getvalue('token');
+    }
 
+    /**
+     * @see FrontController::postProcess()
+     */
     public function postProcess()
     {
         $method = AbstractMethodPaypal::load('EC');
-        $paypal = Module::getInstanceByName('paypal');
+        $paypal = Module::getInstanceByName($this->name);
 
         try {
-            $info = $method->getInfo(array('token'=>Tools::getValue('token')));
+            $method->setParameters($this->values);
+            $info = $method->getInfo();
+            $this->prepareOrder($info);
+            $this->redirectUrl = $this->context->link->getPageLink('order', null, null, array('step'=>2));
         } catch (PayPal\Exception\PPConnectionException $e) {
-            $ex_detailed_message = $paypal->l('Error connecting to ') . $e->getUrl();
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $ex_detailed_message)));
+            $this->errors['error_msg'] = $paypal->l('Error connecting to ', pathinfo(__FILE__)['filename']) . $e->getUrl();
         } catch (PayPal\Exception\PPMissingCredentialException $e) {
-            $ex_detailed_message = $e->errorMessage();
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $ex_detailed_message)));
+            $this->errors['error_msg'] = $e->errorMessage();
         } catch (PayPal\Exception\PPConfigurationException $e) {
-            $ex_detailed_message = $paypal->l('Invalid configuration. Please check your configuration file');
-            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $ex_detailed_message)));
+            $this->errors['error_msg'] = $paypal->l('Invalid configuration. Please check your configuration file', pathinfo(__FILE__)['filename']);
         } catch (PaypalAddons\classes\PaypalException $e) {
-            Tools::redirect(Context::getContext()->link->getModuleLink(
-                'paypal',
-                'error',
-                array(
-                    'error_code' => $e->getCode(),
-                    'error_msg' => $e->getMessage(),
-                    'msg_long' => $e->getMessageLong()
-                )
-            ));
+            $this->errors['error_code'] = $e->getCode();
+            $this->errors['error_msg'] = $e->getMessage();
+            $this->errors['msg_long'] = $e->getMessageLong();
+        } catch (Exception $e) {
+            $this->errors['error_code'] = $e->getCode();
+            $this->errors['error_msg'] = $e->getMessage();
         }
 
+        if (!empty($this->errors)) {
+            $this->redirectUrl = Context::getContext()->link->getModuleLink($this->name, 'error', $this->errors);
+        }
+    }
+
+    /**
+     * @param $info object transaction
+     */
+    public function prepareOrder($info)
+    {
+        $module = Module::getInstanceByName($this->name);
         $payer_info = $info->GetExpressCheckoutDetailsResponseDetails->PayerInfo;
         $ship_addr = $info->GetExpressCheckoutDetailsResponseDetails->PaymentDetails[0]->ShipToAddress;
 
@@ -91,6 +107,10 @@ class PaypalEcScOrderModuleFrontController extends ModuleFrontController
         CartRule::autoRemoveFromCart($this->context);
         CartRule::autoAddToCart($this->context);
         // END Login
+        $this->context->cookie->__set('paypal_ecs', $info->GetExpressCheckoutDetailsResponseDetails->Token);
+        $this->context->cookie->__set('paypal_ecs_payerid', $info->GetExpressCheckoutDetailsResponseDetails->PayerInfo->PayerID);
+        $this->context->cookie->__set('paypal_ecs_email', $info->GetExpressCheckoutDetailsResponseDetails->PayerInfo->Payer);
+
         $addresses = $this->context->customer->getAddresses($this->context->language->id);
         $address_exist = false;
         $count = 1;
@@ -105,18 +125,7 @@ class PaypalEcScOrderModuleFrontController extends ModuleFrontController
             $payer_phone = $info->GetExpressCheckoutDetailsResponseDetails->ContactPhone;
         }
 
-        $id_state = 0;
-        $ship_addr_country = Country::getByIso($ship_addr->Country);
-        if (Country::containsStates($ship_addr_country)) {
-            if ($id_state = (int)State::getIdByIso(Tools::strtoupper($ship_addr->StateOrProvince), $ship_addr_country)) {
-                $id_state = $id_state;
-            } elseif ($id_state = State::getIdByName(pSQL(trim($ship_addr->StateOrProvince)))) {
-                $state = new State((int)$id_state);
-                if ($state->id_country == $ship_addr_country) {
-                    $id_state= $state->id;
-                }
-            }
-        }
+        $id_state = PayPal::getIdStateByPaypalCode($ship_addr->StateOrProvince, $ship_addr->Country);
 
         foreach ($addresses as $address) {
             if ($address['firstname'].' '.$address['lastname'] == $ship_addr->Name
@@ -158,6 +167,32 @@ class PaypalEcScOrderModuleFrontController extends ModuleFrontController
 
             $orderAddress->id_customer = $customer->id;
             $orderAddress->alias = 'Paypal_Address '.($count);
+            $validationMessage = $orderAddress->validateFields(false, true);
+            if (Country::containsStates($orderAddress->id_country) && $orderAddress->id_state == false) {
+                $validationMessage = $module->l('State is required in order to process payment. Please fill in state field.', pathinfo(__FILE__)['filename']);
+            }
+            $country = new Country($orderAddress->id_country);
+            if ($country->active == false) {
+                $validationMessage = $module->l('Country is not active', pathinfo(__FILE__)['filename']);
+            }
+            if (is_string($validationMessage)) {
+                $var = array(
+                    'newAddress' => 'delivery',
+                    'address1' => $orderAddress->address1,
+                    'firstname' => $orderAddress->firstname,
+                    'lastname' => $orderAddress->lastname,
+                    'postcode' => $orderAddress->postcode,
+                    'id_country' => $orderAddress->id_country,
+                    'city' => $orderAddress->city,
+                    'phone' => $orderAddress->phone,
+                    'address2' => $orderAddress->address2,
+                    'id_state' => $orderAddress->id_state
+                );
+                session_start();
+                $_SESSION['notifications'] = Tools::jsonEncode(array('error' => $validationMessage));
+                $url = Context::getContext()->link->getPageLink('order') . '&' . http_build_query($var);
+                Tools::redirect($url);
+            }
             $orderAddress->save();
             $id_address = $orderAddress->id;
         }
@@ -170,10 +205,5 @@ class PaypalEcScOrderModuleFrontController extends ModuleFrontController
         }
 
         $this->context->cart->save();
-
-        $this->context->cookie->__set('paypal_ecs', $info->GetExpressCheckoutDetailsResponseDetails->Token);
-        $this->context->cookie->__set('paypal_ecs_payerid', $info->GetExpressCheckoutDetailsResponseDetails->PayerInfo->PayerID);
-        $this->context->cookie->__set('paypal_ecs_email', $info->GetExpressCheckoutDetailsResponseDetails->PayerInfo->Payer);
-        Tools::redirect($this->context->link->getPageLink('order', null, null, array('step'=>2)));
     }
 }

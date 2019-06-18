@@ -24,29 +24,9 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-abstract class AbstractMethodPaypal
-{
-    // Force les classes filles à définir cette méthode
-    abstract public function init($params);
-    abstract public function validation();
-    abstract public function confirmCapture();
-    abstract public function check();
-    abstract public function refund();
-    abstract public function setConfig($params);
-    abstract public function getConfig(Paypal $module);
-    abstract public function void($params);
-    abstract public function partialRefund($params);
+use PaypalPPBTlib\AbstractMethod;
 
-    /**
-     * @param string $method method alias like BT, EC, PPP
-     * @return stdClass Method class
-     */
-    public static function load($method)
-    {
-        if (preg_match('/^[a-zA-Z0-9_-]+$/', $method) && file_exists(_PS_MODULE_DIR_.'paypal/classes/Method'.$method.'.php')) {
-            include_once _PS_MODULE_DIR_.'paypal/classes/Method'.$method.'.php';
-            $method_class = 'Method'.$method;
-            return new $method_class();
-        }
-    }
+abstract class AbstractMethodPaypal extends AbstractMethod
+{
+
 }

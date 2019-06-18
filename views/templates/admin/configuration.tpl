@@ -34,7 +34,12 @@
          }(document, "script", "paypal-js"));
     </script>
 </div>
-
+<div class="alert alert-danger">
+    <button type="button" class="close" data-dismiss="alert">×</button>
+    {l s='Starting July 1st, 2019, Braintree payment solution will be separated from PayPal module. There will be 2 different modules: PayPal official (v5.x) and Braintree official (v1.x). Both modules will be available for free on Prestashop Addons.' mod='paypal'} </br>
+    {l s='Braintree users: you’ll be required to install the new module (Braintree official (v1.x). It will be possible to transfer quickly your current module configurations from the current version of the PayPal module to the new Braintree module without any impact to your business. New exciting features will come soon!.' mod='paypal'} </br>
+    {l s='PayPal payment solution: No changes & no impacts on your business. You can simply update the module to latest version (PayPal official (v5.x)) for getting new features & bug fixes.' mod='paypal'}
+</div>
 <div class="container-fluid paypal-nav">
     <ul class="nav nav-pills navbar-separator">
         <li {if !isset($ec_paypal_active) && !isset($ec_card_active) && !isset($bt_active) && !isset($ppp_active)}class="active"{/if}><a data-toggle="pill" href="#paypal_conf"><span>{l s='Products' mod='paypal'}</span></a></li>
@@ -91,7 +96,7 @@
                     <div class="bottom">
                         <img src="{$img_checkout|escape:'html':'UTF-8'}" class="product-img">
                         <a class="btn btn-default pull-right"
-                           {if $country_iso == 'BR' || $country_iso == 'IN' || $country_iso == 'MX'}
+                           {if $country_iso == 'BR' || $country_iso == 'IN' || $country_iso == 'MX' || $country_iso == 'JP'}
                                  href="#" onclick="display_popup('EC', 0)"
                            {else}
                                  href="{$return_url|escape:'html':'UTF-8'}&method=EC&with_card=0{if isset($ec_paypal_active) &&  $ec_paypal_active}&modify=1{/if}"
@@ -128,7 +133,7 @@
                         <img src="{$path|escape:'html':'UTF-8'}/views/img/diners.svg" class="product-img">
                         <img src="{$path|escape:'html':'UTF-8'}/views/img/unionpay.svg" class="product-img">
                         <a class="btn btn-default pull-right"
-                                {if $country_iso == 'BR' || $country_iso == 'IN' || $country_iso == 'MX'}
+                                {if $country_iso == 'BR' || $country_iso == 'IN' || $country_iso == 'MX' || $country_iso == 'JP'}
                             href="#" onclick="display_popup('EC', 1)"
                                 {else}
                             href="{$return_url|escape:'html':'UTF-8'}&method=EC&with_card=1{if isset($ec_active) && $ec_active && isset($ec_card_active) && $ec_card_active}&modify=1{/if}"
@@ -338,10 +343,10 @@
             {/if}
             <div class="panel help">
                 <ul class="tick">
-                    <li class="paypal-bold li-padding">{l s='Discover module ducumentation before configuration' mod='paypal'}</li>
+                    <li class="paypal-bold li-padding">{l s='Discover module documentation before configuration' mod='paypal'}</li>
                     <div class="btn-padding form-group"">
                         <a target="_blank" href="https://addons.prestashop.com/documentation/e582dd0854d8994e815d6c0e8886e703bfdf7713" class="btn btn-default">
-                            {l s='Download User Documentation' mod='paypal'}
+                            {l s='Access user documentation for module configuration.' mod='paypal'}
                         </a>
                     </div>
                     <li class="paypal-bold li-padding">{l s='Check requirements before installation' mod='paypal'}</li>
@@ -351,6 +356,14 @@
                         <br><br>
                         <div class="action_response"></div>
                     </div>
+
+                    <li class="paypal-bold li-padding">{l s='Check your transactions history log and potential errors.' mod='paypal'}</li>
+                    <div class="btn-padding form-group"">
+                        <a href="{$AdminPaypalProcessLogger_link|addslashes}"
+                           class="btn btn-default"
+                           target="_blank">{l s='Transaction log' mod='paypal'}</a>
+                    </div>
+
                     <li class="paypal-bold li-padding">{l s='Do you still have any questions?' mod='paypal'}</li>
                     {l s='Contact us! We will be happy to help!' mod='paypal'}
                     <div class="btn-padding form-group"">
@@ -414,7 +427,7 @@
     </div>
 </div>
 {/if}
-{if $country_iso == 'BR' || $country_iso == 'IN' || $country_iso == 'MX'}
+{if $country_iso == 'BR' || $country_iso == 'IN' || $country_iso == 'MX' || $country_iso == 'JP'}
     <div style="display: none;">
         <div id="content-fancybox-configuration-EC">
             <form action="{$return_url|escape:'javascript':'UTF-8'}" method="post" id="credential-configuration" class="bootstrap">

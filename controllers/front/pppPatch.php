@@ -25,11 +25,13 @@
  */
 
 include_once _PS_MODULE_DIR_.'paypal/classes/AbstractMethodPaypal.php';
+include_once _PS_MODULE_DIR_.'paypal/controllers/front/abstract.php';
 
 /**
  * Update PPP payment request before initialize it.
  */
-class PaypalPppPatchModuleFrontController extends ModuleFrontController
+
+class PaypalPppPatchModuleFrontController extends PaypalAbstarctModuleFrontController
 {
     public function postProcess()
     {
@@ -37,9 +39,11 @@ class PaypalPppPatchModuleFrontController extends ModuleFrontController
         if (Context::getContext()->cookie->paypal_plus_payment) {
             try {
                 $method_ppp->doPatch();
-                die(Tools::jsonEncode(array('success' => true)));
+                $this->jsonValues = array('success' => true);
             } catch (Exception $e) {
-                die($e->getMessage());
+                $this->errors['error_code'] = $e->getCode();
+                $this->errors['error_msg'] = $e->getMessage();
+                $this->jsonValues = array('success' => false, 'redirect_link' => Context::getContext()->link->getModuleLink($this->name, 'error', $this->errors));
             }
         }
     }

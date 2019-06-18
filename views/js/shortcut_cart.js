@@ -33,7 +33,7 @@ function EcCheckProductAvailability() {
         type: "POST",
         data: 'checkAvailability=1&source_page=cart',
         success: function (json) {
-            if (json == 1) {
+            if (json.success) {
                 $('#container_express_checkout').show();
             } else {
                 $('#container_express_checkout').hide();
@@ -62,9 +62,11 @@ function ECSInContext() {
         url: ec_sc_action_url,
         type: "GET",
         data: 'getToken=1',
-        success: function (token) {
-            var url = paypal.checkout.urlPrefix +token;
-            paypal.checkout.startFlow(url);
+        success: function (data) {
+            if (data.success == true) {
+                var url = paypal.checkout.urlPrefix + data.token;
+                paypal.checkout.startFlow(url);
+            }
         },
         error: function (responseData, textStatus, errorThrown) {
             alert("Error in ajax post"+responseData.statusText);

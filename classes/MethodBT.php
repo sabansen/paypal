@@ -24,11 +24,12 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-include_once(_PS_MODULE_DIR_.'paypal/sdk/braintree/lib/Braintree.php');
+//include_once(_PS_MODULE_DIR_.'paypal/vendor/braintree/braintree_php/lib/Braintree.php');
 include_once 'PaypalCustomer.php';
 include_once 'PaypalVaulting.php';
 
 use PaypalAddons\classes\PaypalException;
+use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 
 /**
  * Class MethodBT
@@ -36,33 +37,65 @@ use PaypalAddons\classes\PaypalException;
  */
 class MethodBT extends AbstractMethodPaypal
 {
-    /** @var string module name*/
-    public $name = 'paypal';
-
     /** @var string token*/
     public $token;
 
     /** @var string sandbox or live*/
     public $mode;
 
+    /** @var  string A secure, one-time-use reference to payment information */
+    private $payment_method_nonce;
+
+    /** @var  string  BT_CARD_PAYMENT or BT_PAYPAL_PAYMENT*/
+    private $payment_method_bt;
+
+    /** @var  string Vaulted token for cards */
+    private $bt_vaulting_token;
+
+    /** @var  string Vaulted token for paypal */
+    private $pbt_vaulting_token;
+
+    /** @var  bool vaulting checkbox */
+    private $save_card_in_vault;
+
+    /** @var  bool vaulting checkbox */
+    private $save_account_in_vault;
+
+    protected $payment_method = 'Braintree';
+
+    /**
+     * @param $values array replace for tools::getValues()
+     */
+    public function setParameters($values)
+    {
+        foreach ($values as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
+        }
+    }
+
+    /**
+     * @see AbstractMethodPaypal::getConfig()
+     */
     public function getConfig(PayPal $module)
     {
         $params = array('inputs' => array(
             array(
                 'type' => 'select',
-                'label' => $module->l('Payment action'),
+                'label' => $module->l('Payment action', get_class($this)),
                 'name' => 'paypal_intent',
-                'desc' => $module->l(''),
-                'hint' => $module->l('Sale: the money moves instantly from the buyer\'s account to the seller\'s account at the time of payment. Authorization/capture: The authorized mode is a deferred mode of payment that requires the funds to be collected manually when you want to transfer the money. This mode is used if you want to ensure that you have the merchandise before depositing the money, for example. Be careful, you have 29 days to collect the funds.'),
+                'desc' => $module->l('', get_class($this)),
+                'hint' => $module->l('Sale: the money moves instantly from the buyer\'s account to the seller\'s account at the time of payment. Authorization/capture: The authorized mode is a deferred mode of payment that requires the funds to be collected manually when you want to transfer the money. This mode is used if you want to ensure that you have the merchandise before depositing the money, for example. Be careful, you have 29 days to collect the funds.', get_class($this)),
                 'options' => array(
                     'query' => array(
                         array(
                             'id' => 'sale',
-                            'name' => $module->l('Sale')
+                            'name' => $module->l('Sale', get_class($this))
                         ),
                         array(
                             'id' => 'authorization',
-                            'name' => $module->l('Authorize')
+                            'name' => $module->l('Authorize', get_class($this))
                         )
                     ),
                     'id' => 'id',
@@ -71,105 +104,105 @@ class MethodBT extends AbstractMethodPaypal
             ),
             array(
                 'type' => 'switch',
-                'label' => $module->l('Show PayPal benefits to your customers'),
+                'label' => $module->l('Show PayPal benefits to your customers', get_class($this)),
                 'name' => 'paypal_show_advantage',
-                'desc' => $module->l(''),
+                'desc' => $module->l('', get_class($this)),
                 'is_bool' => true,
-                'hint' => $module->l('You can increase your conversion rate by presenting PayPal benefits to your customers on payment methods selection page.'),
+                'hint' => $module->l('You can increase your conversion rate by presenting PayPal benefits to your customers on payment methods selection page.', get_class($this)),
                 'values' => array(
                     array(
                         'id' => 'paypal_show_advantage_on',
                         'value' => 1,
-                        'label' => $module->l('Enabled'),
+                        'label' => $module->l('Enabled', get_class($this)),
                     ),
                     array(
                         'id' => 'paypal_show_advantage_off',
                         'value' => 0,
-                        'label' => $module->l('Disabled'),
+                        'label' => $module->l('Disabled', get_class($this)),
                     )
                 ),
             ),
             array(
                 'type' => 'switch',
-                'label' => $module->l('Accept PayPal Payments'),
+                'label' => $module->l('Accept PayPal Payments', get_class($this)),
                 'name' => 'activate_paypal',
-                'desc' => $module->l(''),
+                'desc' => $module->l('', get_class($this)),
                 'is_bool' => true,
                 'values' => array(
                     array(
                         'id' => 'activate_paypal_on',
                         'value' => 1,
-                        'label' => $module->l('Enabled'),
+                        'label' => $module->l('Enabled', get_class($this)),
                     ),
                     array(
                         'id' => 'activate_paypal_off',
                         'value' => 0,
-                        'label' => $module->l('Disabled'),
+                        'label' => $module->l('Disabled', get_class($this)),
                     )
                 ),
             ),
             array(
                 'type' => 'switch',
-                'label' => $module->l('Enable Vault'),
+                'label' => $module->l('Enable Vault', get_class($this)),
                 'name' => 'paypal_vaulting',
                 'is_bool' => true,
-                'hint' => $module->l('The Vault is used to process payments so your customers don\'t need to re-enter their information each time they make a purchase from you.'),
+                'hint' => $module->l('The Vault is used to process payments so your customers don\'t need to re-enter their information each time they make a purchase from you.', get_class($this)),
                 'values' => array(
                     array(
                         'id' => 'paypal_vaulting_on',
                         'value' => 1,
-                        'label' => $module->l('Enabled'),
+                        'label' => $module->l('Enabled', get_class($this)),
                     ),
                     array(
                         'id' => 'paypal_vaulting_off',
                         'value' => 0,
-                        'label' => $module->l('Disabled'),
+                        'label' => $module->l('Disabled', get_class($this)),
                     )
                 ),
             ),
             array(
                 'type' => 'switch',
-                'label' => $module->l('Enable Card verification'),
+                'label' => $module->l('Enable Card verification', get_class($this)),
                 'name' => 'card_verification',
                 'is_bool' => true,
-                'hint' => $module->l('Card verification is a strong first-line defense against potentially fraudulent cards. It ensures that the credit card number provided is associated with a valid, open account and can be stored in the Vault and charged successfully.'),
+                'hint' => $module->l('Card verification is a strong first-line defense against potentially fraudulent cards. It ensures that the credit card number provided is associated with a valid, open account and can be stored in the Vault and charged successfully.', get_class($this)),
                 'values' => array(
                     array(
                         'id' => 'card_verification_on',
                         'value' => 1,
-                        'label' => $module->l('Enabled'),
+                        'label' => $module->l('Enabled', get_class($this)),
                     ),
                     array(
                         'id' => 'card_verification_off',
                         'value' => 0,
-                        'label' => $module->l('Disabled'),
+                        'label' => $module->l('Disabled', get_class($this)),
                     )
                 ),
             ),
             array(
                 'type' => 'switch',
-                'label' => $module->l('Activate 3D Secure for Braintree'),
+                'label' => $module->l('Activate 3D Secure for Braintree', get_class($this)),
                 'name' => 'paypal_3DSecure',
-                'desc' => $module->l(''),
+                'desc' => $module->l('', get_class($this)),
                 'is_bool' => true,
                 'values' => array(
                     array(
                         'id' => 'paypal_3DSecure_on',
                         'value' => 1,
-                        'label' => $module->l('Enabled'),
+                        'label' => $module->l('Enabled', get_class($this)),
                     ),
                     array(
                         'id' => 'paypal_3DSecure_off',
                         'value' => 0,
-                        'label' => $module->l('Disabled'),
+                        'label' => $module->l('Disabled', get_class($this)),
                     )
                 ),
             ),
             array(
                 'type' => 'text',
-                'label' => $module->l('Amount for 3DS in ').Currency::getCurrency(Configuration::get('PS_CURRENCY_DEFAULT'))['iso_code'],
+                'label' => $module->l('Amount for 3DS in ', get_class($this)).Currency::getCurrency(Configuration::get('PS_CURRENCY_DEFAULT'))['iso_code'],
                 'name' => 'paypal_3DSecure_amount',
-                'hint' => $module->l('Activate 3D Secure only for orders which total is bigger that this amount in your context currency'),
+                'hint' => $module->l('Activate 3D Secure only for orders which total is bigger that this amount in your context currency', get_class($this)),
             ),
         ));
 
@@ -203,7 +236,7 @@ class MethodBT extends AbstractMethodPaypal
         $fields_form2 = array();
         $fields_form2[0]['form'] = array(
             'legend' => array(
-                'title' => $module->l('Braintree merchant accounts'),
+                'title' => $module->l('Braintree merchant accounts', get_class($this)),
                 'icon' => 'icon-cogs',
             ),
         );
@@ -212,14 +245,14 @@ class MethodBT extends AbstractMethodPaypal
             $fields_form2[0]['form']['input'][] =
                 array(
                     'type' => 'text',
-                    'label' => $module->l('Merchant account Id for ').$curr['iso_code'],
+                    'label' => $module->l('Merchant account Id for ', get_class($this)).$curr['iso_code'],
                     'name' => 'braintree_curr_'.$curr['iso_code'],
                     'value' => isset($merchant_accounts[$curr['iso_code']])?$merchant_accounts[$curr['iso_code']] : ''
                 );
             $fields_value['braintree_curr_'.$curr['iso_code']] =  isset($merchant_accounts[$curr['iso_code']])?$merchant_accounts[$curr['iso_code']] : '';
         }
         $fields_form2[0]['form']['submit'] = array(
-            'title' => $module->l('Save'),
+            'title' => $module->l('Save', get_class($this)),
             'class' => 'btn btn-default pull-right button',
         );
 
@@ -242,6 +275,9 @@ class MethodBT extends AbstractMethodPaypal
         return $helper->generateForm($fields_form2);
     }
 
+    /**
+     * @see AbstractMethodPaypal::setConfig()
+     */
     public function setConfig($params)
     {
         $mode = Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
@@ -293,7 +329,7 @@ class MethodBT extends AbstractMethodPaypal
                 $response = $paypal->getBtConnectUrl();
                 $result = Tools::jsonDecode($response);
                 if ($result->error) {
-                    $paypal->errors .= $paypal->displayError($paypal->l('Error onboarding Braintree : ') . $result->error);
+                    $paypal->errors .= $paypal->displayError($paypal->l('Error onboarding Braintree : ', get_class($this)) . $result->error);
                 } elseif (isset($result->data->url_connect)) {
                     Tools::redirectLink($result->data->url_connect);
                 }
@@ -302,26 +338,32 @@ class MethodBT extends AbstractMethodPaypal
 
         if ($mode == 'SANDBOX' && (!Configuration::get('PAYPAL_'.$mode.'_BRAINTREE_ACCESS_TOKEN') || !Configuration::get('PAYPAL_'.$mode.'_BRAINTREE_EXPIRES_AT')
             || !Configuration::get('PAYPAL_'.$mode.'_BRAINTREE_MERCHANT_ID'))) {
-            $paypal->errors .= $paypal->displayError($paypal->l('You are trying to switch to sandbox account. You should use your test credentials. Please go to the "Products" tab and click on "Modify\' for activating the sandbox version of the selected product.'));
+            $paypal->errors .= $paypal->displayError($paypal->l('You are trying to switch to sandbox account. You should use your test credentials. Please go to the "Products" tab and click on "Modify\' for activating the sandbox version of the selected product.', get_class($this)));
         }
         if ($mode == 'LIVE' && (!Configuration::get('PAYPAL_'.$mode.'_BRAINTREE_ACCESS_TOKEN') || !Configuration::get('PAYPAL_'.$mode.'_BRAINTREE_EXPIRES_AT')
                 || !Configuration::get('PAYPAL_'.$mode.'_BRAINTREE_MERCHANT_ID'))) {
-            $paypal->errors .= $paypal->displayError($paypal->l('You are trying to switch to production account. You should use your production credentials. Please go to the "Products" tab and click on "Modify\' for activating the production version of the selected product.'));
+            $paypal->errors .= $paypal->displayError($paypal->l('You are trying to switch to production account. You should use your production credentials. Please go to the "Products" tab and click on "Modify\' for activating the production version of the selected product.', get_class($this)));
         }
     }
 
     /**
      * Init class configurations
      */
-    private function initConfig()
+    private function initConfig($order_mode = null)
     {
-        $this->mode = Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
+        if ($order_mode !== null) {
+            $this->mode = $order_mode ? 'SANDBOX' : 'LIVE';
+        } else {
+            $this->mode = Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
+        }
         $this->gateway = new Braintree_Gateway(array('accessToken' => Configuration::get('PAYPAL_'.$this->mode.'_BRAINTREE_ACCESS_TOKEN')));
         $this->error = '';
     }
 
-
-    public function init($data)
+    /**
+     * @see AbstractMethodPaypal::init()
+     */
+    public function init()
     {
         try {
             $this->initConfig();
@@ -390,29 +432,32 @@ class MethodBT extends AbstractMethodPaypal
 
     /**
      * Get current Transaction status from BT
-     * @param string $transactionId
+     * @param PaypalOrder $orderPayPal
      * @return string|boolean
      */
-    public function getTransactionStatus($transactionId)
+    public function getTransactionStatus($orderPayPal)
     {
-        $this->initConfig();
+        $this->initConfig($orderPayPal->sandbox);
         try {
-            $result = $this->gateway->transaction()->find($transactionId);
+            $result = $this->gateway->transaction()->find($orderPayPal->id_transaction);
             return $result->status;
         } catch (Exception $e) {
             return false;
         }
     }
 
+    /**
+     * @see AbstractMethodPaypal::validation()
+     */
     public function validation()
     {
         $paypal = new PayPal();
-        $transaction = $this->sale(context::getContext()->cart, Tools::getValue('payment_method_nonce'), Tools::getValue('deviceData'));
+        $transaction = $this->sale(context::getContext()->cart, $this->payment_method_nonce);
 
         if (!$transaction) {
             throw new Exception('Error during transaction validation', '00000');
         }
-        $transactionDetail = $this->getDetailsTransaction($transaction);
+        $this->setDetailsTransaction($transaction);
         if (Configuration::get('PAYPAL_API_INTENT') == "sale" && $transaction->paymentInstrumentType == "paypal_account" && $transaction->status == "settling") { // or submitted for settlement?
             $order_state = Configuration::get('PAYPAL_BRAINTREE_OS_AWAITING_VALIDATION');
         } else if ((Configuration::get('PAYPAL_API_INTENT') == "sale" && $transaction->paymentInstrumentType == "paypal_account" && $transaction->status == "settled")
@@ -421,27 +466,27 @@ class MethodBT extends AbstractMethodPaypal
         } else {
             $order_state = Configuration::get('PAYPAL_BRAINTREE_OS_AWAITING');
         }
-        $paypal->validateOrder(context::getContext()->cart->id, $order_state, $transaction->amount, 'Braintree', $paypal->l('Payment accepted.'), $transactionDetail, context::getContext()->cart->id_currency, false, context::getContext()->customer->secure_key);
+        $paypal->validateOrder(context::getContext()->cart->id, $order_state, $transaction->amount, $this->getPaymentMethod(), $paypal->l('Payment accepted.', get_class($this)), $this->getDetailsTransaction(), context::getContext()->cart->id_currency, false, context::getContext()->customer->secure_key);
     }
 
-    /**
-     * Get Transaction details for order
-     * @param object $transaction
-     * @return array
-     */
-    public function getDetailsTransaction($transaction)
+    public function setDetailsTransaction($transaction)
     {
-        return array(
+        $this->transaction_detail = array(
             'method' => 'BT',
             'currency' => pSQL($transaction->currencyIsoCode),
             'transaction_id' => pSQL($transaction->id),
             'payment_method' => $transaction->type,
             'payment_status' => $transaction->status,
-            'id_payment' => Tools::getValue('payment_method_nonce'),
-            'client_token' => Tools::getValue('client_token'),
+            'id_payment' => $this->payment_method_nonce,
             'capture' => $transaction->status == "authorized" ? true : false,
             'payment_tool' => $transaction->paymentInstrumentType,
+            'date_transaction' => $this->getDateTransaction($transaction)
         );
+    }
+
+    public function getDateTransaction($transaction)
+    {
+        return $transaction->updatedAt->format('Y-m-d H:i:s');
     }
 
     /**
@@ -458,7 +503,7 @@ class MethodBT extends AbstractMethodPaypal
     {
         $context = Context::getContext();
         $context_currency = $context->currency;
-        $paypal = Module::getInstanceByName('paypal');
+        $paypal = Module::getInstanceByName($this->name);
         if ($id_currency_to = $paypal->needConvert()) {
             $currency_to_convert = new Currency($id_currency_to);
             $price = Tools::ps_round(Tools::convertPriceFull($price, $context_currency, $currency_to_convert), _PS_PRICE_COMPUTE_PRECISION_);
@@ -469,15 +514,14 @@ class MethodBT extends AbstractMethodPaypal
     /**
      * @param $cart
      * @param $token_payment
-     * @param $device_data
      * @return bool|mixed
      * @throws Exception
      * @throws PaypalException
      */
-    public function sale($cart, $token_payment, $device_data)
+    public function sale($cart, $token_payment)
     {
         $this->initConfig();
-        $bt_method = Tools::getValue('payment_method_bt');
+        $bt_method = $this->payment_method_bt;
         $vault_token = '';
         if ($bt_method == BT_PAYPAL_PAYMENT) {
             $options = array(
@@ -498,7 +542,7 @@ class MethodBT extends AbstractMethodPaypal
         $address_shipping = new Address($cart->id_address_delivery);
         $country_shipping = new Country($address_shipping->id_country);
         $amount = $this->formatPrice($cart->getOrderTotal());
-        $paypal = Module::getInstanceByName('paypal');
+        $paypal = Module::getInstanceByName($this->name);
         $currency = $paypal->getPaymentCurrencyIso();
         $iso_state = '';
         if ($address_shipping->id_state) {
@@ -534,22 +578,22 @@ class MethodBT extends AbstractMethodPaypal
                 'countryCodeAlpha2' => $country_shipping->iso_code,
                 'region'            => $iso_state,
             ),
-            "deviceData"            => $device_data,
+            "deviceData"            => '',
         );
 
-        $paypal_customer = PaypalCustomer::loadCustomerByMethod(Context::getContext()->customer->id, 'BT');
+        $paypal_customer = PaypalCustomer::loadCustomerByMethod(Context::getContext()->customer->id, 'BT', (int)Configuration::get('PAYPAL_SANDBOX'));
         if (!$paypal_customer->id) {
             $paypal_customer = $this->createCustomer();
         } else {
-            $this->updateCustomer($paypal_customer->reference);
+            $this->updateCustomer($paypal_customer);
         }
 
         $paypal = Module::getInstanceByName($this->name);
         if (Configuration::get('PAYPAL_VAULTING')) {
             if ($bt_method == BT_CARD_PAYMENT) {
-                $vault_token = Tools::getValue('bt_vaulting_token');
+                $vault_token = $this->bt_vaulting_token;
             } elseif ($bt_method == BT_PAYPAL_PAYMENT) {
-                $vault_token = Tools::getValue('pbt_vaulting_token');
+                $vault_token = $this->pbt_vaulting_token;
             }
 
             if ($vault_token && $paypal_customer->id) {
@@ -557,8 +601,8 @@ class MethodBT extends AbstractMethodPaypal
                     $data['paymentMethodToken'] = $vault_token;
                 }
             } else {
-                if (Tools::getValue('save_card_in_vault') || Tools::getValue('save_account_in_vault')) {
-                    if (Configuration::get('PAYPAL_BT_CARD_VERIFICATION') && Tools::getValue('save_card_in_vault')) {
+                if ($this->save_card_in_vault || $this->save_account_in_vault) {
+                    if (Configuration::get('PAYPAL_BT_CARD_VERIFICATION') && $this->save_card_in_vault) {
                         $payment_method = $this->gateway->paymentMethod()->create(array(
                             'customerId' => $paypal_customer->reference,
                             'paymentMethodNonce' => $token_payment,
@@ -566,12 +610,12 @@ class MethodBT extends AbstractMethodPaypal
                         ));
 
                         if (isset($payment_method->verification) && $payment_method->verification->status != 'verified') {
-                            $error_msg = $paypal->l('Card verification repond with status').' '.$payment_method->verification->status.'. ';
-                            $error_msg .= $paypal->l('The reason : ').' '.$payment_method->verification->processorResponseText.'. ';
+                            $error_msg = $paypal->l('Card verification repond with status', get_class($this)).' '.$payment_method->verification->status.'. ';
+                            $error_msg .= $paypal->l('The reason : ', get_class($this)).' '.$payment_method->verification->processorResponseText.'. ';
                             if ($payment_method->verification->gatewayRejectionReason) {
-                                $error_msg .= $paypal->l('Rejection reason : ').' '.$payment_method->verification->gatewayRejectionReason;
+                                $error_msg .= $paypal->l('Rejection reason : ', get_class($this)).' '.$payment_method->verification->gatewayRejectionReason;
                             }
-                            Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $error_msg)));
+                            throw new Exception($error_msg, '00000');
                         }
                         $paymentMethodToken = $payment_method->paymentMethod->token;
                     }
@@ -598,8 +642,8 @@ class MethodBT extends AbstractMethodPaypal
 
         if (($result instanceof Braintree_Result_Successful) && $result->success && $this->isValidStatus($result->transaction->status)) {
             if (Configuration::get('PAYPAL_VAULTING')
-                && ((Tools::getValue('save_card_in_vault') && $bt_method == BT_CARD_PAYMENT)
-                    || (Tools::getValue('save_account_in_vault') && $bt_method == BT_PAYPAL_PAYMENT))
+                && (($this->save_card_in_vault && $bt_method == BT_CARD_PAYMENT)
+                    || ($this->save_account_in_vault && $bt_method == BT_PAYPAL_PAYMENT))
                 && !PaypalVaulting::vaultingExist($result->transaction->creditCard['token'], $paypal_customer->id)) {
                 $this->createVaulting($result, $paypal_customer);
             }
@@ -625,14 +669,14 @@ class MethodBT extends AbstractMethodPaypal
     {
         $vaulting = new PaypalVaulting();
         $vaulting->id_paypal_customer = $paypal_customer->id;
-        $vaulting->payment_tool = Tools::getValue('payment_method_bt');
-        if (Tools::getValue('payment_method_bt') == BT_CARD_PAYMENT) {
+        $vaulting->payment_tool = $this->payment_method_bt;
+        if ($vaulting->payment_tool == BT_CARD_PAYMENT) {
             $vaulting->token = $result->transaction->creditCard['token'];
             $vaulting->info = $result->transaction->creditCard['cardType'].': *';
             $vaulting->info .= $result->transaction->creditCard['last4'].' ';
             $vaulting->info .= $result->transaction->creditCard['expirationMonth'].'/';
             $vaulting->info .= $result->transaction->creditCard['expirationYear'];
-        } elseif (Tools::getValue('payment_method_bt') == BT_PAYPAL_PAYMENT) {
+        } elseif ($vaulting->payment_tool == BT_PAYPAL_PAYMENT) {
             $vaulting->token = $result->transaction->paypal['token'];
             $vaulting->info = $result->transaction->paypal['payerFirstName'].' ';
             $vaulting->info .= $result->transaction->paypal['payerLastName'].' ';
@@ -643,10 +687,10 @@ class MethodBT extends AbstractMethodPaypal
 
     /**
      * Update customer info on BT
-     * @param string $id_customer BT customer reference
+     * @param PaypalCustomer $paypal_customer
      * @throws Exception
      */
-    public function updateCustomer($id_customer)
+    public function updateCustomer($paypal_customer)
     {
         $context = Context::getContext();
         $data = array(
@@ -655,13 +699,15 @@ class MethodBT extends AbstractMethodPaypal
             'email' => $context->customer->email
         );
         try {
-            $this->gateway->customer()->update($id_customer, $data);
+            $this->gateway->customer()->update($paypal_customer->reference, $data);
         } catch (Braintree\Exception\NotFound $e) {
+            $paypal_customer->sandbox = !$paypal_customer->sandbox;
+            $paypal_customer->save();
             $paypal = Module::getInstanceByName($this->name);
             $mode  = Configuration::get('PAYPAL_SANDBOX') ? 'Sandbox' : 'Live';
             $mode2  = !Configuration::get('PAYPAL_SANDBOX') ? 'Sandbox' : 'Live';
-            $msg = sprintf($paypal->l('This client is not found in %s mode.'), $mode);
-            $msg .= sprintf($paypal->l('Probably this customer has been already created in %s mode. Please create new prestashop client for this mode.'), $mode2);
+            $msg = sprintf($paypal->l('This client is not found in %s mode.', get_class($this)), $mode);
+            $msg .= sprintf($paypal->l('Probably this customer has been already created in %s mode. Please create new prestashop client for this mode.', get_class($this)), $mode2);
             throw new Exception($msg);
         }
     }
@@ -684,6 +730,7 @@ class MethodBT extends AbstractMethodPaypal
         $customer->id_customer = $context->customer->id;
         $customer->reference = $result->customer->id;
         $customer->method = 'BT';
+        $customer->sandbox = (int) Configuration::get('PAYPAL_SANDBOX');
         $customer->save();
         return $customer;
     }
@@ -708,12 +755,13 @@ class MethodBT extends AbstractMethodPaypal
         return in_array($status, array('submitted_for_settlement','authorized','settled', 'settling'));
     }
 
-
-    public function confirmCapture()
+    /**
+     * @see AbstractMethodPaypal::confirmCapture()
+     */
+    public function confirmCapture($paypal_order)
     {
-        $this->initConfig();
         try {
-            $paypal_order = PaypalOrder::loadByOrderId(Tools::getValue('id_order'));
+            $this->initConfig($paypal_order->sandbox);
             $result = $this->gateway->transaction()->submitForSettlement($paypal_order->id_transaction, number_format($paypal_order->total_paid, 2, ".", ''));
             if ($result instanceof Braintree_Result_Successful && $result->success) {
                 PaypalCapture::updateCapture($result->transaction->id, $result->transaction->amount, $result->transaction->status, $paypal_order->id);
@@ -725,6 +773,7 @@ class MethodBT extends AbstractMethodPaypal
                     'currency' => $result->transaction->currencyIsoCode,
                     'payment_type' => isset($result->transaction->payment_type) ? $result->transaction->payment_type : '',
                     'merchantAccountId' => $result->transaction->merchantAccountId,
+                    'date_transaction' => $this->getDateTransaction($result->transaction)
                 );
             } else if ($result->transaction->status == Braintree_Transaction::SETTLEMENT_DECLINED) {
                 $order = new Order(Tools::getValue('id_order'));
@@ -753,20 +802,17 @@ class MethodBT extends AbstractMethodPaypal
         }
     }
 
-    public function check()
+    /**
+     * @see AbstractMethodPaypal::refund()
+     */
+    public function refund($paypal_order)
     {
-    }
-
-    public function refund()
-    {
-        $this->initConfig();
         try {
-            $paypal_order = PaypalOrder::loadByOrderId(Tools::getValue('id_order'));
+            $this->initConfig($paypal_order->sandbox);
             $capture = PaypalCapture::loadByOrderPayPalId($paypal_order->id);
             $id_transaction = Validate::isLoadedObject($capture) ? $capture->id_capture : $paypal_order->id_transaction;
 
             $result = $this->gateway->transaction()->refund($id_transaction, number_format($paypal_order->total_paid, 2, ".", ''));
-
             if ($result->success) {
                 $response =  array(
                     'success' => true,
@@ -777,6 +823,7 @@ class MethodBT extends AbstractMethodPaypal
                     'currency' => $result->transaction->currencyIsoCode,
                     'payment_type' => $result->transaction->payment_type,
                     'merchantAccountId' => $result->transaction->merchantAccountId,
+                    'date_transaction' => $this->getDateTransaction($result->transaction)
                 );
             } elseif ($result->transaction->status == Braintree_Transaction::SETTLEMENT_DECLINED) {
                 $order = new Order(Tools::getValue('id_order'));
@@ -808,11 +855,14 @@ class MethodBT extends AbstractMethodPaypal
         }
     }
 
+    /**
+     * @see AbstractMethodPaypal::partialRefund()
+     */
     public function partialRefund($params)
     {
-        $this->initConfig();
         try {
             $paypal_order = PaypalOrder::loadByOrderId(Tools::getValue('id_order'));
+            $this->initConfig($paypal_order->sandbox);
             $capture = PaypalCapture::loadByOrderPayPalId($paypal_order->id);
             $id_transaction = Validate::isLoadedObject($capture) ? $capture->id_capture : $paypal_order->id_transaction;
             $amount = 0;
@@ -827,8 +877,8 @@ class MethodBT extends AbstractMethodPaypal
             if ($result->success) {
                 $response =  array(
                     'success' => true,
-                    'refund_id' => $result->transaction->refundedTransactionId,
-                    'transaction_id' => $result->transaction->id,
+                    'refundedTransactionId' => $result->transaction->refundedTransactionId,
+                    'refund_id' => $result->transaction->id,
                     'status' => $result->transaction->status,
                     'amount' => $result->transaction->amount,
                     'currency' => $result->transaction->currencyIsoCode,
@@ -839,7 +889,7 @@ class MethodBT extends AbstractMethodPaypal
                 $errors = $result->errors->deepAll();
                 foreach ($errors as $error) {
                     $response = array(
-                        'transaction_id' => $result->transaction->refundedTransactionId,
+                        'refundedTransactionId' => $result->transaction->refundedTransactionId,
                         'status' => 'Failure',
                         'error_code' => $error->code,
                         'error_message' => $error->message,
@@ -858,11 +908,14 @@ class MethodBT extends AbstractMethodPaypal
         }
     }
 
-    public function void($authorization)
+    /**
+     * @see AbstractMethodPaypal::void()
+     */
+    public function void($orderPayPal)
     {
-        $this->initConfig();
+        $this->initConfig($orderPayPal->sandbox);
         try {
-            $result = $this->gateway->transaction()->void($authorization['authorization_id']);
+            $result = $this->gateway->transaction()->void($orderPayPal->id_transaction);
             if ($result instanceof Braintree_Result_Successful && $result->success) {
                 $response =  array(
                     'success' => true,
@@ -870,6 +923,7 @@ class MethodBT extends AbstractMethodPaypal
                     'status' => $result->transaction->status,
                     'amount' => $result->transaction->amount,
                     'currency' => $result->transaction->currencyIsoCode,
+                    'date_transaction' => $this->getDateTransaction($result->transaction)
                 );
             } elseif ($result->transaction->status == Braintree_Transaction::SETTLEMENT_DECLINED) {
                 $order = new Order(Tools::getValue('id_order'));
@@ -897,13 +951,32 @@ class MethodBT extends AbstractMethodPaypal
      * @param array $ids
      * @return mixed
      */
-    public function searchTransactions($ids)
+    public function searchTransactions($paypalOrders)
     {
-        $this->initConfig();
-        //method Braintree_TransactionSearch::ids() exists in SDK, alias is used.
-        $ids_transaction =  Braintree_TransactionSearch::ids()->in($ids);
-        $collection = $this->gateway->transaction()->search(array($ids_transaction));
+        $collection = array();
+        foreach ($paypalOrders as $paypalOrder) {
+            $transaction = $this->searchTransaction($paypalOrder);
+            if ($transaction === false) {
+                continue;
+            }
+            $collection[] = $transaction;
+        }
         return $collection;
+    }
+
+    /**
+     * @param PaypalOrder $paypalOrder
+     * @return mixed
+     */
+    public function searchTransaction($paypalOrder)
+    {
+        $this->initConfig($paypalOrder->sandbox);
+        try {
+            $transaction = $this->gateway->transaction()->find($paypalOrder->id_transaction);
+            return $transaction;
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
     /**
@@ -916,5 +989,30 @@ class MethodBT extends AbstractMethodPaypal
         $this->initConfig();
         $nonce = $this->gateway->paymentMethodNonce()->create($token);
         return $nonce->paymentMethodNonce->nonce;
+    }
+
+    /**
+     * @see AbstractMethodPaypal::getLinkToTransaction()
+     */
+    public function getLinkToTransaction($id_transaction, $sandbox)
+    {
+        if ($sandbox) {
+            $url = 'https://sandbox.braintreegateway.com/merchants/' . Configuration::get('PAYPAL_SANDBOX_BRAINTREE_MERCHANT_ID') . '/transactions/';
+        } else {
+            $url = 'https://www.braintreegateway.com/merchants/' . Configuration::get('PAYPAL_LIVE_BRAINTREE_MERCHANT_ID') . '/transactions/';
+        }
+        return $url . $id_transaction;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isConfigured()
+    {
+        if (Configuration::get('PAYPAL_SANDBOX')) {
+            return (bool)Configuration::get('PAYPAL_SANDBOX_BRAINTREE_MERCHANT_ID');
+        } else {
+            return (bool)Configuration::get('PAYPAL_LIVE_BRAINTREE_MERCHANT_ID');
+        }
     }
 }

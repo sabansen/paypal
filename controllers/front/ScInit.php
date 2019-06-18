@@ -25,77 +25,92 @@
  */
 
 include_once _PS_MODULE_DIR_.'paypal/classes/AbstractMethodPaypal.php';
-
+include_once _PS_MODULE_DIR_.'paypal/controllers/front/abstract.php';
 /**
  * Init payment for EC shortcut
  */
-class PaypalScInitModuleFrontController extends ModuleFrontController
+class PaypalScInitModuleFrontController extends PaypalAbstarctModuleFrontController
 {
-    public $name = 'paypal';
+    public function init()
+    {
+        parent::init();
+        $this->values['source_page'] = Tools::getvalue('source_page');
+        $this->values['checkAvailability'] = Tools::getvalue('checkAvailability');
+        $this->values['id_product'] = Tools::getvalue('id_product');
+        $this->values['product_attribute'] = Tools::getvalue('product_attribute');
+        $this->values['id_product_attribute'] = Tools::getvalue('id_product_attribute');
+        $this->values['quantity'] = Tools::getvalue('quantity');
+        $this->values['combination'] = Tools::getvalue('combination');
+        $this->values['getToken'] = Tools::getvalue('getToken');
+        $this->values['credit_card'] = 0;
+        $this->values['short_cut'] = 1;
+    }
 
     public function postProcess()
     {
-        switch (Tools::getValue('source_page')) {
-            case 'cart':
-                $this->prepareCart();
-                break;
-            case 'product':
-                $this->prepareProduct();
-                break;
-            default:
+        if ($this->values['checkAvailability']) {
+            return $this->checkAvailability();
+        }
+
+        if ($this->values['source_page'] == 'product') {
+            $this->prepareProduct();
         }
 
         $method = AbstractMethodPaypal::load(Configuration::get('PAYPAL_METHOD'));
 
         try {
-            $response = $method->init(array('use_card'=>0, 'short_cut' => 1));
+            $method->setParameters($this->values);
+            $response = $method->init();
+            if ($this->values['getToken']) {
+                $this->jsonValues = array('success' => true, 'token' => $method->token);
+            } else {
+                $this->redirectUrl = $response;
+            }
         } catch (PaypalAddons\classes\PaypalException $e) {
-            Tools::redirect(Context::getContext()->link->getModuleLink(
-                'paypal',
-                'error',
-                array(
-                    'error_code' => $e->getCode(),
-                    'error_msg' => $e->getMessage(),
-                    'msg_long' => $e->getMessageLong()
-                )
-            ));
+            $this->errors['error_code'] = $e->getCode();
+            $this->errors['error_msg'] = $e->getMessage();
+            $this->errors['msg_long'] = $e->getMessageLong();
         } catch (Exception $e) {
-            Tools::redirect(Context::getContext()->link->getModuleLink(
-                'paypal',
-                'error',
-                array(
-                    'error_code' => $e->getCode(),
-                    'error_msg' => $e->getMessage()
-                )
-            ));
+            $this->errors['error_code'] = $e->getCode();
+            $this->errors['error_msg'] = $e->getMessage();
         }
 
-        $method->processCheckoutSc($response);
-    }
-
-    public function prepareCart()
-    {
-        if (Tools::getValue('checkAvailability')) {
-            if ($this->context->cart->checkQuantities()) {
-                die(Tools::jsonEncode(1));
+        if (!empty($this->errors)) {
+            if ($this->values['getToken']) {
+                $this->jsonValues = array('success' => false, 'redirect_link' => Context::getContext()->link->getModuleLink($this->name, 'error', $this->errors));
             } else {
-                die(Tools::jsonEncode(0));
+                $this->redirectUrl = Context::getContext()->link->getModuleLink($this->name, 'error', $this->errors);
             }
         }
     }
+
+    public function checkAvailability()
+    {
+        switch ($this->values['source_page']) {
+            case 'cart':
+                if ($this->context->cart->checkQuantities()) {
+                    $this->jsonValues = array('success' => true);
+                } else {
+                    $this->jsonValues = array('success' => false);
+                }
+                break;
+            case 'product':
+                $product = new Product($this->values['id_product']);
+                $product->id_product_attribute = $this->values['product_attribute'] != 0 ? $this->values['product_attribute'] : $this->values['id_product_attribute'];
+                if ($product->checkQty($this->values['quantity'])) {
+                    $this->jsonValues = array('success' => true);
+                } else {
+                    $this->jsonValues = array('success' => false);
+                }
+                break;
+            default:
+        }
+    }
+
+
 
     public function prepareProduct()
     {
-        if (Tools::getValue('checkAvailability')) {
-            $product = new Product(Tools::getValue('id_product'));
-            $product->id_product_attribute = Tools::getValue('product_attribute') != 0 ? Tools::getValue('product_attribute') : Tools::getValue('id_product_attribute');
-            if ($product->checkQty(Tools::getValue('quantity'))) {
-                die(Tools::jsonEncode(1));
-            } else {
-                die(Tools::jsonEncode(0));
-            }
-        }
-
         if (empty($this->context->cart->id)) {
             $this->context->cart->add();
             $this->context->cookie->id_cart = $this->context->cart->id;
@@ -108,17 +123,17 @@ class PaypalScInitModuleFrontController extends ModuleFrontController
             }
         }
 
-        if (Tools::getValue('combination')) {
+        if ($this->values['combination']) {
             // build group for search product attribute
-            $temp_group = explode('|', Tools::getValue('combination'));
+            $temp_group = explode('|', $this->values['combination']);
             $group = array();
             foreach ($temp_group as $item) {
                 $temp = explode(':', $item);
                 $group[$temp[0]] = $temp[1];
             }
-            $this->context->cart->updateQty(Tools::getValue('quantity'), Tools::getValue('id_product'), Product::getIdProductAttributesByIdAttributes(Tools::getValue('id_product'), $group));
+            $this->context->cart->updateQty($this->values['quantity'], $this->values['id_product'], Product::getIdProductAttributesByIdAttributes($this->values['id_product'], $group));
         } else {
-            $this->context->cart->updateQty(Tools::getValue('quantity'), Tools::getValue('id_product'));
+            $this->context->cart->updateQty($this->values['quantity'], $this->values['id_product']);
         }
     }
 }

@@ -32,33 +32,34 @@ include_once _PS_MODULE_DIR_.'paypal/controllers/front/abstract.php';
  */
 class PaypalEcInitModuleFrontController extends PaypalAbstarctModuleFrontController
 {
-    public $values;
     public function init()
     {
         parent::init();
         $this->values['getToken'] = Tools::getvalue('getToken');
         $this->values['credit_card'] = Tools::getvalue('credit_card');
+        $this->values['short_cut'] = 0;
     }
     /**
      * @see FrontController::postProcess()
      */
     public function postProcess()
     {
-        $paypal = Module::getInstanceByName('paypal');
+        $paypal = Module::getInstanceByName($this->name);
         $method_ec = AbstractMethodPaypal::load('EC');
         try {
-            $url = $method_ec->init(array('use_card' => $this->values['credit_card']));
+            $method_ec->setParameters($this->values);
+            $url = $method_ec->init();
             if ($this->values['getToken']) {
                 $this->jsonValues = array('success' => true, 'token' => $method_ec->token);
             } else {
                 $this->redirectUrl = $url.'&useraction=commit';
             }
         } catch (PayPal\Exception\PPConnectionException $e) {
-            $this->errors['error_msg'] = $paypal->l('Error connecting to ') . $e->getUrl();
+            $this->errors['error_msg'] = $paypal->l('Error connecting to ', pathinfo(__FILE__)['filename']) . $e->getUrl();
         } catch (PayPal\Exception\PPMissingCredentialException $e) {
             $this->errors['error_msg'] = $e->errorMessage();
         } catch (PayPal\Exception\PPConfigurationException $e) {
-            $this->errors['error_msg'] = $paypal->l('Invalid configuration. Please check your configuration file');
+            $this->errors['error_msg'] = $paypal->l('Invalid configuration. Please check your configuration file', pathinfo(__FILE__)['filename']);
         } catch (PaypalAddons\classes\PaypalException $e) {
             $this->errors['error_code'] = $e->getCode();
             $this->errors['error_msg'] = $e->getMessage();
@@ -70,9 +71,9 @@ class PaypalEcInitModuleFrontController extends PaypalAbstarctModuleFrontControl
 
         if (!empty($this->errors)) {
             if ($this->values['getToken']) {
-                $this->jsonValues = array('success' => false, 'redirect_link' => Context::getContext()->link->getModuleLink('paypal', 'error', $this->errors));
+                $this->jsonValues = array('success' => false, 'redirect_link' => Context::getContext()->link->getModuleLink($this->name, 'error', $this->errors));
             } else {
-                $this->redirectUrl = Context::getContext()->link->getModuleLink('paypal', 'error', $this->errors);
+                $this->redirectUrl = Context::getContext()->link->getModuleLink($this->name, 'error', $this->errors);
             }
         }
     }
