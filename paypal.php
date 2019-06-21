@@ -224,6 +224,42 @@ class PayPal extends PaymentModule
              'parent_class_name' => 'AdminParentPaypalConfiguration',
              'visible' => true,
          ),
+        array(
+            'name' => array(
+                'en' => 'Setup',
+                'fr' => 'Setup'
+            ),
+            'class_name' => 'AdminPayPalSetup',
+            'parent_class_name' => 'AdminPayPalConfiguration',
+            'visible' => true,
+        ),
+        array(
+            'name' => array(
+                'en' => 'Customize checkout experience',
+                'fr' => 'Customize checkout experience'
+            ),
+            'class_name' => 'AdminPayPalCustomizeCheckout',
+            'parent_class_name' => 'AdminPayPalConfiguration',
+            'visible' => true,
+        ),
+        array(
+            'name' => array(
+                'en' => 'Help',
+                'fr' => 'Help'
+            ),
+            'class_name' => 'AdminPayPalHelp',
+            'parent_class_name' => 'AdminPayPalConfiguration',
+            'visible' => true,
+        ),
+        array(
+            'name' => array(
+                'en' => 'Logs',
+                'fr' => 'Logs'
+            ),
+            'class_name' => 'AdminPayPalLogs',
+            'parent_class_name' => 'AdminPayPalConfiguration',
+            'visible' => true,
+        ),
      );
 
     public function __construct()
@@ -499,6 +535,7 @@ class PayPal extends PaymentModule
 
     public function getContent()
     {
+        return Tools::redirectAdmin($this->context->link->getAdminLink('AdminPayPalSetup'));
         $requirements = '';
         if (!Configuration::get('PAYPAL_REQUIREMENTS')) {
             $requirements = $this->_checkRequirements();
