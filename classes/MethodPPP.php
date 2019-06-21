@@ -828,15 +828,13 @@ class MethodPPP extends AbstractMethodPaypal
             'action_url' => $context->link->getModuleLink($this->name, 'ScInit', array(), true),
             'environment' => $environment,
         ));
-
         if ($page_source == 'product') {
             $context->smarty->assign(array(
-                'es_cs_product_attribute' => Tools::getValue('id_product_attribute'),
+                'es_cs_product_attribute' => Tools::getValue('id_product_attribute')
             ));
-            return $context->smarty->fetch('module:paypal/views/templates/hook/PPP_shortcut.tpl');
-        } elseif ($page_source == 'cart') {
-            return $context->smarty->fetch('module:paypal/views/templates/hook/cart_shortcut.tpl');
         }
+        $context->smarty->assign('source_page', $page_source);
+        return $context->smarty->fetch('module:paypal/views/templates/hook/shortcut.tpl');
     }
 
     /**

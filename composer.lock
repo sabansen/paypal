@@ -4,6 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
+    "hash": "9967b2c914b235023dccae6f2fcf1d1f",
     "content-hash": "5215efdb30409503f9fab6d7369b8cb2",
     "packages": [
         {
@@ -51,7 +52,7 @@
                 }
             ],
             "description": "Braintree PHP Client Library",
-            "time": "2019-03-28T23:16:53+00:00"
+            "time": "2019-03-28 23:16:53"
         },
         {
             "name": "paypal/merchant-sdk-php",
@@ -99,7 +100,7 @@
                 "php",
                 "sdk"
             ],
-            "time": "2017-10-10T19:03:05+00:00"
+            "time": "2017-10-10 19:03:05"
         },
         {
             "name": "paypal/permissions-sdk-php",
@@ -144,7 +145,7 @@
                 "php",
                 "sdk"
             ],
-            "time": "2015-12-09T18:01:09+00:00"
+            "time": "2015-12-09 18:01:09"
         },
         {
             "name": "paypal/rest-api-sdk-php",
@@ -193,7 +194,7 @@
                 "rest",
                 "sdk"
             ],
-            "time": "2019-01-04T20:04:25+00:00"
+            "time": "2019-01-04 20:04:25"
         },
         {
             "name": "paypal/sdk-core-php",
@@ -239,7 +240,7 @@
                 "php",
                 "sdk"
             ],
-            "time": "2017-11-13T18:53:13+00:00"
+            "time": "2017-11-13 18:53:13"
         },
         {
             "name": "psr/log",
@@ -286,7 +287,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2018-11-20T15:27:04+00:00"
+            "time": "2018-11-20 15:27:04"
         }
     ],
     "packages-dev": [],

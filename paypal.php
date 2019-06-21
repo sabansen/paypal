@@ -631,7 +631,9 @@ class PayPal extends PaymentModule
                 $this->message .= $this->displayConfirmation($this->l('Your PayPal account is properly connected, you can now receive payments'));
             }
         }
-        $this->context->controller->addCSS($this->_path.'views/css/paypal-bo.css', 'all');
+        $this->context->controller->addCSS($this->_path.'views/css/main.css', 'all');
+        $this->context->controller->addJS($this->_path .'/views/js/paypal_bo.js');
+
 
         $result = $this->message;
 
@@ -738,10 +740,6 @@ class PayPal extends PaymentModule
                         $payment_options->setCallToActionText($action_text);
                         $payment_options->setModuleName('express_checkout_schortcut');
                         $payment_options->setAction($this->context->link->getModuleLink($this->name, 'ecValidation', array('short_cut'=>'1'), true));
-                        $this->context->smarty->assign(array(
-                            'paypal_account_email' => $this->context->cookie->paypal_ecs_email,
-                        ));
-                        $payment_options->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_sc.tpl'));
                         $payments_options[] = $payment_options;
                     }
                 }
@@ -776,7 +774,7 @@ class PayPal extends PaymentModule
                 }
                 break;
             case 'PPP':
-                if (Configuration::get('PAYPAL_PLUS_ENABLED') && $this->assignInfoPaypalPlus()) {
+                if (Configuration::get('PAYPAL_PLUS_ENABLED')) {
                     $payment_options = new PaymentOption();
                     $action_text = $this->l('Pay with PayPal Plus');
                     if (Configuration::get('PAYPAL_API_ADVANTAGES')) {
@@ -784,8 +782,8 @@ class PayPal extends PaymentModule
                     }
                     $payment_options->setCallToActionText($action_text);
                     $payment_options->setModuleName('paypal_plus');
-                    $payment_options->setAction('javascript:doPatchPPP();');
                     try {
+                        $this->context->smarty->assign('path', $this->_path);
                         $payment_options->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_ppp.tpl'));
                     } catch (Exception $e) {
                         die($e);
@@ -797,10 +795,6 @@ class PayPal extends PaymentModule
                         $payment_options->setCallToActionText($action_text);
                         $payment_options->setModuleName('paypal_plus_schortcut');
                         $payment_options->setAction($this->context->link->getModuleLink($this->name, 'pppValidation', array('short_cut'=>'1'), true));
-                        $this->context->smarty->assign(array(
-                            'paypal_account_email' => $this->context->cookie->paypal_pSc_email,
-                        ));
-                        $payment_options->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_sc.tpl'));
                         $payments_options[] = $payment_options;
                     }
                 }
@@ -828,6 +822,7 @@ class PayPal extends PaymentModule
                 return;
             }
 
+
             if (Configuration::get('PAYPAL_METHOD') == 'BT') {
                 if (Configuration::get('PAYPAL_BRAINTREE_ENABLED')) {
                     $this->context->controller->addJqueryPlugin('fancybox');
@@ -839,13 +834,25 @@ class PayPal extends PaymentModule
                     $this->context->controller->registerJavascript($this->name . '-braintreejs', 'modules/' . $this->name . '/views/js/payment_bt.js');
                 }
                 if (Configuration::get('PAYPAL_BY_BRAINTREE')) {
-                    $this->context->controller->registerJavascript($this->name . '-pp-braintree-checkout', 'https://www.paypalobjects.com/api/checkout.js', array('server' => 'remote'));
+                    $this->context->controller->registerJavascript($this->name . '-pp-braintree-checkout', 'https://www.paypalobjects.com/api/checkout.min.js', array('server' => 'remote'));
                     $this->context->controller->registerJavascript($this->name . '-pp-braintree-checkout-min', 'https://js.braintreegateway.com/web/3.24.0/js/paypal-checkout.min.js', array('server' => 'remote'));
                     $this->context->controller->registerJavascript($this->name . '-pp-braintreejs', 'modules/' . $this->name . '/views/js/payment_pbt.js');
                 }
             }
             if ((Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART')) && (isset($this->context->cookie->paypal_ecs) || isset($this->context->cookie->paypal_pSc))) {
                 $this->context->controller->registerJavascript($this->name . '-paypal-ec-sc', 'modules/' . $this->name . '/views/js/shortcut_payment.js');
+                if (isset($this->context->cookie->paypal_ecs)) {
+                    Media::addJsDef(array(
+                        'paypalCheckedMethod' => 'express_checkout_schortcut',
+                    ));
+                    $cookie_paypal_email = $this->context->cookie->paypal_ecs_email;
+                } elseif (isset($this->context->cookie->paypal_pSc)) {
+                    Media::addJsDef(array(
+                        'paypalCheckedMethod' => 'paypal_plus_schortcut',
+                    ));
+                    $cookie_paypal_email = $this->context->cookie->paypal_pSc_email;
+                }
+                Media::addJsDefL('scPaypalCheckedMsg', $this->l('You are about to pay with your PayPal account ').$cookie_paypal_email);
             }
             if (Configuration::get('PAYPAL_METHOD') == 'EC' && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT')) {
                 $environment = (Configuration::get('PAYPAL_SANDBOX')?'sandbox':'live');
@@ -854,10 +861,11 @@ class PayPal extends PaymentModule
                     'merchant_id' => Configuration::get('PAYPAL_MERCHANT_ID_'.Tools::strtoupper($environment)),
                     'url_token'   => $this->context->link->getModuleLink($this->name, 'ecInit', array('credit_card'=>'0','getToken'=>1), true),
                 ));
-                $this->context->controller->registerJavascript($this->name . '-paypal-checkout', 'https://www.paypalobjects.com/api/checkout.js', array('server' => 'remote'));
+                $this->context->controller->registerJavascript($this->name . '-paypal-checkout', 'https://www.paypalobjects.com/api/checkout.min.js', array('server' => 'remote'));
                 $this->context->controller->registerJavascript($this->name . '-paypal-checkout-in-context', 'modules/' . $this->name . '/views/js/ec_in_context.js');
             }
             if (Configuration::get('PAYPAL_METHOD') == 'PPP' && Configuration::get('PAYPAL_PLUS_ENABLED')) {
+                $this->assignJSvarsPaypalPlus();
                 $this->context->controller->registerJavascript($this->name . '-plus-minjs', 'https://www.paypalobjects.com/webstatic/ppplus/ppplus.min.js', array('server' => 'remote'));
                 $this->context->controller->registerJavascript($this->name . '-plus-payment-js', 'modules/' . $this->name . '/views/js/payment_ppp.js');
                 $this->context->controller->addJqueryPlugin('fancybox');
@@ -874,6 +882,8 @@ class PayPal extends PaymentModule
                     'ec_sc_action_url'   => $this->context->link->getModuleLink($this->name, 'ScInit', array('credit_card'=>'0','getToken'=>1), true),
                 ));
             }
+            $this->context->controller->registerJavascript($this->name . '-paypal-checkout', 'https://www.paypalobjects.com/api/checkout.min.js', array('server' => 'remote'));
+            $this->context->controller->registerJavascript($this->name . '-paypal-shortcut', 'modules/' . $this->name . '/views/js/shortcut.js');
             Media::addJsDef(array(
                 'sc_init_url'   => $this->context->link->getModuleLink($this->name, 'ScInit', array(), true),
             ));
@@ -966,7 +976,7 @@ class PayPal extends PaymentModule
      * Assign form data for Paypal Plus payment option
      * @return boolean
      */
-    protected function assignInfoPaypalPlus()
+    protected function assignJSvarsPaypalPlus()
     {
         $ppplus = AbstractMethodPaypal::load('PPP');
         try {
@@ -978,16 +988,15 @@ class PayPal extends PaymentModule
         $address_invoice = new Address($this->context->cart->id_address_invoice);
         $country_invoice = new Country($address_invoice->id_country);
 
-        $this->context->smarty->assign(array(
-            'pppSubmitUrl'=> $this->context->link->getModuleLink('paypal', 'pppValidation', array(), true),
-            'approval_url_ppp'=> $approval_url,
-            'baseDir' => $this->context->link->getBaseLink($this->context->shop->id, true),
-            'path' => $this->_path,
-            'mode' => Configuration::get('PAYPAL_SANDBOX')  ? 'sandbox' : 'live',
-            'ppp_language_iso_code' => $this->context->language->iso_code,
-            'ppp_country_iso_code' => $country_invoice->iso_code,
-            'ajax_patch_url' => $this->context->link->getModuleLink('paypal', 'pppPatch', array(), true),
+        Media::addJsDef(array(
+            'approvalUrlPPP' => $approval_url,
+            'modePPP' => Configuration::get('PAYPAL_SANDBOX')  ? 'sandbox' : 'live',
+            'languageIsoCodePPP' => $this->context->language->iso_code,
+            'countryIsoCodePPP' => $country_invoice->iso_code,
+            'ajaxPatchUrl' => $this->context->link->getModuleLink('paypal', 'pppPatch', array(), true),
         ));
+        Media::addJsDefL('waitingRedirectionMsg', $this->l('In few seconds you will be redirected to PayPal. Please wait.'));
+
         return true;
     }
 
@@ -1816,12 +1825,12 @@ class PayPal extends PaymentModule
 
         $method = AbstractMethodPaypal::load('PPP');
         $information = $method->getInstructionInfo($paypal_order->id_payment);
-        $tab = $this->l('The bank name').' : '.$information->recipient_banking_instruction->bank_name.'; 
-        '.$this->l('Account holder name').' : '.$information->recipient_banking_instruction->account_holder_name.'; 
-        '.$this->l('IBAN').' : '.$information->recipient_banking_instruction->international_bank_account_number.'; 
-        '.$this->l('BIC').' : '.$information->recipient_banking_instruction->bank_identifier_code.'; 
+        $tab = $this->l('The bank name').' : '.$information->recipient_banking_instruction->bank_name.';
+        '.$this->l('Account holder name').' : '.$information->recipient_banking_instruction->account_holder_name.';
+        '.$this->l('IBAN').' : '.$information->recipient_banking_instruction->international_bank_account_number.';
+        '.$this->l('BIC').' : '.$information->recipient_banking_instruction->bank_identifier_code.';
         '.$this->l('Amount due / currency').' : '.$information->amount->value.' '.$information->amount->currency.';
-        '.$this->l('Payment due date').' : '.$information->payment_due_date.'; 
+        '.$this->l('Payment due date').' : '.$information->payment_due_date.';
         '.$this->l('Reference').' : '.$information->reference_number.'.';
         return $tab;
     }
