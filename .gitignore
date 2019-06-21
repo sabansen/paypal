@@ -8,4 +8,6 @@ api/Results.txt
 vendor/
 !vendor/ppbtlib
 node_modules/
-views/**/*.LICENSE
+package-lock.json
+views/js/*
+views/css/*

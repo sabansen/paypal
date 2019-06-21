@@ -633,7 +633,7 @@ class PayPal extends PaymentModule
                 $this->message .= $this->displayConfirmation($this->l('Your PayPal account is properly connected, you can now receive payments'));
             }
         }
-        $this->context->controller->addCSS($this->_path.'views/css/main.css', 'all');
+        $this->context->controller->addCSS($this->_path.'views/css/paypal_bo.css', 'all');
         $this->context->controller->addJS($this->_path .'/views/js/paypal_bo.js');
 
 
