@@ -24,7 +24,7 @@ const config = {
     'js/paypal_bo': './_dev/js/paypal_bo.js',
 
     'css/braintree': './_dev/scss/braintree.scss',
-    'css/main': './_dev/scss/main.scss',
+    'css/paypal_bo': './_dev/scss/paypal_bo.scss',
   },
 
   output: {
