@@ -28,12 +28,19 @@ use PaypalAddons\classes\AdminPayPalController;
 
 class AdminPayPalSetupController extends AdminPayPalController
 {
+    public function __construct()
+    {
+        parent::__construct();
+        $this->parametres = array(
+            'paypal_api_intent',
+            'paypal_sandbox',
+            'paypal_api_user_name_sandbox',
+            'paypal_api_user_name_live'
+        );
+    }
+
     public function initContent()
     {
-        if (Configuration::get('BRAINTREE_MIGRATION_DONE') != '1') {
-            return Tools::redirectAdmin($this->context->link->getAdminLink('AdminBraintreeMigration', true));
-        }
-
         $this->initAccountSettingsBlock();
         $formAccountSettings = $this->renderForm();
         $this->clearFieldsForm();

@@ -28,6 +28,8 @@ use Symfony\Component\VarDumper\VarDumper;
 
 class AdminPayPalController extends \ModuleAdminController
 {
+    protected $parametres = array();
+
     public function __construct()
     {
         parent::__construct();
@@ -142,6 +144,10 @@ class AdminPayPalController extends \ModuleAdminController
 
     public function saveForm()
     {
-
+        foreach (\Tools::getAllValues() as $fieldName => $fieldValue) {
+            if (in_array($fieldName, $this->parametres)) {
+                \Configuration::updateValue(\Tools::strtoupper($fieldName), pSQL($fieldValue), false, null, $this->context->shop->id);
+            }
+        }
     }
 }

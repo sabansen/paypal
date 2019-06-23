@@ -1820,7 +1820,12 @@ class PayPal extends PaymentModule
      */
     public function getPartnerInfo()
     {
-        $return_url = $this->context->link->getAdminLink('AdminModules', true).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name.'&active_method='.Tools::getValue('method');
+        $urlParams = array(
+            'active_method' => Tools::getValue('method'),
+            'paypal_set_config' => 1,
+            'with_card' => 0
+        );
+        $return_url = $this->context->link->getAdminLink('AdminPayPalSetup', true, null, $urlParams);
         if ($this->context->country->iso_code == "CN") {
             $country = "C2";
         } else {
