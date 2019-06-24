@@ -72,14 +72,24 @@ class AdminPayPalSetupController extends AdminPayPalController
         $this->context->smarty->assign($tpl_vars);
         $this->content = $this->context->smarty->fetch($this->getTemplatePath() . 'setup.tpl');
         $this->context->smarty->assign('content', $this->content);
-        Media::addJsDef(array(
-            'controllerUrl' => AdminController::$currentIndex . '&token=' . Tools::getAdminTokenLite($this->controller_name)
-        ));
-        $this->addJS('modules/' . $this->module->name . '/views/js/setupAdmin.js');
+        $this->addJS('modules/' . $this->module->name . '/views/js/adminSetup.js');
     }
 
     public function initAccountSettingsBlock()
     {
+        //$accountConfigured
+        $method = AbstractMethodPaypal::load(Configuration::get('PAYPAL_METHOD'));
+        $urlParameters = array(
+            'paypal_set_config' => 1,
+            'method' => 'EC',
+            'with_card' => 0,
+            'modify' => 1
+        );
+        $tpl_vars = array(
+            'accountConfigured' => $method == null? false : $method->isConfigured(),
+            'urlOnboarding' => $this->context->link->getAdminLink('AdminPayPalSetup', true, null, $urlParameters)
+        );
+        $this->context->smarty->assign($tpl_vars);
         $html_content = $this->context->smarty->fetch($this->getTemplatePath() . '_partials/accountSettingsBlock.tpl');
 
         $this->fields_form[]['form'] = array(
@@ -219,5 +229,25 @@ class AdminPayPalSetupController extends AdminPayPalController
                 )
             )
         );
+    }
+
+    public function displayAjaxLogoutAccount()
+    {
+        $response = new JsonResponse();
+        $content = array(
+            'status' => false,
+            'redirectUrl' => ''
+        );
+        if (Tools::getValue('token') == Tools::getAdminTokenLite($this->controller_name)) {
+            $countryDefault = new \Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
+            $methodType = $countryDefault->iso_code == "DE" ? "PPP" : "EC";
+            $method = \AbstractMethodPaypal::load($methodType);
+            $method->logOut();
+            $content['status'] = true;
+            $content['redirectUrl'] = $this->context->link->getAdminLink($this->controller_name);
+        }
+
+        $response->setContent(\Tools::jsonEncode($content));
+        return $response->send();
     }
 }

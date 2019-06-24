@@ -64,7 +64,10 @@ class AdminPayPalController extends \ModuleAdminController
     public function setMedia($isNewTheme = false)
     {
         parent::setMedia($isNewTheme);
-        $this->addCSS(_PS_MODULE_DIR_ . $this->module->name . '/views/css/admin.css');
+        \Media::addJsDef(array(
+            'controllerUrl' => \AdminController::$currentIndex . '&token=' . \Tools::getAdminTokenLite($this->controller_name)
+        ));
+        $this->addCSS(_PS_MODULE_DIR_ . $this->module->name . '/views/css/paypal_bo.css');
     }
 
     protected function _checkRequirements()
@@ -136,6 +139,12 @@ class AdminPayPalController extends \ModuleAdminController
             $method = \AbstractMethodPaypal::load($methodType);
             $method->setConfig(\Tools::getAllValues());
         }
+        /*if (\Tools::isSubmit('logOutAccount')) {
+            $countryDefault = new \Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
+            $methodType = $countryDefault->iso_code == "DE" ? "PPP" : "EC";
+            $method = \AbstractMethodPaypal::load($methodType);
+            $method->logOut(\Tools::getAllValues());
+        }*/
         if (\Tools::isSubmit($this->controller_name . '_config')) {
             $this->saveForm();
         }

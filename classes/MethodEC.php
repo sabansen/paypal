@@ -359,6 +359,22 @@ class MethodEC extends AbstractMethodPaypal
         return $helper->generateForm($fields_form);
     }
 
+    public function logOut($sandbox = null)
+    {
+        if ($sandbox == null) {
+            $mode = Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
+        } else {
+            $mode = (int)$sandbox ? 'SANDBOX' : 'LIVE';
+        }
+
+        Configuration::updateValue('PAYPAL_USERNAME_'.$mode, '');
+        Configuration::updateValue('PAYPAL_PSWD_'.$mode, '');
+        Configuration::updateValue('PAYPAL_SIGNATURE_'.$mode, '');
+        Configuration::updateValue('PAYPAL_'.$mode.'_ACCESS', 0);
+        Configuration::updateValue('PAYPAL_MERCHANT_ID_'.$mode, '');
+        Configuration::updateValue('PAYPAL_API_CARD', 0);
+    }
+
     /**
      * @see AbstractMethodPaypal::setConfig()
      */
@@ -367,6 +383,7 @@ class MethodEC extends AbstractMethodPaypal
         $mode = Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
         $paypal = Module::getInstanceByName($this->name);
         if (isset($params['api_username']) && isset($params['api_password']) && isset($params['api_signature'])) {
+            //Symfony\Component\VarDumper\VarDumper::dump($params); die;
             Configuration::updateValue('PAYPAL_METHOD', 'EC');
             Configuration::updateValue('PAYPAL_EXPRESS_CHECKOUT', 1);
             Configuration::updateValue('PAYPAL_USERNAME_'.$mode, $params['api_username']);

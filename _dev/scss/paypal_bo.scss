@@ -30,4 +30,19 @@
 // Pages
 @import "pages/admin";
 
+.flex {
+  display: flex !important;
+}
+
+.stretchHeightForm form {
+  height: 100%;
+}
+
+.stretchHeightForm .panel {
+  height: 100%;
+}
+
+.stretchHeightForm {
+  padding-bottom: 20px;
+}
 

@@ -22,6 +22,7 @@ const config = {
     'js/shortcut_payment': './_dev/js/shortcut_payment.js',
     'js/shortcut': './_dev/js/shortcut.js',
     'js/paypal_bo': './_dev/js/paypal_bo.js',
+    'js/adminSetup': './_dev/js/adminSetup.js',
 
     'css/braintree': './_dev/scss/braintree.scss',
     'css/paypal_bo': './_dev/scss/paypal_bo.scss',

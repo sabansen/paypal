@@ -32,8 +32,15 @@
         {l s='in order to activate the module, you must connect your existing PayPal account or create a new one.' mod='paypal'}
     </p>
 
-    <a href="{$link->getAdminLink('AdminPayPalSetup', true, null, ['paypal_set_config' => 1, 'method' => 'EC', 'with_card' => 0])|addslashes}" class="btn btn-default">
-        {l s='Connect or create PayPal account' mod='paypal'}
-    </a>
+    {if isset($accountConfigured) && $accountConfigured}
+        <span class="btn btn-default" id="logoutAccount">
+                {l s='Logout' mod='paypal'}
+        </span>
+    {else}
+        <a href="{if isset($urlOnboarding)}{$urlOnboarding|addslashes}{/if}"
+           class="btn btn-default">
+            {l s='Connect or create PayPal account' mod='paypal'}
+        </a>
+    {/if}
 </div>
 
