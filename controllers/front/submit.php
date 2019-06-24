@@ -42,6 +42,9 @@ class PayPalSubmitModuleFrontController extends ModuleFrontController
         $this->context = Context::getContext();
         $this->id_module = (int) Tools::getValue('id_module');
         $id_cart = Tools::getValue('id_cart');
+        if (!$id_cart || $id_cart != Context::getContext()->cart->id) {
+            Tools::redirect($this->context->link->getPageLink('history'));
+        }
         $res = @fopen(dirname(__FILE__).'/../../'.$id_cart.'.txt', 'x');
         if (!$res) {
             while (file_exists(dirname(__FILE__).'/../../'.$id_cart.'.txt')) {
@@ -71,10 +74,6 @@ class PayPalSubmitModuleFrontController extends ModuleFrontController
     {
         $id_cart = Tools::getValue('id_cart');
         $cart = Context::getContext()->cart;
-        if ($cart->id != $id_cart) {
-            Tools::redirect($this->context->link->getPageLink('history'));
-        }
-
         $order_total = (float) $cart->getOrderTotal(true, Cart::BOTH);
         $customer = new Customer((int) $cart->id_customer);
         $paypal = Module::getInstanceByName('paypal');

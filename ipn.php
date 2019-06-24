@@ -239,9 +239,15 @@ if (Tools::getValue('receiver_email') == Configuration::get('PAYPAL_BUSINESS_ACC
         $ipn = new PayPalIPN();
         $custom = Tools::jsonDecode(Tools::getValue('custom'), true);
         $res = @fopen($custom['id_cart'].'.txt', 'x');
+        $seconds = 0;
         if (!$res) {
             while (file_exists($custom['id_cart'].'.txt')) {
                 sleep(1);
+                $seconds++;
+                if ($seconds >= 300)
+                {
+                    @rename($custom['id_cart'].'.txt', date('YmdHis').'_'.$custom['id_cart'].'.txt');
+                }
             }
         }
         $ipn->confirmOrder($custom);
