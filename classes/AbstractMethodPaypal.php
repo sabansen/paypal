@@ -28,5 +28,17 @@ use PaypalPPBTlib\AbstractMethod;
 
 abstract class AbstractMethodPaypal extends AbstractMethod
 {
+    public static function load($method = null)
+    {
+        if ($method == null) {
+            $countryDefault = new \Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'));
+            $method = $countryDefault->iso_code == "DE" ? "PPP" : "EC";
+        }
 
+        if (preg_match('/^[a-zA-Z0-9_-]+$/', $method) && file_exists(_PS_MODULE_DIR_.'paypal/classes/Method'.$method.'.php')) {
+            include_once _PS_MODULE_DIR_.'paypal/classes/Method'.$method.'.php';
+            $method_class = 'Method'.$method;
+            return new $method_class();
+        }
+    }
 }

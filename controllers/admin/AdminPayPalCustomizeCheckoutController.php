@@ -32,7 +32,9 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
         $this->parametres = array(
             'paypal_express_checkout_in_context',
             'paypal_api_advantages',
-            'paypal_config_brand'
+            'paypal_config_brand',
+            'paypal_express_checkout_shortcut',
+            'paypal_express_checkout_shortcut_cart'
         );
     }
 
@@ -45,6 +47,12 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
 
     public function initForm()
     {
+        $tpl_vars = array(
+            'paypal_express_checkout_shortcut' => (int)Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT'),
+            'paypal_express_checkout_shortcut_cart' => (int)Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART')
+        );
+        $this->context->smarty->assign($tpl_vars);
+        $htmlContent = $this->context->smarty->fetch($this->getTemplatePath() . '_partials/blockPreviewButtonContext.tpl');
         $this->fields_form[]['form'] = array(
             'legend' => array(
                 'title' => $this->l('Behavior'),
@@ -76,7 +84,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
                     'label' => $this->l('PayPal Express CheckoutShortcut on'),
                     'hint' => $this->l('The PayPal shortcut is displayed directly in the cart or on your product pages, allowing a faster checkout experience for your buyers. It requires fewer pages, clicks and seconds in order to finalize the payment. PayPal provides you with the client’s billing and shipping information so that you don’t have to collect it yourself.'),
                     'name' => '',
-                    'html_content' => ''
+                    'html_content' => $htmlContent
                 ),
                 array(
                     'type' => 'switch',
@@ -116,5 +124,12 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             $values[$parametre] = Configuration::get(Tools::strtoupper($parametre));
         }
         $this->tpl_form_vars = array_merge($this->tpl_form_vars, $values);
+    }
+
+    public function saveForm()
+    {
+        foreach ($this->parametres as $parametre) {
+            \Configuration::updateValue(\Tools::strtoupper($parametre), pSQL(\Tools::getValue($parametre), ''));
+        }
     }
 }
