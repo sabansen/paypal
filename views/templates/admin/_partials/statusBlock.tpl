@@ -25,29 +25,29 @@
 
 <div>
     <p>
-        {l s='Merchant Country:' mod='braintree'} <b>{$merchantCountry|escape:'utf':'htmlall'}</b>
+        {l s='Merchant Country:' mod='paypal'} <b>{$merchantCountry|escape:'utf':'htmlall'}</b>
     </p>
 
     <p>
-        {l s='To  modify country:' mod='braintree'}
+        {l s='To  modify country:' mod='paypal'}
         <a href="{$link->getAdminLink('AdminLocalization', true)}"
            target="_blank">
-            {l s='International > Localization' mod='braintree'}
+            {l s='International > Localization' mod='paypal'}
         </a>
     </p>
 
     <p>
-        <span class="btn btn-default" id="btn-check-requirements">{l s='Check requirements' mod='braintree'}</span>
+        <span class="btn btn-default" id="btn-check-requirements">{l s='Check requirements' mod='paypal'}</span>
     </p>
 
     <ul class="list-unstyled">
         <li>
             {if isset($tlsVersion) && $tlsVersion['status']}
                 <i class="icon-check" style="color: green"></i>
-                {l s='PHP cURL extension must be enabled on your server' mod='braintree'}
+                {l s='PHP cURL extension must be enabled on your server' mod='paypal'}
             {elseif isset($tlsVersion) && $tlsVersion['status'] == false}
                 <i class="icon-remove" style="color: red"></i>
-                {l s='PHP cURL extension must be enabled on your server' mod='braintree'}. {$tlsVersion['error_message']}
+                {l s='PHP cURL extension must be enabled on your server' mod='paypal'}. {$tlsVersion['error_message']}
             {/if}
 
         </li>
@@ -58,7 +58,7 @@
             {else}
                 <i class="icon-remove" style="color: red"></i>
             {/if}
-            {l s='You must connect your Braintree account' mod='braintree'}
+            {l s='You must connect your Braintree account' mod='paypal'}
         </li>
     </ul>
 </div>

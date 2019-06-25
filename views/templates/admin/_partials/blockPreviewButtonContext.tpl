@@ -26,22 +26,28 @@
 <div class="block-preview-button-context">
 
     <div>
-        <input type="checkbox" {if isset($paypal_express_checkout_shortcut_cart) && $paypal_express_checkout_shortcut_cart}checked{/if}
-               name="paypal_express_checkout_shortcut_cart"
-               value="1">
-        <label for="paypal_express_checkout_shortcut">
-            {l s="Cart Page" mod="paypal"}
-        </label>
+        <div>
+            <input type="checkbox" {if isset($paypal_express_checkout_shortcut_cart) && $paypal_express_checkout_shortcut_cart}checked{/if}
+                   name="paypal_express_checkout_shortcut_cart"
+                   value="1">
+            <label for="paypal_express_checkout_shortcut">
+                {l s="Cart Page" mod="paypal"}
+            </label>
+        </div>
+
         <img src="/modules/paypal/views/img/cart_page_button.png" alt="">
     </div>
 
     <div>
-        <input type="checkbox" {if isset($paypal_express_checkout_shortcut) && $paypal_express_checkout_shortcut}checked{/if}
-               name="paypal_express_checkout_shortcut" id="paypal_express_checkout_shortcut"
-               value="1">
-        <label for="paypal_express_checkout_shortcut">
-            {l s="Product Pages" mod="paypal"}
-        </label>
+        <div>
+            <input type="checkbox" {if isset($paypal_express_checkout_shortcut) && $paypal_express_checkout_shortcut}checked{/if}
+                   name="paypal_express_checkout_shortcut" id="paypal_express_checkout_shortcut"
+                   value="1">
+            <label for="paypal_express_checkout_shortcut">
+                {l s="Product Pages" mod="paypal"}
+            </label>
+        </div>
+
         <img src="/modules/paypal/views/img/product_page_button.png" alt="">
     </div>
 

@@ -22,30 +22,13 @@
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+<div class="panel">
+    <div>
+        <p>{l s='If you encounter rounding issues with your orders, please change PrestaShop round mode in:' mod='paypal'} <a target="_blank" href="{$link->getAdminLink('AdminPreferences', true)}" target="_blank">{l s='Preferences > General' mod='paypal'}</a> {l s='then change for:' mod='paypal'}</p>
+        <ul>
+            <li class="h4">{l s='Round mode: "Round up away from zero, when it is half way there (recommended) "' mod='paypal'}</li>
+            <li class="h4">{l s='Round type: "Round on each item"' mod='paypal'}</li>
+        </ul>
 
-
-<div class="col-lg-9">
-    <p class="h3">
-        {l s='Environment' mod='paypal'}
-        {if isset($sandbox) && $sandbox}
-            <b>{l s='Sandbox' mod='paypal'}</b>
-        {else}
-            <b>{l s='Production' mod='paypal'}</b>
-        {/if}
-    </p>
-
-    <p>{l s='Production mode is the Live environment where you\'ll be able to collect your real payments'}</p>
-
-    <p>
-        <button class="btn btn-default" id="switchEnvironmentMode">
-            {l s='Switch to' mod='paypal'}
-            {if isset($sandbox) && $sandbox}
-                {l s='Production mode' mod='paypal'}
-            {else}
-                {l s='Sandbox mode' mod='paypal'}
-            {/if}
-        </button>
-    </p>
+    </div>
 </div>
-
-

@@ -32,13 +32,13 @@
     <ul class="tick">
         <li>
             <p class="h4">
-                {l s='Discover module ducumentation before configuration' mod='braintree'}
+                {l s='Discover module ducumentation before configuration' mod='paypal'}
             </p>
             <p>
                 <a target="_blank"
                    href="https://addons.prestashop.com/documentation/e582dd0854d8994e815d6c0e8886e703bfdf7713"
                    class="btn btn-default">
-                    {l s='Access user documentation for module configuration.' mod='braintree'}
+                    {l s='Access user documentation for module configuration.' mod='paypal'}
                 </a>
             </p>
         </li>
@@ -46,14 +46,14 @@
 
         <li>
             <p class="h4">
-                {l s='Check requirements before installation' mod='braintree'}
+                {l s='Check requirements before installation' mod='paypal'}
             </p>
             <p>
-                {l s='Are you using the required TLS version? Did you select a default country? Click on the button below and check if all requirements are completed!' mod='braintree'}
+                {l s='Are you using the required TLS version? Did you select a default country? Click on the button below and check if all requirements are completed!' mod='paypal'}
             </p>
             <p>
                 <button  name="submit-ckeck_requirements"  class="btn btn-default" id="ckeck_requirements">
-                    {l s='Check requirements' mod='braintree'}
+                    {l s='Check requirements' mod='paypal'}
                 </button>
 
                 <p class="action_response"></p>
@@ -62,21 +62,21 @@
 
         <li>
             <p class="h4">
-                {l s='Do you still have any questions?' mod='braintree'}
+                {l s='Do you still have any questions?' mod='paypal'}
             </p>
             <p>
-                {l s='Contact us! We will be happy to help!' mod='braintree'}
+                {l s='Contact us! We will be happy to help!' mod='paypal'}
             </p>
             <p>
                 <a target="_blank"
                    href="https://www.paypal.com/fr/webapps/mpp/contact-us"
                    class="btn btn-default">
-                    {l s='Contact our product team for any functional questions' mod='braintree'}
+                    {l s='Contact our product team for any functional questions' mod='paypal'}
                 </a>
             </p>
             <p>
                 <a target="_blank" href="https://addons.prestashop.com/fr/contactez-nous?id_product=1748" class="btn btn-default">
-                    {l s='Contact our technical support' mod='braintree'}
+                    {l s='Contact our technical support' mod='paypal'}
                 </a>
             </p>
         </li>
