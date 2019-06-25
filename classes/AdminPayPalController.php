@@ -30,10 +30,14 @@ class AdminPayPalController extends \ModuleAdminController
 {
     protected $parametres = array();
 
+    protected $method;
+
     public function __construct()
     {
         parent::__construct();
         $this->bootstrap = true;
+        $countryDefault = new \Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
+        $this->method = $countryDefault->iso_code == "DE" ? "PPP" : "EC";
     }
 
     public function renderForm($fields_form = null)

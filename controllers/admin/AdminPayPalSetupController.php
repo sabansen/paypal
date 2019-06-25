@@ -35,7 +35,11 @@ class AdminPayPalSetupController extends AdminPayPalController
             'paypal_api_intent',
             'paypal_sandbox',
             'paypal_api_user_name_sandbox',
-            'paypal_api_user_name_live'
+            'paypal_api_user_name_live',
+            'paypal_sandbox_clientid',
+            'paypal_live_clientid',
+            'paypal_sandbox_secret',
+            'paypal_live_secret'
         );
     }
 
@@ -77,8 +81,49 @@ class AdminPayPalSetupController extends AdminPayPalController
 
     public function initAccountSettingsBlock()
     {
-        //$accountConfigured
-        $method = AbstractMethodPaypal::load(Configuration::get('PAYPAL_METHOD'));
+        $this->fields_form[]['form'] = array(
+            'legend' => array(
+                'title' => $this->l('Account settings'),
+                'icon' => 'icon-cogs',
+            ),
+            'input' => array(
+                array(
+                    'type' => 'html',
+                    'html_content' => $this->getHtmlBlockAccountSetting(),
+                    'name' => '',
+                )
+            )
+        );
+    }
+
+    public function getHtmlBlockAccountSetting()
+    {
+        if ($this->method == 'EC') {
+            $tpl_vars = $this->getTplVarsForEC();
+        } else {
+            $tpl_vars = $this->getTplVarsForPPP();
+        }
+
+        $this->context->smarty->assign($tpl_vars);
+        $html_content = $this->context->smarty->fetch($this->getTemplatePath() . '_partials/accountSettingsBlock.tpl');
+        return $html_content;
+    }
+
+    public function getTplVarsForPPP()
+    {
+        $tpl_vars = array(
+            'paypal_sandbox_clientid' => Configuration::get('PAYPAL_SANDBOX_CLIENTID'),
+            'paypal_live_clientid' => Configuration::get('PAYPAL_LIVE_CLIENTID'),
+            'paypal_sandbox_secret' => Configuration::get('PAYPAL_SANDBOX_SECRET'),
+            'paypal_live_secret' => Configuration::get('PAYPAL_LIVE_SECRET')
+        );
+
+        return $tpl_vars;
+    }
+
+    public function getTplVarsForEC()
+    {
+        $method = AbstractMethodPaypal::load($this->method);
         $urlParameters = array(
             'paypal_set_config' => 1,
             'method' => 'EC',
@@ -89,22 +134,8 @@ class AdminPayPalSetupController extends AdminPayPalController
             'accountConfigured' => $method == null? false : $method->isConfigured(),
             'urlOnboarding' => $this->context->link->getAdminLink('AdminPayPalSetup', true, null, $urlParameters)
         );
-        $this->context->smarty->assign($tpl_vars);
-        $html_content = $this->context->smarty->fetch($this->getTemplatePath() . '_partials/accountSettingsBlock.tpl');
 
-        $this->fields_form[]['form'] = array(
-            'legend' => array(
-                'title' => $this->l('Account settings'),
-                'icon' => 'icon-cogs',
-            ),
-            'input' => array(
-                array(
-                    'type' => 'html',
-                    'html_content' => $html_content,
-                    'name' => '',
-                )
-            )
-        );
+        return $tpl_vars;
     }
 
     public function initPaymentSettingsBlock()
@@ -164,7 +195,8 @@ class AdminPayPalSetupController extends AdminPayPalController
                 array(
                     'type' => 'text',
                     'label' => $this->l('API user name'),
-                    'name' => 'paypal_api_user_name'
+                    'name' => 'paypal_api_user_name',
+                    'readonly' => true,
                 )
             ),
             'submit' => array(
@@ -207,7 +239,7 @@ class AdminPayPalSetupController extends AdminPayPalController
     public function initStatusBlock()
     {
         $countryDefault = new \Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
-        $method = AbstractMethodPaypal::load(Configuration::get('PAYPAL_METHOD'));
+        $method = AbstractMethodPaypal::load($this->method);
 
         $tpl_vars = array(
             'merchantCountry' => $countryDefault->name,
@@ -239,9 +271,7 @@ class AdminPayPalSetupController extends AdminPayPalController
             'redirectUrl' => ''
         );
         if (Tools::getValue('token') == Tools::getAdminTokenLite($this->controller_name)) {
-            $countryDefault = new \Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
-            $methodType = $countryDefault->iso_code == "DE" ? "PPP" : "EC";
-            $method = \AbstractMethodPaypal::load($methodType);
+            $method = \AbstractMethodPaypal::load($this->method);
             $method->logOut();
             $content['status'] = true;
             $content['redirectUrl'] = $this->context->link->getAdminLink($this->controller_name);

@@ -15,8 +15,12 @@
 
 const SetupAdmin = {
     init () {
-        $('#logoutAccount').click(function () {
+        $('#logoutAccount').on('click', (event) => {
             SetupAdmin.logoutAccount();
+        });
+
+        $('#confirmCredentials').click((event) => {
+            $(event.currentTarget).closest('form').submit();
         });
     },
 
