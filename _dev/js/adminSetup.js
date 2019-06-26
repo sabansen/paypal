@@ -22,6 +22,10 @@ const SetupAdmin = {
         $('#confirmCredentials').click((event) => {
             $(event.currentTarget).closest('form').submit();
         });
+
+        $(document).on('click', '#btn-check-requirements', () => {
+            SetupAdmin.checkRequirements();
+        });
     },
 
     logoutAccount() {
@@ -39,6 +43,20 @@ const SetupAdmin = {
             },
         });
 
+    },
+
+    checkRequirements() {
+        $.ajax({
+            url: controllerUrl,
+            type: 'POST',
+            data: {
+                ajax: true,
+                action: 'CheckCredentials',
+            },
+            success(response) {
+                $('#status-block').html(response);
+            },
+        });
     },
 
 };

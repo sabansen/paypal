@@ -45,34 +45,36 @@ class AdminPayPalSetupController extends AdminPayPalController
 
     public function initContent()
     {
+        $tpl_vars = array();
         $this->initAccountSettingsBlock();
         $formAccountSettings = $this->renderForm();
         $this->clearFieldsForm();
+        $tpl_vars['formAccountSettings'] = $formAccountSettings;
+
 
         $this->initPaymentSettingsBlock();
         $formPaymentSettings = $this->renderForm();
         $this->clearFieldsForm();
+        $tpl_vars['formPaymentSettings'] = $formPaymentSettings;
 
-        $this->initApiUserNameForm();
-        $formApiUserName = $this->renderForm();
-        $this->clearFieldsForm();
+        if ($this->method == 'EC') {
+            $this->initApiUserNameForm();
+            $formApiUserName = $this->renderForm();
+            $this->clearFieldsForm();
+            $tpl_vars['formMerchantAccounts'] = $formApiUserName;
+        }
+
 
         $this->initEnvironmentSettings();
         $formEnvironmentSettings = $this->renderForm();
         $this->clearFieldsForm();
+        $tpl_vars['formEnvironmentSettings'] = $formEnvironmentSettings;
 
         $this->initStatusBlock();
         $formStatus = $this->renderForm();
         $this->clearFieldsForm();
+        $tpl_vars['formStatus'] = $formStatus;
 
-        $tpl_vars = array(
-            'formAccountSettings' => $formAccountSettings,
-            'formPaymentSettings' => $formPaymentSettings,
-            'formMerchantAccounts' => $formApiUserName,
-            'formEnvironmentSettings' => $formEnvironmentSettings,
-            'formStatus' => $formStatus
-
-        );
         $this->context->smarty->assign($tpl_vars);
         $this->content = $this->context->smarty->fetch($this->getTemplatePath() . 'setup.tpl');
         $this->context->smarty->assign('content', $this->content);
@@ -111,11 +113,13 @@ class AdminPayPalSetupController extends AdminPayPalController
 
     public function getTplVarsForPPP()
     {
+        $method = AbstractMethodPaypal::load($this->method);
         $tpl_vars = array(
             'paypal_sandbox_clientid' => Configuration::get('PAYPAL_SANDBOX_CLIENTID'),
             'paypal_live_clientid' => Configuration::get('PAYPAL_LIVE_CLIENTID'),
             'paypal_sandbox_secret' => Configuration::get('PAYPAL_SANDBOX_SECRET'),
-            'paypal_live_secret' => Configuration::get('PAYPAL_LIVE_SECRET')
+            'paypal_live_secret' => Configuration::get('PAYPAL_LIVE_SECRET'),
+            'accountConfigured' => $method == null? false : $method->isConfigured(),
         );
 
         return $tpl_vars;
@@ -280,4 +284,12 @@ class AdminPayPalSetupController extends AdminPayPalController
         $response->setContent(\Tools::jsonEncode($content));
         return $response->send();
     }
+
+    public function displayAjaxCheckCredentials()
+    {
+        $this->initStatusBlock();
+        $response = new JsonResponse($this->renderForm());
+        return $response->send();
+    }
+
 }

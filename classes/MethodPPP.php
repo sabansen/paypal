@@ -82,6 +82,18 @@ class MethodPPP extends AbstractMethodPaypal
         }
     }
 
+    public function logOut($sandbox = null)
+    {
+        if ($sandbox == null) {
+            $mode = Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
+        } else {
+            $mode = (int)$sandbox ? 'SANDBOX' : 'LIVE';
+        }
+
+        Configuration::updateValue('PAYPAL_' . $mode . '_CLIENTID', '');
+        Configuration::updateValue('PAYPAL_' . $mode . '_SECRET', '');
+    }
+
     /**
      * @see AbstractMethodPaypal::setConfig()
      */
