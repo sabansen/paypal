@@ -292,4 +292,21 @@ class AdminPayPalSetupController extends AdminPayPalController
         return $response->send();
     }
 
+    public function saveForm()
+    {
+        parent::saveForm();
+
+        if ($this->method == 'PPP') {
+            $method = AbstractMethodPaypal::load($this->method);
+            $experience_web = $method->createWebExperience();
+            if ($experience_web) {
+                Configuration::updateValue('PAYPAL_PLUS_EXPERIENCE', $experience_web->id);
+            } else {
+                $this->log($this->l('An error occurred while creating your web experience. Check your credentials.'));
+            }
+        }
+
+        $this->module->checkPaypalStats();
+    }
+
 }

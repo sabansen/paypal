@@ -103,6 +103,10 @@ class PaypalPppScOrderModuleFrontController extends PaypalAbstarctModuleFrontCon
         CartRule::autoRemoveFromCart($this->context);
         CartRule::autoAddToCart($this->context);
         // END Login
+        $this->context->cookie->__set('paypal_pSc', $info->id);
+        $this->context->cookie->__set('paypal_pSc_payerid', $payer_info->payer_id);
+        $this->context->cookie->__set('paypal_pSc_email', $payer_info->email);
+
         $addresses = $this->context->customer->getAddresses($this->context->language->id);
         $address_exist = false;
         $count = 1;
@@ -142,6 +146,34 @@ class PaypalPppScOrderModuleFrontController extends PaypalAbstarctModuleFrontCon
             $orderAddress->postcode = $ship_addr->postal_code;
             $orderAddress->id_customer = $customer->id;
             $orderAddress->alias = 'Paypal_Address '.($count);
+
+            $validationMessage = $orderAddress->validateFields(false, true);
+            if (Country::containsStates($orderAddress->id_country) && $orderAddress->id_state == false) {
+                $validationMessage = $this->l('State is required in order to process payment. Please fill in state field.');
+            }
+            $country = new Country($orderAddress->id_country);
+            if ($country->active == false) {
+                $validationMessage = $this->l('Country is not active');
+            }
+            if (is_string($validationMessage)) {
+                $var = array(
+                    'newAddress' => 'delivery',
+                    'address1' => $orderAddress->address1,
+                    'firstname' => $orderAddress->firstname,
+                    'lastname' => $orderAddress->lastname,
+                    'postcode' => $orderAddress->postcode,
+                    'id_country' => $orderAddress->id_country,
+                    'city' => $orderAddress->city,
+                    'phone' => $orderAddress->phone,
+                    'address2' => $orderAddress->address2,
+                    'id_state' => $orderAddress->id_state
+                );
+                session_start();
+                $_SESSION['notifications'] = Tools::jsonEncode(array('error' => $validationMessage));
+                $url = Context::getContext()->link->getPageLink('order') . '&' . http_build_query($var);
+                Tools::redirect($url);
+            }
+
             $orderAddress->save();
             $id_address = $orderAddress->id;
         }
@@ -151,9 +183,5 @@ class PaypalPppScOrderModuleFrontController extends PaypalAbstarctModuleFrontCon
         $product = $this->context->cart->getProducts();
         $this->context->cart->setProductAddressDelivery($product[0]['id_product'], $product[0]['id_product_attribute'], $product[0]['id_address_delivery'], $id_address);
         $this->context->cart->save();
-
-        $this->context->cookie->__set('paypal_pSc', $info->id);
-        $this->context->cookie->__set('paypal_pSc_payerid', $payer_info->payer_id);
-        $this->context->cookie->__set('paypal_pSc_email', $payer_info->email);
     }
 }

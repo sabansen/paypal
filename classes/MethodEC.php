@@ -97,266 +97,7 @@ class MethodEC extends AbstractMethodPaypal
      */
     public function getConfig(\PayPal $module)
     {
-        $mode = Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
-        $params = array('inputs' => array(
-            array(
-                'type' => 'select',
-                'label' => $module->l('Payment action', get_class($this)),
-                'name' => 'paypal_intent',
-                'desc' => $module->l('', get_class($this)),
-                'hint' => $module->l('Sale: the money moves instantly from the buyer\'s account to the seller\'s account at the time of payment. Authorization/capture: The authorized mode is a deferred mode of payment that requires the funds to be collected manually when you want to transfer the money. This mode is used if you want to ensure that you have the merchandise before depositing the money, for example. Be careful, you have 29 days to collect the funds.', get_class($this)),
-                'options' => array(
-                    'query' => array(
-                        array(
-                            'id' => 'sale',
-                            'name' => $module->l('Sale', get_class($this))
-                        ),
-                        array(
-                            'id' => 'authorization',
-                            'name' => $module->l('Authorize', get_class($this))
-                        )
-                    ),
-                    'id' => 'id',
-                    'name' => 'name'
-                ),
-            ),
-            array(
-                'type' => 'switch',
-                'label' => $module->l('Show PayPal benefits to your customers', get_class($this)),
-                'name' => 'paypal_show_advantage',
-                'is_bool' => true,
-                'hint' => $module->l('You can increase your conversion rate by presenting PayPal benefits to your customers on payment methods selection page.', get_class($this)),
-                'values' => array(
-                    array(
-                        'id' => 'paypal_show_advantage_on',
-                        'value' => 1,
-                        'label' => $module->l('Enabled', get_class($this)),
-                    ),
-                    array(
-                        'id' => 'paypal_show_advantage_off',
-                        'value' => 0,
-                        'label' => $module->l('Disabled', get_class($this)),
-                    )
-                ),
-            ),
-            array(
-                'type' => 'switch',
-                'label' => $module->l('PayPal In-Context', get_class($this)),
-                'name' => 'paypal_ec_in_context',
-                'is_bool' => true,
-                'hint' => $module->l('PayPal opens in a pop-up window, allowing your buyers to finalize their payment without leaving your website. Optimized, modern and reassuring experience which benefits from the same security standards than during a redirection to the PayPal website.', get_class($this)),
-                'values' => array(
-                    array(
-                        'id' => 'paypal_ec_in_context_on',
-                        'value' => 1,
-                        'label' => $module->l('Enabled', get_class($this)),
-                    ),
-                    array(
-                        'id' => 'paypal_ec_in_context_off',
-                        'value' => 0,
-                        'label' => $module->l('Disabled', get_class($this)),
-                    )
-                ),
-            ),
-            array(
-                'type' => 'text',
-                'label' => $module->l('Brand name', get_class($this)),
-                'name' => 'config_brand',
-                'placeholder' => $module->l('Leave it empty to use your Shop name', get_class($this)),
-                'hint' => $module->l('A label that overrides the business name in the PayPal account on the PayPal pages.', get_class($this)),
-            ),
-            array(
-                'type' => 'file',
-                'label' => $module->l('Shop logo field', get_class($this)),
-                'name' => 'config_logo',
-                'display_image' => true,
-                'image' => file_exists(Configuration::get('PAYPAL_CONFIG_LOGO'))?'<img src="'.Context::getContext()->link->getBaseLink().'modules/paypal/views/img/p_logo_'.Context::getContext()->shop->id.'.png" class="img img-thumbnail" />':'',
-                'delete_url' => $module->module_link.'&deleteLogoPp=1',
-                'hint' => $module->l('An image must be stored on a secure (https) server. Use a valid graphics format, such as .gif, .jpg, or .png. Limit the image to 190 pixels wide by 60 pixels high. PayPal crops images that are larger. This logo will replace brand name  at the top of the cart review area.', get_class($this)),
-            ),
-        ));
-        $params['fields_value'] = array(
-            'paypal_intent' => Configuration::get('PAYPAL_API_INTENT'),
-            'paypal_show_advantage' => Configuration::get('PAYPAL_API_ADVANTAGES'),
-            'paypal_ec_in_context' => Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT'),
-            'paypal_ec_merchant_id' => Configuration::get('PAYPAL_MERCHANT_ID_'.$mode),
-            'config_brand' => Configuration::get('PAYPAL_CONFIG_BRAND'),
-            'config_logo' => Configuration::get('PAYPAL_CONFIG_LOGO'),
-        );
 
-        $country_default = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
-
-        if (!in_array($country_default, $module->bt_countries)) {
-            $params['inputs'][] = array(
-                'type' => 'switch',
-                'label' => $module->l('Accept credit and debit card payment', get_class($this)),
-                'name' => 'paypal_card',
-                'is_bool' => true,
-                'hint' => $module->l('Your customers can pay with debit and credit cards as well as local payment systems whether or not they use PayPal', get_class($this)),
-                'values' => array(
-                    array(
-                        'id' => 'paypal_card_on',
-                        'value' => 1,
-                        'label' => $module->l('Enabled', get_class($this)),
-                    ),
-                    array(
-                        'id' => 'paypal_card_off',
-                        'value' => 0,
-                        'label' => $module->l('Disabled', get_class($this)),
-                    )
-                ),
-            );
-            $params['fields_value']['paypal_card'] = Configuration::get('PAYPAL_API_CARD');
-        }
-
-
-        $context = Context::getContext();
-
-        $context->smarty->assign(array(
-            'access_token_sandbox' => Configuration::get('PAYPAL_SANDBOX_ACCESS'),
-            'access_token_live' => Configuration::get('PAYPAL_LIVE_ACCESS'),
-            'ec_card_active' => Configuration::get('PAYPAL_API_CARD'),
-            'ec_paypal_active' => !Configuration::get('PAYPAL_API_CARD') || (Configuration::get('PAYPAL_EXPRESS_CHECKOUT') && Context::getContext()->country->iso_code == 'DE'),
-            'need_rounding' => ((Configuration::get('PS_ROUND_TYPE') == Order::ROUND_ITEM) && (Configuration::get('PS_PRICE_ROUND_MODE') == PS_ROUND_HALF_UP) ? 0 : 1),
-            'ec_active' => Configuration::get('PAYPAL_EXPRESS_CHECKOUT'),
-        ));
-
-        $context->smarty->assign(array(
-            'api_username' => Configuration::get('PAYPAL_USERNAME_'.$mode),
-            'api_password' => Configuration::get('PAYPAL_PSWD_'.$mode),
-            'api_signature' => Configuration::get('PAYPAL_SIGNATURE_'.$mode),
-            'merchant_id' => Configuration::get('PAYPAL_MERCHANT_ID_'.$mode),
-            'mode' => $mode
-        ));
-
-        $params['form'] = $this->getApiUserName($module);
-
-        $params['short_cut'] = $this->createShortcutForm($module);
-
-        return $params;
-    }
-
-    public function getApiUserName($module)
-    {
-        $fields_form = array();
-        $fields_form[0]['form'] = array(
-            'legend' => array(
-                'title' => $module->l('Api user name', get_class($this)),
-                'icon' => 'icon-cogs',
-            ),
-        );
-        $apiUserName = (Configuration::get('PAYPAL_SANDBOX')?Configuration::get('PAYPAL_USERNAME_SANDBOX'):Configuration::get('PAYPAL_USERNAME_LIVE'));
-
-        $fields_form[0]['form']['input'] = array(
-            array(
-                'type' => 'text',
-                'label' => $module->l('API user name', get_class($this)),
-                'name'=>'api_user_name',
-                'disabled'=>'disabled'
-            )
-        );
-
-        $helper = new HelperForm();
-        $helper->module = $module;
-        $helper->name_controller = 'form_api_username';
-        $helper->token = Tools::getAdminTokenLite('AdminModules');
-        $helper->currentIndex = AdminController::$currentIndex.'&configure='.$module->name;
-        $helper->title = $module->displayName;
-        $helper->show_toolbar = false;
-        $default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
-        $helper->default_form_language = $default_lang;
-        $helper->allow_employee_form_lang = $default_lang;
-        $helper->tpl_vars = array(
-            'fields_value' => array('api_user_name'=>$apiUserName),
-            'id_language' => Context::getContext()->language->id,
-            'back_url' => $module->module_link.'#paypal_params'
-        );
-        return $helper->generateForm($fields_form);
-    }
-
-    public function createShortcutForm($module)
-    {
-        $fields_form = array();
-        $fields_form[0]['form'] = array(
-            'legend' => array(
-                'title' => $module->l('PayPal Express Shortcut', get_class($this)),
-                'icon' => 'icon-cogs',
-            ),
-            'submit' => array(
-                'title' => $module->l('Save', get_class($this)),
-                'class' => 'btn btn-default pull-right button',
-            ),
-        );
-
-        $fields_form[0]['form']['input'] = array(
-            array(
-                'type' => 'html',
-                'name' => 'paypal_desc_shortcut',
-                'html_content' => $module->l('The PayPal shortcut is displayed directly in the cart or on your product pages, allowing a faster checkout experience for your buyers. It requires fewer pages, clicks and seconds in order to finalize the payment. PayPal provides you with the client’s billing and shipping information so that you don’t have to collect it yourself.', get_class($this)),
-            ),
-            array(
-                'type' => 'switch',
-                'label' => $module->l('Display the shortcut on product pages', get_class($this)),
-                'name' => 'paypal_show_shortcut',
-                'is_bool' => true,
-                'hint' => $module->l('Recommended for mono-product websites.', get_class($this)),
-                'values' => array(
-                    array(
-                        'id' => 'paypal_show_shortcut_on',
-                        'value' => 1,
-                        'label' => $module->l('Enabled', get_class($this)),
-                    ),
-                    array(
-                        'id' => 'paypal_show_shortcut_off',
-                        'value' => 0,
-                        'label' => $module->l('Disabled', get_class($this)),
-                    )
-                ),
-            ),
-            array(
-                'type' => 'switch',
-                'label' => $module->l('Display shortcut in the cart', get_class($this)),
-                'name' => 'paypal_show_shortcut_cart',
-                'is_bool' => true,
-                'hint' => $module->l('Recommended for multi-products websites.', get_class($this)),
-                'values' => array(
-                    array(
-                        'id' => 'paypal_show_shortcut_cart_on',
-                        'value' => 1,
-                        'label' => $module->l('Enabled', get_class($this)),
-                    ),
-                    array(
-                        'id' => 'paypal_show_shortcut_cart_off',
-                        'value' => 0,
-                        'label' => $module->l('Disabled', get_class($this)),
-                    )
-                ),
-            ),
-        );
-
-        $fields_value = array(
-            'paypal_show_shortcut' => Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT'),
-            'paypal_show_shortcut_cart' => Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART'),
-        );
-
-        $helper = new HelperForm();
-        $helper->module = $module;
-        $helper->name_controller = 'form_shortcut';
-        $helper->token = Tools::getAdminTokenLite('AdminModules');
-        $helper->currentIndex = AdminController::$currentIndex.'&configure='.$module->name;
-        $helper->title = $module->displayName;
-        $helper->show_toolbar = false;
-        $default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
-        $helper->default_form_language = $default_lang;
-        $helper->submit_action = 'submit_shortcut';
-        $helper->allow_employee_form_lang = $default_lang;
-        $helper->tpl_vars = array(
-            'fields_value' => $fields_value,
-            'id_language' => Context::getContext()->language->id,
-            'back_url' => $module->module_link.'#paypal_params'
-        );
-
-        return $helper->generateForm($fields_form);
     }
 
     public function logOut($sandbox = null)
@@ -383,8 +124,6 @@ class MethodEC extends AbstractMethodPaypal
         $mode = Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
         $paypal = Module::getInstanceByName($this->name);
         if (isset($params['api_username']) && isset($params['api_password']) && isset($params['api_signature'])) {
-            //Symfony\Component\VarDumper\VarDumper::dump($params); die;
-            Configuration::updateValue('PAYPAL_METHOD', 'EC');
             Configuration::updateValue('PAYPAL_EXPRESS_CHECKOUT', 1);
             Configuration::updateValue('PAYPAL_USERNAME_'.$mode, $params['api_username']);
             Configuration::updateValue('PAYPAL_PSWD_'.$mode, $params['api_password']);
@@ -393,42 +132,9 @@ class MethodEC extends AbstractMethodPaypal
             Configuration::updateValue('PAYPAL_MERCHANT_ID_'.$mode, $params['merchant_id']);
             Configuration::updateValue('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT', 1);
             Configuration::updateValue('PAYPAL_API_CARD', $params['with_card']);
-            Tools::redirect($paypal->module_link);
-        }
-        if (Tools::isSubmit('submit_shortcut')) {
-            Configuration::updateValue('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT', $params['paypal_show_shortcut']);
-            Configuration::updateValue('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART', $params['paypal_show_shortcut_cart']);
-        }
-        if (Tools::isSubmit('paypal_config')) {
-            Configuration::updateValue('PAYPAL_API_INTENT', $params['paypal_intent']);
-            Configuration::updateValue('PAYPAL_API_ADVANTAGES', $params['paypal_show_advantage']);
-            Configuration::updateValue('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT', $params['paypal_ec_in_context']);
-            Configuration::updateValue('PAYPAL_CONFIG_BRAND', $params['config_brand']);
-            if (isset($_FILES['config_logo']['tmp_name']) && $_FILES['config_logo']['tmp_name'] != '') {
-                if (!in_array($_FILES['config_logo']['type'], array('image/gif', 'image/png', 'image/jpeg'))) {
-                    $paypal->errors .= $paypal->displayError($paypal->l('Use a valid graphics format, such as .gif, .jpg, or .png.', get_class($this)));
-                    return;
-                }
-                $size = getimagesize($_FILES['config_logo']['tmp_name']);
-                if ($size[0] > 190 || $size[1] > 60) {
-                    $paypal->errors .= $paypal->displayError($paypal->l('Limit the image to 190 pixels wide by 60 pixels high.', get_class($this)));
-                    return;
-                }
-                if (!($tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS')) ||
-                    !move_uploaded_file($_FILES['config_logo']['tmp_name'], $tmpName)) {
-                    $paypal->errors .= $paypal->displayError($paypal->l('An error occurred while copying the image.', get_class($this)));
-                }
-                if (!ImageManager::resize($tmpName, _PS_MODULE_DIR_.'paypal/views/img/p_logo_'.Context::getContext()->shop->id.'.png')) {
-                    $paypal->errors .= $paypal->displayError($paypal->l('An error occurred while copying the image.', get_class($this)));
-                }
-                Configuration::updateValue('PAYPAL_CONFIG_LOGO', _PS_MODULE_DIR_.'paypal/views/img/p_logo_'.Context::getContext()->shop->id.'.png');
-            }
+            Tools::redirect($paypal);
         }
 
-        if (Tools::getValue('deleteLogoPp')) {
-            unlink(Configuration::get('PAYPAL_CONFIG_LOGO'));
-            Configuration::updateValue('PAYPAL_CONFIG_LOGO', '');
-        }
 
         $country_default = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
 
@@ -446,19 +152,10 @@ class MethodEC extends AbstractMethodPaypal
 
         if (isset($params['method'])) {
             Configuration::updateValue('PAYPAL_API_CARD', $params['with_card']);
-            if ((isset($params['modify']) && $params['modify']) || (Configuration::get('PAYPAL_METHOD') != $params['method'])) {
+            if ((isset($params['modify']) && $params['modify']) || $this->isConfigured()) {
                 $response = $paypal->getPartnerInfo();
                 Tools::redirectLink($response);
             }
-        }
-
-        if ($mode == 'SANDBOX' && (!Configuration::get('PAYPAL_USERNAME_'.$mode) || !Configuration::get('PAYPAL_PSWD_'.$mode)
-            || !Configuration::get('PAYPAL_SIGNATURE_'.$mode))) {
-            $paypal->errors .= $paypal->displayError($paypal->l('You are trying to switch to sandbox account. You should use your test credentials. Please go to the "Products" tab and click on "Modify\' for activating the sandbox version of the selected product.', get_class($this)));
-        }
-        if ($mode == 'LIVE' && (!Configuration::get('PAYPAL_USERNAME_'.$mode) || !Configuration::get('PAYPAL_PSWD_'.$mode)
-                || !Configuration::get('PAYPAL_SIGNATURE_'.$mode))) {
-            $paypal->errors .= $paypal->displayError($paypal->l('You are trying to switch to production account. You should use your production credentials. Please go to the "Products" tab and click on "Modify\' for activating the production version of the selected product.', get_class($this)));
         }
     }
 
@@ -1083,9 +780,13 @@ class MethodEC extends AbstractMethodPaypal
     public function isConfigured()
     {
         if (Configuration::get('PAYPAL_SANDBOX')) {
-            return (bool)Configuration::get('PAYPAL_MERCHANT_ID_SANDBOX');
+            return (bool)Configuration::get('PAYPAL_MERCHANT_ID_SANDBOX') &&
+                (bool)Configuration::get('PAYPAL_USERNAME_SANDBOX') &&
+                (bool)Configuration::get('PAYPAL_USERNAME_SANDBOX');
         } else {
-            return (bool)Configuration::get('PAYPAL_MERCHANT_ID_LIVE');
+            return (bool)Configuration::get('PAYPAL_MERCHANT_ID_LIVE') &&
+                (bool)Configuration::get('PAYPAL_USERNAME_LIVE') &&
+                (bool)Configuration::get('PAYPAL_USERNAME_LIVE');
         }
     }
 }

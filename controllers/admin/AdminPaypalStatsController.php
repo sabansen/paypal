@@ -39,19 +39,12 @@ class AdminPaypalStatsController extends \ModuleAdminController
 
     public function getReportLink()
     {
-        if (Configuration::get('PAYPAL_METHOD') == 'BT') {
-            if (Configuration::get('PAYPAL_SANDBOX')) {
-                $this->report_link = "https://sandbox.braintreegateway.com/merchants/".Configuration::get('PAYPAL_SANDBOX_BRAINTREE_MERCHANT_ID')."/transactions/advanced_search";
-            } else {
-                $this->report_link = "https://www.braintreegateway.com/merchants/".Configuration::get('PAYPAL_LIVE_BRAINTREE_MERCHANT_ID')."/transactions/advanced_search";
-            }
+        if (Configuration::get('PAYPAL_SANDBOX')) {
+            $this->report_link = "https://business.sandbox.paypal.com/merchantdata/reportHome";
         } else {
-            if (Configuration::get('PAYPAL_SANDBOX')) {
-                $this->report_link = "https://business.sandbox.paypal.com/merchantdata/reportHome";
-            } else {
-                $this->report_link = "https://business.paypal.com/merchantdata/reportHome";
-            }
+            $this->report_link = "https://business.paypal.com/merchantdata/reportHome";
         }
+
         return $this->report_link;
     }
 }

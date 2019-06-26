@@ -56,7 +56,7 @@ class PaypalScInitModuleFrontController extends PaypalAbstarctModuleFrontControl
             $this->prepareProduct();
         }
 
-        $method = AbstractMethodPaypal::load(Configuration::get('PAYPAL_METHOD'));
+        $method = AbstractMethodPaypal::load();
 
         try {
             $method->setParameters($this->values);

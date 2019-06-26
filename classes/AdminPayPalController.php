@@ -25,6 +25,7 @@
 namespace PaypalAddons\classes;
 
 use Symfony\Component\VarDumper\VarDumper;
+use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 
 class AdminPayPalController extends \ModuleAdminController
 {
@@ -143,12 +144,7 @@ class AdminPayPalController extends \ModuleAdminController
             $method = \AbstractMethodPaypal::load($methodType);
             $method->setConfig(\Tools::getAllValues());
         }
-        /*if (\Tools::isSubmit('logOutAccount')) {
-            $countryDefault = new \Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
-            $methodType = $countryDefault->iso_code == "DE" ? "PPP" : "EC";
-            $method = \AbstractMethodPaypal::load($methodType);
-            $method->logOut(\Tools::getAllValues());
-        }*/
+
         if (\Tools::isSubmit($this->controller_name . '_config')) {
             $this->saveForm();
         }
@@ -162,5 +158,12 @@ class AdminPayPalController extends \ModuleAdminController
                 \Configuration::updateValue(\Tools::strtoupper($fieldName), pSQL($fieldValue), false, null, $this->context->shop->id);
             }
         }
+    }
+
+    public function log($message)
+    {
+        ProcessLoggerHandler::openLogger();
+        ProcessLoggerHandler::logError($message);
+        ProcessLoggerHandler::closeLogger();
     }
 }
