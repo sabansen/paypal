@@ -461,6 +461,9 @@ class PayPal extends PaymentModule
 
     public function hookPaymentOptions($params)
     {
+        if (Module::isEnabled('braintree') && (int)Configuration::get('BRAINTREE_ACTIVATE_PAYPAL')) {
+            return;
+        }
         $is_virtual = 0;
         foreach ($params['cart']->getProducts() as $key => $product) {
             if ($product['is_virtual']) {
