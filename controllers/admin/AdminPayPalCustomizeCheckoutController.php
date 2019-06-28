@@ -40,8 +40,10 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
 
     public function initContent()
     {
+        parent::initContent();
         $this->initForm();
-        $this->content = $this->renderForm();
+        $this->context->smarty->assign('form', $this->renderForm());
+        $this->content = $this->context->smarty->fetch($this->getTemplatePath() . 'customizeCheckout.tpl');
         $this->context->smarty->assign('content', $this->content);
     }
 

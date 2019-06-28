@@ -26,5 +26,16 @@ require_once _PS_MODULE_DIR_ . 'paypal/controllers/admin/AdminPaypalProcessLogge
 
 class AdminPayPalLogsController extends AdminPayPalProcessLoggerController
 {
+    public function initContent()
+    {
+        $this->context->smarty->assign('showWarningForUserBraintree', $this->module->showWarningForUserBraintree());
+        $this->content = $this->context->smarty->fetch($this->getTemplatePath() . '_partials/headerLogo.tpl');
+        $this->content .= parent::initContent();
+    }
 
+    public function setMedia($isNewTheme = false)
+    {
+        parent::setMedia($isNewTheme);
+        $this->addCSS(_PS_MODULE_DIR_ . $this->module->name . '/views/css/paypal_bo.css');
+    }
 }

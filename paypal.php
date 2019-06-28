@@ -1466,4 +1466,9 @@ class PayPal extends PaymentModule
         $countOrders = (int)DB::getInstance()->getValue($query);
         return $countOrders == 1;
     }
+
+    public function showWarningForUserBraintree()
+    {
+        return (int)Configuration::get('PAYPAL_BRAINTREE_ENABLED');
+    }
 }

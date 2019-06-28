@@ -45,6 +45,7 @@ class AdminPayPalSetupController extends AdminPayPalController
 
     public function initContent()
     {
+        parent::initContent();
         $tpl_vars = array();
         $this->initAccountSettingsBlock();
         $formAccountSettings = $this->renderForm();

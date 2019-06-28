@@ -41,6 +41,12 @@ class AdminPayPalController extends \ModuleAdminController
         $this->method = $countryDefault->iso_code == "DE" ? "PPP" : "EC";
     }
 
+    public function initContent()
+    {
+        $showWarningForUserBraintree = $this->module->showWarningForUserBraintree();
+        $this->context->smarty->assign('showWarningForUserBraintree', $showWarningForUserBraintree);
+    }
+
     public function renderForm($fields_form = null)
     {
         if ($fields_form === null) {
