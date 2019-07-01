@@ -31,6 +31,6 @@ class AdminPaypalConfigurationController extends \ModuleAdminController
     public function __construct()
     {
         parent::__construct();
-        Tools::redirect($this->context->link->getAdminLink('AdminModules', true).'&configure='.$this->module->name.'&tab_module='.$this->module->tab.'&module_name='.$this->module->name);
+        Tools::redirect($this->context->link->getAdminLink('AdminPayPalSetup', true));
     }
 }

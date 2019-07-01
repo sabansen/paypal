@@ -1469,6 +1469,6 @@ class PayPal extends PaymentModule
 
     public function showWarningForUserBraintree()
     {
-        return (int)Configuration::get('PAYPAL_BRAINTREE_ENABLED');
+        return (int)Configuration::get('PAYPAL_BRAINTREE_ENABLED') && !Configuration::get('PAYPAL_USE_WITHOUT_BRAINTREE');
     }
 }

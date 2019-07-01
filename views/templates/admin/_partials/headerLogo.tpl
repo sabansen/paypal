@@ -40,7 +40,10 @@
         </div>
 
         <div class="flex justify-content-center">
-            <button class="btn btn-default">{l s='You would like to use PayPal without Braintree' mod='paypal'}</button>
+            <a class="btn btn-default"
+               href="{$link->getAdminLink('AdminPayPalSetup', true, null, ['useWithoutBraintree' => 1])}">
+                {l s='You would like to use PayPal without Braintree' mod='paypal'}
+            </a>
         </div>
     </div>
 {/if}

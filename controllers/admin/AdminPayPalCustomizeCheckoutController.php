@@ -22,6 +22,8 @@
  * @license   Commercial license
  * @version   develop
  */
+include_once(_PS_MODULE_DIR_.'paypal/vendor/autoload.php');
+
 use PaypalAddons\classes\AdminPayPalController;
 
 class AdminPayPalCustomizeCheckoutController extends AdminPayPalController

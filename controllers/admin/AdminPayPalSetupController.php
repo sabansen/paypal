@@ -22,6 +22,7 @@
  * @license   Commercial license
  * @version   develop
  */
+include_once(_PS_MODULE_DIR_.'paypal/vendor/autoload.php');
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use PaypalAddons\classes\AdminPayPalController;
@@ -41,6 +42,14 @@ class AdminPayPalSetupController extends AdminPayPalController
             'paypal_sandbox_secret',
             'paypal_live_secret'
         );
+    }
+
+    public function init()
+    {
+        parent::init();
+        if (Tools::getValue('useWithoutBraintree')) {
+            Configuration::updateValue('PAYPAL_USE_WITHOUT_BRAINTREE', 1);
+        }
     }
 
     public function initContent()
