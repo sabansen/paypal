@@ -24,28 +24,20 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PaypalAddons\services;
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+use PaypalPPBTlib\Install\ModuleInstaller;
 
-use PaypalPPBTlib\Extensions\ProcessLogger\Classes\ProcessLoggerObjectModel;
-use Symfony\Component\VarDumper\VarDumper;
-
-class ServicePaypalLog
+/**
+ * @param $module PayPal
+ * @return bool
+ */
+function upgrade_module_5_0_0($module)
 {
-    /**
-     * @param $log ProcessLoggerObjectModel
-     * @return url
-     */
-    public function getLinkToTransaction($log)
-    {
-        if ($log->id_transaction == false || $log->id_order == false) {
-            return '';
-        }
-        /** @var $paypalOrder \PaypalOrder object*/
-        $paypalOrder = \PaypalOrder::loadByOrderId($log->id_order);
-        if (\Validate::isLoadedObject($paypalOrder) == false || $paypalOrder->method == 'BT') {
-            return '';
-        }
-        $method = \AbstractMethodPaypal::load($paypalOrder->method);
-        return $method->getLinkToTransaction($log->id_transaction, $log->sandbox);
-    }
+    $installer = new ModuleInstaller($module);
+    $installer->registerHooks();
+    $installer->installAdminControllers();
+    $module->checkPaypalStats();
+    return true;
 }

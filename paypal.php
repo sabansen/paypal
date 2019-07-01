@@ -844,6 +844,7 @@ class PayPal extends PaymentModule
 
     public function hookDisplayAdminOrder($params)
     {
+        /* @var $paypal_order PaypalOrder*/
         $id_order = $params['id_order'];
         $order = new Order((int)$id_order);
         $paypal_msg = '';
@@ -852,6 +853,14 @@ class PayPal extends PaymentModule
 
         if (!Validate::isLoadedObject($paypal_order)) {
             return false;
+        }
+        if ($paypal_order->method == 'BT' && (Module::isInstalled('braintree') == false)) {
+            $tmpMessage = "<p class='paypal-warning'>";
+            $tmpMessage .= $this->l('This order has been paid via Braintree payment solution provided by PayPal module. ') . "</br>";
+            $tmpMessage .= $this->l('Starting from the v5.0.0 of PayPal module, the Braintree payment solution is not available via PayPal anymore. You can continue to use Braintree by installing the new Braintree module available via ') . "<a href='https://addons.prestashop.com/' target='_blank'>" . $this->l('addons.prestashop') . "</a>" . "</br>";
+            $tmpMessage .= $this->l('All actions on this order will not be processed by Braintree until you install the new module (ex: you can not refund this order automatically by changing order status).');
+            $tmpMessage .= "</p>";
+            $paypal_msg .= $this->displayWarning($tmpMessage);
         }
         if ($paypal_order->sandbox) {
             $this->context->controller->warnings[] = $this->l('[SANDBOX] Please pay attention that payment for this order was made via PayPal Sandbox mode.');
@@ -1031,7 +1040,7 @@ class PayPal extends PaymentModule
     {
         /**@var $orderPayPal PaypalOrder*/
         $orderPayPal = PaypalOrder::loadByOrderId($params['id_order']);
-        if (!Validate::isLoadedObject($orderPayPal)) {
+        if (!Validate::isLoadedObject($orderPayPal) || $orderPayPal->method == 'BT') {
             return false;
         }
         $method = AbstractMethodPaypal::load($orderPayPal->method);
@@ -1470,5 +1479,11 @@ class PayPal extends PaymentModule
     public function showWarningForUserBraintree()
     {
         return (int)Configuration::get('PAYPAL_BRAINTREE_ENABLED') && !Configuration::get('PAYPAL_USE_WITHOUT_BRAINTREE');
+    }
+
+    public function displayInformation($message)
+    {
+        $this->context->smarty->assign('message', $message);
+        return $this->context->smarty->fetch(_PS_MODULE_DIR_ . $this->name . '/views/templates/admin/_partials/alertInfo.tpl');
     }
 }
