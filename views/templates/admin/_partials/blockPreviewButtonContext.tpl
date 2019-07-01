@@ -31,7 +31,16 @@
                    name="paypal_express_checkout_shortcut_cart"
                    value="1">
             <label for="paypal_express_checkout_shortcut">
-                {l s="Cart Page" mod="paypal"}
+                <span class="label-tooltip"
+                      data-toggle="tooltip"
+                      data-html="true" title=""
+                      data-original-title="<p>Activating Express Checkout Shortcut on Cart Page is recommended in specific cases only:</p>
+                                            <ul>
+                                                <li> Multi Products web sites </li>
+                                            </ul>"
+                >
+                    {l s="Cart Page" mod="paypal"}
+                </span>
             </label>
         </div>
 
@@ -44,7 +53,25 @@
                    name="paypal_express_checkout_shortcut" id="paypal_express_checkout_shortcut"
                    value="1">
             <label for="paypal_express_checkout_shortcut">
-                {l s="Product Pages" mod="paypal"}
+                <span class="label-tooltip"
+                      data-toggle="tooltip"
+                      data-html="true" title=""
+                      data-original-title="<p>Activating Express Checkout Shortcut on Product Pages is recommended in specific cases only:</p>
+                                            <ul>
+                                                <li> Mono Product </li>
+                                                <li> Digital Goods </li>
+                                            </ul>
+                                            <p>Example:</p>
+                                            <ul>
+                                                <li> Parking lot rental </li>
+                                                <li> Escape game reservation </li>
+                                                <li> Booking services </li>
+                                                <li> Single product sale </li>
+                                            </ul>"
+                >
+                    {l s="Product Pages" mod="paypal"}
+                </span>
+
             </label>
         </div>
 
