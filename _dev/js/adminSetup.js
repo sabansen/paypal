@@ -13,54 +13,69 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+import {hoverConfig, hoverTabConfig} from './functions.js';
+
 const SetupAdmin = {
-    init () {
-        $('#logoutAccount').on('click', (event) => {
-            SetupAdmin.logoutAccount();
-        });
+  init() {
+    $('#logoutAccount').on('click', (event) => {
+      SetupAdmin.logoutAccount();
+    });
 
-        $('#confirmCredentials').click((event) => {
-            $(event.currentTarget).closest('form').submit();
-        });
+    $('#confirmCredentials').click((event) => {
+      $(event.currentTarget).closest('form').submit();
+    });
 
-        $(document).on('click', '#btn-check-requirements', () => {
-            SetupAdmin.checkRequirements();
-        });
-    },
+    $(document).on('click', '#btn-check-requirements', () => {
+      SetupAdmin.checkRequirements();
+    });
 
-    logoutAccount() {
-        $.ajax({
-            url: controllerUrl,
-            type: 'POST',
-            data: {
-                ajax: true,
-                action: 'logOutAccount',
-            },
-            success(response) {
-                if (response.status) {
-                    document.location = response.redirectUrl;
-                }
-            },
-        });
+    $('[data-pp-link-settings]').on('click', (e) => {
+      let el = $(e.target.attributes.href.value);
+      if (el.length) {
+        hoverConfig(el);
+      } else {
+        hoverTabConfig();
+      }
+    });
 
-    },
+    $('.defaultForm').on('mouseleave', (e) => {
+      $(e.currentTarget).removeClass('pp-settings-link-on');
+    });
+  },
 
-    checkRequirements() {
-        $.ajax({
-            url: controllerUrl,
-            type: 'POST',
-            data: {
-                ajax: true,
-                action: 'CheckCredentials',
-            },
-            success(response) {
-                $('#status-block').html(response);
-            },
-        });
-    },
+  logoutAccount() {
+    $.ajax({
+      url: controllerUrl,
+      type: 'POST',
+      data: {
+        ajax: true,
+        action: 'logOutAccount',
+      },
+      success(response) {
+        if (response.status) {
+          document.location = response.redirectUrl;
+        }
+      },
+    });
+
+  },
+
+  checkRequirements() {
+    $.ajax({
+      url: controllerUrl,
+      type: 'POST',
+      data: {
+        ajax: true,
+        action: 'CheckCredentials',
+      },
+      success(response) {
+        $('#status-block').html(response);
+      },
+    });
+  },
 
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    SetupAdmin.init();
+  SetupAdmin.init();
 });

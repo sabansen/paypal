@@ -93,7 +93,7 @@ class AdminPayPalSetupController extends AdminPayPalController
 
     public function initAccountSettingsBlock()
     {
-        $this->fields_form[]['form'] = array(
+        $this->fields_form['form']['form'] = array(
             'legend' => array(
                 'title' => $this->l('Account settings'),
                 'icon' => 'icon-cogs',
@@ -104,7 +104,8 @@ class AdminPayPalSetupController extends AdminPayPalController
                     'html_content' => $this->getHtmlBlockAccountSetting(),
                     'name' => '',
                 )
-            )
+            ),
+            'id_form' => 'pp_config_account'
         );
     }
 
@@ -227,7 +228,7 @@ class AdminPayPalSetupController extends AdminPayPalController
     {
         $this->context->smarty->assign('sandbox', (int)\Configuration::get('PAYPAL_SANDBOX'));
         $html_content = $this->context->smarty->fetch($this->getTemplatePath() . '_partials/switchSandboxBlock.tpl');
-        $this->fields_form[]['form'] = array(
+        $this->fields_form['form']['form'] = array(
             'legend' => array(
                 'title' => $this->l('Environment Settings'),
                 'icon' => 'icon-cogs',
@@ -242,7 +243,8 @@ class AdminPayPalSetupController extends AdminPayPalController
                     'type' => 'hidden',
                     'name' => 'paypal_sandbox',
                 )
-            )
+                ),
+                'id_form' => 'pp_config_environment'
         );
         $values = array(
             'paypal_sandbox' => !(int)Configuration::get('PAYPAL_SANDBOX')

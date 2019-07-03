@@ -25,7 +25,7 @@
 
 {include './_partials/headerLogo.tpl'}
 
-<div class="row">
+<div>
     <div class="row flex">
         <div class="col-lg-8 stretchHeightForm">
             {if isset($formAccountSettings)}
