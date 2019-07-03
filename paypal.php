@@ -446,6 +446,9 @@ class PayPal extends PaymentModule
 
     public function hookDisplayShoppingCartFooter()
     {
+        if (Module::isEnabled('braintree') && (int)Configuration::get('BRAINTREE_ACTIVATE_PAYPAL')) {
+            return;
+        }
         if ('cart' !== $this->context->controller->php_self
             || !Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART')) {
             return false;
@@ -686,6 +689,9 @@ class PayPal extends PaymentModule
 
     public function hookDisplayReassurance()
     {
+        if (Module::isEnabled('braintree') && (int)Configuration::get('BRAINTREE_ACTIVATE_PAYPAL')) {
+            return;
+        }
         if ('product' !== $this->context->controller->php_self || !Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT')) {
             return false;
         }
