@@ -16,8 +16,6 @@ const config = {
     'js/bo_order': './_dev/js/bo_order.js',
     'js/ec_in_context': './_dev/js/ec_in_context.js',
     'js/order_confirmation': './_dev/js/order_confirmation.js',
-    'js/payment_bt': './_dev/js/payment_bt.js',
-    'js/payment_pbt': './_dev/js/payment_pbt.js',
     'js/payment_ppp': './_dev/js/payment_ppp.js',
     'js/shortcut_payment': './_dev/js/shortcut_payment.js',
     'js/shortcut': './_dev/js/shortcut.js',

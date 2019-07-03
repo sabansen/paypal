@@ -14,15 +14,13 @@
  */
 
 // init in-context
-document.addEventListener("DOMContentLoaded", function(){
-    $(document).on('click', '#desc-order-partial_refund', function(){
-        if ($('#doPartialRefundPaypal').length == 0) {
-            var newCheckBox = '<p class="checkbox"><label for="doPartialRefundPaypal">\n' +
-                '<input type="checkbox" id="doPartialRefundPaypal" name="doPartialRefundPaypal">\n' +
-                chb_paypal_refund + '</label></p>';
-            $('button[name=partialRefund]').parent('.partial_refund_fields').prepend(newCheckBox);
-        }
-    });
-});
-
-
+$(document).ready(() => {
+  $(document).on('click', '#desc-order-partial_refund', () => {
+    if ($('#doPartialRefundPaypal').length == 0) {
+			let newCheckBox = `<p class="checkbox"><label for="doPartialRefundPaypal">
+			<input type="checkbox" id="doPartialRefundPaypal" name="doPartialRefundPaypal">
+        ${chb_paypal_refund}</label></p>`;
+      $('button[name=partialRefund]').parent('.partial_refund_fields').prepend(newCheckBox);
+    }
+  });
+})

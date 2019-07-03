@@ -1,6 +1,5 @@
 $(document).ready( () => {
   $('[data-display-popup]').on('click', function() {
-
     displayPopup($(this).data('method'), $(this).data('with-card'))
   });
 
