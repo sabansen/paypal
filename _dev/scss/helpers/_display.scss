@@ -6,7 +6,11 @@
 
 	&__align-items-center {
 		align-items: center !important;
-	}
+  }
+
+  &__justify-content-center {
+		justify-content: center !important;
+  }
 
 	&__hidden {
 		display: none;

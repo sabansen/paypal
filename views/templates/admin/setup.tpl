@@ -26,8 +26,8 @@
 {include './_partials/headerLogo.tpl'}
 
 <div>
-    <div class="row flex">
-        <div class="col-lg-8 stretchHeightForm">
+    <div class="row pp__flex">
+        <div class="col-lg-8 stretchHeightForm pp__pb-4">
             {if isset($formAccountSettings)}
                 {$formAccountSettings nofilter}
             {/if}
@@ -40,7 +40,7 @@
         </div>
     </div>
 
-    <div class="row flex">
+    <div class="row pp__flex">
         <div class="col-lg-8">
             {if isset($formPaymentSettings)}
                 {$formPaymentSettings nofilter}
@@ -50,7 +50,7 @@
                 {$formMerchantAccounts nofilter}
             {/if}
         </div>
-        <div class="col-lg-4 stretchHeightForm" id="status-block">
+        <div class="col-lg-4 stretchHeightForm pp__pb-4" id="status-block">
             {if isset($formStatus)}
                 {$formStatus nofilter}
             {/if}

@@ -24,7 +24,7 @@
 *}
 
 {if isset($showWarningForUserBraintree) && $showWarningForUserBraintree}
-  <div class="mb-20">
+  <div class="pp__mb-4">
     <div class="alert alert-danger">
       {l s='Starting July 1st, 2019, Braintree payment solution is separated from PayPal module. There are 2 different
 modules: PayPal official (v5.0.0) and Braintree official (v1.0.0). ' mod='paypal'}
@@ -39,7 +39,7 @@ modules: PayPal official (v5.0.0) and Braintree official (v1.0.0). ' mod='paypal
       {l s='Please note that we highly recommend to uninstall the PayPal module once you finish your Braintree settings migration.' mod='paypal'}
     </div>
 
-    <div class="flex justify-content-center">
+    <div class="pp__flex pp__justify-content-center">
       <a class="btn btn-default"
         href="{$link->getAdminLink('AdminPayPalSetup', true, null, ['useWithoutBraintree' => 1])}">
         {l s='You would like to use PayPal without Braintree' mod='paypal'}

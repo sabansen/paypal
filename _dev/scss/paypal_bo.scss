@@ -27,44 +27,10 @@
 // Components
 @import "components/nav";
 
+// Helpers
 @import "helpers/borders";
 @import "helpers/display";
 @import "helpers/spacing";
 
 // Pages
 @import "pages/admin";
-
-.flex {
-  display: flex !important;
-}
-
-.stretchHeightForm form {
-  height: 100%;
-}
-
-.stretchHeightForm .panel {
-  height: 100%;
-}
-
-.stretchHeightForm {
-  padding-bottom: 20px;
-}
-
-.block-preview-button-context {
-  display: flex;
-  >div {
-    padding: 10px 5px;
-  }
-  img {
-    max-width: 100%;
-  }
-}
-
-.justify-content-center {
-  justify-content: center;
-}
-
-.mb-20 {
-  margin-bottom: 20px;
-}
-

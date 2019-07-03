@@ -4,11 +4,6 @@ $(document).ready( () => {
     displayPopup($(this).data('method'), $(this).data('with-card'))
   });
 
-  $('#change_product').click(function(event) {
-    event.preventDefault();
-    $('a[href=#paypal_conf]').click();
-  });
-
   $('.main_form').insertAfter($('.configuration-block'));
   $('.bt_currency_form').insertAfter($('.main_form'));
   $('.form_shortcut').insertAfter($('.main_form'));
@@ -30,9 +25,6 @@ $(document).ready( () => {
     toggleElement($(this).val(), $('#card_verification_on').parents('.form-group'));
   });
 
-  if ($('#config_logo-images-thumbnails').length && !ssl_active) {
-    $('#config_logo-images-thumbnails').after(logoThumbnailsMessage);
-  }
 });
 
 $('[data-check-requirements]').click( () => {

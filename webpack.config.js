@@ -26,7 +26,6 @@ const config = {
     'js/adminCheckout': './_dev/js/adminCheckout.js',
     'js/helpAdmin': './_dev/js/helpAdmin.js',
 
-    'css/braintree': './_dev/scss/braintree.scss',
     'css/paypal_bo': './_dev/scss/paypal_bo.scss',
   },
 

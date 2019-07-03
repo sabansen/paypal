@@ -28,6 +28,10 @@ $spacers: (
 	.pp__py-#{$size} {
 		padding-top: $length !important;
 		padding-bottom: $length !important;
+  }
+  .pp__px-#{$size} {
+		padding-left: $length !important;
+		padding-right: $length !important;
 	}
 }
 

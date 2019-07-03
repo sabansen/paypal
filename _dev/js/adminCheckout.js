@@ -17,9 +17,6 @@ import {hoverConfig, hoverTabConfig} from './functions.js';
 
 var CustomizeCheckout = {
   init() {
-    console.log(66);
-
-
     $('[data-pp-link-settings]').on('click', (e) => {
       let el = $(e.target.attributes.href.value);
       if (el.length) {
