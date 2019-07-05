@@ -103,6 +103,8 @@ class AdminPayPalSetupController extends AdminPayPalController
                     'type' => 'html',
                     'html_content' => $this->getHtmlBlockAccountSetting(),
                     'name' => '',
+                    'col' => 12,
+                    'label' => '',
                 )
             ),
             'id_form' => 'pp_config_account'
@@ -238,10 +240,14 @@ class AdminPayPalSetupController extends AdminPayPalController
                     'type' => 'html',
                     'html_content' => $html_content,
                     'name' => '',
+                    'col' => 12,
+                    'label' => '',
                 ),
                 array(
                     'type' => 'hidden',
                     'name' => 'paypal_sandbox',
+                    'col' => 12,
+                    'label' => '',
                 )
                 ),
                 'id_form' => 'pp_config_environment'
@@ -274,6 +280,8 @@ class AdminPayPalSetupController extends AdminPayPalController
                     'type' => 'html',
                     'html_content' => $html_content,
                     'name' => '',
+                    'col' => 12,
+                    'label' => '',
                 )
             )
         );
