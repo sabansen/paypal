@@ -55,6 +55,11 @@ class AdminPayPalSetupController extends AdminPayPalController
     public function initContent()
     {
         parent::initContent();
+        if ($this->module->showWarningForUserBraintree()) {
+            $this->content = $this->context->smarty->fetch($this->getTemplatePath() . '_partials/messages/forBraintreeUsers.tpl');
+            $this->context->smarty->assign('content', $this->content);
+            return;
+        }
         $tpl_vars = array();
         $this->initAccountSettingsBlock();
         $formAccountSettings = $this->renderForm();

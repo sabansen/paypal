@@ -45,6 +45,12 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
     {
         parent::initContent();
 
+        if ($this->module->showWarningForUserBraintree()) {
+            $this->content = $this->context->smarty->fetch($this->getTemplatePath() . '_partials/messages/forBraintreeUsers.tpl');
+            $this->context->smarty->assign('content', $this->content);
+            return;
+        }
+
         if (Tools::getValue('deleteLogo')) {
             unlink(Configuration::get('PAYPAL_CONFIG_LOGO'));
             Configuration::updateValue('PAYPAL_CONFIG_LOGO', '');
