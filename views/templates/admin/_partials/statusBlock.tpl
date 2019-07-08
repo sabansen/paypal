@@ -44,11 +44,11 @@
         <li>
             {if isset($sslActivated) && $sslActivated}
                 <i class="icon-check" style="color: green"></i>
+                {l s='SSL enabled.' mod='paypal'}
             {else}
                 <i class="icon-remove" style="color: red"></i>
+                {l s='SSL should be enabled on your web site.' mod='paypal'}
             {/if}
-            {l s='SSL is activated' mod='paypal'}
-
         </li>
 
         <li>

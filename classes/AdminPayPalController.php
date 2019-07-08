@@ -95,7 +95,7 @@ class AdminPayPalController extends \ModuleAdminController
 
         if ($this->module->isSslActive() == false) {
             $response['success'] = false;
-            $response['message'][] = $this->l('Activate SSL please');
+            $response['message'][] = $this->l('SSL should be enabled on your web site.');
         }
 
         $tls_check = $this->_checkTLSVersion();
