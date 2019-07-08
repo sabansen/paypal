@@ -92,6 +92,12 @@ class AdminPayPalController extends \ModuleAdminController
             $response['message'][] = $this->l('To activate a payment solution, please select your default country.');
 
         }
+
+        if ($this->module->isSslActive() == false) {
+            $response['success'] = false;
+            $response['message'][] = $this->l('Activate SSL please');
+        }
+
         $tls_check = $this->_checkTLSVersion();
         if ($tls_check['status'] == false) {
             $response['success'] = false;

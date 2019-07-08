@@ -1492,4 +1492,9 @@ class PayPal extends PaymentModule
         $this->context->smarty->assign('message', $message);
         return $this->context->smarty->fetch(_PS_MODULE_DIR_ . $this->name . '/views/templates/admin/_partials/alertInfo.tpl');
     }
+
+    public function isSslActive()
+    {
+        return \Configuration::get('PS_SSL_ENABLED') && \Configuration::get('PS_SSL_ENABLED_EVERYWHERE');
+    }
 }

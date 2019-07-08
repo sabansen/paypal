@@ -42,6 +42,16 @@
 
     <ul class="list-unstyled">
         <li>
+            {if isset($sslActivated) && $sslActivated}
+                <i class="icon-check" style="color: green"></i>
+            {else}
+                <i class="icon-remove" style="color: red"></i>
+            {/if}
+            {l s='SSL is activated' mod='paypal'}
+
+        </li>
+
+        <li>
             {if isset($tlsVersion) && $tlsVersion['status']}
                 <i class="icon-check" style="color: green"></i>
                 {l s='PHP cURL extension must be enabled on your server' mod='paypal'}

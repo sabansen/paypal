@@ -266,8 +266,10 @@ class AdminPayPalSetupController extends AdminPayPalController
         $tpl_vars = array(
             'merchantCountry' => $countryDefault->name,
             'tlsVersion' => $this->_checkTLSVersion(),
-            'accountConfigured' => $method == null ? false : $method->isConfigured()
+            'accountConfigured' => $method == null ? false : $method->isConfigured(),
+            'sslActivated' => $this->module->isSslActive()
         );
+
         $this->context->smarty->assign($tpl_vars);
         $html_content = $this->context->smarty->fetch($this->getTemplatePath() . '_partials/statusBlock.tpl');
         $this->fields_form[]['form'] = array(
