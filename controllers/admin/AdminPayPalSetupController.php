@@ -119,6 +119,7 @@ class AdminPayPalSetupController extends AdminPayPalController
             $tpl_vars = $this->getTplVarsForPPP();
         }
 
+        $tpl_vars['method'] = $this->method;
         $this->context->smarty->assign($tpl_vars);
         $html_content = $this->context->smarty->fetch($this->getTemplatePath() . '_partials/accountSettingsBlock.tpl');
         return $html_content;
@@ -149,8 +150,14 @@ class AdminPayPalSetupController extends AdminPayPalController
         );
         $tpl_vars = array(
             'accountConfigured' => $method == null? false : $method->isConfigured(),
-            'urlOnboarding' => $this->context->link->getAdminLink('AdminPayPalSetup', true, null, $urlParameters)
+            'urlOnboarding' => $this->context->link->getAdminLink('AdminPayPalSetup', true, null, $urlParameters),
         );
+
+        if ((int)Configuration::get('PAYPAL_SANDBOX')) {
+            $tpl_vars['paypal_api_user_name'] = Configuration::get('PAYPAL_USERNAME_SANDBOX');
+        } else {
+            $tpl_vars['paypal_api_user_name'] = Configuration::get('PAYPAL_USERNAME_LIVE');
+        }
 
         return $tpl_vars;
     }

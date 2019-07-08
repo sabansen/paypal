@@ -33,8 +33,25 @@
     </p>
 
     {if isset($accountConfigured) && $accountConfigured}
-        <span class="btn btn-default" id="logoutAccount">
-                {l s='Logout' mod='paypal'}
+        {if isset($method) && $method == 'EC'}
+            <span class="mr-20">
+				{l s='Connected account' mod='paypal'}
+            </span>
+
+            <strong>
+                {if isset($paypal_api_user_name) && is_string($paypal_api_user_name)}
+                    {$paypal_api_user_name|replace:'_api':'@'}
+                {/if}
+            </strong>
+        {else}
+            <span class="mr-20">
+				{l s='Your account is connected now !' mod='paypal'}
+            </span>
+        {/if}
+
+
+        <span class="btn btn-default ml-20" data-bt-logout>
+				{l s='Logout' mod='paypal'}
         </span>
     {else}
         {if isset($urlOnboarding) && $urlOnboarding}
