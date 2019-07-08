@@ -29,7 +29,7 @@
     </p>
 
     <p>
-        {l s='in order to activate the module, you must connect your existing PayPal account or create a new one.' mod='paypal'}
+        {l s='In order to activate the module, you must connect your existing PayPal account or create a new one.' mod='paypal'}
     </p>
 
     {if isset($accountConfigured) && $accountConfigured}
