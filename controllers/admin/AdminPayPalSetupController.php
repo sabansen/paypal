@@ -205,7 +205,7 @@ class AdminPayPalSetupController extends AdminPayPalController
         $mode = (int)Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
         $this->fields_form[]['form'] = array(
             'legend' => array(
-                'title' => $this->l('Braintree Merchant Accounts'),
+                'title' => $this->l('API user names'),
                 'icon' => 'icon-cogs',
             ),
             'input' => array(
