@@ -97,7 +97,6 @@ class MethodEC extends AbstractMethodPaypal
      */
     public function getConfig(\PayPal $module)
     {
-
     }
 
     public function logOut($sandbox = null)

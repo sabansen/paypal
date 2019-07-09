@@ -34,7 +34,7 @@
         {/if}
     </p>
 
-    <p>{l s='Production mode is the Live environment where you\'ll be able to collect your real payments'}</p>
+    <p>{l s='Production mode is the Live environment where you\'ll be able to collect your real payments' mod='paypal'}</p>
 
     <p>
         <button class="btn btn-default" id="switchEnvironmentMode">

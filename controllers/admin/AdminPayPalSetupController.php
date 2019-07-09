@@ -22,6 +22,7 @@
  * @license   Commercial license
  * @version   develop
  */
+ 
 include_once(_PS_MODULE_DIR_.'paypal/vendor/autoload.php');
 
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -234,7 +235,9 @@ class AdminPayPalSetupController extends AdminPayPalController
             ),
         );
 
-        $values['paypal_api_user_name'] = Configuration::get('PAYPAL_USERNAME_' . $mode);
+        $values = array(
+            'paypal_api_user_name' => Configuration::get('PAYPAL_USERNAME_' . $mode),
+        );
         $this->tpl_form_vars = array_merge($this->tpl_form_vars, $values);
     }
 
@@ -344,5 +347,4 @@ class AdminPayPalSetupController extends AdminPayPalController
 
         $this->module->checkPaypalStats();
     }
-
 }

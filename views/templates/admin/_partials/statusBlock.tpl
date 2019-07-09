@@ -25,7 +25,7 @@
 
 <div>
     <p>
-        {l s='Merchant Country:' mod='paypal'} <b>{$merchantCountry|escape:'utf':'htmlall'}</b>
+        {l s='Merchant Country:' mod='paypal'} <b>{$merchantCountry|escape:'htmlall':'utf-8'}</b>
     </p>
 
     <p>

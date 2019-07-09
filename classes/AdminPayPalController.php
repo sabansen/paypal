@@ -22,6 +22,7 @@
  * @license   Commercial license
  * @version   develop
  */
+ 
 namespace PaypalAddons\classes;
 
 use Symfony\Component\VarDumper\VarDumper;
@@ -90,7 +91,6 @@ class AdminPayPalController extends \ModuleAdminController
         if ((int)\Configuration::get('PS_COUNTRY_DEFAULT') == false) {
             $response['success'] = false;
             $response['message'][] = $this->l('To activate a payment solution, please select your default country.');
-
         }
 
         if ($this->module->isSslActive() == false) {

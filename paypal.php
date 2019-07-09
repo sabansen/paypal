@@ -201,61 +201,61 @@ class PayPal extends PaymentModule
              'parent_class_name' => 'SELL',
              'visible' => true,
              'icon' => 'payment'
-         ),
-         array(
-             'name' => array(
-                 'en' => 'Configuration',
-                 'fr' => 'Configuration'
              ),
-             'class_name' => 'AdminPaypalConfiguration',
-             'parent_class_name' => 'AdminParentPaypalConfiguration',
-             'visible' => true,
-         ),
-         array(
-             'name' => array(
-                 'en' => 'Report',
-                 'fr' => 'Rapport'
+             array(
+                 'name' => array(
+                     'en' => 'Configuration',
+                     'fr' => 'Configuration'
+                 ),
+                 'class_name' => 'AdminPaypalConfiguration',
+                 'parent_class_name' => 'AdminParentPaypalConfiguration',
+                 'visible' => true,
              ),
-             'class_name' => 'AdminPaypalStats',
-             'parent_class_name' => 'AdminParentPaypalConfiguration',
-             'visible' => true,
-         ),
-        array(
-            'name' => array(
-                'en' => 'Setup',
-                'fr' => 'Setup'
+             array(
+                 'name' => array(
+                     'en' => 'Report',
+                     'fr' => 'Rapport'
+                 ),
+                 'class_name' => 'AdminPaypalStats',
+                 'parent_class_name' => 'AdminParentPaypalConfiguration',
+                 'visible' => true,
+             ),
+            array(
+                'name' => array(
+                    'en' => 'Setup',
+                    'fr' => 'Setup'
+                ),
+                'class_name' => 'AdminPayPalSetup',
+                'parent_class_name' => 'AdminPayPalConfiguration',
+                'visible' => true,
             ),
-            'class_name' => 'AdminPayPalSetup',
-            'parent_class_name' => 'AdminPayPalConfiguration',
-            'visible' => true,
-        ),
-        array(
-            'name' => array(
-                'en' => 'Customize checkout experience',
-                'fr' => 'Customize checkout experience'
+            array(
+                'name' => array(
+                    'en' => 'Customize checkout experience',
+                    'fr' => 'Customize checkout experience'
+                ),
+                'class_name' => 'AdminPayPalCustomizeCheckout',
+                'parent_class_name' => 'AdminPayPalConfiguration',
+                'visible' => true,
             ),
-            'class_name' => 'AdminPayPalCustomizeCheckout',
-            'parent_class_name' => 'AdminPayPalConfiguration',
-            'visible' => true,
-        ),
-        array(
-            'name' => array(
-                'en' => 'Help',
-                'fr' => 'Help'
+            array(
+                'name' => array(
+                    'en' => 'Help',
+                    'fr' => 'Help'
+                ),
+                'class_name' => 'AdminPayPalHelp',
+                'parent_class_name' => 'AdminPayPalConfiguration',
+                'visible' => true,
             ),
-            'class_name' => 'AdminPayPalHelp',
-            'parent_class_name' => 'AdminPayPalConfiguration',
-            'visible' => true,
-        ),
-        array(
-            'name' => array(
-                'en' => 'Logs',
-                'fr' => 'Logs'
+            array(
+                'name' => array(
+                    'en' => 'Logs',
+                    'fr' => 'Logs'
+                ),
+                'class_name' => 'AdminPayPalLogs',
+                'parent_class_name' => 'AdminPayPalConfiguration',
+                'visible' => true,
             ),
-            'class_name' => 'AdminPayPalLogs',
-            'parent_class_name' => 'AdminPayPalConfiguration',
-            'visible' => true,
-        ),
      );
 
     public function __construct()
@@ -1417,8 +1417,8 @@ class PayPal extends PaymentModule
             $country = new Country((int) $address->id_country);
             $state = new State((int) $address->id_state);
             if (isset(PayPal::$state_iso_code_matrix[$country->iso_code]) &&
-                empty(PayPal::$state_iso_code_matrix[$country->iso_code]) == false)
-            {
+                empty(PayPal::$state_iso_code_matrix[$country->iso_code]) == false
+            ) {
                 $matrix = PayPal::$state_iso_code_matrix[$country->iso_code];
                 $ship_addr_state = $matrix[$state->iso_code] ? $matrix[$state->iso_code] : $matrix[$state->name];
             } else {
