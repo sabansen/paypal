@@ -398,6 +398,7 @@ class PayPal extends PaymentModule
             $order_state->delivery = false;
             $order_state->logable = false;
             $order_state->invoice = false;
+            $order_state->module_name = $this->name;
             if ($order_state->add()) {
                 $source = _PS_MODULE_DIR_.'paypal/views/img/os_paypal.png';
                 $destination = _PS_ROOT_DIR_.'/img/os/'.(int) $order_state->id.'.gif';
@@ -422,6 +423,7 @@ class PayPal extends PaymentModule
             $order_state->delivery = false;
             $order_state->logable = false;
             $order_state->invoice = false;
+            $order_state->module_name = $this->name;
             if ($order_state->add()) {
                 $source = _PS_MODULE_DIR_.'paypal/views/img/os_braintree.png';
                 $destination = _PS_ROOT_DIR_.'/img/os/'.(int) $order_state->id.'.gif';
@@ -446,6 +448,7 @@ class PayPal extends PaymentModule
             $order_state->delivery = false;
             $order_state->logable = false;
             $order_state->invoice = false;
+            $order_state->module_name = $this->name;
             if ($order_state->add()) {
                 $source = _PS_MODULE_DIR_.'paypal/views/img/os_braintree.png';
                 $destination = _PS_ROOT_DIR_.'/img/os/'.(int) $order_state->id.'.gif';
@@ -463,7 +466,33 @@ class PayPal extends PaymentModule
         if (!parent::uninstall()) {
             return false;
         }
+        if ($this->uninstallOrderStates() == false) {
+            return false;
+        }
         return true;
+    }
+
+    /**
+     * Delete order states
+     * @return bool
+     */
+    public function uninstallOrderStates()
+    {
+        /* @var $orderState OrderState*/
+        $result = true;
+        $collection = new PrestaShopCollection('OrderState');
+        $collection->where('module_name', '=', $this->name);
+        $orderStates = $collection->getResults();
+
+        if ($orderStates == false) {
+            return $result;
+        }
+
+        foreach ($orderStates as $orderState) {
+            $result &= $orderState->delete();
+        }
+
+        return $result;
     }
 
     public function getUrl()
