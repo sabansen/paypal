@@ -23,7 +23,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div class="alert alert-info">
-    <button type="button" class="close" data-dismiss="alert">×</button>
+<div class="alert alert-info {if isset($widthByContent) && $widthByContent}d-inline-block{/if}">
+    {if isset($btnClose) && $btnClose}
+        <button type="button" class="close" data-dismiss="alert">×</button>
+    {/if}
     {$message|escape:'htmlall':'utf-8'}
 </div>

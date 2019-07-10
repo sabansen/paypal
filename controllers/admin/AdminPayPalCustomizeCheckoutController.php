@@ -79,7 +79,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             'input' => array(
                 array(
                     'type' => 'select',
-                    'label' => $this->l('PayPal In-Context'),
+                    'label' => $this->l('PayPal checkout'),
                     'name' => 'paypal_express_checkout_in_context',
                     'hint' => $this->l('PayPal opens in a pop-up window, allowing your buyers to finalize their payment without leaving your website. Optimized, modern and reassuring experience which benefits from the same security standards than during a redirection to the PayPal website.'),
                     'options' => array(
@@ -96,6 +96,12 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
                         'id' => 'id',
                         'name' => 'name'
                     )
+                ),
+                array(
+                    'type' => 'html',
+                    'label' => '',
+                    'name' => '',
+                    'html_content' => $this->module->displayInformation($this->l('In-Context has shown better conversion rate'), false, true),
                 ),
                 array(
                     'type' => 'html',

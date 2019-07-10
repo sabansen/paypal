@@ -1520,9 +1520,14 @@ class PayPal extends PaymentModule
             Configuration::get('PAYPAL_METHOD') == 'BT';
     }
 
-    public function displayInformation($message)
+    public function displayInformation($message, $btnClose = true, $widthByContent = false)
     {
-        $this->context->smarty->assign('message', $message);
+        $tplVars = array(
+            'message' => $message,
+            'btnClose' => $btnClose,
+            'widthByContent' => $widthByContent
+        );
+        $this->context->smarty->assign($tplVars);
         return $this->context->smarty->fetch(_PS_MODULE_DIR_ . $this->name . '/views/templates/admin/_partials/alertInfo.tpl');
     }
 
