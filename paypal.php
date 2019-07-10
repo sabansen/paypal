@@ -406,56 +406,7 @@ class PayPal extends PaymentModule
             }
             Configuration::updateValue('PAYPAL_OS_WAITING', (int) $order_state->id);
         }
-        if (!Configuration::get('PAYPAL_BRAINTREE_OS_AWAITING')
-            || !Validate::isLoadedObject(new OrderState(Configuration::get('PAYPAL_BRAINTREE_OS_AWAITING')))) {
-            $order_state = new OrderState();
-            $order_state->name = array();
-            foreach (Language::getLanguages() as $language) {
-                if (Tools::strtolower($language['iso_code']) == 'fr') {
-                    $order_state->name[$language['id_lang']] = 'En attente de paiement Braintree';
-                } else {
-                    $order_state->name[$language['id_lang']] = 'Awaiting for Braintree payment';
-                }
-            }
-            $order_state->send_email = false;
-            $order_state->color = '#4169E1';
-            $order_state->hidden = false;
-            $order_state->delivery = false;
-            $order_state->logable = false;
-            $order_state->invoice = false;
-            $order_state->module_name = $this->name;
-            if ($order_state->add()) {
-                $source = _PS_MODULE_DIR_.'paypal/views/img/os_braintree.png';
-                $destination = _PS_ROOT_DIR_.'/img/os/'.(int) $order_state->id.'.gif';
-                copy($source, $destination);
-            }
-            Configuration::updateValue('PAYPAL_BRAINTREE_OS_AWAITING', (int) $order_state->id);
-        }
-        if (!Configuration::get('PAYPAL_BRAINTREE_OS_AWAITING_VALIDATION')
-            || !Validate::isLoadedObject(new OrderState(Configuration::get('PAYPAL_BRAINTREE_OS_AWAITING_VALIDATION')))) {
-            $order_state = new OrderState();
-            $order_state->name = array();
-            foreach (Language::getLanguages() as $language) {
-                if (Tools::strtolower($language['iso_code']) == 'fr') {
-                    $order_state->name[$language['id_lang']] = 'En attente de validation Braintree';
-                } else {
-                    $order_state->name[$language['id_lang']] = 'Awaiting for Braintree validation';
-                }
-            }
-            $order_state->send_email = false;
-            $order_state->color = '#4169E1';
-            $order_state->hidden = false;
-            $order_state->delivery = false;
-            $order_state->logable = false;
-            $order_state->invoice = false;
-            $order_state->module_name = $this->name;
-            if ($order_state->add()) {
-                $source = _PS_MODULE_DIR_.'paypal/views/img/os_braintree.png';
-                $destination = _PS_ROOT_DIR_.'/img/os/'.(int) $order_state->id.'.gif';
-                copy($source, $destination);
-            }
-            Configuration::updateValue('PAYPAL_BRAINTREE_OS_AWAITING_VALIDATION', (int) $order_state->id);
-        }
+
         return true;
     }
 
