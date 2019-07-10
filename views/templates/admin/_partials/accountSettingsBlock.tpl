@@ -34,7 +34,7 @@
 
     {if isset($accountConfigured) && $accountConfigured}
         {if isset($method) && $method == 'EC'}
-            <span class="mr-20">
+            <span class="pp__mr-4">
 				{l s='Connected account' mod='paypal'}
             </span>
 
@@ -44,13 +44,13 @@
                 {/if}
             </strong>
         {else}
-            <span class="mr-20">
+            <span class="pp__mr-4">
 				{l s='Your account is connected now !' mod='paypal'}
             </span>
         {/if}
 
 
-        <span class="btn btn-default ml-20" data-bt-logout>
+        <span class="btn btn-default pp__ml-4" data-bt-logout>
 				{l s='Logout' mod='paypal'}
         </span>
     {else}

@@ -26,7 +26,7 @@
 
 <div class="col-lg-9">
     <p class="h3">
-        {l s='Environment' mod='paypal'}
+        {l s='Environment:' mod='paypal'}
         {if isset($sandbox) && $sandbox}
             <b>{l s='Sandbox' mod='paypal'}</b>
         {else}

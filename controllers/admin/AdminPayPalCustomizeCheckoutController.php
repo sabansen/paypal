@@ -100,7 +100,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
                 array(
                     'type' => 'html',
                     'label' => $this->l('PayPal Express CheckoutShortcut on'),
-                    'hint' => $this->l('The PayPal shortcut is displayed directly in the cart or on your product pages, allowing a faster checkout experience for your buyers. It requires fewer pages, clicks and seconds in order to finalize the payment. PayPal provides you with the client’s billing and shipping information so that you don’t have to collect it yourself.'),
+                    'hint' => $this->l('The PayPal shortcut is displayed directly on your cart or on your product pages, allowing a faster checkout for your buyers.PayPal provides you with the client\'s shipping and billing information so that you don\'t have to collect it yourself.'),
                     'name' => '',
                     'html_content' => $htmlContent
                 ),
