@@ -39,5 +39,6 @@ function upgrade_module_5_0_0($module)
     $installer->registerHooks();
     $installer->installAdminControllers();
     $module->checkPaypalStats();
+    $module->renameTabParent();
     return true;
 }

@@ -194,8 +194,8 @@ class PayPal extends PaymentModule
     public $moduleAdminControllers = array(
              array(
              'name' => array(
-                 'en' => 'PayPal & Braintree Official',
-                 'fr' => 'PayPal et Braintree Officiel'
+                 'en' => 'PayPal Official',
+                 'fr' => 'PayPal Officiel'
              ),
              'class_name' => 'AdminParentPaypalConfiguration',
              'parent_class_name' => 'SELL',
@@ -1529,5 +1529,26 @@ class PayPal extends PaymentModule
     public function isSslActive()
     {
         return \Configuration::get('PS_SSL_ENABLED') && \Configuration::get('PS_SSL_ENABLED_EVERYWHERE');
+    }
+
+    public function renameTabParent()
+    {
+        $tab = Tab::getInstanceFromClassName('AdminParentPaypalConfiguration');
+
+        if (Validate::isLoadedObject($tab) == false) {
+            return;
+        }
+
+        $name = array();
+
+        foreach (Language::getLanguages() as $lang) {
+            if ($lang['iso_code'] == 'fr') {
+                $name[$lang['id_lang']] = 'PayPal Officiel';
+            } else {
+                $name[$lang['id_lang']] = 'PayPal Official';
+            }
+        }
+        $tab->name = $name;
+        $tab->save();
     }
 }
