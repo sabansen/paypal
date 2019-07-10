@@ -228,11 +228,7 @@ class AdminPayPalSetupController extends AdminPayPalController
                     'name' => 'paypal_api_user_name',
                     'readonly' => true,
                 )
-            ),
-            'submit' => array(
-                'title' => $this->l('Save'),
-                'class' => 'btn btn-default pull-right button',
-            ),
+            )
         );
 
         $values = array(
