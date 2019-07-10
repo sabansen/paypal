@@ -345,6 +345,37 @@ class PayPal extends PaymentModule
     }
 
     /**
+     * Add checkbox carrier restrictions for a module.
+     *
+     * @param array $shops
+     *
+     * @return bool
+     */
+    public function addCheckboxCarrierRestrictionsForModule(array $shops = array())
+    {
+        if (!$shops) {
+            $shops = Shop::getShops(true, null, true);
+        }
+
+        $carriers = Carrier::getCarriers($this->context->language->id, false, false, false, null, Carrier::ALL_CARRIERS);
+        $carrier_ids = array();
+        foreach ($carriers as $carrier) {
+            $carrier_ids[] = $carrier['id_reference'];
+        }
+
+        foreach ($shops as $s) {
+            foreach ($carrier_ids as $id_carrier) {
+                if (!Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'module_carrier` (`id_module`, `id_shop`, `id_reference`)
+				VALUES (' . (int) $this->id . ', "' . (int) $s . '", ' . (int) $id_carrier . ')')) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Create order state
      * @return boolean
      */
