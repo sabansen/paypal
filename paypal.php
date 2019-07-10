@@ -231,8 +231,8 @@ class PayPal extends PaymentModule
             ),
             array(
                 'name' => array(
-                    'en' => 'Customize checkout experience',
-                    'fr' => 'Customize checkout experience'
+                    'en' => 'Experience',
+                    'fr' => 'Experience'
                 ),
                 'class_name' => 'AdminPayPalCustomizeCheckout',
                 'parent_class_name' => 'AdminPayPalConfiguration',
