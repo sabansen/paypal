@@ -31,8 +31,7 @@ modules: PayPal official (v5.0.0) and Braintree official (v1.0.0). ' mod='paypal
       <br>
       {l s='You are using the v5.0.0 of PayPal module : the Braintree payment solution is not available via PayPal anymore. ' mod='paypal'}
       <br>
-      {l s='You can continue to use Braintree by installing the new Braintree module available via addons.prestashop' mod='paypal'}
-      <a href="https://addons.prestashop.com/">{l s='for free.' mod='paypal'}</a>
+      {{l s='You can continue to use Braintree by installing the new Braintree module available via addons.prestashop [a @href1@]for free.[/a]' mod='paypal'}|totlreplace:['@href1@' => {'https://addons.prestashop.com/'}]}
       <br>
       {l s='You will be able to migrate your account settings and orders created via Braintree once you install the new Braintree module' mod='paypal'}
       <br>

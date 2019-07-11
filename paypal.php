@@ -276,6 +276,7 @@ class PayPal extends PaymentModule
 
         parent::__construct();
 
+        require_once realpath(dirname(__FILE__) .'/smarty/plugins') . '/modifier.totlreplace.php';
         $this->displayName = $this->l('PayPal');
         $this->description = $this->l('Allow your customers to pay with PayPal - the safest, quickest and easiest way to pay online.');
         $this->confirmUninstall = $this->l('Are you sure you want to delete your details?');
