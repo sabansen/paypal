@@ -101,7 +101,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
                     'type' => 'html',
                     'label' => '',
                     'name' => '',
-                    'html_content' => $this->module->displayInformation($this->l('In-Context has shown better conversion rate'), false, true),
+                    'html_content' => $this->module->displayInformation($this->l('In-Context has shown better conversion rate')),
                 ),
                 array(
                     'type' => 'html',
