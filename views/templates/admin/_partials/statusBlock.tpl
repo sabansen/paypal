@@ -68,7 +68,7 @@
             {else}
                 <i class="icon-remove" style="color: red"></i>
             {/if}
-            {l s='You must connect your Braintree account' mod='paypal'}
+            {l s='You must connect your PayPal account' mod='paypal'}
         </li>
     </ul>
 </div>
