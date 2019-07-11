@@ -198,7 +198,7 @@ class AdminPayPalSetupController extends AdminPayPalController
                 array(
                     'type' => 'html',
                     'name' => '',
-                    'html_content' => $this->module->displayInformation($this->l('We recommend Authoreze process only for lean manufacturers and craft products sellers.'))
+                    'html_content' => $this->module->displayInformation($this->l('We recommend Authorize process only for lean manufacturers and craft products sellers.'))
                 )
             ),
             'submit' => array(
