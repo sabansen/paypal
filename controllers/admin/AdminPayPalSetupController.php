@@ -22,6 +22,7 @@
  * @license   Commercial license
  * @version   develop
  */
+ 
 include_once(_PS_MODULE_DIR_.'paypal/vendor/autoload.php');
 
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -55,6 +56,11 @@ class AdminPayPalSetupController extends AdminPayPalController
     public function initContent()
     {
         parent::initContent();
+        if ($this->module->showWarningForUserBraintree()) {
+            $this->content = $this->context->smarty->fetch($this->getTemplatePath() . '_partials/messages/forBraintreeUsers.tpl');
+            $this->context->smarty->assign('content', $this->content);
+            return;
+        }
         $tpl_vars = array();
         $this->initAccountSettingsBlock();
         $formAccountSettings = $this->renderForm();
@@ -119,6 +125,7 @@ class AdminPayPalSetupController extends AdminPayPalController
             $tpl_vars = $this->getTplVarsForPPP();
         }
 
+        $tpl_vars['method'] = $this->method;
         $this->context->smarty->assign($tpl_vars);
         $html_content = $this->context->smarty->fetch($this->getTemplatePath() . '_partials/accountSettingsBlock.tpl');
         return $html_content;
@@ -149,8 +156,14 @@ class AdminPayPalSetupController extends AdminPayPalController
         );
         $tpl_vars = array(
             'accountConfigured' => $method == null? false : $method->isConfigured(),
-            'urlOnboarding' => $this->context->link->getAdminLink('AdminPayPalSetup', true, null, $urlParameters)
+            'urlOnboarding' => $this->context->link->getAdminLink('AdminPayPalSetup', true, null, $urlParameters),
         );
+
+        if ((int)Configuration::get('PAYPAL_SANDBOX')) {
+            $tpl_vars['paypal_api_user_name'] = Configuration::get('PAYPAL_USERNAME_SANDBOX');
+        } else {
+            $tpl_vars['paypal_api_user_name'] = Configuration::get('PAYPAL_USERNAME_LIVE');
+        }
 
         return $tpl_vars;
     }
@@ -185,7 +198,7 @@ class AdminPayPalSetupController extends AdminPayPalController
                 array(
                     'type' => 'html',
                     'name' => '',
-                    'html_content' => $this->module->displayInformation($this->l('We recommend Authoreze process only for lean manufacturers and craft products sellers.'))
+                    'html_content' => $this->module->displayInformation($this->l('We recommend Authorize process only for lean manufacturers and craft products sellers.'))
                 )
             ),
             'submit' => array(
@@ -205,7 +218,7 @@ class AdminPayPalSetupController extends AdminPayPalController
         $mode = (int)Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
         $this->fields_form[]['form'] = array(
             'legend' => array(
-                'title' => $this->l('Braintree Merchant Accounts'),
+                'title' => $this->l('API user names'),
                 'icon' => 'icon-cogs',
             ),
             'input' => array(
@@ -215,14 +228,12 @@ class AdminPayPalSetupController extends AdminPayPalController
                     'name' => 'paypal_api_user_name',
                     'readonly' => true,
                 )
-            ),
-            'submit' => array(
-                'title' => $this->l('Save'),
-                'class' => 'btn btn-default pull-right button',
-            ),
+            )
         );
 
-        $values['paypal_api_user_name'] = Configuration::get('PAYPAL_USERNAME_' . $mode);
+        $values = array(
+            'paypal_api_user_name' => Configuration::get('PAYPAL_USERNAME_' . $mode),
+        );
         $this->tpl_form_vars = array_merge($this->tpl_form_vars, $values);
     }
 
@@ -266,8 +277,10 @@ class AdminPayPalSetupController extends AdminPayPalController
         $tpl_vars = array(
             'merchantCountry' => $countryDefault->name,
             'tlsVersion' => $this->_checkTLSVersion(),
-            'accountConfigured' => $method == null ? false : $method->isConfigured()
+            'accountConfigured' => $method == null ? false : $method->isConfigured(),
+            'sslActivated' => $this->module->isSslActive()
         );
+
         $this->context->smarty->assign($tpl_vars);
         $html_content = $this->context->smarty->fetch($this->getTemplatePath() . '_partials/statusBlock.tpl');
         $this->fields_form[]['form'] = array(
@@ -330,5 +343,4 @@ class AdminPayPalSetupController extends AdminPayPalController
 
         $this->module->checkPaypalStats();
     }
-
 }

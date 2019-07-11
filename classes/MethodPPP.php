@@ -99,12 +99,10 @@ class MethodPPP extends AbstractMethodPaypal
      */
     public function setConfig($params)
     {
-
     }
 
     public function getConfig(Paypal $paypal)
     {
-
     }
 
     /**

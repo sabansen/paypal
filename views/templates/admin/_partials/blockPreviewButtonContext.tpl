@@ -25,19 +25,18 @@
 
 <div class="block-preview-button-context pp__flex">
 	<div class="pp__py-2 pp__px-1">
-		<div>
+		<div class="pp__mb-2">
 			<input type="checkbox" {if isset($paypal_express_checkout_shortcut_cart) &&
-				$paypal_express_checkout_shortcut_cart}checked{/if} name="paypal_express_checkout_shortcut_cart" value="1">
-			<label for="paypal_express_checkout_shortcut">
+				$paypal_express_checkout_shortcut_cart}checked{/if} name="paypal_express_checkout_shortcut_cart" value="1"
+				   id="paypal_express_checkout_shortcut_cart">
+			<label for="paypal_express_checkout_shortcut_cart" class="control-label">
 				<span
 					class="label-tooltip"
 					data-toggle="tooltip"
 					data-html="true"
 					title=""
-					data-original-title="<p>Activating Express Checkout Shortcut on Cart Page is recommended in specific cases only:</p>
-						<ul>
-								<li> Multi Products web sites </li>
-						</ul>"
+					data-original-title="<p style='text-align:left'>Activating Express Checkout Shortcut on Cart Page is recommended in specific cases only:</p>
+						<p style='text-align:left'>- Multi Products web sites</p>"
 					>
 					{l s="Cart Page" mod="paypal"}
 				</span>
@@ -47,28 +46,24 @@
 	</div>
 
 	<div class="pp__py-2 pp__px-1">
-		<div>
+		<div class="pp__mb-2">
 			<input type="checkbox" {if isset($paypal_express_checkout_shortcut) &&
 				$paypal_express_checkout_shortcut}checked{/if} name="paypal_express_checkout_shortcut"
 				id="paypal_express_checkout_shortcut" value="1">
-			<label for="paypal_express_checkout_shortcut">
+			<label for="paypal_express_checkout_shortcut"  class="control-label">
 				<span
 					class="label-tooltip"
 					data-toggle="tooltip"
 					data-html="true"
 					title=""
-					data-original-title="<p>Activating Express Checkout Shortcut on Product Pages is recommended in specific cases only:</p>
-						<ul>
-								<li> Mono Product </li>
-								<li> Digital Goods </li>
-						</ul>
-						<p>Example:</p>
-						<ul>
-								<li> Parking lot rental </li>
-								<li> Escape game reservation </li>
-								<li> Booking services </li>
-								<li> Single product sale </li>
-						</ul>"
+					data-original-title="<p style='text-align:left'>Activating Express Checkout Shortcut on Product Pages is recommended in specific cases only:</p>
+						<p style='text-align:left'>- Mono Product</p>
+						<p style='text-align:left'>- Digital Goods</p>
+						<p style='text-align:left'>Example:</p>
+						<p style='text-align:left'>- Parking lot rental</p>
+						<p style='text-align:left'>- Escape game reservation</p>
+						<p style='text-align:left'>- Booking services</p>
+						<p style='text-align:left'>- Single product sale</p>"
 					>
 					{l s="Product Pages" mod="paypal"}
 				</span>
@@ -79,5 +74,7 @@
 </div>
 
 <div class="alert alert-info">
-	{l s='Shortcut converts best when on both product pages & cart page' mod='paypal'}
+	<button type="button" class="close" data-dismiss="alert">×</button>
+    {l s='Shortcut converts best when on both product pages & cart page' mod='paypal'}
 </div>
+

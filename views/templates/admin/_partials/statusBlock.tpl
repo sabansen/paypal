@@ -24,38 +24,49 @@
 *}
 
 <div>
-  <p>
-    {l s='Merchant Country:' mod='paypal'} <b>{$merchantCountry|escape:'utf':'htmlall'}</b>
-  </p>
+    <p>
+        {l s='Merchant Country:' mod='paypal'} <b>{$merchantCountry|escape:'htmlall':'utf-8'}</b>
+    </p>
 
-  <p>
-    {{l s='To  modify country: [a @href1@]International > Localization[/a]' mod='paypal'}|totlreplace:['@href1@' => {$link->getAdminLink('AdminLocalization', true)}, '@target@' => {'target="blank"'}]}
-  </p>
+    <p>
+      {{l s='To  modify country: [a @href1@]International > Localization[/a]' mod='paypal'}|totlreplace:['@href1@' => {$link->getAdminLink('AdminLocalization', true)}, '@target@' => {'target="blank"'}]}
+    </p>
 
-  <p>
-    <span class="btn btn-default" id="btn-check-requirements">{l s='Check requirements' mod='paypal'}</span>
-  </p>
+    <p>
+        <span class="btn btn-default" id="btn-check-requirements">{l s='Check requirements' mod='paypal'}</span>
+    </p>
 
-  <ul class="list-unstyled">
-    <li>
-      {if isset($tlsVersion) && $tlsVersion['status']}
-        <i class="icon-check" style="color: green"></i>
-        {l s='PHP cURL extension must be enabled on your server' mod='paypal'}
-      {elseif isset($tlsVersion) && $tlsVersion['status'] == false}
-        <i class="icon-remove" style="color: red"></i>
-        {l s='PHP cURL extension must be enabled on your server' mod='paypal'}. {$tlsVersion['error_message']}
-      {/if}
-    </li>
+    <ul class="list-unstyled">
+        <li>
+            {if isset($sslActivated) && $sslActivated}
+                <i class="icon-check" style="color: green"></i>
+                {l s='SSL enabled.' mod='paypal'}
+            {else}
+                <i class="icon-remove" style="color: red"></i>
+                {l s='SSL should be enabled on your web site.' mod='paypal'}
+            {/if}
+        </li>
 
-    <li>
-      {if isset($accountConfigured) && $accountConfigured}
-        <i class="icon-check" style="color: green"></i>
-      {else}
-        <i class="icon-remove" style="color: red"></i>
-      {/if}
-      {l s='You must connect your Braintree account' mod='paypal'}
-    </li>
-  </ul>
+        <li>
+            {if isset($tlsVersion) && $tlsVersion['status']}
+                <i class="icon-check" style="color: green"></i>
+                {l s='PHP cURL extension must be enabled on your server' mod='paypal'}
+            {elseif isset($tlsVersion) && $tlsVersion['status'] == false}
+                <i class="icon-remove" style="color: red"></i>
+                {l s='PHP cURL extension must be enabled on your server' mod='paypal'}. {$tlsVersion['error_message']}
+            {/if}
+
+        </li>
+
+        <li>
+            {if isset($accountConfigured) && $accountConfigured}
+                <i class="icon-check" style="color: green"></i>
+            {else}
+                <i class="icon-remove" style="color: red"></i>
+            {/if}
+            {l s='You must connect your PayPal account' mod='paypal'}
+        </li>
+    </ul>
 </div>
 
 

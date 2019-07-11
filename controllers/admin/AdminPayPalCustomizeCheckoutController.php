@@ -45,6 +45,12 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
     {
         parent::initContent();
 
+        if ($this->module->showWarningForUserBraintree()) {
+            $this->content = $this->context->smarty->fetch($this->getTemplatePath() . '_partials/messages/forBraintreeUsers.tpl');
+            $this->context->smarty->assign('content', $this->content);
+            return;
+        }
+
         if (Tools::getValue('deleteLogo')) {
             unlink(Configuration::get('PAYPAL_CONFIG_LOGO'));
             Configuration::updateValue('PAYPAL_CONFIG_LOGO', '');
@@ -73,7 +79,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             'input' => array(
                 array(
                     'type' => 'select',
-                    'label' => $this->l('PayPal In-Context'),
+                    'label' => $this->l('PayPal checkout'),
                     'name' => 'paypal_express_checkout_in_context',
                     'hint' => $this->l('PayPal opens in a pop-up window, allowing your buyers to finalize their payment without leaving your website. Optimized, modern and reassuring experience which benefits from the same security standards than during a redirection to the PayPal website.'),
                     'options' => array(
@@ -93,8 +99,14 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
                 ),
                 array(
                     'type' => 'html',
+                    'label' => '',
+                    'name' => '',
+                    'html_content' => $this->module->displayInformation($this->l('In-Context has shown better conversion rate')),
+                ),
+                array(
+                    'type' => 'html',
                     'label' => $this->l('PayPal Express CheckoutShortcut on'),
-                    'hint' => $this->l('The PayPal shortcut is displayed directly in the cart or on your product pages, allowing a faster checkout experience for your buyers. It requires fewer pages, clicks and seconds in order to finalize the payment. PayPal provides you with the client’s billing and shipping information so that you don’t have to collect it yourself.'),
+                    'hint' => $this->l('The PayPal shortcut is displayed directly on your cart or on your product pages, allowing a faster checkout for your buyers.PayPal provides you with the client\'s shipping and billing information so that you don\'t have to collect it yourself.'),
                     'name' => '',
                     'html_content' => $htmlContent
                 ),

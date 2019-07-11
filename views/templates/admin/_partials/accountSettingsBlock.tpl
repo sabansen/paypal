@@ -29,12 +29,29 @@
     </p>
 
     <p>
-        {l s='in order to activate the module, you must connect your existing PayPal account or create a new one.' mod='paypal'}
+        {l s='In order to activate the module, you must connect your existing PayPal account or create a new one.' mod='paypal'}
     </p>
 
     {if isset($accountConfigured) && $accountConfigured}
-        <span class="btn btn-default" id="logoutAccount">
-                {l s='Logout' mod='paypal'}
+        {if isset($method) && $method == 'EC'}
+            <span class="pp__mr-4">
+				{l s='Connected account' mod='paypal'}
+            </span>
+
+            <strong>
+                {if isset($paypal_api_user_name) && is_string($paypal_api_user_name)}
+                    {$paypal_api_user_name|replace:'_api':'@'}
+                {/if}
+            </strong>
+        {else}
+            <span class="pp__mr-4">
+				{l s='Your account is connected now !' mod='paypal'}
+            </span>
+        {/if}
+
+
+        <span class="btn btn-default pp__ml-4" data-bt-logout>
+				{l s='Logout' mod='paypal'}
         </span>
     {else}
         {if isset($urlOnboarding) && $urlOnboarding}

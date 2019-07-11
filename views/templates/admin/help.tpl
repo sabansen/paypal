@@ -32,7 +32,7 @@
     <ul class="tick">
         <li>
             <p class="h4">
-                {l s='Discover module ducumentation before configuration' mod='paypal'}
+                {l s='Discover module documentation before configuration' mod='paypal'}
             </p>
             <p>
                 <a target="_blank"

@@ -29,13 +29,13 @@
     <div class="row pp__flex">
         <div class="col-lg-8 stretchHeightForm pp__pb-4">
             {if isset($formAccountSettings)}
-                {$formAccountSettings nofilter}
+                {$formAccountSettings nofilter} {* the variable contains html code *}
             {/if}
 
         </div>
         <div class="col-lg-4">
             {if isset($formEnvironmentSettings)}
-                {$formEnvironmentSettings nofilter}
+                {$formEnvironmentSettings nofilter} {* the variable contains html code *}
             {/if}
         </div>
     </div>
@@ -43,7 +43,7 @@
     <div class="row pp__flex">
         <div class="col-lg-8">
             {if isset($formPaymentSettings)}
-                {$formPaymentSettings nofilter}
+                {$formPaymentSettings nofilter} {* the variable contains html code *}
             {/if}
 
             {if isset($formMerchantAccounts)}
@@ -52,7 +52,7 @@
         </div>
         <div class="col-lg-4 stretchHeightForm pp__pb-4" id="status-block">
             {if isset($formStatus)}
-                {$formStatus nofilter}
+                {$formStatus nofilter} {* the variable contains html code *}
             {/if}
         </div>
     </div>

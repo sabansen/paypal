@@ -25,4 +25,4 @@
 
 {include './_partials/headerLogo.tpl'}
 
-{$form nofilter}
+{$form nofilter} {* the variable contains html code *}

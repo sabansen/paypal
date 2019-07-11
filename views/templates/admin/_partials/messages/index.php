@@ -23,22 +23,13 @@
  *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
-
-if (!defined('_PS_VERSION_')) {
-    exit;
-}
-use PaypalPPBTlib\Install\ModuleInstaller;
-
-/**
- * @param $module PayPal
- * @return bool
- */
-function upgrade_module_5_0_0($module)
-{
-    $installer = new ModuleInstaller($module);
-    $installer->registerHooks();
-    $installer->installAdminControllers();
-    $module->checkPaypalStats();
-    $module->renameTabParent();
-    return true;
-}
+                        
+header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
+                        
+header("Cache-Control: no-store, no-cache, must-revalidate");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+                        
+header("Location: ../");
+exit;

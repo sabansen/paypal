@@ -97,7 +97,6 @@ class MethodEC extends AbstractMethodPaypal
      */
     public function getConfig(\PayPal $module)
     {
-
     }
 
     public function logOut($sandbox = null)
@@ -132,7 +131,7 @@ class MethodEC extends AbstractMethodPaypal
             Configuration::updateValue('PAYPAL_MERCHANT_ID_'.$mode, $params['merchant_id']);
             Configuration::updateValue('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT', 1);
             Configuration::updateValue('PAYPAL_API_CARD', $params['with_card']);
-            Tools::redirect($paypal);
+            Tools::redirect($paypal->module_link);
         }
 
 

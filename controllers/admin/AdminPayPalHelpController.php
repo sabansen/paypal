@@ -22,6 +22,7 @@
  * @license   Commercial license
  * @version   develop
  */
+ 
 include_once(_PS_MODULE_DIR_.'paypal/vendor/autoload.php');
 
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -32,7 +33,7 @@ class AdminPayPalHelpController extends AdminPayPalController
     public function initContent()
     {
         parent::initContent();
-        $need_rounding = (Configuration::get('PS_ROUND_TYPE') != Order::ROUND_ITEM) || (Configuration::get('PS_PRICE_ROUND_MODE') != PS_ROUND_HALF_DOWN);
+        $need_rounding = (Configuration::get('PS_ROUND_TYPE') != Order::ROUND_ITEM) || (Configuration::get('PS_PRICE_ROUND_MODE') != PS_ROUND_HALF_UP);
         $tpl_vars = array(
             'need_rounding' => $need_rounding,
         );

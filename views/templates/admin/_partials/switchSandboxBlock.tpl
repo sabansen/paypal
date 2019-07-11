@@ -26,7 +26,7 @@
 
 <div class="col-lg-9">
     <p class="h3">
-        {l s='Environment' mod='paypal'}
+        {l s='Environment:' mod='paypal'}
         {if isset($sandbox) && $sandbox}
             <b>{l s='Sandbox' mod='paypal'}</b>
         {else}
@@ -34,7 +34,7 @@
         {/if}
     </p>
 
-    <p>{l s='Production mode is the Live environment where you\'ll be able to collect your real payments'}</p>
+    <p>{l s='Production mode is the Live environment where you\'ll be able to collect your real payments' mod='paypal'}</p>
 
     <p>
         <button class="btn btn-default" id="switchEnvironmentMode">

@@ -194,68 +194,68 @@ class PayPal extends PaymentModule
     public $moduleAdminControllers = array(
              array(
              'name' => array(
-                 'en' => 'PayPal & Braintree Official',
-                 'fr' => 'PayPal et Braintree Officiel'
+                 'en' => 'PayPal Official',
+                 'fr' => 'PayPal Officiel'
              ),
              'class_name' => 'AdminParentPaypalConfiguration',
              'parent_class_name' => 'SELL',
              'visible' => true,
              'icon' => 'payment'
-         ),
-         array(
-             'name' => array(
-                 'en' => 'Configuration',
-                 'fr' => 'Configuration'
              ),
-             'class_name' => 'AdminPaypalConfiguration',
-             'parent_class_name' => 'AdminParentPaypalConfiguration',
-             'visible' => true,
-         ),
-         array(
-             'name' => array(
-                 'en' => 'Report',
-                 'fr' => 'Rapport'
+             array(
+                 'name' => array(
+                     'en' => 'Configuration',
+                     'fr' => 'Configuration'
+                 ),
+                 'class_name' => 'AdminPaypalConfiguration',
+                 'parent_class_name' => 'AdminParentPaypalConfiguration',
+                 'visible' => true,
              ),
-             'class_name' => 'AdminPaypalStats',
-             'parent_class_name' => 'AdminParentPaypalConfiguration',
-             'visible' => true,
-         ),
-        array(
-            'name' => array(
-                'en' => 'Setup',
-                'fr' => 'Setup'
+             array(
+                 'name' => array(
+                     'en' => 'Report',
+                     'fr' => 'Rapport'
+                 ),
+                 'class_name' => 'AdminPaypalStats',
+                 'parent_class_name' => 'AdminParentPaypalConfiguration',
+                 'visible' => true,
+             ),
+            array(
+                'name' => array(
+                    'en' => 'Setup',
+                    'fr' => 'Setup'
+                ),
+                'class_name' => 'AdminPayPalSetup',
+                'parent_class_name' => 'AdminPayPalConfiguration',
+                'visible' => true,
             ),
-            'class_name' => 'AdminPayPalSetup',
-            'parent_class_name' => 'AdminPayPalConfiguration',
-            'visible' => true,
-        ),
-        array(
-            'name' => array(
-                'en' => 'Customize checkout experience',
-                'fr' => 'Customize checkout experience'
+            array(
+                'name' => array(
+                    'en' => 'Experience',
+                    'fr' => 'Experience'
+                ),
+                'class_name' => 'AdminPayPalCustomizeCheckout',
+                'parent_class_name' => 'AdminPayPalConfiguration',
+                'visible' => true,
             ),
-            'class_name' => 'AdminPayPalCustomizeCheckout',
-            'parent_class_name' => 'AdminPayPalConfiguration',
-            'visible' => true,
-        ),
-        array(
-            'name' => array(
-                'en' => 'Help',
-                'fr' => 'Help'
+            array(
+                'name' => array(
+                    'en' => 'Help',
+                    'fr' => 'Help'
+                ),
+                'class_name' => 'AdminPayPalHelp',
+                'parent_class_name' => 'AdminPayPalConfiguration',
+                'visible' => true,
             ),
-            'class_name' => 'AdminPayPalHelp',
-            'parent_class_name' => 'AdminPayPalConfiguration',
-            'visible' => true,
-        ),
-        array(
-            'name' => array(
-                'en' => 'Logs',
-                'fr' => 'Logs'
+            array(
+                'name' => array(
+                    'en' => 'Logs',
+                    'fr' => 'Logs'
+                ),
+                'class_name' => 'AdminPayPalLogs',
+                'parent_class_name' => 'AdminPayPalConfiguration',
+                'visible' => true,
             ),
-            'class_name' => 'AdminPayPalLogs',
-            'parent_class_name' => 'AdminPayPalConfiguration',
-            'visible' => true,
-        ),
      );
 
     public function __construct()
@@ -346,6 +346,37 @@ class PayPal extends PaymentModule
     }
 
     /**
+     * Add checkbox carrier restrictions for a module.
+     *
+     * @param array $shops
+     *
+     * @return bool
+     */
+    public function addCheckboxCarrierRestrictionsForModule(array $shops = array())
+    {
+        if (!$shops) {
+            $shops = Shop::getShops(true, null, true);
+        }
+
+        $carriers = Carrier::getCarriers($this->context->language->id, false, false, false, null, Carrier::ALL_CARRIERS);
+        $carrier_ids = array();
+        foreach ($carriers as $carrier) {
+            $carrier_ids[] = $carrier['id_reference'];
+        }
+
+        foreach ($shops as $s) {
+            foreach ($carrier_ids as $id_carrier) {
+                if (!Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'module_carrier` (`id_module`, `id_shop`, `id_reference`)
+				VALUES (' . (int) $this->id . ', "' . (int) $s . '", ' . (int) $id_carrier . ')')) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Create order state
      * @return boolean
      */
@@ -368,6 +399,7 @@ class PayPal extends PaymentModule
             $order_state->delivery = false;
             $order_state->logable = false;
             $order_state->invoice = false;
+            $order_state->module_name = $this->name;
             if ($order_state->add()) {
                 $source = _PS_MODULE_DIR_.'paypal/views/img/os_paypal.png';
                 $destination = _PS_ROOT_DIR_.'/img/os/'.(int) $order_state->id.'.gif';
@@ -375,54 +407,7 @@ class PayPal extends PaymentModule
             }
             Configuration::updateValue('PAYPAL_OS_WAITING', (int) $order_state->id);
         }
-        if (!Configuration::get('PAYPAL_BRAINTREE_OS_AWAITING')
-            || !Validate::isLoadedObject(new OrderState(Configuration::get('PAYPAL_BRAINTREE_OS_AWAITING')))) {
-            $order_state = new OrderState();
-            $order_state->name = array();
-            foreach (Language::getLanguages() as $language) {
-                if (Tools::strtolower($language['iso_code']) == 'fr') {
-                    $order_state->name[$language['id_lang']] = 'En attente de paiement Braintree';
-                } else {
-                    $order_state->name[$language['id_lang']] = 'Awaiting for Braintree payment';
-                }
-            }
-            $order_state->send_email = false;
-            $order_state->color = '#4169E1';
-            $order_state->hidden = false;
-            $order_state->delivery = false;
-            $order_state->logable = false;
-            $order_state->invoice = false;
-            if ($order_state->add()) {
-                $source = _PS_MODULE_DIR_.'paypal/views/img/os_braintree.png';
-                $destination = _PS_ROOT_DIR_.'/img/os/'.(int) $order_state->id.'.gif';
-                copy($source, $destination);
-            }
-            Configuration::updateValue('PAYPAL_BRAINTREE_OS_AWAITING', (int) $order_state->id);
-        }
-        if (!Configuration::get('PAYPAL_BRAINTREE_OS_AWAITING_VALIDATION')
-            || !Validate::isLoadedObject(new OrderState(Configuration::get('PAYPAL_BRAINTREE_OS_AWAITING_VALIDATION')))) {
-            $order_state = new OrderState();
-            $order_state->name = array();
-            foreach (Language::getLanguages() as $language) {
-                if (Tools::strtolower($language['iso_code']) == 'fr') {
-                    $order_state->name[$language['id_lang']] = 'En attente de validation Braintree';
-                } else {
-                    $order_state->name[$language['id_lang']] = 'Awaiting for Braintree validation';
-                }
-            }
-            $order_state->send_email = false;
-            $order_state->color = '#4169E1';
-            $order_state->hidden = false;
-            $order_state->delivery = false;
-            $order_state->logable = false;
-            $order_state->invoice = false;
-            if ($order_state->add()) {
-                $source = _PS_MODULE_DIR_.'paypal/views/img/os_braintree.png';
-                $destination = _PS_ROOT_DIR_.'/img/os/'.(int) $order_state->id.'.gif';
-                copy($source, $destination);
-            }
-            Configuration::updateValue('PAYPAL_BRAINTREE_OS_AWAITING_VALIDATION', (int) $order_state->id);
-        }
+
         return true;
     }
 
@@ -433,7 +418,33 @@ class PayPal extends PaymentModule
         if (!parent::uninstall()) {
             return false;
         }
+        if ($this->uninstallOrderStates() == false) {
+            return false;
+        }
         return true;
+    }
+
+    /**
+     * Delete order states
+     * @return bool
+     */
+    public function uninstallOrderStates()
+    {
+        /* @var $orderState OrderState*/
+        $result = true;
+        $collection = new PrestaShopCollection('OrderState');
+        $collection->where('module_name', '=', $this->name);
+        $orderStates = $collection->getResults();
+
+        if ($orderStates == false) {
+            return $result;
+        }
+
+        foreach ($orderStates as $orderState) {
+            $result &= $orderState->delete();
+        }
+
+        return $result;
     }
 
     public function getUrl()
@@ -1418,8 +1429,8 @@ class PayPal extends PaymentModule
             $country = new Country((int) $address->id_country);
             $state = new State((int) $address->id_state);
             if (isset(PayPal::$state_iso_code_matrix[$country->iso_code]) &&
-                empty(PayPal::$state_iso_code_matrix[$country->iso_code]) == false)
-            {
+                empty(PayPal::$state_iso_code_matrix[$country->iso_code]) == false
+            ) {
                 $matrix = PayPal::$state_iso_code_matrix[$country->iso_code];
                 $ship_addr_state = $matrix[$state->iso_code] ? $matrix[$state->iso_code] : $matrix[$state->name];
             } else {
@@ -1485,12 +1496,45 @@ class PayPal extends PaymentModule
 
     public function showWarningForUserBraintree()
     {
-        return (int)Configuration::get('PAYPAL_BRAINTREE_ENABLED') && !Configuration::get('PAYPAL_USE_WITHOUT_BRAINTREE');
+        return (int)Configuration::get('PAYPAL_BRAINTREE_ENABLED') &&
+            !Configuration::get('PAYPAL_USE_WITHOUT_BRAINTREE') &&
+            Configuration::get('PAYPAL_METHOD') == 'BT';
     }
 
-    public function displayInformation($message)
+    public function displayInformation($message, $btnClose = true, $widthByContent = false)
     {
-        $this->context->smarty->assign('message', $message);
+        $tplVars = array(
+            'message' => $message,
+            'btnClose' => $btnClose,
+            'widthByContent' => $widthByContent
+        );
+        $this->context->smarty->assign($tplVars);
         return $this->context->smarty->fetch(_PS_MODULE_DIR_ . $this->name . '/views/templates/admin/_partials/alertInfo.tpl');
+    }
+
+    public function isSslActive()
+    {
+        return \Configuration::get('PS_SSL_ENABLED') && \Configuration::get('PS_SSL_ENABLED_EVERYWHERE');
+    }
+
+    public function renameTabParent()
+    {
+        $tab = Tab::getInstanceFromClassName('AdminParentPaypalConfiguration');
+
+        if (Validate::isLoadedObject($tab) == false) {
+            return;
+        }
+
+        $name = array();
+
+        foreach (Language::getLanguages() as $lang) {
+            if ($lang['iso_code'] == 'fr') {
+                $name[$lang['id_lang']] = 'PayPal Officiel';
+            } else {
+                $name[$lang['id_lang']] = 'PayPal Official';
+            }
+        }
+        $tab->name = $name;
+        $tab->save();
     }
 }
