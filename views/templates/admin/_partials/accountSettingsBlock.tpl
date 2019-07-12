@@ -50,7 +50,7 @@
         {/if}
 
 
-        <span class="btn btn-default pp__ml-4" data-bt-logout>
+        <span class="btn btn-default pp__ml-4" data-bt-logout id="logoutAccount">
 				{l s='Logout' mod='paypal'}
         </span>
     {else}
