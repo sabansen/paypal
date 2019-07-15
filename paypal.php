@@ -621,7 +621,7 @@ class PayPal extends PaymentModule
 
     public function getContent()
     {
-        if (Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE') && !isset($_SERVER['HTTPS'])) {
+        if (Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE') && Tools::usingSecureMode() == false) {
             Tools::redirect('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
         }
         if (Tools::getIsset('BRAINTREE_ENABLED')) {

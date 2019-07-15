@@ -46,9 +46,15 @@ class PayPalSubmitModuleFrontController extends ModuleFrontController
             Tools::redirect($this->context->link->getPageLink('history'));
         }
         $res = @fopen(dirname(__FILE__).'/../../'.$id_cart.'.txt', 'x');
+        $seconds = 0;
         if (!$res) {
             while (file_exists(dirname(__FILE__).'/../../'.$id_cart.'.txt')) {
                 sleep(1);
+                $seconds++;
+                if($seconds >= 300)
+                {
+                    @rename(dirname(__FILE__).'/../../'.$id_cart.'.txt', dirname(__FILE__).'/../../'.date('YmdHis').'_'.$id_cart.'.txt');
+                }
             }
         } else {
             $id_order = Order::getOrderByCartId((int) $id_cart);

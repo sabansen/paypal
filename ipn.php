@@ -256,7 +256,7 @@ if (Tools::getValue('receiver_email') == Configuration::get('PAYPAL_BUSINESS_ACC
             unlink($custom['id_cart'].'.txt');
         }
     }
-} else {
+} elseif (Tools::isSubmit('custom')) {
     $custom = Tools::jsonDecode(Tools::getValue('custom'), true);
     Db::getInstance()->insert('paypal_hss_email_error', array('id_cart' => $custom['id_cart'], 'email' => Tools::getValue('receiver_email')));
 }
