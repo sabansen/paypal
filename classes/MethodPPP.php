@@ -641,6 +641,14 @@ class MethodPPP extends AbstractMethodPaypal
      */
     public function isConfigured()
     {
+        return $this->credentialsSetted() && Configuration::get('PAYPAL_PLUS_EXPERIENCE');
+    }
+
+    /**
+     * @return bool
+     */
+    public function credentialsSetted()
+    {
         if (Configuration::get('PAYPAL_SANDBOX')) {
             return (bool)Configuration::get('PAYPAL_SANDBOX_CLIENTID') && (bool)Configuration::get('PAYPAL_SANDBOX_SECRET');
         } else {
