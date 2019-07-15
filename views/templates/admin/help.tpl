@@ -24,6 +24,15 @@
 *}
 {include './_partials/headerLogo.tpl'}
 
+<div class="panel">
+    <div>
+        {l s='If you have just created your PayPal account, check the email sent by PayPal to confirm your email address.' mod='paypal'}
+    </div>
+    <div>
+        {l s='You must have a PayPal Business Account. Otherwise, your personal account should be converted to Business account.' mod='paypal'}
+    </div>
+</div>
+
 {if isset($need_rounding) && $need_rounding}
     {include file="./_partials/block_info.tpl"}
 {/if}
@@ -58,6 +67,15 @@
 
                 <p class="action_response"></p>
             </p>
+        </li>
+
+        <li>
+            <p class="h4">
+                {l s='Check your transactions history log and potential errors' mod='paypal'}
+            </p>
+            <a href="{$link->getAdminLink('AdminPayPalLogs', true)|addslashes}" class="btn btn-default">
+                {l s='Transaction log' mod='paypal'}
+            </a>
         </li>
 
         <li>

@@ -36,8 +36,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             'paypal_api_advantages',
             'paypal_config_brand',
             'paypal_express_checkout_shortcut',
-            'paypal_express_checkout_shortcut_cart',
-            'paypal_config_logo'
+            'paypal_express_checkout_shortcut_cart'
         );
     }
 
