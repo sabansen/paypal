@@ -44,6 +44,13 @@ class AdminPayPalController extends \ModuleAdminController
 
     public function initContent()
     {
+        if ((int)\Configuration::get('PAYPAL_SANDBOX') == 1) {
+            $message = $this->l('Your PayPal account is currently configured to accept payments on the Sandbox');
+            $message .= ' (<b>' . $this->l('test environment') . '</b>). ';
+            $message .= $this->l('Any transaction will be fictitious. Disable the option, to accept actual payments (production environment) and log in with your PayPal credentials');
+            $this->warnings[] = $message;
+        }
+
         $showWarningForUserBraintree = $this->module->showWarningForUserBraintree();
         $this->context->smarty->assign('showWarningForUserBraintree', $showWarningForUserBraintree);
     }
