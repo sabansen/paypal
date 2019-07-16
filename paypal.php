@@ -435,6 +435,11 @@ class PayPal extends PaymentModule
             return false;
         }
         $method = AbstractMethodPaypal::load();
+
+        if ($method->isConfigured() == false) {
+            return;
+        }
+
         return $method->renderExpressCheckoutShortCut($this->context, $this->paypal_method, 'cart');
     }
 
@@ -677,6 +682,11 @@ class PayPal extends PaymentModule
             return false;
         }
         $method = AbstractMethodPaypal::load();
+
+        if ($method->isConfigured() == false) {
+            return;
+        }
+
         return $method->renderExpressCheckoutShortCut($this->context, $this->paypal_method, 'product');
     }
 
