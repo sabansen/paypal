@@ -39,7 +39,7 @@
 						<a href="#pp_config_account" data-pp-link-settings>1) {l s='Connect below your existing PayPal account or create a new one' mod='paypal'}.</a>
 					</li>
 					<li>
-						<a href="#pp_config_behavior" data-pp-link-settings>2) {l s='Adjust your Payment setting to either capture payments instantly (Capture), or after you confirm the order (Authorization)' mod='paypal'}.</a>
+						<a href="#pp_config_payment" data-pp-link-settings>2) {l s='Adjust your Payment setting to either capture payments instantly (Sale), or after you confirm the order (Authorize)' mod='paypal'}.</a>
 					</li>
 					<li>
 						<a href="#pp_config_environment" data-pp-link-settings>3) {l s='Make sure the module is set to Production mode' mod='paypal'}.</a>

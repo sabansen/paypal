@@ -22,7 +22,7 @@
  * @license   Commercial license
  * @version   develop
  */
- 
+
 include_once(_PS_MODULE_DIR_.'paypal/vendor/autoload.php');
 
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -170,7 +170,7 @@ class AdminPayPalSetupController extends AdminPayPalController
 
     public function initPaymentSettingsBlock()
     {
-        $this->fields_form[]['form'] = array(
+        $this->fields_form['form']['form'] = array(
             'legend' => array(
                 'title' => $this->l('Payment settings'),
                 'icon' => 'icon-cogs',
@@ -205,6 +205,7 @@ class AdminPayPalSetupController extends AdminPayPalController
                 'title' => $this->l('Save'),
                 'class' => 'btn btn-default pull-right button',
             ),
+            'id_form' => 'pp_config_payment'
         );
 
         $values = array(

@@ -149,7 +149,6 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
                 'title' => $this->l('Save'),
                 'class' => 'btn btn-default pull-right button',
             ),
-            'id_form' => 'pp_config_behavior'
         );
 
         $values = array();
