@@ -1,8 +1,6 @@
 export const hoverConfig = (el) => {
-
-	$('.defaultForm').removeClass('pp-settings-link-on');
-	$('#subtab-AdminPayPalCustomizeCheckout').removeClass('pp-settings-link-on pp__border-b-primary');
-	$('#subtab-AdminPayPalSetup').removeClass('pp-settings-link-on pp__border-b-primary');
+  $('.defaultForm').removeClass('pp-settings-link-on');
+  $('.page-head-tabs a').removeClass('pp-settings-link-on pp__border-b-primary');
 	el.addClass('pp-settings-link-on');
 	$('html, body').animate({
 		scrollTop: el.offset().top - 200 + "px"
@@ -10,13 +8,18 @@ export const hoverConfig = (el) => {
 }
 
 export const hoverTabConfig = () => {
-	if ($('#subtab-AdminPayPalCustomizeCheckout').hasClass('current')) {
-		$('#subtab-AdminPayPalSetup').addClass('pp-settings-link-on pp__border-b-primary');
-	} else if ($('#subtab-AdminPayPalSetup').hasClass('current')) {
-		$('#subtab-AdminPayPalCustomizeCheckout').addClass('pp-settings-link-on pp__border-b-primary');
-	}
+  let tabs = document.querySelectorAll('.page-head-tabs a'),
+		currentTab = $('.page-head-tabs a.current');
+	tabs.forEach( el => {
+		let checkoutTab = $(el).attr('href').includes('AdminPayPalCustomizeCheckout'),
+		 	setupTab = $(el).attr('href').includes('AdminPayPalSetup');
+		if ((currentTab.attr('href').includes('AdminPayPalCustomizeCheckout') && setupTab)
+			|| (currentTab.attr('href').includes('AdminPayPalSetup') && checkoutTab)) {
+			$(el).addClass('pp-settings-link-on pp__border-b-primary');
+		}
+	})
 	$('html, body').animate({
-		scrollTop: $('#head_tabs').offset().top - 200 + "px"
+		scrollTop: $('.page-head-tabs').offset().top - 200 + "px"
 	}, 900);
 }
 
