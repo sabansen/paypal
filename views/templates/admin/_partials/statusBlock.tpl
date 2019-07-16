@@ -39,20 +39,20 @@
     <ul class="list-unstyled">
         <li>
             {if isset($sslActivated) && $sslActivated}
-                <i class="icon-check" style="color: green"></i>
+                <i class="icon-check text-success"></i>
                 {l s='SSL enabled.' mod='paypal'}
             {else}
-                <i class="icon-remove" style="color: red"></i>
+                <i class="icon-remove text-danger"></i>
                 {l s='SSL should be enabled on your web site.' mod='paypal'}
             {/if}
         </li>
 
         <li>
             {if isset($tlsVersion) && $tlsVersion['status']}
-                <i class="icon-check" style="color: green"></i>
+                <i class="icon-check text-success"></i>
                 {l s='PHP cURL extension must be enabled on your server' mod='paypal'}
             {elseif isset($tlsVersion) && $tlsVersion['status'] == false}
-                <i class="icon-remove" style="color: red"></i>
+                <i class="icon-remove text-danger"></i>
                 {l s='PHP cURL extension must be enabled on your server' mod='paypal'}. {$tlsVersion['error_message']}
             {/if}
 
@@ -60,9 +60,9 @@
 
         <li>
             {if isset($accountConfigured) && $accountConfigured}
-                <i class="icon-check" style="color: green"></i>
+                <i class="icon-check text-success"></i>
             {else}
-                <i class="icon-remove" style="color: red"></i>
+                <i class="icon-remove text-danger"></i>
             {/if}
             {l s='You must connect your PayPal account' mod='paypal'}
         </li>
