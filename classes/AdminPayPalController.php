@@ -174,7 +174,7 @@ class AdminPayPalController extends \ModuleAdminController
     {
         foreach (\Tools::getAllValues() as $fieldName => $fieldValue) {
             if (in_array($fieldName, $this->parametres)) {
-                \Configuration::updateValue(\Tools::strtoupper($fieldName), pSQL($fieldValue), false, null, $this->context->shop->id);
+                \Configuration::updateValue(\Tools::strtoupper($fieldName), pSQL($fieldValue));
             }
         }
     }
