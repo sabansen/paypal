@@ -92,7 +92,13 @@ class PaypalCapture extends ObjectModel
         $sql->from('paypal_order', 'po');
         $sql->innerJoin('paypal_capture', 'pc', 'po.`id_paypal_order` = pc.`id_paypal_order`');
         $sql->where('po.id_order = '.(int)$id_order);
-        return Db::getInstance()->getRow($sql);
+        $row = Db::getInstance()->getRow($sql);
+
+        if (is_array($row)) {
+            return $row;
+        } else {
+            return array();
+        }
     }
 
     /**

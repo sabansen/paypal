@@ -100,7 +100,12 @@ class PaypalVaulting extends ObjectModel
         $query->where('pv.payment_tool = "'.pSQL($method).'"');
         $query->where('pc.sandbox = ' . (int)Configuration::get('PAYPAL_SANDBOX'));
         $result = $db->executeS($query);
-        return $result;
+
+        if (is_array($result)) {
+            return $result;
+        } else {
+            return array();
+        }
     }
 
     /**
