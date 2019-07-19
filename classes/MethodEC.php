@@ -24,6 +24,8 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
+require_once 'AbstractMethodPaypal.php';
+
 use PayPal\CoreComponentTypes\BasicAmountType;
 use PayPal\EBLBaseComponents\DoExpressCheckoutPaymentRequestDetailsType;
 use PayPal\EBLBaseComponents\AddressType;
@@ -403,7 +405,7 @@ class MethodEC extends AbstractMethodPaypal
             $url = '/websc&cmd=_express-checkout';
         }
 
-        if (($method == 'SetExpressCheckout') && ($this->type == 'payment_cart')) {
+        if (($method == 'SetExpressCheckout') && $this->credit_card) {
             $url .= '&useraction=commit';
         }
         $paypal = Module::getInstanceByName($this->name);
@@ -715,7 +717,7 @@ class MethodEC extends AbstractMethodPaypal
      * @param $page_source
      * @return mixed
      */
-    public function renderExpressCheckoutShortCut(&$context, $type, $page_source)
+    public function renderExpressCheckoutShortCut(Context &$context, $type, $page_source)
     {
         $lang = $context->language->iso_code;
         $environment = (Configuration::get('PAYPAL_SANDBOX')?'sandbox':'live');

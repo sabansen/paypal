@@ -26,7 +26,11 @@
 <div data-container-express-checkout data-paypal-source-page="{$source_page}" style="float:right; margin: 10px 40px 0 0">
     <form data-paypal-payment-form-cart class="paypal_payment_form" action="{$action_url|escape:'htmlall':'UTF-8'}" title="{l s='Pay with PayPal' mod='paypal'}" method="post" data-ajax="false">
         {if $source_page == 'product'}
-          <input type="hidden" name="id_product" data-paypal-id-product value="{$smarty.get.id_product|intval}" />
+          <input
+                  type="hidden"
+                  name="id_product"
+                  data-paypal-id-product
+                  value="{if isset($smarty.get.id_product)}{$smarty.get.id_product|intval}{/if}" />
           <input type="hidden" name="quantity" data-paypal-qty value=""/>
           <input type="hidden" name="combination" data-paypal-combination value="" />
           <input type="hidden" data-paypal-id-product-attribute value="{$es_cs_product_attribute|escape:'htmlall':'UTF-8'}" />
