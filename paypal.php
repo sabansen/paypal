@@ -448,10 +448,16 @@ class PayPal extends PaymentModule
         return Tools::redirectAdmin($this->context->link->getAdminLink('AdminPayPalSetup'));
     }
 
+    /**
+     * @param $params
+     * @return array
+     * @throws Exception
+     * @throws SmartyException
+     */
     public function hookPaymentOptions($params)
     {
         if (Module::isEnabled('braintree') && (int)Configuration::get('BRAINTREE_ACTIVATE_PAYPAL')) {
-            return;
+            return array();
         }
         $is_virtual = 0;
         foreach ($params['cart']->getProducts() as $key => $product) {

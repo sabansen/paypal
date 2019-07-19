@@ -90,7 +90,7 @@ class MethodECTest extends TestCase
             $info = $this->method->getInfo();
             $this->assertInstanceOf(GetExpressCheckoutDetailsResponseType::class, $info);
         } catch (\Exception $e) {
-            $this->assertInstanceOf(PaypalException::class, $e);
+            $this->assertInstanceOf(PaypalException::class, $e, $e->getMessage(), $e->getMessage());
         }
     }
 
@@ -108,7 +108,7 @@ class MethodECTest extends TestCase
             $urlAPI = $this->method->init();
             $this->assertIsString($urlAPI);
         } catch (\Exception $e) {
-            $this->assertInstanceOf(PaypalException::class, $e);
+            $this->assertInstanceOf(PaypalException::class, $e, $e->getMessage());
         }
     }
 

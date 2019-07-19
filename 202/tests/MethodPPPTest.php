@@ -35,10 +35,7 @@ if (file_exists($pathInit)) {
 require_once _PS_MODULE_DIR_.'paypal/vendor/autoload.php';
 require_once _PS_MODULE_DIR_.'paypal/classes/MethodPPP.php';
 
-use Braintree\Exception;
 use PHPUnit\Framework\TestCase;
-use \PayPal\PayPalAPI\GetExpressCheckoutDetailsResponseType;
-use PaypalAddons\classes\PaypalException;
 use PayPal\Rest\ApiContext;
 use PayPal\Api\CreateProfileResponse;
 
