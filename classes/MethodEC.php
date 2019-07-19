@@ -778,9 +778,13 @@ class MethodEC extends AbstractMethodPaypal
     /**
      * @return bool
      */
-    public function isConfigured()
+    public function isConfigured($mode = null)
     {
-        if (Configuration::get('PAYPAL_SANDBOX')) {
+        if ($mode == null) {
+            $mode = (int) Configuration::get('PAYPAL_SANDBOX');
+        }
+
+        if ($mode) {
             return (bool)Configuration::get('PAYPAL_MERCHANT_ID_SANDBOX') &&
                 (bool)Configuration::get('PAYPAL_USERNAME_SANDBOX') &&
                 (bool)Configuration::get('PAYPAL_USERNAME_SANDBOX');

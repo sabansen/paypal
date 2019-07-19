@@ -33,20 +33,23 @@ if (file_exists($pathInit)) {
     require_once $pathInit;
 }
 require_once _PS_MODULE_DIR_.'paypal/vendor/autoload.php';
-require_once _PS_MODULE_DIR_.'paypal/classes/MethodEC.php';
+require_once _PS_MODULE_DIR_.'paypal/classes/MethodPPP.php';
 
+use Braintree\Exception;
 use PHPUnit\Framework\TestCase;
 use \PayPal\PayPalAPI\GetExpressCheckoutDetailsResponseType;
 use PaypalAddons\classes\PaypalException;
+use PayPal\Rest\ApiContext;
+use PayPal\Api\CreateProfileResponse;
 
-class MethodECTest extends TestCase
+class MethodPPPTest extends TestCase
 {
-    /* @var \MethodEC*/
+    /* @var \MethodPPP*/
     protected $method;
 
     protected function setUp()
     {
-        $this->method = new \MethodEC();
+        $this->method = new \MethodPPP();
     }
 
     /**
@@ -54,20 +57,21 @@ class MethodECTest extends TestCase
      */
     public function testGetCredentialsInfo($mode)
     {
-        $keys = array(
-            'acct1.UserName',
-            'acct1.Password',
-            'acct1.Signature',
-            'acct1.Signature',
-            'mode',
-            'log.LogEnabled'
-        );
-        $credentialInfo = $this->method->_getCredentialsInfo($mode);
-        $this->assertIsArray($credentialInfo);
+        $this->assertInstanceOf(ApiContext::class, $this->method->_getCredentialsInfo($mode));
+    }
 
-        foreach ($keys as $key) {
-            $this->assertArrayHasKey($key, $credentialInfo);
-        }
+    public function testCreateWebExperience()
+    {
+        $webExp = $this->method->createWebExperience();
+        $this->assertTrue($webExp instanceof CreateProfileResponse || $webExp === false);
+    }
+
+    /**
+     * @dataProvider getDataForCredentialsSetted
+     */
+    public function testCredentialsSetted($mode)
+    {
+        $this->assertIsBool($this->method->credentialsSetted($mode));
     }
 
     /**
@@ -79,19 +83,13 @@ class MethodECTest extends TestCase
         $this->assertIsString($priceFormated);
     }
 
-    public function testGetDateTransaction()
+    /**
+     * @dataProvider getDataForGetInstructionInfo
+     */
+    public function testGetInstructionInfo($id_payment)
     {
-        $this->assertIsString($this->method->getDateTransaction());
-    }
-
-    public function testGetInfo()
-    {
-        try {
-            $info = $this->method->getInfo();
-            $this->assertInstanceOf(GetExpressCheckoutDetailsResponseType::class, $info);
-        } catch (\Exception $e) {
-            $this->assertInstanceOf(PaypalException::class, $e);
-        }
+        $instructionInfo = $this->method->getInstructionInfo($id_payment);
+        $this->assertTrue(is_object($instructionInfo) || $instructionInfo === false);
     }
 
     /**
@@ -102,30 +100,17 @@ class MethodECTest extends TestCase
         $this->assertIsString($this->method->getLinkToTransaction($id_transaction, $sandbox));
     }
 
-    public function testInit()
-    {
-        try {
-            $urlAPI = $this->method->init();
-            $this->assertIsString($urlAPI);
-        } catch (\Exception $e) {
-            $this->assertInstanceOf(PaypalException::class, $e);
-        }
-    }
-
     /**
-     * @dataProvider getDataForGetCredentialsInfo
+     * @dataProvider getDataForIsConfigured
      */
     public function testIsConfigured()
     {
         $this->assertIsBool($this->method->isConfigured());
     }
 
-    /**
-     * @dataProvider getDataForRedirectToAPI
-     */
-    public function testRedirectToAPI($method)
+    public function testInit()
     {
-        $this->assertIsString($this->method->redirectToAPI($method));
+        $this->assertIsString($this->method->init());
     }
 
     /**
@@ -134,12 +119,6 @@ class MethodECTest extends TestCase
     public function testRenderExpressCheckoutShortCut(&$context, $type, $page_source)
     {
         $this->assertIsString($this->method->renderExpressCheckoutShortCut($context, $type, $page_source));
-    }
-
-
-    public function testUseMobile()
-    {
-        $this->assertIsBool($this->method->useMobile());
     }
 
     public function getDataForGetCredentialsInfo()
@@ -154,6 +133,12 @@ class MethodECTest extends TestCase
         return $data;
     }
 
+    public function getDataForCredentialsSetted()
+    {
+        $data = $this->getDataForGetCredentialsInfo();
+        return$data;
+    }
+
     public function getDataForFormatPrice()
     {
         $data = array(
@@ -163,6 +148,12 @@ class MethodECTest extends TestCase
             array(00),
             array(null),
         );
+        return $data;
+    }
+
+    public function getDataForGetInstructionInfo()
+    {
+        $data = $this->getDataForGetCredentialsInfo();
         return $data;
     }
 
@@ -178,15 +169,9 @@ class MethodECTest extends TestCase
         return $data;
     }
 
-    public function getDataForRedirectToAPI()
+    public function getDataForIsConfigured()
     {
-        $data = array(
-            array(1),
-            array(023),
-            array('123'),
-            array(00),
-            array(null),
-        );
+        $data = $this->getDataForGetCredentialsInfo();
         return $data;
     }
 
@@ -204,5 +189,4 @@ class MethodECTest extends TestCase
         );
         return $data;
     }
-
 }

@@ -19,6 +19,6 @@
       "paypal/permissions-sdk-php": "~3.9",
       "braintree/braintree_php": "~3.40",
       "paypal/rest-api-sdk-php": "1.*",
-      "phpunit/phpunit": "^8"
+      "phpunit/phpunit": "^7"
     }
 }

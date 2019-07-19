@@ -24,6 +24,8 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
+require_once 'AbstractMethodPaypal.php';
+
 use PayPal\Auth\OAuthTokenCredential;
 use PayPal\Rest\ApiContext;
 use PayPal\Api\Amount;
@@ -203,6 +205,9 @@ class MethodPPP extends AbstractMethodPaypal
      */
     public function init()
     {
+        if ($this->isConfigured() == false) {
+            return '';
+        }
         $payer = new Payer();
         $payer->setPaymentMethod("paypal");
         // ### Itemized information
@@ -255,7 +260,23 @@ class MethodPPP extends AbstractMethodPaypal
         // The return object contains the state and the
         // url to which the buyer must be redirected to
         // for payment approval
-        $payment->create($this->_getCredentialsInfo());
+
+        try {
+            $payment->create($this->_getCredentialsInfo());
+        } catch (Exception $e) {
+            $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 1)[0];
+            $message = 'Error in ' . $backtrace['file'];
+            $message .= ' (line ' . $backtrace['line'] . '); ';
+            $message .= 'Message: ' . $e->getMessage() . ';';
+            $message .= 'File: ' . $e->getFile() . '; ';
+            $message .= 'Line: ' . $e->getLine();
+
+            ProcessLoggerHandler::openLogger();
+            ProcessLoggerHandler::logError($message);
+            ProcessLoggerHandler::closeLogger();
+
+            return '';
+        }
 
         // ### Get redirect url
         // The API response provides the url that you must redirect
@@ -589,11 +610,30 @@ class MethodPPP extends AbstractMethodPaypal
     /**
      * Get payment details
      * @param $id_payment
-     * @return mixed
+     * @return bool|mixed
      */
     public function getInstructionInfo($id_payment)
     {
-        $sale = Payment::get($id_payment, $this->_getCredentialsInfo());
+        if ($this->isConfigured() == false) {
+            return false;
+        }
+        try {
+            $sale = Payment::get($id_payment, $this->_getCredentialsInfo());
+        } catch (Exception $e) {
+            $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 1)[0];
+            $message = 'Error in ' . $backtrace['file'];
+            $message .= ' (line ' . $backtrace['line'] . '); ';
+            $message .= 'Message: ' . $e->getMessage() . ';';
+            $message .= 'File: ' . $e->getFile() . '; ';
+            $message .= 'Line: ' . $e->getLine();
+
+            ProcessLoggerHandler::openLogger();
+            ProcessLoggerHandler::logError($message);
+            ProcessLoggerHandler::closeLogger();
+
+            return false;
+        }
+
         return $sale->payment_instruction;
     }
 
@@ -639,17 +679,21 @@ class MethodPPP extends AbstractMethodPaypal
     /**
      * @return bool
      */
-    public function isConfigured()
+    public function isConfigured($mode = null)
     {
-        return $this->credentialsSetted() && Configuration::get('PAYPAL_PLUS_EXPERIENCE');
+        return $this->credentialsSetted($mode) && Configuration::get('PAYPAL_PLUS_EXPERIENCE');
     }
 
     /**
      * @return bool
      */
-    public function credentialsSetted()
+    public function credentialsSetted($mode = null)
     {
-        if (Configuration::get('PAYPAL_SANDBOX')) {
+        if ($mode == null) {
+            $mode = (int) Configuration::get('PAYPAL_SANDBOX');
+        }
+
+        if ($mode) {
             return (bool)Configuration::get('PAYPAL_SANDBOX_CLIENTID') && (bool)Configuration::get('PAYPAL_SANDBOX_SECRET');
         } else {
             return (bool)Configuration::get('PAYPAL_LIVE_CLIENTID') && (bool)Configuration::get('PAYPAL_LIVE_SECRET');
