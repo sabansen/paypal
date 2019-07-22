@@ -30,7 +30,9 @@ const SetupAdmin = {
     });
 
     $('[data-pp-link-settings]').on('click', (e) => {
-      let el = $(e.target.attributes.href.value);
+      e.preventDefault();
+      const el = $(e.target.attributes.href.value);
+
       if (el.length) {
         hoverConfig(el);
       } else {
