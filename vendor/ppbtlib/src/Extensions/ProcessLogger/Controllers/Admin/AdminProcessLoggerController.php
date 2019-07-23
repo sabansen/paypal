@@ -113,7 +113,7 @@ class AdminProcessLoggerController extends \ModuleAdminController
                 'callback' => 'getLevel'
             ),
             'log' => array(
-                'title' => $this->module->l('Message (API PayPal/Braintree response)', 'AdminProcessLoggerController'),
+                'title' => $this->module->l('Message (AIP PayPal/Braintree response)', 'AdminProcessLoggerController'),
             ),
             'id_shop' => array(
                 'title' => $this->module->l('Shop ID', 'AdminProcessLoggerController'),
