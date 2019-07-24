@@ -45,9 +45,9 @@ class AdminPayPalController extends \ModuleAdminController
     public function initContent()
     {
         if ((int)\Configuration::get('PAYPAL_SANDBOX') == 1) {
-            $message = $this->l('Your PayPal account is currently configured to accept payments on the Sandbox');
+            $message = $this->l('Your PayPal account is currently configured to accept payments on Sandbox.');
             $message .= ' (<b>' . $this->l('test environment') . '</b>). ';
-            $message .= $this->l('Any transaction will be fictitious. Disable the option, to accept actual payments (production environment) and log in with your PayPal credentials');
+            $message .= $this->l('Any transaction will be fictitious. Disable the option to accept actual payments (live environment) and log in with your PayPal credentials.');
             $this->warnings[] = $message;
         }
 
@@ -102,7 +102,7 @@ class AdminPayPalController extends \ModuleAdminController
 
         if ($this->module->isSslActive() == false) {
             $response['success'] = false;
-            $response['message'][] = $this->l('SSL should be enabled on your web site.');
+            $response['message'][] = $this->l('SSL should be enabled on your website.');
         }
 
         $tls_check = $this->_checkTLSVersion();
@@ -111,7 +111,7 @@ class AdminPayPalController extends \ModuleAdminController
             $response['message'][] = $this->l('Tls verification failed.').' '.$tls_check['error_message'];
         }
         if ($response['success']) {
-            $response['message'][] = $this->l('Your shop configuration is OK. You can start to configure the Braintree module.');
+            $response['message'][] = $this->l('Your shop configuration is OK. You can start configuring your Braintree module.');
         }
         return $response;
     }
@@ -137,7 +137,7 @@ class AdminPayPalController extends \ModuleAdminController
                 $return['status'] = false;
                 $curl_info = curl_getinfo($curl);
                 if ($curl_info['http_code'] == 401) {
-                    $return['error_message'] = $this->l('401 Unauthorized. Please note that the TLS verification can not be done if you have an htaccess password protection enabled on your web site.');
+                    $return['error_message'] = $this->l('401 Unauthorized. Please note that the TLS verification can not be done if you have a htaccess password protection enabled on your website.');
                 } else {
                     $return['error_message'] = curl_error($curl);
                 }
@@ -147,7 +147,7 @@ class AdminPayPalController extends \ModuleAdminController
         } else {
             $return['status'] = false;
             if (version_compare(curl_version()['version'], '7.34.0', '<')) {
-                $return['error_message'] = $this->l(' You are using an old version of cURL. Please update your cURL extension to version 7.34.0 or higher.');
+                $return['error_message'] = $this->l('You are using an old version of cURL. Please update your cURL extension to version 7.34.0 or higher.');
             } else {
                 $return['error_message'] = $this->l('TLS version is not compatible');
             }

@@ -43,7 +43,7 @@
                 {l s='SSL enabled.' mod='paypal'}
             {else}
                 <i class="icon-remove text-danger"></i>
-                {l s='SSL should be enabled on your web site.' mod='paypal'}
+                {l s='SSL should be enabled on your website.' mod='paypal'}
             {/if}
         </li>
 

@@ -477,7 +477,7 @@ class PayPal extends PaymentModule
                     $payment_options->setLogo(Media::getMediaPath(_PS_MODULE_DIR_.$this->name.'/views/img/paypal_sm.png'));
                     $payment_options->setModuleName($this->name);
                     if (Configuration::get('PAYPAL_API_ADVANTAGES')) {
-                        $action_text .= ' | '.$this->l('It\'s easy, simple and secure');
+                        $action_text .= ' | '.$this->l('It\'s simple, fast and secure');
                     }
                     $this->context->smarty->assign(array(
                         'path' => $this->_path,
@@ -518,7 +518,7 @@ class PayPal extends PaymentModule
                     $payment_options = new PaymentOption();
                     $action_text = $this->l('Pay with PayPal Plus');
                     if (Configuration::get('PAYPAL_API_ADVANTAGES')) {
-                        $action_text .= ' | '.$this->l('It\'s easy, simple and secure');
+                        $action_text .= ' | '.$this->l('It\'s simple, fast and secure');
                     }
                     $payment_options->setCallToActionText($action_text);
                     $payment_options->setModuleName('paypal_plus');
@@ -649,7 +649,7 @@ class PayPal extends PaymentModule
             'countryIsoCodePPP' => $country_invoice->iso_code,
             'ajaxPatchUrl' => $this->context->link->getModuleLink('paypal', 'pppPatch', array(), true),
         ));
-        Media::addJsDefL('waitingRedirectionMsg', $this->l('In few seconds you will be redirected to PayPal. Please wait.'));
+        Media::addJsDefL('waitingRedirectionMsg', $this->l('In few seconds, you will be redirected to PayPal. Please wait.'));
 
         return true;
     }
@@ -671,7 +671,7 @@ class PayPal extends PaymentModule
             try {
                 $this->context->smarty->assign('ppp_information', $method->getInstructionInfo($paypal_order->id_payment));
             } catch (Exception $e) {
-                $this->context->smarty->assign('error_msg', $this->l('We are not able to verify if payment was successful. Please check if you have received confirmation from PayPal.'));
+                $this->context->smarty->assign('error_msg', $this->l('We are not able to verify if payment was successful. Please check if you have received confirmation from PayPal on your account.'));
             }
         }
         $this->context->controller->registerJavascript($this->name.'-order_confirmation_js', $this->_path.'/views/js/order_confirmation.js');
@@ -772,7 +772,7 @@ class PayPal extends PaymentModule
             ProcessLoggerHandler::closeLogger();
             $msg = $this->l('Order validation error : ').$e->getMessage().'. ';
             if (isset($transaction['transaction_id']) && $id_order_state != Configuration::get('PS_OS_ERROR')) {
-                $msg .= $this->l('Attention, your payment is made. Please, contact customer support. Your transaction ID is  : ').$transaction['transaction_id'];
+                $msg .= $this->l('Attention, your payment has been processed. Please, contact customer support. Your transaction ID is: ').$transaction['transaction_id'];
             }
             Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $msg, 'no_retry' => true)));
         }
@@ -838,7 +838,7 @@ class PayPal extends PaymentModule
         if (Tools::getValue('controller') == "AdminOrders" && Tools::getValue('id_order')) {
             $paypal_order = PaypalOrder::loadByOrderId(Tools::getValue('id_order'));
             if (Validate::isLoadedObject($paypal_order)) {
-                Media::addJsDefL('chb_paypal_refund', $this->l('Refund PayPal'));
+                Media::addJsDefL('chb_paypal_refund', $this->l('Refund on PayPal'));
                 $this->context->controller->addJS($this->_path . '/views/js/bo_order.js');
             }
         }
@@ -859,9 +859,9 @@ class PayPal extends PaymentModule
         }
         if ($paypal_order->method == 'BT' && (Module::isInstalled('braintree') == false)) {
             $tmpMessage = "<p class='paypal-warning'>";
-            $tmpMessage .= $this->l('This order has been paid via Braintree payment solution provided by PayPal module. ') . "</br>";
-            $tmpMessage .= $this->l('Starting from the v5.0.0 of PayPal module, the Braintree payment solution is not available via PayPal anymore. You can continue to use Braintree by installing the new Braintree module available via ') . "<a href='https://addons.prestashop.com/' target='_blank'>" . $this->l('addons.prestashop') . "</a>" . "</br>";
-            $tmpMessage .= $this->l('All actions on this order will not be processed by Braintree until you install the new module (ex: you can not refund this order automatically by changing order status).');
+            $tmpMessage .= $this->l('This order has been paid via Braintree payment solution provided by PayPal module prior v5.0. ') . "</br>";
+            $tmpMessage .= $this->l('Starting from v5.0.0 of PayPal module, Braintree payment solution won\'t be available via PayPal module anymore. You can continue using Braintree by installing the new Braintree module available via ') . "<a href='https://addons.prestashop.com/' target='_blank'>" . $this->l('addons.prestashop') . "</a>" . "</br>";
+            $tmpMessage .= $this->l('All actions on this order will not be processed by Braintree until you install the new module (ex: you cannot refund this order automatically by changing order status).');
             $tmpMessage .= "</p>";
             $paypal_msg .= $this->displayWarning($tmpMessage);
         }
@@ -870,17 +870,18 @@ class PayPal extends PaymentModule
         }
         if (Tools::getValue('not_payed_capture')) {
             $paypal_msg .= $this->displayWarning(
-                '<p class="paypal-warning">'.$this->l('You couldn\'t refund order, it\'s not payed yet.').'</p>'
+                '<p class="paypal-warning">'.$this->l('You can\'t refund order as it hasn\'t be paid yet.').'</p>'
             );
         }
         if (Tools::getValue('error_refund')) {
             $paypal_msg .= $this->displayWarning(
-                '<p class="paypal-warning">'.$this->l('We have unexpected problem during refund operation. For more details please see the "PayPal" tab in the order details.').'</p>'
+                '<p class="paypal-warning">'.$this->l('We encountered an unexpected problem during refund operation. For more details please see the \'PayPal\' tab in the order details.
+').'</p>'
             );
         }
         if (Tools::getValue('cancel_failed')) {
             $paypal_msg .= $this->displayWarning(
-                '<p class="paypal-warning">'.$this->l('We have unexpected problem during cancel operation. For more details please see the "PayPal" tab in the order details.').'</p>'
+                '<p class="paypal-warning">'.$this->l('We encountered an unexpected problem during cancel operation. For more details please see the \'PayPal\' tab in the order details.').'</p>'
             );
         }
         if ($order->current_state == Configuration::get('PS_OS_REFUND') &&  $paypal_order->payment_status == 'Refunded') {
@@ -898,7 +899,7 @@ class PayPal extends PaymentModule
         }
         if (Tools::getValue('error_capture')) {
             $paypal_msg .= $this->displayWarning(
-                '<p class="paypal-warning">'.$this->l('We have unexpected problem during capture operation. See massages for more details').'</p>'
+                '<p class="paypal-warning">'.$this->l('We encountered an unexpected problem during capture operation. See messages for more details.').'</p>'
             );
         }
 
@@ -906,7 +907,7 @@ class PayPal extends PaymentModule
             $preferences = $this->context->link->getAdminLink('AdminPreferences', true);
             $paypal_msg .= $this->displayWarning('<p class="paypal-warning">'.$this->l('Product pricing has been modified as your rounding settings aren\'t compliant with PayPal.').' '.
                 $this->l('To avoid automatic rounding to customer for PayPal payments, please update your rounding settings.').' '.
-                '<a target="_blank" href="'.$preferences.'">'.$this->l('Reed more.').'</a></p>');
+                '<a target="_blank" href="'.$preferences.'">'.$this->l('Read more.').'</a></p>');
         }
 
         return $paypal_msg.$this->display(__FILE__, 'views/templates/hook/paypal_order.tpl');
@@ -943,7 +944,7 @@ class PayPal extends PaymentModule
             if (Validate::isLoadedObject($capture) && !$capture->id_capture) {
                 ProcessLoggerHandler::openLogger();
                 ProcessLoggerHandler::logError(
-                    $this->l('You couldn\'t refund order, it\'s not payed yet.'),
+                    $this->l('You can\'t refund order as it hasn\'t be paid yet.'),
                     null,
                     $paypal_order->id_order,
                     $paypal_order->id_cart,
@@ -1058,7 +1059,7 @@ class PayPal extends PaymentModule
             || (Validate::isLoadedObject($paypalCapture) && $paypalCapture->id_capture))) {
                 ProcessLoggerHandler::openLogger();
                 ProcessLoggerHandler::logError(
-                    $this->l('You canceled the order that hadn\'t been refunded yet'),
+                    $this->l('You are trying to refund an order that hasn\'t been captured yet. The order has instead been cancelled. '),
                     null,
                     $orderPayPal->id_order,
                     $orderPayPal->id_cart,
@@ -1137,7 +1138,7 @@ class PayPal extends PaymentModule
             if (Validate::isLoadedObject($capture) && !$capture->id_capture) {
                 ProcessLoggerHandler::openLogger();
                 ProcessLoggerHandler::logError(
-                    $this->l('You couldn\'t refund order, it\'s not payed yet.'),
+                    $this->l('You can\'t refund order as it hasn\'t be paid yet.'),
                     null,
                     $orderPayPal->id_order,
                     $orderPayPal->id_cart,

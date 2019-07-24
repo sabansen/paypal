@@ -45,7 +45,7 @@
             </strong>
         {else}
             <span class="pp__mr-4">
-				{l s='Your account is connected now !' mod='paypal'}
+				{l s='Your account is now connected!Create a « REST API apps »Create a « REST API apps »' mod='paypal'}
             </span>
         {/if}
 
@@ -73,7 +73,7 @@
         <div class="modal-content">
             <div class="modal-body">
                 <h4>{l s='API Credentials' mod='paypal'}</h4>
-                <p>{l s='In order to accept PayPal Plus payments, please fill your API REST credentials.' mod='paypal'}</p>
+                <p>{l s='In order to accept PayPal Plus payments, please fill in your API REST credentials.' mod='paypal'}</p>
                 <ul>
                     <li>{l s='Access' mod='paypal'} <a target="_blank" href="https://developer.paypal.com/developer/applications/">{l s='https://developer.paypal.com/developer/applications/' mod='paypal'}</a></li>
                     <li>{l s='Log in or Create a business account' mod='paypal'}</li>
