@@ -24,15 +24,18 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
-use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
+
 include_once(_PS_MODULE_DIR_.'paypal/vendor/autoload.php');
-use PaypalPPBTlib\Module\PaymentModule;
+
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerExtension;
+use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
+use PaypalPPBTlib\Install\ModuleInstaller;
+use PaypalPPBTlib\Extensions\AbstractModuleExtension;
+use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
+use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 
 include_once(_PS_MODULE_DIR_.'paypal/sdk/BraintreeSiSdk.php');
 
@@ -51,7 +54,7 @@ const BT_PAYPAL_PAYMENT = 'paypal-braintree';
 // BT = Braintree
 // PPP = PayPal Plus
 
-class PayPal extends PaymentModule
+class PayPal extends \PaymentModule
 {
     public static $dev = true;
     public $express_checkout;
@@ -290,8 +293,16 @@ class PayPal extends PaymentModule
 
     public function install()
     {
-        // Install default
-        if (!parent::install()) {
+        $installer = new ModuleInstaller($this);
+
+        $isPhpVersionCompliant = false;
+        try {
+            $isPhpVersionCompliant = $installer->checkPhpVersion();
+        } catch (\Exception $e) {
+            $this->_errors[] = Tools::displayError($e->getMessage());
+        }
+
+        if (($isPhpVersionCompliant && parent::install() && $installer->install()) == false) {
             return false;
         }
 
@@ -299,6 +310,7 @@ class PayPal extends PaymentModule
         if (!$this->installOrderState()) {
             return false;
         }
+
         $this->checkPaypalStats();
         if (!Configuration::updateValue('PAYPAL_MERCHANT_ID_SANDBOX', '')
             || !Configuration::updateValue('PAYPAL_MERCHANT_ID_LIVE', '')
@@ -383,13 +395,16 @@ class PayPal extends PaymentModule
 
     public function uninstall()
     {
-        // Uninstall default
-        if (!parent::uninstall()) {
+        $installer = new ModuleInstaller($this);
+
+        if ((parent::uninstall() && $installer->uninstall()) == false) {
             return false;
         }
+
         if ($this->uninstallOrderStates() == false) {
             return false;
         }
+
         return true;
     }
 
@@ -1522,5 +1537,80 @@ class PayPal extends PaymentModule
         }
         $tab->name = $name;
         $tab->save();
+    }
+
+    public function handleExtensionsHook($hookName, $params)
+    {
+        if (!isset($this->extensions) || empty($this->extensions)) {
+            return false;
+        }
+        $result = false;
+        foreach ($this->extensions as $extension) {
+            /** @var AbstractModuleExtension $extension */
+            $extension = new $extension();
+            $extension->setModule($this);
+            if (is_callable(array($extension, $hookName))) {
+                $hookResult = $extension->{$hookName}($params);
+                if ($result === false) {
+                    $result = $hookResult;
+                } elseif (is_array($hookResult) && $result !== false) {
+                    $result = array_merge($result, $hookResult);
+                } else {
+                    $result .= $hookResult;
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Handle module widget call
+     * @param $action
+     * @param $method
+     * @param $hookName
+     * @param $configuration
+     * @return bool
+     * @throws \ReflectionException
+     */
+    public function handleWidget($action, $method, $hookName, $configuration)
+    {
+        if (!isset($this->extensions) || empty($this->extensions)) {
+            return false;
+        }
+
+        foreach ($this->extensions as $extension) {
+            /** @var AbstractModuleExtension $extension */
+            $extension = new $extension();
+            if (!($extension instanceof WidgetInterface)) {
+                continue;
+            }
+            $extensionClass = (new ReflectionClass($extension))->getShortName();
+            if ($extensionClass != $action) {
+                continue;
+            }
+            $extension->setModule($this);
+            if (is_callable(array($extension, $method))) {
+                return $extension->{$method}($hookName, $configuration);
+            }
+        }
+
+        return false;
+
+    }
+
+    /**
+     * TODO
+     * Reset Module only if merchant choose to keep data on modal
+     *
+     * @return bool
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    public function reset()
+    {
+        $installer = new ModuleInstaller($this);
+
+        return $installer->reset($this);
     }
 }
