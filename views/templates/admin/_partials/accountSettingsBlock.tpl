@@ -78,7 +78,7 @@
                     <li>{l s='Access' mod='paypal'} <a target="_blank" href="https://developer.paypal.com/developer/applications/">{l s='https://developer.paypal.com/developer/applications/' mod='paypal'}</a></li>
                     <li>{l s='Log in or Create a business account' mod='paypal'}</li>
                     <li>{l s='Create a « REST API apps »' mod='paypal'}</li>
-                    <li>{l s='Click « Show » en dessous de « Secret: »' mod='paypal'}</li>
+                    <li>{l s='Click « Show » below « Secret: »' mod='paypal'}</li>
                     <li>{l s='Copy/paste your « Client ID » and « Secret » below for each environment' mod='paypal'}</li>
                 </ul>
                 <hr/>
