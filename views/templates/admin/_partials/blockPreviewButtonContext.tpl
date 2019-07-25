@@ -75,6 +75,6 @@
 
 <div class="alert alert-info">
 	<button type="button" class="close" data-dismiss="alert">×</button>
-    {l s='Shortcut converts best when on both product pages & cart page' mod='paypal'}
+    {l s='Shortcut converts best when activated on both product pages & cart page' mod='paypal'}
 </div>
 
