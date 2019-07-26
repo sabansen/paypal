@@ -348,7 +348,7 @@ class AdminProcessLoggerController extends \ModuleAdminController
                     $shop['id_shop']
                 );
                 $this->confirmations[] = $this->module->l(
-                    'Log parameters are successfully updated!',
+                    'Successful update.',
                     'AdminProcessLoggerController'
                 );
             }

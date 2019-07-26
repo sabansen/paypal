@@ -160,9 +160,12 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
 
     public function saveForm()
     {
+        $result = true;
+
         foreach ($this->parametres as $parametre) {
-            \Configuration::updateValue(\Tools::strtoupper($parametre), pSQL(\Tools::getValue($parametre), ''));
+            $result &= \Configuration::updateValue(\Tools::strtoupper($parametre), pSQL(\Tools::getValue($parametre), ''));
         }
+
         if (isset($_FILES['paypal_config_logo']['tmp_name']) && $_FILES['paypal_config_logo']['tmp_name'] != '') {
             if (!in_array($_FILES['paypal_config_logo']['type'], array('image/gif', 'image/png', 'image/jpeg'))) {
                 $this->errors[] = $this->l('Use a valid graphics format, such as .gif, .jpg, or .png.');
@@ -180,7 +183,9 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             if (!ImageManager::resize($tmpName, _PS_MODULE_DIR_.'paypal/views/img/p_logo_'.Context::getContext()->shop->id.'.png')) {
                 $this->errors[] = $this->l('An error occurred while copying the image.');
             }
-            Configuration::updateValue('PAYPAL_CONFIG_LOGO', _PS_MODULE_DIR_.'paypal/views/img/p_logo_'.Context::getContext()->shop->id.'.png');
+            $result &= Configuration::updateValue('PAYPAL_CONFIG_LOGO', _PS_MODULE_DIR_.'paypal/views/img/p_logo_'.Context::getContext()->shop->id.'.png');
         }
+
+        return $result;
     }
 }

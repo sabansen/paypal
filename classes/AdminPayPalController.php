@@ -158,25 +158,30 @@ class AdminPayPalController extends \ModuleAdminController
     public function postProcess()
     {
         if (\Tools::isSubmit("paypal_set_config")) {
-            $countryDefault = new \Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
-            $methodType = $countryDefault->iso_code == "DE" ? "PPP" : "EC";
-            $method = \AbstractMethodPaypal::load($methodType);
+            $method = \AbstractMethodPaypal::load($this->method);
             $method->setConfig(\Tools::getAllValues());
         }
 
         if (\Tools::isSubmit($this->controller_name . '_config')) {
-            $this->saveForm();
+            if ($this->saveForm()) {
+                $this->confirmations[] = $this->l('Successful update.');
+            }
         }
+
         parent::postProcess();
     }
 
     public function saveForm()
     {
+        $result = true;
+
         foreach (\Tools::getAllValues() as $fieldName => $fieldValue) {
             if (in_array($fieldName, $this->parametres)) {
-                \Configuration::updateValue(\Tools::strtoupper($fieldName), pSQL($fieldValue));
+                $result &= \Configuration::updateValue(\Tools::strtoupper($fieldName), pSQL($fieldValue));
             }
         }
+
+        return $result;
     }
 
     public function log($message)

@@ -328,7 +328,7 @@ class AdminPayPalSetupController extends AdminPayPalController
 
     public function saveForm()
     {
-        parent::saveForm();
+        $result = parent::saveForm();
 
         if ($this->method == 'PPP') {
             $method = AbstractMethodPaypal::load($this->method);
@@ -348,5 +348,6 @@ class AdminPayPalSetupController extends AdminPayPalController
         }
 
         $this->module->checkPaypalStats();
+        return $result;
     }
 }
