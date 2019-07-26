@@ -154,15 +154,19 @@ class AdminPayPalSetupController extends AdminPayPalController
             'with_card' => 0,
             'modify' => 1
         );
+        $countryDefault = new \Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
         $tpl_vars = array(
             'accountConfigured' => $method == null? false : $method->isConfigured(),
             'urlOnboarding' => $this->context->link->getAdminLink('AdminPayPalSetup', true, null, $urlParameters),
+            'country_iso' => $countryDefault->iso_code,
         );
 
         if ((int)Configuration::get('PAYPAL_SANDBOX')) {
             $tpl_vars['paypal_api_user_name'] = Configuration::get('PAYPAL_USERNAME_SANDBOX');
+            $tpl_vars['mode'] = 'SANDBOX';
         } else {
             $tpl_vars['paypal_api_user_name'] = Configuration::get('PAYPAL_USERNAME_LIVE');
+            $tpl_vars['mode'] = 'LIVE';
         }
 
         return $tpl_vars;
