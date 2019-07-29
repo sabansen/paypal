@@ -20,6 +20,8 @@ $(document).ready( () => {
 
 $('#payment-confirmation button').on('click', (e) => {
   let selectedOption = $('input[name=payment-option]:checked').attr('id');
+
+  // Express checkout method
   if ($(`#${selectedOption}-additional-information`).find($('[data-ec-in-context]')).length > 0) {
     e.preventDefault();
     e.stopPropagation();
@@ -28,6 +30,7 @@ $('#payment-confirmation button').on('click', (e) => {
 });
 
 const ECInContext = () => {
+    // Init Express checkout method
     paypal.checkout.initXO();
     $.support.cors = true;
     $.ajax({
@@ -43,7 +46,7 @@ const ECInContext = () => {
             }
         },
         error: function (responseData, textStatus, errorThrown) {
-            alert(`Error in ajax post${responseData.statusText}`);
+            alert(`Error in ajax post ${responseData.statusText}`);
             paypal.checkout.closeFlow();
         }
     });

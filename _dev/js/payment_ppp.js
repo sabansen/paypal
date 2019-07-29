@@ -20,6 +20,8 @@ $(document).ready( () => {
     if (modePPP == 'sandbox') {
       showPui = true;
     }
+
+    // Add parameters for paypal plus method
     ppp = PAYPAL.apps.PPP({
       "approvalUrl": approvalUrlPPP,
       "placeholder": "ppplus",
@@ -33,6 +35,7 @@ $(document).ready( () => {
   }
 });
 
+// Order payment button action for paypal plus
 $('#payment-confirmation button').on('click', (e) => {
   let selectedOption = $('input[name=payment-option]:checked').attr('id');
   if ($(`#${selectedOption}-additional-information .payment_module`).hasClass('paypal-plus')) {
@@ -42,6 +45,7 @@ $('#payment-confirmation button').on('click', (e) => {
   }
 });
 
+// Show popup and call doCheckout() function from API
 const doPatchPPP = () => {
   if (exec_ppp_payment) {
     exec_ppp_payment = false;

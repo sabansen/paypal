@@ -15,7 +15,11 @@
 
 // init in-context
 $(document).ready(() => {
+
+  // Make partial order refund in Order page in BO
   $(document).on('click', '#desc-order-partial_refund', () => {
+    
+    // Create checkbox and insert for Paypal refund 
     if ($('#doPartialRefundPaypal').length == 0) {
 			let newCheckBox = `<p class="checkbox"><label for="doPartialRefundPaypal">
 			<input type="checkbox" id="doPartialRefundPaypal" name="doPartialRefundPaypal">

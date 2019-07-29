@@ -13,10 +13,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+// Import functions for scrolling effect to necessary block on click
 import {hoverConfig, hoverTabConfig} from './functions.js';
 
 var CustomizeCheckout = {
   init() {
+    // Scroll to necessary block
     $('[data-pp-link-settings]').on('click', (e) => {
       let el = $(e.target.attributes.href.value);
       if (el.length) {
@@ -26,6 +28,7 @@ var CustomizeCheckout = {
       }
     });
 
+    // Remove effect after leaving cursor from the block
     $('.defaultForm').on('mouseleave', (e) => {
       $(e.currentTarget).removeClass('pp-settings-link-on');
     });

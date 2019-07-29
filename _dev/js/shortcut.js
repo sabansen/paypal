@@ -14,21 +14,31 @@
  */
 // init incontext
 $(document).ready( () => {
+
+  // Get source page from data attribute value
   let sourcePage = $('[data-container-express-checkout]').data('paypal-source-page');
   switch (sourcePage) {
     case 'product':
-    let vars = getProductVars();
+
+      // Get product's variables
+      let vars = getProductVars();
+
+      // Check chosen product's availability
       EcCheckProductAvailability(sourcePage, vars['qty'], vars['id_product'], vars['id_product_attribute']);
       prestashop.on('updatedProduct', function(e, xhr, settings) {
           EcCheckProductAvailability(sourcePage, vars['qty'], vars['id_product'], e.id_product_attribute);
       });
       break;
     case 'cart':
+
+      // Check products added in cart availability
       prestashop.on('updateCart', () => EcCheckProductAvailability(sourcePage));
       break;
   }
   if (typeof ec_sc_in_context !== 'undefined' && ec_sc_in_context) {
     window.paypalCheckoutReady = () => {
+
+      // Setup Express Checkout method
       paypal.checkout.setup(merchant_id, {
         environment: ec_sc_environment,
       });
@@ -36,6 +46,8 @@ $(document).ready( () => {
   }
 });
 
+
+// Get product's variables frm data attributes
 const getProductVars = () => {
   let vars = new Object();
       vars['qty'] = $('input[name="qty"]').val();
@@ -47,6 +59,8 @@ const getProductVars = () => {
 // Click on shortcut button
 $('[data-paypal-shortcut-btn]').on('click', () => {
   let sourcePage = $('[data-container-express-checkout]').data('paypal-source-page');
+
+  // Replace current_shop_url attribute
   $('[data-paypal-url-page]').val(document.location.href);
   switch (sourcePage) {
     case 'product':
@@ -61,6 +75,8 @@ $('[data-paypal-shortcut-btn]').on('click', () => {
       });
       $('[data-paypal-combination]').val(combination.join('|'));
       if (typeof ec_sc_in_context !== 'undefined' && ec_sc_in_context) {
+
+        // Express Checkout method for product page
         ECSInContext(sourcePage, combination, vars['qty'], vars['id_product']);
       } else {
         $('[data-paypal-payment-form-cart]').submit();
@@ -68,6 +84,8 @@ $('[data-paypal-shortcut-btn]').on('click', () => {
       break;
     case 'cart':
       if (typeof ec_sc_in_context !== 'undefined' && ec_sc_in_context) {
+
+        // Express Checkout method for cart page
         ECSInContext();
       } else {
         $('[data-paypal-payment-form-cart]').submit();
@@ -76,6 +94,7 @@ $('[data-paypal-shortcut-btn]').on('click', () => {
   }
 });
 
+// Check product availability using shortcut product/cart page
 const EcCheckProductAvailability = (sourcePage, qty=false, productId=false, productIdAttr=false) => {
   $.ajax({
     url: sc_init_url,

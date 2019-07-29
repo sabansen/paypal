@@ -13,22 +13,28 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+// Import functions for scrolling effect to necessary block on click
 import {hoverConfig, hoverTabConfig} from './functions.js';
 
 const SetupAdmin = {
   init() {
+
+    // Disconnect from braintree account
     $('#logoutAccount').on('click', (event) => {
       SetupAdmin.logoutAccount();
     });
-
+    
+    // Connect to braintree account
     $('#confirmCredentials').click((event) => {
       $(event.currentTarget).closest('form').submit();
     });
 
+    // Check credentials (TLS version, country, enabling SSL)
     $(document).on('click', '#btn-check-requirements', () => {
       SetupAdmin.checkRequirements();
     });
 
+    // Scroll to necessary block
     $('[data-pp-link-settings]').on('click', (e) => {
       e.preventDefault();
       const el = $(e.target.attributes.href.value);
@@ -40,6 +46,7 @@ const SetupAdmin = {
       }
     });
 
+    // Remove effect after leaving cursor from the block
     $('.defaultForm').on('mouseleave', (e) => {
       $(e.currentTarget).removeClass('pp-settings-link-on');
     });
@@ -78,6 +85,4 @@ const SetupAdmin = {
 
 };
 
-document.addEventListener('DOMContentLoaded', () => {
-  SetupAdmin.init();
-});
+$(document).ready(() => SetupAdmin.init());

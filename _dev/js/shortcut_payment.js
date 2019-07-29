@@ -13,7 +13,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-//  Show message of checked paypal method instead of payment options
+// Show message of checked paypal method (Express Checkout or Paypal Plus) instead of payment options
 $(document).ready( ()=> {
   if ($('section#checkout-payment-step').hasClass('js-current-step')) {
     let el = $(`input[data-module-name="${paypalCheckedMethod}"]`);
