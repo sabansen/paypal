@@ -25,7 +25,6 @@
  
 namespace PaypalAddons\classes;
 
-use Symfony\Component\VarDumper\VarDumper;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 
 class AdminPayPalController extends \ModuleAdminController

@@ -27,7 +27,6 @@
 namespace PaypalAddons\services;
 
 use PaypalPPBTlib\Extensions\ProcessLogger\Classes\ProcessLoggerObjectModel;
-use Symfony\Component\VarDumper\VarDumper;
 
 class ServicePaypalLog
 {
