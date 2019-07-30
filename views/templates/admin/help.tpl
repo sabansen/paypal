@@ -45,7 +45,7 @@
             </p>
             <p>
                 <a target="_blank"
-                   href="{$link->getAdminLink('AdminPayPalHelp', true, null, ['download-documentation' => 1])|addslashes}"
+                   href=""
                    class="btn btn-default">
                     {l s='Access user documentation for module configuration.' mod='paypal'}
                 </a>

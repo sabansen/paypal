@@ -33,9 +33,6 @@ class AdminPayPalHelpController extends AdminPayPalController
     public function initContent()
     {
         parent::initContent();
-        if (Tools::isSubmit('download-documentation')) {
-            return $this->downloadDocumentation();
-        }
         $need_rounding = (Configuration::get('PS_ROUND_TYPE') != Order::ROUND_ITEM) || (Configuration::get('PS_PRICE_ROUND_MODE') != PS_ROUND_HALF_UP);
         $tpl_vars = array(
             'need_rounding' => $need_rounding,
@@ -50,16 +47,5 @@ class AdminPayPalHelpController extends AdminPayPalController
     {
         $response = new JsonResponse($this->_checkRequirements());
         return $response->send();
-    }
-
-    public function downloadDocumentation()
-    {
-        $filePath = _PS_MODULE_DIR_ . $this->module->name . '/PayPal_officiel_user_guide.zip';
-        header("Cache-Control: public");
-        header("Content-Description: File Transfer");
-        header("Content-Disposition: attachment; filename=PayPal_officiel_user_guide.zip");
-        header("Content-Type: application/zip");
-        header("Content-Transfer-Encoding: binary");
-        readfile($filePath);
     }
 }
