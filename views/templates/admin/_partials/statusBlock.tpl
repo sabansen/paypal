@@ -29,7 +29,7 @@
     </p>
 
     <p>
-      {{l s='To  modify country: [a @href1@]International > Localization[/a]' mod='paypal'}|totlreplace:['@href1@' => {$link->getAdminLink('AdminLocalization', true)}, '@target@' => {'target="blank"'}]}
+      {{l s='To  modify country: [a @href1@]International > Localization[/a]' mod='paypal'}|paypalreplace:['@href1@' => {$link->getAdminLink('AdminLocalization', true)}, '@target@' => {'target="blank"'}]}
     </p>
 
     <p>

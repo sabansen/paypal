@@ -25,13 +25,13 @@
 
 /**
  * Smarty modifier to replace HTML tags in translations.
- * @usage {{l='test'}|totlreplace}
+ * @usage {{l='test'}|paypalreplace}
  * @param.value string
  * @param.name string
  */
 
-if (!function_exists('smarty_modifier_totlreplace')) {
-    function smarty_modifier_totlreplace($string, $replaces = array())
+if (!function_exists('smarty_modifier_paypalreplace')) {
+    function smarty_modifier_paypalreplace($string, $replaces = array())
     {
         $search = array(
             '[b]',
