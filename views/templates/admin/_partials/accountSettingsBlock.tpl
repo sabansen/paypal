@@ -142,19 +142,19 @@
                     <h4>{l s='API Credentials for' mod='paypal'} {$mode}</h4>
                     <p>
                         <label for="api_username">{l s='API username' mod='paypal'}</label>
-                        <input type="text" id="api_username" name="api_username" value="{if isset($api_username)}{$api_username|escape:'htmlall':'UTF-8'}{/if}"/>
+                        <input type="text" id="api_username" name="api_username" value="{if isset($paypal_api_user_name)}{$paypal_api_user_name|escape:'htmlall':'UTF-8'}{/if}"/>
                     </p>
                     <p>
                         <label for="api_password">{l s='API password' mod='paypal'}</label>
-                        <input type="password" id="api_password" name="api_password" value="{if isset($api_password)}{$api_password|escape:'htmlall':'UTF-8'}{/if}"/>
+                        <input type="password" id="api_password" name="api_password" value="{if isset($paypal_pswd)}{$paypal_pswd|escape:'htmlall':'UTF-8'}{/if}"/>
                     </p>
                     <p>
                         <label for="api_signature">{l s='API signature' mod='paypal'}</label>
-                        <input type="text" id="api_signature" name="api_signature" value="{if isset($api_signature)}{$api_signature|escape:'htmlall':'UTF-8'}{/if}"/>
+                        <input type="text" id="api_signature" name="api_signature" value="{if isset($paypal_signature)}{$paypal_signature|escape:'htmlall':'UTF-8'}{/if}"/>
                     </p>
                     <p>
                         <label for="merchant_id">{l s='Merchant ID' mod='paypal'}</label>
-                        <input type="text" id="merchant_id" name="merchant_id" value="{if isset($merchant_id)}{$merchant_id|escape:'htmlall':'UTF-8'}{/if}"/>
+                        <input type="text" id="merchant_id" name="merchant_id" value="{if isset($paypal_merchant_id)}{$paypal_merchant_id|escape:'htmlall':'UTF-8'}{/if}"/>
                     </p>
 
                 </div>
