@@ -445,8 +445,9 @@ class PayPal extends \PaymentModule
         if (Module::isEnabled('braintree') && (int)Configuration::get('BRAINTREE_ACTIVATE_PAYPAL')) {
             return;
         }
-        if ('cart' !== $this->context->controller->php_self
-            || !Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART')) {
+        if ('cart' !== $this->context->controller->php_self ||
+            !Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART') ||
+            $this->context->cart->hasProducts() == false) {
             return false;
         }
         $method = AbstractMethodPaypal::load();

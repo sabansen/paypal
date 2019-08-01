@@ -26,6 +26,7 @@ $(document).ready( () => {
       // Check chosen product's availability
       EcCheckProductAvailability(sourcePage, vars['qty'], vars['id_product'], vars['id_product_attribute']);
       prestashop.on('updatedProduct', function(e, xhr, settings) {
+          let vars = getProductVars();
           EcCheckProductAvailability(sourcePage, vars['qty'], vars['id_product'], e.id_product_attribute);
       });
       break;
