@@ -176,7 +176,7 @@ class PaypalEcScOrderModuleFrontController extends PaypalAbstarctModuleFrontCont
                 $validationMessage = $module->l('Country is not active', pathinfo(__FILE__)['filename']);
             }
             if (is_string($validationMessage)) {
-                $var = array(
+                $vars = array(
                     'newAddress' => 'delivery',
                     'address1' => $orderAddress->address1,
                     'firstname' => $orderAddress->firstname,
@@ -190,7 +190,7 @@ class PaypalEcScOrderModuleFrontController extends PaypalAbstarctModuleFrontCont
                 );
                 session_start();
                 $_SESSION['notifications'] = Tools::jsonEncode(array('error' => $validationMessage));
-                $url = Context::getContext()->link->getPageLink('order') . '&' . http_build_query($var);
+                $url = Context::getContext()->link->getPageLink('order', null, null, $vars);
                 Tools::redirect($url);
             }
             $orderAddress->save();
@@ -199,6 +199,21 @@ class PaypalEcScOrderModuleFrontController extends PaypalAbstarctModuleFrontCont
 
         $this->context->cart->id_address_delivery = $id_address;
         $this->context->cart->id_address_invoice = $id_address;
+
+        $addressValidator = new AddressValidator();
+        $invalidAddressIds = $addressValidator->validateCartAddresses($this->context->cart);
+
+        if (empty($invalidAddressIds) == false) {
+            $vars = array(
+                'id_address' => $id_address,
+                'editAddress' => 'delivery'
+            );
+            session_start();
+            $_SESSION['notifications'] = Tools::jsonEncode(array('error' => $this->l('Your address is incomplete, please update it.')));
+            $url = Context::getContext()->link->getPageLink('order', null, null, $vars);
+            Tools::redirect($url);
+        }
+
         $products = $this->context->cart->getProducts();
         foreach ($products as $key => $product) {
             $this->context->cart->setProductAddressDelivery($product['id_product'], $product['id_product_attribute'], $product['id_address_delivery'], $id_address);
