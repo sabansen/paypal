@@ -212,7 +212,7 @@ class PayPal extends \PaymentModule
                  ),
                  'class_name' => 'AdminPaypalConfiguration',
                  'parent_class_name' => 'AdminParentPaypalConfiguration',
-                 'visible' => true,
+                 'visible' => false,
              ),
              array(
                  'name' => array(
@@ -257,6 +257,33 @@ class PayPal extends \PaymentModule
                 ),
                 'class_name' => 'AdminPayPalLogs',
                 'parent_class_name' => 'AdminPayPalConfiguration',
+                'visible' => true,
+            ),
+            array(
+                'name' => array(
+                    'en' => 'Setup',
+                    'fr' => 'Setup'
+                ),
+                'class_name' => 'AdminPayPalSetupMenu',
+                'parent_class_name' => 'AdminParentPaypalConfiguration',
+                'visible' => true,
+            ),
+            array(
+                'name' => array(
+                    'en' => 'Experience',
+                    'fr' => 'Experience'
+                ),
+                'class_name' => 'AdminPayPalCustomizeCheckoutMenu',
+                'parent_class_name' => 'AdminParentPaypalConfiguration',
+                'visible' => true,
+            ),
+            array(
+                'name' => array(
+                    'en' => 'Help',
+                    'fr' => 'Help'
+                ),
+                'class_name' => 'AdminPayPalHelpMenu',
+                'parent_class_name' => 'AdminParentPaypalConfiguration',
                 'visible' => true,
             ),
      );
