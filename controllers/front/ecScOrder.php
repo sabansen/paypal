@@ -47,10 +47,10 @@ class PaypalEcScOrderModuleFrontController extends PaypalAbstarctModuleFrontCont
         $paypal = Module::getInstanceByName($this->name);
 
         try {
+            $this->redirectUrl = $this->context->link->getPageLink('order', null, null, array('step'=>2));
             $method->setParameters($this->values);
             $info = $method->getInfo();
             $this->prepareOrder($info);
-            $this->redirectUrl = $this->context->link->getPageLink('order', null, null, array('step'=>2));
         } catch (PayPal\Exception\PPConnectionException $e) {
             $this->errors['error_msg'] = $paypal->l('Error connecting to ', pathinfo(__FILE__)['filename']) . $e->getUrl();
         } catch (PayPal\Exception\PPMissingCredentialException $e) {
@@ -191,7 +191,7 @@ class PaypalEcScOrderModuleFrontController extends PaypalAbstarctModuleFrontCont
                 session_start();
                 $_SESSION['notifications'] = Tools::jsonEncode(array('error' => $validationMessage));
                 $url = Context::getContext()->link->getPageLink('order', null, null, $vars);
-                Tools::redirect($url);
+                $this->redirectUrl = $url;
             }
             $orderAddress->save();
             $id_address = $orderAddress->id;
@@ -211,7 +211,7 @@ class PaypalEcScOrderModuleFrontController extends PaypalAbstarctModuleFrontCont
             session_start();
             $_SESSION['notifications'] = Tools::jsonEncode(array('error' => $this->l('Your address is incomplete, please update it.')));
             $url = Context::getContext()->link->getPageLink('order', null, null, $vars);
-            Tools::redirect($url);
+            $this->redirectUrl = $url;
         }
 
         $products = $this->context->cart->getProducts();
