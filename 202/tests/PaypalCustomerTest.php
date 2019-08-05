@@ -36,9 +36,32 @@ require_once _PS_MODULE_DIR_.'paypal/vendor/autoload.php';
 require_once _PS_MODULE_DIR_.'paypal/classes/PaypalCustomer.php';
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 class PaypalCustomerTest extends TestCase
 {
+    public $moduleManagerBuilder;
+
+    public $moduleManager;
+
+    public $moduleNames;
+
+    protected function setUp()
+    {
+        $this->moduleManagerBuilder = ModuleManagerBuilder::getInstance();
+        $this->moduleManager = $this->moduleManagerBuilder->build();
+        $this->moduleNames = 'paypal';
+    }
+
+    public function testInstall()
+    {
+        $employees = \Employee::getEmployeesByProfile(_PS_ADMIN_PROFILE_);
+        $contextTest = \Context::getContext();
+        $contextTest->employee = new \Employee((int)$employees[0]['id_employee']);
+        $contextTest->cookie->update();
+        \Context::setInstanceForTesting($contextTest);
+        $this->assertTrue((bool)$this->moduleManager->install($this->moduleNames), "Could not install $this->moduleNames");
+    }
 
     /**
      * @dataProvider getDataForLoadCustomerByMethod

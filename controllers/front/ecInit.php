@@ -32,34 +32,36 @@ include_once _PS_MODULE_DIR_.'paypal/controllers/front/abstract.php';
  */
 class PaypalEcInitModuleFrontController extends PaypalAbstarctModuleFrontController
 {
+    /* @var $method AbstractMethodPaypal*/
+    protected $method;
+
     public function init()
     {
         parent::init();
         $this->values['getToken'] = Tools::getvalue('getToken');
         $this->values['credit_card'] = Tools::getvalue('credit_card');
         $this->values['short_cut'] = 0;
+        $this->setMethod(AbstractMethodPaypal::load('EC'));
     }
     /**
      * @see FrontController::postProcess()
      */
     public function postProcess()
     {
-        $paypal = Module::getInstanceByName($this->name);
-        $method_ec = AbstractMethodPaypal::load('EC');
         try {
-            $method_ec->setParameters($this->values);
-            $url = $method_ec->init();
+            $this->method->setParameters($this->values);
+            $url = $this->method->init();
             if ($this->values['getToken']) {
-                $this->jsonValues = array('success' => true, 'token' => $method_ec->token);
+                $this->jsonValues = array('success' => true, 'token' => $this->method->token);
             } else {
                 $this->redirectUrl = $url.'&useraction=commit';
             }
         } catch (PayPal\Exception\PPConnectionException $e) {
-            $this->errors['error_msg'] = $paypal->l('Error connecting to ', pathinfo(__FILE__)['filename']) . $e->getUrl();
+            $this->errors['error_msg'] = $this->module->l('Error connecting to ', pathinfo(__FILE__)['filename']) . $e->getUrl();
         } catch (PayPal\Exception\PPMissingCredentialException $e) {
             $this->errors['error_msg'] = $e->errorMessage();
         } catch (PayPal\Exception\PPConfigurationException $e) {
-            $this->errors['error_msg'] = $paypal->l('Invalid configuration. Please check your configuration file', pathinfo(__FILE__)['filename']);
+            $this->errors['error_msg'] = $this->module->l('Invalid configuration. Please check your configuration file', pathinfo(__FILE__)['filename']);
         } catch (PaypalAddons\classes\PaypalException $e) {
             $this->errors['error_code'] = $e->getCode();
             $this->errors['error_msg'] = $e->getMessage();
@@ -76,5 +78,10 @@ class PaypalEcInitModuleFrontController extends PaypalAbstarctModuleFrontControl
                 $this->redirectUrl = Context::getContext()->link->getModuleLink($this->name, 'error', $this->errors);
             }
         }
+    }
+
+    public function setMethod($method)
+    {
+        $this->method = $method;
     }
 }
