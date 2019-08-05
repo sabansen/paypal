@@ -31,6 +31,9 @@ include_once _PS_MODULE_DIR_.'paypal/controllers/front/abstract.php';
  */
 class PaypalScInitModuleFrontController extends PaypalAbstarctModuleFrontController
 {
+    /* @var $method AbstractMethodPaypal*/
+    protected $method;
+
     public function init()
     {
         parent::init();
@@ -44,6 +47,7 @@ class PaypalScInitModuleFrontController extends PaypalAbstarctModuleFrontControl
         $this->values['getToken'] = Tools::getvalue('getToken');
         $this->values['credit_card'] = 0;
         $this->values['short_cut'] = 1;
+        $this->setMethod(AbstractMethodPaypal::load());
     }
 
     public function postProcess()
@@ -56,13 +60,12 @@ class PaypalScInitModuleFrontController extends PaypalAbstarctModuleFrontControl
             $this->prepareProduct();
         }
 
-        $method = AbstractMethodPaypal::load();
-
         try {
-            $method->setParameters($this->values);
-            $response = $method->init();
+            $this->method->setParameters($this->values);
+            $response = $this->method->init();
+
             if ($this->values['getToken']) {
-                $this->jsonValues = array('success' => true, 'token' => $method->token);
+                $this->jsonValues = array('success' => true, 'token' => $this->method->token);
             } else {
                 $this->redirectUrl = $response;
             }
@@ -135,5 +138,10 @@ class PaypalScInitModuleFrontController extends PaypalAbstarctModuleFrontControl
         } else {
             $this->context->cart->updateQty($this->values['quantity'], $this->values['id_product']);
         }
+    }
+
+    public function setMethod($method)
+    {
+        $this->method = $method;
     }
 }
