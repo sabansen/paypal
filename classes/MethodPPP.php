@@ -443,6 +443,12 @@ class MethodPPP extends AbstractMethodPaypal
     {
         $context = Context::getContext();
         $cart = $context->cart;
+        $customer = new Customer($cart->id_customer);
+
+        if (!Validate::isLoadedObject($customer)) {
+            throw new Exception('Customer is not loaded object');
+        }
+
         // Get the payment Object by passing paymentId
         // payment id was previously stored in session in
         // CreatePaymentUsingPayPal.php
@@ -491,10 +497,6 @@ class MethodPPP extends AbstractMethodPaypal
         // do that by passing the transaction object with just `amount` field in it.
         $exec_payment = $payment->execute($execution, $this->_getCredentialsInfo());
         $this->setDetailsTransaction($exec_payment);
-        $customer = new Customer($cart->id_customer);
-        if (!Validate::isLoadedObject($customer)) {
-            throw new Exception('Customer is not loaded object');
-        }
         $currency = $context->currency;
         $total = (float)$exec_payment->transactions[0]->amount->total;
         $paypal = Module::getInstanceByName($this->name);

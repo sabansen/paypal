@@ -459,6 +459,12 @@ class MethodEC extends AbstractMethodPaypal
     public function validation()
     {
         $context = Context::getContext();
+        $cart = $context->cart;
+        $customer = new Customer($cart->id_customer);
+
+        if (!Validate::isLoadedObject($customer)) {
+            throw new Exception('Customer is not loaded object');
+        }
 
         $this->_paymentDetails = new PaymentDetailsType();
         $this->_paymentDetails->ButtonSource = 'PrestaShop_Cart_'.(getenv('PLATEFORM') == 'PSREADY' ? 'Ready_':'').'EC';
@@ -490,11 +496,7 @@ class MethodEC extends AbstractMethodPaypal
             throw new PaypalException($exec_payment->Errors[0]->ErrorCode, $exec_payment->Errors[0]->ShortMessage, $exec_payment->Errors[0]->LongMessage);
         }
         $this->setDetailsTransaction($exec_payment->DoExpressCheckoutPaymentResponseDetails);
-        $cart = $context->cart;
-        $customer = new Customer($cart->id_customer);
-        if (!Validate::isLoadedObject($customer)) {
-            throw new Exception('Customer is not loaded object');
-        }
+
         $currency = $context->currency;
         $payment_info = $exec_payment->DoExpressCheckoutPaymentResponseDetails->PaymentInfo[0];
 
