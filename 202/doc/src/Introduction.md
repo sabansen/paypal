@@ -15,8 +15,8 @@ To install module on PrestaShop, download zip package form [product page on Pres
 
 For developpers.
 
-This module contain composer.json file.
-See the [composer documentation][composer-doc] to learn more about the composer.json file.
+This module contain composer.json and package.json files.
+See the [composer documentation][composer-doc] and [npm documentation][npm-doc] respectively to learn more about these files.
 The module namespace is : `PaypalAddons`.
 
 Starting from the 4.5 version, PayPal module for PrestaShop will use PPBTlib.
@@ -52,3 +52,4 @@ For rendre the module more testable we need :
 
 [composer-doc]: https://getcomposer.org/doc/04-schema.md
 [addons]: https://addons.prestashop.com/en/payment-card-wallet/1748-paypal-braintree-official.html
+[npm-doc]: https://docs.npmjs.com/
