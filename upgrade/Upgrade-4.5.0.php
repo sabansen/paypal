@@ -38,7 +38,6 @@ function upgrade_module_4_5_0($module)
     $installer = new ModuleInstaller($module);
     $installer->registerHooks();
     $installer->installObjectModel('PaypalOrder');
-    $installer->installObjectModel('PaypalCustomer');
     $installer->installAdminControllers();
     $installer->installExtensions();
     $module->checkPaypalStats();

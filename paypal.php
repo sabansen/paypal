@@ -42,8 +42,6 @@ include_once(_PS_MODULE_DIR_.'paypal/sdk/BraintreeSiSdk.php');
 include_once 'classes/AbstractMethodPaypal.php';
 include_once 'classes/PaypalCapture.php';
 include_once 'classes/PaypalOrder.php';
-include_once 'classes/PaypalCustomer.php';
-include_once 'classes/PaypalVaulting.php';
 include_once 'classes/PaypalLog.php';
 
 const BT_CARD_PAYMENT = 'card-braintree';
@@ -158,8 +156,6 @@ class PayPal extends \PaymentModule
     public $objectModels = array(
         'PaypalCapture',
         'PaypalOrder',
-        'PaypalVaulting',
-        'PaypalCustomer'
     );
 
     /**
