@@ -19,7 +19,7 @@ Method `initPaymentSettingsBlock()` is responsible for displaying this section.
 
 ##### API user name
 
-Serves only for displaying api user name. \
+Serves only for displaying api user name. 
 Method `initApiUserNameForm()` is responsible for displaying this section.
 
 ##### Environment settings

@@ -28,11 +28,26 @@ Everywhere we used Messages we replace by saving the logs to our table. All fron
 
 ### Hooks associated
 
-#### displayAdminOrderContentOrder & displayAdminOrderTabOrder
+#### displayAdminOrderContentOrder, displayAdminOrderTabOrder & displayAdminCartsView
 
 Display log recap on order page in the order tab. 
 Add tab with table :
 
-|DATE|Transaction|Description|Payment tool|
-|------|------|------|------|
+|DATE|Timestamp PayPal|Transaction|Description|Payment tool|
+|------|------|------|------|------|
 
+
+## Methods
+
+
+- **getDateTransaction()**
+    
+    - **Return Values**
+    
+      `string` return the date of the transaction on the PayPal with the time zone
+      
+- **getLinkToTransaction()**
+
+    - **Return Values**
+        
+      `string` return the link to the page of the transaction on PayPal
