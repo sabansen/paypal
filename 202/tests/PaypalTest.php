@@ -49,7 +49,7 @@ class PaypalTest extends TestCase
     /* @var \PayPal*/
     protected $paypal;
 
-    protected function setUp()
+    protected function setUp():void
     {
         $this->paypal = new \PayPal();
         $this->moduleManagerBuilder = ModuleManagerBuilder::getInstance();

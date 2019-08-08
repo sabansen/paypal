@@ -47,7 +47,7 @@ class ScInitTest extends TestCase
 
     public $moduleNames;
 
-    protected function setUp()
+    protected function setUp():void
     {
         $_GET['module'] = 'paypal';
 
@@ -135,7 +135,7 @@ class ScInitTest extends TestCase
         $scInitMock->setMethod($methodMock);
         $scInitMock->postProcess();
         $this->assertNotEmpty($scInitMock->errors);
-        $this->assertContains('controller=error', $scInitMock->redirectUrl);
+        $this->assertStringContainsString('controller=error', $scInitMock->redirectUrl);
     }
 
     /**

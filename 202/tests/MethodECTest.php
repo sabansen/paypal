@@ -51,7 +51,7 @@ class MethodECTest extends TestCase
 
     public $moduleNames;
 
-    protected function setUp()
+    protected function setUp():void
     {
         $this->method = new \MethodEC();
         $this->moduleManagerBuilder = ModuleManagerBuilder::getInstance();

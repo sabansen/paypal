@@ -51,7 +51,7 @@ class MethodPPPTest extends TestCase
 
     public $moduleNames;
 
-    protected function setUp()
+    protected function setUp():void
     {
         $this->method = new \MethodPPP();
         $this->moduleManagerBuilder = ModuleManagerBuilder::getInstance();

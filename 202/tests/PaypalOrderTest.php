@@ -46,7 +46,7 @@ class PaypalOrderTest extends TestCase
 
     public $moduleNames;
 
-    protected function setUp()
+    protected function setUp():void
     {
         $this->moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $this->moduleManager = $this->moduleManagerBuilder->build();
