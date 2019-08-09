@@ -92,4 +92,9 @@ class PaypalTest extends TestCase
     {
         $this->assertIsBool($this->paypal->showWarningForUserBraintree());
     }
+
+    public function testGetHooksUnregistered()
+    {
+        $this->assertIsArray($this->paypal->getHooksUnregistered());
+    }
 }
