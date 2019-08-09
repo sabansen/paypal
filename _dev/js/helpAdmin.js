@@ -54,8 +54,10 @@ var HelpAdmin = {
   // Show error message
   getAlert(message, typeAlert) {
     const alert = document.createElement('div');
+    let messageNode = document.createElement('div');
+    messageNode.innerHTML = message;
     alert.className = `alert alert-${typeAlert}`;
-    alert.appendChild(document.createTextNode(message));
+    alert.appendChild(messageNode);
     return alert;
   },
 };

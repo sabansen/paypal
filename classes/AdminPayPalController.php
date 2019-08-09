@@ -94,6 +94,13 @@ class AdminPayPalController extends \ModuleAdminController
             'success' => true,
             'message' => array()
         );
+        $hooksUnregistered = $this->module->getHooksUnregistered();
+
+        if (empty($hooksUnregistered) == false) {
+            $response['success'] = false;
+            $response['message'][] = $this->getHooksUnregisteredMessage($hooksUnregistered);
+        }
+
         if ((int)\Configuration::get('PS_COUNTRY_DEFAULT') == false) {
             $response['success'] = false;
             $response['message'][] = $this->l('To activate a payment solution, please select your default country.');
@@ -188,5 +195,19 @@ class AdminPayPalController extends \ModuleAdminController
         ProcessLoggerHandler::openLogger();
         ProcessLoggerHandler::logError($message);
         ProcessLoggerHandler::closeLogger();
+    }
+
+    /**
+     *  @param array $hooks array of the hooks name
+     *  @return string
+     */
+    public function getHooksUnregisteredMessage($hooks)
+    {
+        if (is_array($hooks) == false || empty($hooks)) {
+            return '';
+        }
+
+        $this->context->smarty->assign('hooks', $hooks);
+        return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/messages/unregisteredHooksMessage.tpl');
     }
 }
