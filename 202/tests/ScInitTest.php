@@ -47,7 +47,7 @@ class ScInitTest extends TestCase
 
     public $moduleNames;
 
-    protected function setUp():void
+    protected function setUp()
     {
         $_GET['module'] = 'paypal';
 

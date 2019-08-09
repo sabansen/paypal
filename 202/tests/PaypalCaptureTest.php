@@ -46,7 +46,7 @@ class PaypalCaptureTest extends TestCase
 
     public $moduleNames;
 
-    protected function setUp():void
+    protected function setUp()
     {
         $this->moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $this->moduleManager = $this->moduleManagerBuilder->build();
