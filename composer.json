@@ -5,8 +5,7 @@
     "autoload": {
         "psr-4": {
             "PaypalPPBTlib\\": "vendor/ppbtlib/src/",
-            "PaypalAddons\\": ".",
-            "PayPalTest\\": "202/tests/"
+            "PaypalAddons\\": "."
         }
     },
     "scripts": {

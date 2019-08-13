@@ -1684,4 +1684,22 @@ class PayPal extends \PaymentModule
         $result &=  $tabParent->save();
         return $result;
     }
+
+    /**
+    * @return array return the unregistered hooks
+     */
+    public function getHooksUnregistered()
+    {
+        $hooksUnregistered = array();
+
+        foreach ($this->hooks as $hookName) {
+            if (Hook::isModuleRegisteredOnHook($this, $hookName, $this->context->shop->id)) {
+                continue;
+            }
+
+            $hooksUnregistered[] = $hookName;
+        }
+
+        return $hooksUnregistered;
+    }
 }
