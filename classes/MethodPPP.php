@@ -388,7 +388,7 @@ class MethodPPP extends AbstractMethodPaypal
      * Update payment requestbefore redirection.
      * Add reductions.
      */
-    public function doPatch()
+    public function doPatch($paymentId = null)
     {
         $discounts = Context::getContext()->cart->getCartRules();
         $total_discount = 0;
@@ -400,7 +400,11 @@ class MethodPPP extends AbstractMethodPaypal
 
         // Retrieve the payment object by calling the tatic `get` method
         // on the Payment class by passing a valid Payment ID
-        $payment = Payment::get(Context::getContext()->cookie->paypal_plus_payment, $this->_getCredentialsInfo());
+        if ($paymentId === null) {
+            $paymentId = Context::getContext()->cookie->paypal_plus_payment;
+        }
+
+        $payment = Payment::get($paymentId, $this->_getCredentialsInfo());
 
         $cart = new Cart(Context::getContext()->cart->id);
         $address_delivery = new Address($cart->id_address_delivery);
@@ -454,34 +458,10 @@ class MethodPPP extends AbstractMethodPaypal
         // CreatePaymentUsingPayPal.php
         $paymentId = $this->short_cut ? $context->cookie->paypal_pSc : $this->paymentId;
         $payment = Payment::get($paymentId, $this->_getCredentialsInfo());
-        if ($this->short_cut) {
-            $discounts = Context::getContext()->cart->getCartRules();
-            if (count($discounts) > 0) {
-                Context::getContext()->cookie->__unset('paypal_pSc');
-                Context::getContext()->cookie->__unset('paypal_pSc_payerid');
-                throw new Exception('The total of the order do not match amount paid.');
-            }
-            $address_delivery = new Address($cart->id_address_delivery);
-            $state = '';
-            if ($address_delivery->id_state) {
-                $state = new State((int) $address_delivery->id_state);
-            }
-            $state_name = $state ? $state->iso_code : '';
-            $patchAdd = new Patch();
-            $patchAdd->setOp('replace')
-                ->setPath('/transactions/0/item_list/shipping_address')
-                ->setValue(json_decode('{
-                    "recipient_name": "'.$address_delivery->firstname.' '.$address_delivery->lastname.'",
-                    "line1": "'.$address_delivery->address1.'",
-                    "city": "'.$address_delivery->city.'",
-                    "state": "'.$state_name.'",
-                    "postal_code": "'.$address_delivery->postcode.'",
-                    "country_code": "'.Country::getIsoById($address_delivery->id_country).'"
-                }'));
 
-            $patchRequest = new PatchRequest();
-            $patchRequest->setPatches(array($patchAdd));
-            $payment->update($patchRequest, $this->_getCredentialsInfo());
+        // The total of the order or address can be changed, so need to update transaction info
+        if ($this->short_cut) {
+            $this->doPatch($paymentId);
         }
 
         // ### Payment Execute
