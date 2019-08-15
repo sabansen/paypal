@@ -11,7 +11,7 @@
         processIsolation="false"
         stopOnFailure="false"
         syntaxCheck="true"
-        bootstrap="/home/bogdan/www/prestashop.bogdan.tot/site/bb/bootstrap.php"
+        bootstrap="./build/prestashop/admin-dev/bootstrap.php"
 >
     <php>
         <ini name="error_reporting" value="-1" />
