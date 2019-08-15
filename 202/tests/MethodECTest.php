@@ -22,7 +22,7 @@
  * @license   Commercial license
  */
 
-namespace TotTest\tests;
+namespace PayPalTest;
 
 $pathConfig = dirname(__FILE__) . '/../../../../config/config.inc.php';
 $pathInit = dirname(__FILE__) . '/../../../../init.php';
@@ -39,6 +39,8 @@ use PHPUnit\Framework\TestCase;
 use \PayPal\PayPalAPI\GetExpressCheckoutDetailsResponseType;
 use PaypalAddons\classes\PaypalException;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PayPalTest\MethodECMock;
+use PayPalTest\ContextMock;
 
 class MethodECTest extends TestCase
 {
@@ -51,9 +53,14 @@ class MethodECTest extends TestCase
 
     public $moduleNames;
 
+    /* @var MethodECMock*/
+    protected $contextMock;
+
     protected function setUp()
     {
-        $this->method = new \MethodEC();
+        $methodMock = new MethodECMock();
+        $this->method = $methodMock->getInstance();
+        $this->contextMock = new ContextMock();
         $this->moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $this->moduleManager = $this->moduleManagerBuilder->build();
         $this->moduleNames = 'paypal';
@@ -74,6 +81,7 @@ class MethodECTest extends TestCase
      */
     public function testGetCredentialsInfo($mode)
     {
+        $method = new \MethodEC();
         $keys = array(
             'acct1.UserName',
             'acct1.Password',
@@ -82,7 +90,7 @@ class MethodECTest extends TestCase
             'mode',
             'log.LogEnabled'
         );
-        $credentialInfo = $this->method->_getCredentialsInfo($mode);
+        $credentialInfo = $method->_getCredentialsInfo($mode);
         $this->assertTrue(is_array($credentialInfo));
 
         foreach ($keys as $key) {
@@ -124,6 +132,7 @@ class MethodECTest extends TestCase
 
     public function testInit()
     {
+        \Context::setInstanceForTesting($this->contextMock->getInstance());
         try {
             $urlAPI = $this->method->init();
             $this->assertTrue(is_string($urlAPI));

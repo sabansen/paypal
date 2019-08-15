@@ -168,6 +168,9 @@ class MethodEC extends AbstractMethodPaypal
     public function init()
     {
         // details about payment
+        if ($this->isConfigured() == false) {
+            throw new PaypalException(0, 'Invalid configuration', 'Invalid configuration. Please check your configuration');
+        }
         $this->_paymentDetails = new PaymentDetailsType();
         $this->_paymentDetails->ButtonSource = 'PrestaShop_Cart_'.(getenv('PLATEFORM') == 'PSREADY' ? 'Ready_':'').'EC';
 
@@ -436,7 +439,6 @@ class MethodEC extends AbstractMethodPaypal
             case 0:
                 $params['acct1.UserName'] = Configuration::get('PAYPAL_USERNAME_LIVE');
                 $params['acct1.Password'] = Configuration::get('PAYPAL_PSWD_LIVE');
-                $params['acct1.Signature'] = Configuration::get('PAYPAL_SIGNATURE_LIVE');
                 $params['acct1.Signature'] = Configuration::get('PAYPAL_SIGNATURE_LIVE');
                 $params['mode'] = $mode_order ? 'sandbox' : 'live';
                 $params['log.LogEnabled'] = false;

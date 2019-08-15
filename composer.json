@@ -6,7 +6,7 @@
         "psr-4": {
             "PaypalPPBTlib\\": "vendor/ppbtlib/src/",
             "PaypalAddons\\": ".",
-            "PHPUnit\\": "vendor/phpunit/phpunit/src/"
+            "PayPalTest\\": "202/tests/"
         }
     },
     "scripts": {
