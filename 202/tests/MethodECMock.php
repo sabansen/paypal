@@ -22,7 +22,7 @@
  * @license   Commercial license
  */
 
-
+namespace PayPalTest;
 
 $pathConfig = dirname(__FILE__) . '/../../../../config/config.inc.php';
 $pathInit = dirname(__FILE__) . '/../../../../init.php';
