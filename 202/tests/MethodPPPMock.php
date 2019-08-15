@@ -33,21 +33,37 @@ if (file_exists($pathInit)) {
     require_once $pathInit;
 }
 require_once _PS_MODULE_DIR_.'paypal/vendor/autoload.php';
+require_once _PS_MODULE_DIR_.'paypal/classes/MethodPPP.php';
 
 use PHPUnit\Framework\TestCase;
+use PayPal\Rest\ApiContext;
+use PayPal\Auth\OAuthTokenCredential;
 
-class ContextMock extends TestCase
+class MethodPPPMock extends TestCase
 {
     public function getInstance()
     {
-        $context = \Context::getContext();
-        $customerMock = $this->getMockBuilder(\Customer::class)->getMock();
-        $cartMock = $this->getMockBuilder(\Cart::class)->getMock();
+        $methodMock = $this->getMockBuilder(\MethodPPP::class)
+            ->setMethods(array('_getCredentialsInfo'))
+            ->getMock();
 
-        $context->customer = $customerMock;
-        $context->cart = $cartMock;
+        $apiContext = new ApiContext(
+            new OAuthTokenCredential(
+                'ASY0PPD9m_iTYj3qVRYuUI484zJmxV9KGVHksm2Eqvp4w3J8cpWGXkwfHP0fqTSZI10o147UsgFEMkSd',
+                'EMfCLrLpZ6cN8j1vQ4OyFKVkk_anFcSJWxYFZZJvnTwEYNIROLpDpw4f08lj5YAmsn21MVrywRzbhu6n'
+            )
+        );
+        $apiContext->setConfig(
+            array(
+                'mode' => 'sandbox',
+                'log.LogEnabled' => false,
+                'cache.enabled' => true,
+            )
+        );
+        $apiContext->addRequestHeader('PayPal-Partner-Attribution-Id', (getenv('PLATEFORM') == 'PSREAD')?'PrestaShop_Cart_Ready_PPP':'PrestaShop_Cart_PPP');
+        $methodMock->method('_getCredentialsInfo')->willReturn($apiContext);
 
-        return $context;
+        return $methodMock;
     }
 
 }

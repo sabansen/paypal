@@ -39,10 +39,11 @@ use PHPUnit\Framework\TestCase;
 use PayPal\Rest\ApiContext;
 use PayPal\Api\CreateProfileResponse;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PayPalTest\MethodPPPMock;
 
 class MethodPPPTest extends TestCase
 {
-    /* @var \MethodPPP*/
+    /* @var MethodPPPMock*/
     protected $method;
 
     public $moduleManagerBuilder;
@@ -53,7 +54,8 @@ class MethodPPPTest extends TestCase
 
     protected function setUp()
     {
-        $this->method = new \MethodPPP();
+        $methodMock = new MethodPPPMock();
+        $this->method = $methodMock->getInstance();
         $this->moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $this->moduleManager = $this->moduleManagerBuilder->build();
         $this->moduleNames = 'paypal';

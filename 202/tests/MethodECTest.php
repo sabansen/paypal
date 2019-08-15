@@ -43,7 +43,7 @@ use PayPalTest\MethodECMock;
 
 class MethodECTest extends TestCase
 {
-    /* @var \MethodEC*/
+    /* @var MethodECMock*/
     protected $method;
 
     public $moduleManagerBuilder;
