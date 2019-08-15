@@ -157,7 +157,6 @@ class ScInitTest extends TestCase
 
     public function providerCheckAvailability()
     {
-        $this->setUp();
         $dataProvider = array(
             'cart_1' => array(
                 array('source_page' => 'cart'),
@@ -208,7 +207,6 @@ class ScInitTest extends TestCase
 
     public function providerSuccessProductRedirect()
     {
-        $this->setUp();
         $methodMock = $this->getMockBuilder(\MethodEC::class)
             ->setMethods(array('init'))
             ->getMock();
@@ -230,7 +228,6 @@ class ScInitTest extends TestCase
 
     public function providerSuccessProductJson()
     {
-        $this->setUp();
         $methodMock = $this->getMockBuilder(\MethodEC::class)
             ->setMethods(array('init'))
             ->getMock();
@@ -252,7 +249,6 @@ class ScInitTest extends TestCase
 
     public function providerFailureCartRedirect()
     {
-        $this->setUp();
         $methodMock = $this->getMockBuilder(\MethodEC::class)
             ->setMethods(array('init'))
             ->getMock();
@@ -270,7 +266,6 @@ class ScInitTest extends TestCase
 
     public function providerFailureCartJson()
     {
-        $this->setUp();
         $methodMock = $this->getMockBuilder(\MethodEC::class)
             ->setMethods(array('init'))
             ->getMock();

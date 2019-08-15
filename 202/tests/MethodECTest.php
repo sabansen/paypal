@@ -34,16 +34,16 @@ if (file_exists($pathInit)) {
 }
 require_once _PS_MODULE_DIR_.'paypal/vendor/autoload.php';
 require_once _PS_MODULE_DIR_.'paypal/classes/MethodEC.php';
+require_once _PS_MODULE_DIR_.'paypal/202/tests/MethodECMock.php';
 
 use PHPUnit\Framework\TestCase;
 use \PayPal\PayPalAPI\GetExpressCheckoutDetailsResponseType;
 use PaypalAddons\classes\PaypalException;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
-use PayPalTest\MethodECMock;
 
 class MethodECTest extends TestCase
 {
-    /* @var MethodECMock*/
+    /* @var \MethodECMock*/
     protected $method;
 
     public $moduleManagerBuilder;
@@ -54,7 +54,7 @@ class MethodECTest extends TestCase
 
     protected function setUp()
     {
-        $methodMock = new MethodECMock();
+        $methodMock = new \MethodECMock();
         $this->method = $methodMock->getInstance();
         $this->moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $this->moduleManager = $this->moduleManagerBuilder->build();
