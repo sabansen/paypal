@@ -69,7 +69,7 @@ class PaypalCaptureTest extends TestCase
     public function testGetByOrderId($id_order)
     {
         $captureRow = \PaypalCapture::getByOrderId($id_order);
-        $this->assertIsArray($captureRow);
+        $this->assertTrue(is_array($captureRow));
     }
 
     /**

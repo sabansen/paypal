@@ -78,7 +78,7 @@ class PaypalOrderTest extends TestCase
     public function testGetIdOrderByTransactionId($id_transaction)
     {
         $id_order = \PaypalOrder::getIdOrderByTransactionId($id_transaction);
-        $this->assertIsInt($id_order);
+        $this->assertTrue(is_int($id_order));
     }
 
     /**
@@ -87,13 +87,13 @@ class PaypalOrderTest extends TestCase
     public function testGetOrderById($id_order)
     {
         $paypalOrder = \PaypalOrder::getOrderById($id_order);
-        $this->assertIsArray($paypalOrder);
+        $this->assertTrue(is_array($paypalOrder));
     }
 
     public function testGetPaypalBtOrdersIds()
     {
         $orderBtIds = \PaypalOrder::getPaypalBtOrdersIds();
-        $this->assertIsArray($orderBtIds);
+        $this->assertTrue(is_array($orderBtIds));
     }
 
     public function getDataForLoadByOrderId()

@@ -69,7 +69,7 @@ class PaypalLogTest extends TestCase
     public function testGetLinkToTransaction($idPayPalLog)
     {
         $payPalLog = new \PaypalLog($idPayPalLog);
-        $this->assertIsString($payPalLog->getLinkToTransaction());
+        $this->assertTrue(is_string($payPalLog->getLinkToTransaction()));
     }
 
     /**
@@ -78,7 +78,7 @@ class PaypalLogTest extends TestCase
     public function testGetDateTransaction($idPayPalLog)
     {
         $payPalLog = new \PaypalLog($idPayPalLog);
-        $this->assertIsString($payPalLog->getDateTransaction());
+        $this->assertTrue(is_string($payPalLog->getDateTransaction()));
     }
 
     public function getDataForGetLinkToTransaction()

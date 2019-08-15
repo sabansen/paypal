@@ -69,17 +69,17 @@ class PaypalTest extends TestCase
 
     public function testGetDecimal()
     {
-        $this->assertIsInt(\PayPal::getDecimal());
+        $this->assertTrue(is_int(\PayPal::getDecimal()));
     }
 
     public function testGetPaymentCurrencyIso()
     {
-        $this->assertIsString($this->paypal->getPaymentCurrencyIso());
+        $this->assertTrue(is_string($this->paypal->getPaymentCurrencyIso()));
     }
 
     public function testGetUrl()
     {
-        $this->assertIsString($this->paypal->getUrl());
+        $this->assertTrue(is_string($this->paypal->getUrl()));
     }
 
     public function testNeedConvert()
@@ -90,6 +90,6 @@ class PaypalTest extends TestCase
 
     public function testShowWarningForUserBraintree()
     {
-        $this->assertIsBool($this->paypal->showWarningForUserBraintree());
+        $this->assertTrue(is_bool($this->paypal->showWarningForUserBraintree()));
     }
 }

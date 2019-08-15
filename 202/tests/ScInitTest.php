@@ -135,7 +135,7 @@ class ScInitTest extends TestCase
         $scInitMock->setMethod($methodMock);
         $scInitMock->postProcess();
         $this->assertNotEmpty($scInitMock->errors);
-        $this->assertStringContainsString('controller=error', $scInitMock->redirectUrl);
+        $this->assertContains('controller=error', $scInitMock->redirectUrl);
     }
 
     /**

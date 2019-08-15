@@ -78,7 +78,7 @@ class EcInitTest extends TestCase
         $ecInit->setMethod($methodMock);
         $ecInit->postProcess();
         $this->assertNotEmpty($ecInit->errors);
-        $this->assertStringContainsString('controller=error', $ecInit->redirectUrl);
+        $this->assertContains('controller=error', $ecInit->redirectUrl);
     }
 
     /**

@@ -83,7 +83,7 @@ class MethodECTest extends TestCase
             'log.LogEnabled'
         );
         $credentialInfo = $this->method->_getCredentialsInfo($mode);
-        $this->assertIsArray($credentialInfo);
+        $this->assertTrue(is_array($credentialInfo));
 
         foreach ($keys as $key) {
             $this->assertArrayHasKey($key, $credentialInfo);
@@ -96,12 +96,12 @@ class MethodECTest extends TestCase
     public function testFormatPrice($price)
     {
         $priceFormated = $this->method->formatPrice($price);
-        $this->assertIsString($priceFormated);
+        $this->assertTrue(is_string($priceFormated));
     }
 
     public function testGetDateTransaction()
     {
-        $this->assertIsString($this->method->getDateTransaction());
+        $this->assertTrue(is_string($this->method->getDateTransaction()));
     }
 
     public function testGetInfo()
@@ -119,14 +119,14 @@ class MethodECTest extends TestCase
      */
     public function testGetLinkToTransaction($id_transaction, $sandbox)
     {
-        $this->assertIsString($this->method->getLinkToTransaction($id_transaction, $sandbox));
+        $this->assertTrue(is_string($this->method->getLinkToTransaction($id_transaction, $sandbox)));
     }
 
     public function testInit()
     {
         try {
             $urlAPI = $this->method->init();
-            $this->assertIsString($urlAPI);
+            $this->assertTrue(is_string($urlAPI));
         } catch (\Exception $e) {
             $this->assertInstanceOf(PaypalException::class, $e, $e->getMessage());
         }
@@ -137,7 +137,7 @@ class MethodECTest extends TestCase
      */
     public function testIsConfigured()
     {
-        $this->assertIsBool($this->method->isConfigured());
+        $this->assertTrue(is_bool($this->method->isConfigured()));
     }
 
     /**
@@ -145,21 +145,21 @@ class MethodECTest extends TestCase
      */
     public function testRedirectToAPI($method)
     {
-        $this->assertIsString($this->method->redirectToAPI($method));
+        $this->assertTrue(is_string($this->method->redirectToAPI($method)));
     }
 
     /**
      * @dataProvider getDataForRenderExpressCheckoutShortCut
      */
-    public function testRenderExpressCheckoutShortCut(&$context, $type, $page_source)
+    public function testRenderExpressCheckoutShortCut($context, $type, $page_source)
     {
-        $this->assertIsString($this->method->renderExpressCheckoutShortCut($context, $type, $page_source));
+        $this->assertTrue(is_string($this->method->renderExpressCheckoutShortCut($context, $type, $page_source)));
     }
 
 
     public function testUseMobile()
     {
-        $this->assertIsBool($this->method->useMobile());
+        $this->assertTrue(is_bool($this->method->useMobile()));
     }
 
     public function getDataForGetCredentialsInfo()

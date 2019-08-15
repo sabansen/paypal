@@ -88,7 +88,7 @@ class MethodPPPTest extends TestCase
      */
     public function testCredentialsSetted($mode)
     {
-        $this->assertIsBool($this->method->credentialsSetted($mode));
+        $this->assertTrue(is_bool($this->method->credentialsSetted($mode)));
     }
 
     /**
@@ -97,7 +97,7 @@ class MethodPPPTest extends TestCase
     public function testFormatPrice($price)
     {
         $priceFormated = $this->method->formatPrice($price);
-        $this->assertIsString($priceFormated);
+        $this->assertTrue(is_string($priceFormated));
     }
 
     /**
@@ -114,7 +114,7 @@ class MethodPPPTest extends TestCase
      */
     public function testGetLinkToTransaction($id_transaction, $sandbox)
     {
-        $this->assertIsString($this->method->getLinkToTransaction($id_transaction, $sandbox));
+        $this->assertTrue(is_string($this->method->getLinkToTransaction($id_transaction, $sandbox)));
     }
 
     /**
@@ -122,20 +122,20 @@ class MethodPPPTest extends TestCase
      */
     public function testIsConfigured()
     {
-        $this->assertIsBool($this->method->isConfigured());
+        $this->assertTrue(is_bool($this->method->isConfigured()));
     }
 
     public function testInit()
     {
-        $this->assertIsString($this->method->init());
+        $this->assertTrue(is_string($this->method->init()));
     }
 
     /**
      * @dataProvider getDataForRenderExpressCheckoutShortCut
      */
-    public function testRenderExpressCheckoutShortCut(&$context, $type, $page_source)
+    public function testRenderExpressCheckoutShortCut($context, $type, $page_source)
     {
-        $this->assertIsString($this->method->renderExpressCheckoutShortCut($context, $type, $page_source));
+        $this->assertTrue(is_string($this->method->renderExpressCheckoutShortCut($context, $type, $page_source)));
     }
 
     public function getDataForGetCredentialsInfo()

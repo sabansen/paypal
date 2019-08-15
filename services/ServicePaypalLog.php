@@ -28,6 +28,9 @@ namespace PaypalAddons\services;
 
 use PaypalPPBTlib\Extensions\ProcessLogger\Classes\ProcessLoggerObjectModel;
 
+require_once dirname(__FILE__) . '/../classes/PaypalOrder.php';
+require_once dirname(__FILE__) . '/../classes/AbstractMethodPaypal.php';
+
 class ServicePaypalLog
 {
     /**
