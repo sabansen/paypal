@@ -470,7 +470,7 @@ class PayPal extends \PaymentModule
         }
         if ('cart' !== $this->context->controller->php_self ||
             !Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART') ||
-            $this->context->cart->hasProducts() == false) {
+            $this->context->cart->nbProducts() == 0) {
             return false;
         }
         $method = AbstractMethodPaypal::load();
