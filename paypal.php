@@ -601,6 +601,12 @@ class PayPal extends \PaymentModule
                 return;
             }
 
+            $method = AbstractMethodPaypal::load($this->paypal_method);
+
+            if ($method->isConfigured() == false) {
+                return false;
+            }
+
             if ((Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART')) && (isset($this->context->cookie->paypal_ecs) || isset($this->context->cookie->paypal_pSc))) {
                 $this->context->controller->registerJavascript($this->name . '-paypal-ec-sc', 'modules/' . $this->name . '/views/js/shortcut_payment.js');
                 if (isset($this->context->cookie->paypal_ecs)) {
