@@ -1683,10 +1683,4 @@ class PayPal extends \PaymentModule
         $result &=  $tabParent->save();
         return $result;
     }
-
-    public function checkCredentialsEC()
-    {
-        $method = AbstractMethodPaypal::load('EC');
-        $method->checkCredentials();
-    }
 }

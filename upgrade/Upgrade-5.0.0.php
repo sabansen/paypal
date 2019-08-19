@@ -27,6 +27,9 @@
 if (!defined('_PS_VERSION_')) {
     exit;
 }
+
+require_once '../classes/AbstractMethodPaypal.php';
+
 use PaypalPPBTlib\Install\ModuleInstaller;
 
 /**
@@ -40,7 +43,8 @@ function upgrade_module_5_0_0($module)
     $installer->installAdminControllers();
     $module->checkPaypalStats();
     $module->renameTabParent();
-    $module->checkCredentialsEC();
+    $method = AbstractMethodPaypal::load('EC');
+    $method->checkCredentials();
     $tabConfiguration = Tab::getInstanceFromClassName('AdminPaypalConfiguration');
 
     if (Validate::isLoadedObject($tabConfiguration) == false) {
