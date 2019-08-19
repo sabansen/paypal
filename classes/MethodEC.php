@@ -117,6 +117,7 @@ class MethodEC extends AbstractMethodPaypal
         Configuration::updateValue('PAYPAL_'.$mode.'_ACCESS', 0);
         Configuration::updateValue('PAYPAL_MERCHANT_ID_'.$mode, '');
         Configuration::updateValue('PAYPAL_API_CARD', 0);
+        Configuration::updateValue('PAYPAL_CONNECTION_EC_CONFIGURED', 0);
     }
 
     /**
@@ -135,6 +136,7 @@ class MethodEC extends AbstractMethodPaypal
             Configuration::updateValue('PAYPAL_MERCHANT_ID_'.$mode, $params['merchant_id']);
             Configuration::updateValue('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT', 1);
             Configuration::updateValue('PAYPAL_API_CARD', $params['with_card']);
+            $this->checkCredentials();
             $paypal->checkPaypalStats();
             Tools::redirect($paypal->module_link);
         }
@@ -784,6 +786,11 @@ class MethodEC extends AbstractMethodPaypal
      */
     public function isConfigured($mode = null)
     {
+        return (int)Configuration::get('PAYPAL_CONNECTION_EC_CONFIGURED') === 1;
+    }
+
+    public function checkCredentials($mode = null)
+    {
         $paypalService = new PayPalAPIInterfaceServiceService($this->_getCredentialsInfo($mode));
         $getBalanceReq = new GetBalanceReq();
         $getBalanceReq->GetBalanceRequest = new GetBalanceRequestType();
@@ -791,10 +798,15 @@ class MethodEC extends AbstractMethodPaypal
         try {
             $response = $paypalService->GetBalance($getBalanceReq);
         } catch (Exception $e) {
-            return false;
+            Configuration::updateValue('PAYPAL_CONNECTION_EC_CONFIGURED', 0);
+            return;
         }
 
-        return $response->Ack == 'Success';
+        if ($response->Ack == 'Success') {
+            Configuration::updateValue('PAYPAL_CONNECTION_EC_CONFIGURED', 1);
+        } else {
+            Configuration::updateValue('PAYPAL_CONNECTION_EC_CONFIGURED', 0);
+        }
     }
 
     public function getTplVars()

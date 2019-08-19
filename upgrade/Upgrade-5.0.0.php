@@ -40,6 +40,7 @@ function upgrade_module_5_0_0($module)
     $installer->installAdminControllers();
     $module->checkPaypalStats();
     $module->renameTabParent();
+    $module->checkCredentialsEC();
     $tabConfiguration = Tab::getInstanceFromClassName('AdminPaypalConfiguration');
 
     if (Validate::isLoadedObject($tabConfiguration) == false) {
