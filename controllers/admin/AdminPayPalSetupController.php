@@ -67,13 +67,12 @@ class AdminPayPalSetupController extends AdminPayPalController
         $this->clearFieldsForm();
         $tpl_vars['formAccountSettings'] = $formAccountSettings;
 
-
-        $this->initPaymentSettingsBlock();
-        $formPaymentSettings = $this->renderForm();
-        $this->clearFieldsForm();
-        $tpl_vars['formPaymentSettings'] = $formPaymentSettings;
-
         if ($this->method == 'EC') {
+            $this->initPaymentSettingsBlock();
+            $formPaymentSettings = $this->renderForm();
+            $this->clearFieldsForm();
+            $tpl_vars['formPaymentSettings'] = $formPaymentSettings;
+
             $this->initApiUserNameForm();
             $formApiUserName = $this->renderForm();
             $this->clearFieldsForm();

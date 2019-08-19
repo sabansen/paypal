@@ -52,6 +52,7 @@ class AdminPayPalController extends \ModuleAdminController
 
         $showWarningForUserBraintree = $this->module->showWarningForUserBraintree();
         $this->context->smarty->assign('showWarningForUserBraintree', $showWarningForUserBraintree);
+        $this->context->smarty->assign('methodType', $this->method);
     }
 
     public function renderForm($fields_form = null)
