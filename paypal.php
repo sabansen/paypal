@@ -634,7 +634,7 @@ class PayPal extends \PaymentModule
                 $this->context->controller->registerJavascript($this->name . '-paypal-checkout-in-context', 'modules/' . $this->name . '/views/js/ec_in_context.js');
             }
             if ($this->paypal_method == 'PPP') {
-                $this->assignJSvarsPaypalPlus();
+                $method->assignJSvarsPaypalPlus();
                 $this->context->controller->registerJavascript($this->name . '-plus-minjs', 'https://www.paypalobjects.com/webstatic/ppplus/ppplus.min.js', array('server' => 'remote'));
                 $this->context->controller->registerJavascript($this->name . '-plus-payment-js', 'modules/' . $this->name . '/views/js/payment_ppp.js');
                 $this->context->controller->addJqueryPlugin('fancybox');
@@ -670,35 +670,6 @@ class PayPal extends \PaymentModule
             'transaction_id' => pSQL($transaction_id),
         ), 'order_reference = "'.pSQL($ps_order->reference).'"');
     }
-
-    /**
-     * Assign form data for Paypal Plus payment option
-     * @return boolean
-     */
-    protected function assignJSvarsPaypalPlus()
-    {
-        $ppplus = AbstractMethodPaypal::load('PPP');
-        try {
-            $approval_url = $ppplus->init();
-            $this->context->cookie->__set('paypal_plus_payment', $ppplus->paymentId);
-        } catch (Exception $e) {
-            return false;
-        }
-        $address_invoice = new Address($this->context->cart->id_address_invoice);
-        $country_invoice = new Country($address_invoice->id_country);
-
-        Media::addJsDef(array(
-            'approvalUrlPPP' => $approval_url,
-            'modePPP' => Configuration::get('PAYPAL_SANDBOX')  ? 'sandbox' : 'live',
-            'languageIsoCodePPP' => $this->context->language->iso_code,
-            'countryIsoCodePPP' => $country_invoice->iso_code,
-            'ajaxPatchUrl' => $this->context->link->getModuleLink('paypal', 'pppPatch', array(), true),
-        ));
-        Media::addJsDefL('waitingRedirectionMsg', $this->l('In few seconds, you will be redirected to PayPal. Please wait.'));
-
-        return true;
-    }
-
 
     public function hookDisplayOrderConfirmation($params)
     {

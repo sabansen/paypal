@@ -681,4 +681,47 @@ class MethodPPP extends AbstractMethodPaypal
             return (bool)Configuration::get('PAYPAL_LIVE_CLIENTID') && (bool)Configuration::get('PAYPAL_LIVE_SECRET');
         }
     }
+
+    /**
+     * Assign form data for Paypal Plus payment option
+     * @return boolean
+     */
+    public function assignJSvarsPaypalPlus()
+    {
+        $context = Context::getContext();
+        try {
+            $approval_url = $this->init();
+            $context->cookie->__set('paypal_plus_payment', $this->paymentId);
+        } catch (Exception $e) {
+            return false;
+        }
+
+        $paypal = Module::getInstanceByName('paypal');
+        $address_invoice = new Address($context->cart->id_address_invoice);
+        $country_invoice = new Country($address_invoice->id_country);
+
+        Media::addJsDef(array(
+            'approvalUrlPPP' => $approval_url,
+            'modePPP' => Configuration::get('PAYPAL_SANDBOX')  ? 'sandbox' : 'live',
+            'languageIsoCodePPP' => $context->language->iso_code,
+            'countryIsoCodePPP' => $country_invoice->iso_code,
+            'ajaxPatchUrl' => $context->link->getModuleLink('paypal', 'pppPatch', array(), true),
+        ));
+        Media::addJsDefL('waitingRedirectionMsg', $paypal->l('In few seconds, you will be redirected to PayPal. Please wait.', false, get_class($this)));
+
+        return true;
+    }
+
+    public function getTplVars()
+    {
+        $tpl_vars = array(
+            'paypal_sandbox_clientid' => Configuration::get('PAYPAL_SANDBOX_CLIENTID'),
+            'paypal_live_clientid' => Configuration::get('PAYPAL_LIVE_CLIENTID'),
+            'paypal_sandbox_secret' => Configuration::get('PAYPAL_SANDBOX_SECRET'),
+            'paypal_live_secret' => Configuration::get('PAYPAL_LIVE_SECRET'),
+            'accountConfigured' => $this->isConfigured(),
+        );
+
+        return $tpl_vars;
+    }
 }

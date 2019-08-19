@@ -119,63 +119,13 @@ class AdminPayPalSetupController extends AdminPayPalController
 
     public function getHtmlBlockAccountSetting()
     {
-        if ($this->method == 'EC') {
-            $tpl_vars = $this->getTplVarsForEC();
-        } else {
-            $tpl_vars = $this->getTplVarsForPPP();
-        }
+        $method = AbstractMethodPaypal::load($this->method);
+        $tpl_vars = $method->getTplVars();
 
         $tpl_vars['method'] = $this->method;
         $this->context->smarty->assign($tpl_vars);
         $html_content = $this->context->smarty->fetch($this->getTemplatePath() . '_partials/accountSettingsBlock.tpl');
         return $html_content;
-    }
-
-    public function getTplVarsForPPP()
-    {
-        $method = AbstractMethodPaypal::load($this->method);
-        $tpl_vars = array(
-            'paypal_sandbox_clientid' => Configuration::get('PAYPAL_SANDBOX_CLIENTID'),
-            'paypal_live_clientid' => Configuration::get('PAYPAL_LIVE_CLIENTID'),
-            'paypal_sandbox_secret' => Configuration::get('PAYPAL_SANDBOX_SECRET'),
-            'paypal_live_secret' => Configuration::get('PAYPAL_LIVE_SECRET'),
-            'accountConfigured' => $method == null? false : $method->isConfigured(),
-        );
-
-        return $tpl_vars;
-    }
-
-    public function getTplVarsForEC()
-    {
-        $method = AbstractMethodPaypal::load($this->method);
-        $urlParameters = array(
-            'paypal_set_config' => 1,
-            'method' => 'EC',
-            'with_card' => 0,
-            'modify' => 1
-        );
-        $countryDefault = new \Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
-        $tpl_vars = array(
-            'accountConfigured' => $method == null? false : $method->isConfigured(),
-            'urlOnboarding' => $this->context->link->getAdminLink('AdminPayPalSetup', true, null, $urlParameters),
-            'country_iso' => $countryDefault->iso_code,
-        );
-
-        if ((int)Configuration::get('PAYPAL_SANDBOX')) {
-            $tpl_vars['paypal_api_user_name'] = Configuration::get('PAYPAL_USERNAME_SANDBOX');
-            $tpl_vars['paypal_pswd'] = Configuration::get('PAYPAL_PSWD_SANDBOX');
-            $tpl_vars['paypal_signature'] = Configuration::get('PAYPAL_SIGNATURE_SANDBOX');
-            $tpl_vars['paypal_merchant_id'] = Configuration::get('PAYPAL_MERCHANT_ID_SANDBOX');
-            $tpl_vars['mode'] = 'SANDBOX';
-        } else {
-            $tpl_vars['paypal_api_user_name'] = Configuration::get('PAYPAL_USERNAME_LIVE');
-            $tpl_vars['paypal_pswd'] = Configuration::get('PAYPAL_PSWD_LIVE');
-            $tpl_vars['paypal_signature'] = Configuration::get('PAYPAL_SIGNATURE_LIVE');
-            $tpl_vars['paypal_merchant_id'] = Configuration::get('PAYPAL_MERCHANT_ID_LIVE');
-            $tpl_vars['mode'] = 'LIVE';
-        }
-
-        return $tpl_vars;
     }
 
     public function initPaymentSettingsBlock()

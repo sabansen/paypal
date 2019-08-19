@@ -796,4 +796,37 @@ class MethodEC extends AbstractMethodPaypal
 
         return $response->Ack == 'Success';
     }
+
+    public function getTplVars()
+    {
+        $urlParameters = array(
+            'paypal_set_config' => 1,
+            'method' => 'EC',
+            'with_card' => 0,
+            'modify' => 1
+        );
+        $context = Context::getContext();
+        $countryDefault = new \Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $context->language->id);
+        $tpl_vars = array(
+            'accountConfigured' => $this->isConfigured(),
+            'urlOnboarding' => $context->link->getAdminLink('AdminPayPalSetup', true, null, $urlParameters),
+            'country_iso' => $countryDefault->iso_code,
+        );
+
+        if ((int)Configuration::get('PAYPAL_SANDBOX')) {
+            $tpl_vars['paypal_api_user_name'] = Configuration::get('PAYPAL_USERNAME_SANDBOX');
+            $tpl_vars['paypal_pswd'] = Configuration::get('PAYPAL_PSWD_SANDBOX');
+            $tpl_vars['paypal_signature'] = Configuration::get('PAYPAL_SIGNATURE_SANDBOX');
+            $tpl_vars['paypal_merchant_id'] = Configuration::get('PAYPAL_MERCHANT_ID_SANDBOX');
+            $tpl_vars['mode'] = 'SANDBOX';
+        } else {
+            $tpl_vars['paypal_api_user_name'] = Configuration::get('PAYPAL_USERNAME_LIVE');
+            $tpl_vars['paypal_pswd'] = Configuration::get('PAYPAL_PSWD_LIVE');
+            $tpl_vars['paypal_signature'] = Configuration::get('PAYPAL_SIGNATURE_LIVE');
+            $tpl_vars['paypal_merchant_id'] = Configuration::get('PAYPAL_MERCHANT_ID_LIVE');
+            $tpl_vars['mode'] = 'LIVE';
+        }
+
+        return $tpl_vars;
+    }
 }
