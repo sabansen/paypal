@@ -48,6 +48,8 @@ use PayPal\PayPalAPI\GetExpressCheckoutDetailsReq;
 use PayPal\Service\PayPalAPIInterfaceServiceService;
 use PaypalAddons\classes\PaypalException;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
+use PayPal\PayPalAPI\GetBalanceReq;
+use PayPal\PayPalAPI\GetBalanceRequestType;
 
 /**
  * Class MethodEC.
@@ -782,18 +784,16 @@ class MethodEC extends AbstractMethodPaypal
      */
     public function isConfigured($mode = null)
     {
-        if ($mode == null) {
-            $mode = (int) Configuration::get('PAYPAL_SANDBOX');
+        $paypalService = new PayPalAPIInterfaceServiceService($this->_getCredentialsInfo($mode));
+        $getBalanceReq = new GetBalanceReq();
+        $getBalanceReq->GetBalanceRequest = new GetBalanceRequestType();
+
+        try {
+            $response = $paypalService->GetBalance($getBalanceReq);
+        } catch (Exception $e) {
+            return false;
         }
 
-        if ($mode) {
-            return (bool)Configuration::get('PAYPAL_MERCHANT_ID_SANDBOX') &&
-                (bool)Configuration::get('PAYPAL_USERNAME_SANDBOX') &&
-                (bool)Configuration::get('PAYPAL_USERNAME_SANDBOX');
-        } else {
-            return (bool)Configuration::get('PAYPAL_MERCHANT_ID_LIVE') &&
-                (bool)Configuration::get('PAYPAL_USERNAME_LIVE') &&
-                (bool)Configuration::get('PAYPAL_USERNAME_LIVE');
-        }
+        return $response->Ack == 'Success';
     }
 }
