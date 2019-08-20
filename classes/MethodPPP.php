@@ -61,6 +61,8 @@ class MethodPPP extends AbstractMethodPaypal
 
     private $_amount;
 
+    public $errors = array();
+
     /** @var boolean shortcut payment from product or cart page*/
     public $short_cut;
 
@@ -194,6 +196,8 @@ class MethodPPP extends AbstractMethodPaypal
             // Use this call to create a profile.
             $createProfileResponse = $webProfile->create($this->_getCredentialsInfo());
         } catch (\PayPal\Exception\PayPalConnectionException $ex) {
+            $module = Module::getInstanceByName('paypal');
+            $this->errors[] = $module->l('An error occurred while creating your web experience. Check your credentials.', get_class($this));
             return false;
         }
 
@@ -707,7 +711,7 @@ class MethodPPP extends AbstractMethodPaypal
             'countryIsoCodePPP' => $country_invoice->iso_code,
             'ajaxPatchUrl' => $context->link->getModuleLink('paypal', 'pppPatch', array(), true),
         ));
-        Media::addJsDefL('waitingRedirectionMsg', $paypal->l('In few seconds, you will be redirected to PayPal. Please wait.', false, get_class($this)));
+        Media::addJsDefL('waitingRedirectionMsg', $paypal->l('In few seconds, you will be redirected to PayPal. Please wait.', get_class($this)));
 
         return true;
     }
@@ -723,5 +727,15 @@ class MethodPPP extends AbstractMethodPaypal
         );
 
         return $tpl_vars;
+    }
+
+    public function checkCredentials()
+    {
+        $experience_web = $this->createWebExperience();
+        if ($experience_web) {
+            Configuration::updateValue('PAYPAL_PLUS_EXPERIENCE', $experience_web->id);
+        } else {
+            Configuration::updateValue('PAYPAL_PLUS_EXPERIENCE', '');
+        }
     }
 }

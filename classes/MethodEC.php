@@ -84,6 +84,8 @@ class MethodEC extends AbstractMethodPaypal
 
     protected $payment_method = 'PayPal';
 
+    public $errors = array();
+
     /**
      * @param $values array replace for tools::getValues()
      */
@@ -138,7 +140,7 @@ class MethodEC extends AbstractMethodPaypal
             Configuration::updateValue('PAYPAL_API_CARD', $params['with_card']);
             $this->checkCredentials();
             $paypal->checkPaypalStats();
-            Tools::redirect($paypal->module_link);
+            return;
         }
 
 
@@ -794,10 +796,12 @@ class MethodEC extends AbstractMethodPaypal
         $paypalService = new PayPalAPIInterfaceServiceService($this->_getCredentialsInfo($mode));
         $getBalanceReq = new GetBalanceReq();
         $getBalanceReq->GetBalanceRequest = new GetBalanceRequestType();
+        $module = Module::getInstanceByName('paypal');
 
         try {
             $response = $paypalService->GetBalance($getBalanceReq);
         } catch (Exception $e) {
+            $this->errors[] = $module->l('An error occurred while creating your web experience. Check your credentials.',  get_class($this));
             Configuration::updateValue('PAYPAL_CONNECTION_EC_CONFIGURED', 0);
             return;
         }
@@ -805,6 +809,7 @@ class MethodEC extends AbstractMethodPaypal
         if ($response->Ack == 'Success') {
             Configuration::updateValue('PAYPAL_CONNECTION_EC_CONFIGURED', 1);
         } else {
+            $this->errors[] = $module->l('An error occurred while creating your web experience. Check your credentials.', get_class($this));
             Configuration::updateValue('PAYPAL_CONNECTION_EC_CONFIGURED', 0);
         }
     }

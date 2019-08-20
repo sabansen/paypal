@@ -290,23 +290,13 @@ class AdminPayPalSetupController extends AdminPayPalController
     {
         $result = parent::saveForm();
         $method = AbstractMethodPaypal::load($this->method);
+        $method->checkCredentials();
 
-        if ($this->method == 'PPP') {
-            if ($method->credentialsSetted()) {
-                $experience_web = $method->createWebExperience();
-                if ($experience_web) {
-                    Configuration::updateValue('PAYPAL_PLUS_EXPERIENCE', $experience_web->id);
-                } else {
-                    Configuration::updateValue('PAYPAL_PLUS_EXPERIENCE', '');
-                    $message = $this->l('An error occurred while creating your web experience. Check your credentials.');
-                    $this->errors[] = $message;
-                    $this->log($message);
-                }
-            } else {
-                $this->errors[] = $this->l('An error occurred while creating your web experience. Check your credentials.');
+        if (empty($method->errors) == false) {
+            foreach ($method->errors as $error) {
+                $this->errors[] = $error;
+                $this->log($error);
             }
-        } elseif ($this->method == 'EC') {
-            $method->checkCredentials();
         }
 
         $this->module->checkPaypalStats();
