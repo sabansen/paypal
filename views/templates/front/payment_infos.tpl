@@ -22,7 +22,7 @@
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<input type="hidden" name="ec_in_context" data-ec-in-context>
+
 <p>{l s='Benefit from many PayPal advantages such as :' mod='paypal'}</p>
 <p><img src="{$path|escape:'html':'UTF-8'}views/img/protected.png" style="height: 43px; padding-right: 10px;">{l s='Your orders are protected' mod='paypal'}*</p>
 <p><img src="{$path|escape:'html':'UTF-8'}views/img/refund.png" style=" height: 43px; padding-right: 10px;">{l s='Return shipping refunded' mod='paypal'}*</p>

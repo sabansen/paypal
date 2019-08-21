@@ -18,18 +18,7 @@ $(document).ready( () => {
   window.paypalCheckoutReady = () => paypal.checkout.setup(merchant_id, {environment: environment});
 });
 
-$('#payment-confirmation button').on('click', (e) => {
-  let selectedOption = $('input[name=payment-option]:checked').attr('id');
-
-  // Express checkout method
-  if ($(`#${selectedOption}-additional-information`).find($('[data-ec-in-context]')).length > 0) {
-    e.preventDefault();
-    e.stopPropagation();
-    ECInContext();
-  }
-});
-
-const ECInContext = () => {
+window.ECInContext = () => {
     // Init Express checkout method
     paypal.checkout.initXO();
     $.support.cors = true;
