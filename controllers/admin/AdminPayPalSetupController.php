@@ -41,7 +41,11 @@ class AdminPayPalSetupController extends AdminPayPalController
             'paypal_sandbox_clientid',
             'paypal_live_clientid',
             'paypal_sandbox_secret',
-            'paypal_live_secret'
+            'paypal_live_secret',
+            'paypal_mb_sandbox_clientid',
+            'paypal_mb_live_clientid',
+            'paypal_mb_sandbox_secret',
+            'paypal_mb_live_secret'
         );
     }
 

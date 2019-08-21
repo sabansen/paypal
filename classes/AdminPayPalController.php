@@ -38,7 +38,20 @@ class AdminPayPalController extends \ModuleAdminController
         parent::__construct();
         $this->bootstrap = true;
         $countryDefault = new \Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
-        $this->method = $countryDefault->iso_code == "DE" ? "PPP" : "EC";
+
+        switch ($countryDefault->iso_code) {
+            case "DE":
+                $this->method = "PPP";
+                break;
+            case "BR":
+                $this->method = "MB";
+                break;
+            case "MX":
+                $this->method = "MB";
+                break;
+            default:
+                $this->method = "EC";
+        }
     }
 
     public function initContent()
