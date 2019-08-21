@@ -41,7 +41,11 @@ class AdminPayPalSetupController extends AdminPayPalController
             'paypal_sandbox_clientid',
             'paypal_live_clientid',
             'paypal_sandbox_secret',
-            'paypal_live_secret'
+            'paypal_live_secret',
+            'paypal_mb_sandbox_clientid',
+            'paypal_mb_live_clientid',
+            'paypal_mb_sandbox_secret',
+            'paypal_mb_live_secret'
         );
     }
 
@@ -119,16 +123,17 @@ class AdminPayPalSetupController extends AdminPayPalController
 
     public function getHtmlBlockAccountSetting()
     {
-        if ($this->method == 'EC') {
-            $tpl_vars = $this->getTplVarsForEC();
-        } else {
-            $tpl_vars = $this->getTplVarsForPPP();
-        }
-
+        $method = AbstractMethodPaypal::load($this->method);
+        $tpl_vars = $method->getTplVars();
         $tpl_vars['method'] = $this->method;
         $this->context->smarty->assign($tpl_vars);
         $html_content = $this->context->smarty->fetch($this->getTemplatePath() . '_partials/accountSettingsBlock.tpl');
         return $html_content;
+    }
+
+    public function getTplVarsForMB()
+    {
+
     }
 
     public function getTplVarsForPPP()
@@ -340,21 +345,13 @@ class AdminPayPalSetupController extends AdminPayPalController
     public function saveForm()
     {
         $result = parent::saveForm();
+        $method = AbstractMethodPaypal::load($this->method);
+        $method->checkCredentials();
 
-        if ($this->method == 'PPP') {
-            $method = AbstractMethodPaypal::load($this->method);
-            if ($method->credentialsSetted()) {
-                $experience_web = $method->createWebExperience();
-                if ($experience_web) {
-                    Configuration::updateValue('PAYPAL_PLUS_EXPERIENCE', $experience_web->id);
-                } else {
-                    Configuration::updateValue('PAYPAL_PLUS_EXPERIENCE', '');
-                    $message = $this->l('An error occurred while creating your web experience. Check your credentials.');
-                    $this->errors[] = $message;
-                    $this->log($message);
-                }
-            } else {
-                $this->errors[] = $this->l('An error occurred while creating your web experience. Check your credentials.');
+        if (empty($method->errors) == false) {
+            foreach ($method->errors as $error) {
+                $this->errors[] = $error;
+                $this->log($error);
             }
         }
 
