@@ -146,7 +146,7 @@ class MethodEC extends AbstractMethodPaypal
 
         $country_default = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
 
-        if (!in_array($country_default, $paypal->bt_countries)) {
+        if (!in_array($country_default, $paypal->countriesApiCartUnavailable)) {
             if (Tools::isSubmit('paypal_config')) {
                 Configuration::updateValue('PAYPAL_API_CARD', $params['paypal_card']);
             }

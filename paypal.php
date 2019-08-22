@@ -60,7 +60,7 @@ class PayPal extends \PaymentModule
     public $amount_paid_paypal;
     public $module_link;
     public $errors;
-    public $bt_countries = array("FR", "GB", "IT", "ES", "US");
+    public $countriesApiCartUnavailable = array("FR", "GB", "IT", "ES", "DE");
     public $paypal_method;
     /** @var array matrix of state iso codes between paypal and prestashop */
     public static $state_iso_code_matrix = array(
@@ -498,6 +498,7 @@ class PayPal extends \PaymentModule
         if (Module::isEnabled('braintree') && (int)Configuration::get('BRAINTREE_ACTIVATE_PAYPAL')) {
             return array();
         }
+        $isoCountryDefault = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
         $is_virtual = 0;
         foreach ($params['cart']->getProducts() as $key => $product) {
             if ($product['is_virtual']) {
@@ -532,7 +533,7 @@ class PayPal extends \PaymentModule
                     }
                     $payments_options[] = $payment_options;
 
-                    if (Configuration::get('PAYPAL_API_CARD')) {
+                    if (Configuration::get('PAYPAL_API_CARD') && (in_array($isoCountryDefault, $this->countriesApiCartUnavailable) == false)) {
                         $payment_options = new PaymentOption();
                         $action_text = $this->l('Pay with debit or credit card');
                         $payment_options->setLogo(Media::getMediaPath(_PS_MODULE_DIR_.$this->name.'/views/img/logo_card.png'));

@@ -36,7 +36,8 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             'paypal_api_advantages',
             'paypal_config_brand',
             'paypal_express_checkout_shortcut',
-            'paypal_express_checkout_shortcut_cart'
+            'paypal_express_checkout_shortcut_cart',
+            'paypal_api_card'
         );
     }
 
@@ -68,6 +69,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             'paypal_express_checkout_shortcut' => (int)Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT'),
             'paypal_express_checkout_shortcut_cart' => (int)Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART')
         );
+        $isoCountryDefault = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
         $this->context->smarty->assign($tpl_vars);
         $htmlContent = $this->context->smarty->fetch($this->getTemplatePath() . '_partials/blockPreviewButtonContext.tpl');
         $this->fields_form['form']['form'] = array(
@@ -150,6 +152,28 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
                 'class' => 'btn btn-default pull-right button',
             ),
         );
+
+        if (in_array($isoCountryDefault, $this->module->countriesApiCartUnavailable) == false) {
+            $this->fields_form['form']['form']['input'][] = array(
+                'type' => 'switch',
+                'label' => $this->l('Accept credit and debit card payment'),
+                'name' => 'paypal_api_card',
+                'is_bool' => true,
+                'hint' => $this->l('Your customers can pay with debit and credit cards as well as local payment systems whether or not they use PayPal.'),
+                'values' => array(
+                    array(
+                        'id' => 'paypal_api_card_on',
+                        'value' => 1,
+                        'label' => $this->l('Enabled'),
+                    ),
+                    array(
+                        'id' => 'paypal_api_card_off',
+                        'value' => 0,
+                        'label' => $this->l('Disabled'),
+                    )
+                ),
+            );
+        }
 
         $values = array();
         foreach ($this->parametres as $parametre) {
