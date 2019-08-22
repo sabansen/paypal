@@ -92,6 +92,7 @@ class MethodMB extends AbstractMethodPaypal
 
         Configuration::updateValue('PAYPAL_MB_' . $mode . '_CLIENTID', '');
         Configuration::updateValue('PAYPAL_MB_' . $mode . '_SECRET', '');
+        Configuration::updateValue('PAYPAL_MB_EXPERIENCE', '');
     }
 
     /**
@@ -191,7 +192,7 @@ class MethodMB extends AbstractMethodPaypal
         try {
             // Use this call to create a profile.
             $createProfileResponse = $webProfile->create($this->_getCredentialsInfo());
-        } catch (\PayPal\Exception\PayPalConnectionException $ex) {
+        } catch (Exception $ex) {
             $module = Module::getInstanceByName('paypal');
             $this->errors[] = $module->l('An error occurred while creating your web experience. Check your credentials.', get_class($this));
             return false;
