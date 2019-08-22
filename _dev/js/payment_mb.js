@@ -17,7 +17,7 @@ const PayPalMB = {
 
     ppp: null,
 
-    config: {},
+    config: null,
 
     init(approvalUrlPPP, selectorId, mode, payer) {
         this.config = {
@@ -32,9 +32,29 @@ const PayPalMB = {
     },
 
     initCheckout() {
-        this.ppp = PAYPAL.apps.PPP(this.config);
+        if (this.ppp == null && this.config != null) {
+            this.ppp = PAYPAL.apps.PPP(this.config);
+            let selector = "#" + this.config.placeholder + " iframe";
+            $(selector).css('width', '100%');
+        }
+    },
+
+    doPayment() {
+        if (this.ppp != null) {
+
+        }
     }
 
 }
 
-PayPalMB.init(approvalUrlPPP, "ppplus-mb", paypalMode, payerInfo);
+
+$(document).ready(() => {
+    PayPalMB.init(approvalUrlPPP, "ppplus-mb", paypalMode, payerInfo);
+
+    $('.payment-options input[name="payment-option"]').click((event) => {
+        let paymentOption = $(event.target);
+        if (paymentOption.attr('data-module-name') == "paypal_plus_mb") {
+            PayPalMB.initCheckout();
+        }
+    });
+});

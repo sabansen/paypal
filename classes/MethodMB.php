@@ -53,9 +53,6 @@ class MethodMB extends AbstractMethodPaypal
 {
     private $_items = array();
 
-    /* @var $payerInfo PayerInfo*/
-    private $payerInfo;
-
     private $_itemTotalValue = 0;
 
     private $_taxTotalValue = 0;
@@ -69,6 +66,9 @@ class MethodMB extends AbstractMethodPaypal
     protected $payment_method = 'PayPal';
 
     public $errors = array();
+
+    /** payment Object IDl*/
+    public $paymentId;
 
     /**
      * @param $values array replace for tools::getValues()
@@ -401,7 +401,8 @@ class MethodMB extends AbstractMethodPaypal
         Media::addJsDef(array(
             'approvalUrlPPP' => $approval_url,
             'paypalMode' => Configuration::get('PAYPAL_SANDBOX')  ? 'sandbox' : 'live',
-            'payerInfo' => $this->getPayerInfo()
+            'payerInfo' => $this->getPayerInfo(),
+            'ajaxPatchUrl' => $context->link->getModuleLink('paypal', 'pppPatch', array(), true)
         ));
 
         return true;
