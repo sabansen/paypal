@@ -22,6 +22,7 @@ const config = {
     'js/adminSetup': './_dev/js/adminSetup.js',
     'js/adminCheckout': './_dev/js/adminCheckout.js',
     'js/helpAdmin': './_dev/js/helpAdmin.js',
+    'js/payment_mb': './_dev/js/payment_mb.js',
 
     'css/paypal_bo': './_dev/scss/paypal_bo.scss',
   },

@@ -311,7 +311,20 @@ class PayPal extends \PaymentModule
 
         $this->errors = '';
         $countryDefault = new \Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
-        $this->paypal_method = $countryDefault->iso_code == "DE" ? "PPP" : "EC";
+
+        switch ($countryDefault->iso_code) {
+            case "DE":
+                $this->paypal_method = "PPP";
+                break;
+            case "BR":
+                $this->paypal_method = "MB";
+                break;
+            case "MX":
+                $this->paypal_method = "MB";
+                break;
+            default:
+                $this->paypal_method = "EC";
+        }
     }
 
     public function install()
@@ -580,6 +593,25 @@ class PayPal extends \PaymentModule
                 }
 
                 break;
+            case 'MB':
+                if ($method->isConfigured()) {
+                    $payment_options = new PaymentOption();
+                    $action_text = $this->l('Pay with PayPal Plus');
+                    if (Configuration::get('PAYPAL_API_ADVANTAGES')) {
+                        $action_text .= ' | '.$this->l('It\'s simple, fast and secure');
+                    }
+                    $payment_options->setCallToActionText($action_text);
+                    $payment_options->setModuleName('paypal_plus_mb');
+                    try {
+                        $this->context->smarty->assign('path', $this->_path);
+                        $payment_options->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_mb.tpl'));
+                    } catch (Exception $e) {
+                        die($e);
+                    }
+                    $payments_options[] = $payment_options;
+                }
+
+                break;
         }
 
         return $payments_options;
@@ -640,9 +672,15 @@ class PayPal extends \PaymentModule
                 $this->context->controller->registerJavascript($this->name . '-plus-payment-js', 'modules/' . $this->name . '/views/js/payment_ppp.js');
                 $this->context->controller->addJqueryPlugin('fancybox');
             }
+
+            if ($this->paypal_method == 'MB') {
+                $method->assignJSvarsPaypalMB();
+                $this->context->controller->registerJavascript($this->name . '-plusdcc-minjs', 'https://www.paypalobjects.com/webstatic/ppplusdcc/ppplusdcc.min.js', array('server' => 'remote'));
+                $this->context->controller->registerJavascript($this->name . '-mb-payment-js', 'modules/' . $this->name . '/views/js/payment_mb.js');
+            }
         }
         if ((Tools::getValue('controller') == "product" && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT'))
-        || (Tools::getValue('controller') == "cart" && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART'))) {
+            || (Tools::getValue('controller') == "cart" && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART'))) {
             if (Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT') && $this->paypal_method == 'EC') {
                 $environment = (Configuration::get('PAYPAL_SANDBOX')?'sandbox':'live');
                 Media::addJsDef(array(
