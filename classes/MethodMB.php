@@ -51,6 +51,20 @@ use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
  */
 class MethodMB extends AbstractMethodPaypal
 {
+    private $_items = array();
+
+    /* @var $payerInfo PayerInfo*/
+    private $payerInfo;
+
+    private $_itemTotalValue = 0;
+
+    private $_taxTotalValue = 0;
+
+    /* @var $_itemList ItemList*/
+    private $_itemList;
+
+    /* @var $_amount Amount*/
+    private $_amount;
 
     protected $payment_method = 'PayPal';
 
@@ -129,8 +143,61 @@ class MethodMB extends AbstractMethodPaypal
         return $apiContext;
     }
 
+    /**
+     * Customize payment experience
+     * @return bool|\PayPal\Api\CreateProfileResponse
+     */
     public function createWebExperience()
     {
+        $brand_name = Configuration::get('PAYPAL_PPP_CONFIG_BRAND')?Configuration::get('PAYPAL_PPP_CONFIG_BRAND'):Configuration::get('PS_SHOP_NAME');
+        $brand_logo = file_exists(_PS_MODULE_DIR_.'paypal/views/img/ppp_logo'.Context::getContext()->shop->id.'.png')?Context::getContext()->link->getBaseLink(Context::getContext()->shop->id, true).'modules/paypal/views/img/ppp_logo'.Context::getContext()->shop->id.'.png':Context::getContext()->link->getBaseLink().'img/'.Configuration::get('PS_LOGO');
+        $flowConfig = new \PayPal\Api\FlowConfig();
+        // When set to "commit", the buyer is shown an amount, and the button text will read "Pay Now" on the checkout page.
+        $flowConfig->setUserAction("commit");
+        // Defines the HTTP method to use to redirect the user to a return URL. A valid value is `GET` or `POST`.
+        $flowConfig->setReturnUriHttpMethod("GET");
+        // Parameters for style and presentation.
+        $presentation = new \PayPal\Api\Presentation();
+        // A URL to logo image. Allowed vaues: .gif, .jpg, or .png.
+        $presentation->setLogoImage($brand_logo)
+            //	A label that overrides the business name in the PayPal account on the PayPal pages.
+            ->setBrandName($brand_name)
+            //  Locale of pages displayed by PayPal payment experience.
+            ->setLocaleCode(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')))
+            // A label to use as hypertext for the return to merchant link.
+            ->setReturnUrlLabel("Return");
+        // Parameters for input fields customization.
+        $inputFields = new \PayPal\Api\InputFields();
+        // Enables the buyer to enter a note to the merchant on the PayPal page during checkout.
+        $inputFields->setAllowNote(false)
+            // Determines whether or not PayPal displays shipping address fields on the experience pages. Allowed values: 0, 1, or 2. When set to 0, PayPal displays the shipping address on the PayPal pages. When set to 1, PayPal does not display shipping address fields whatsoever. When set to 2, if you do not pass the shipping address, PayPal obtains it from the buyer’s account profile. For digital goods, this field is required, and you must set it to 1.
+            ->setNoShipping(0)
+            // Determines whether or not the PayPal pages should display the shipping address and not the shipping address on file with PayPal for this buyer. Displaying the PayPal street address on file does not allow the buyer to edit that address. Allowed values: 0 or 1. When set to 0, the PayPal pages should not display the shipping address. When set to 1, the PayPal pages should display the shipping address.
+            ->setAddressOverride(1);
+        // #### Payment Web experience profile resource
+        $webProfile = new \PayPal\Api\WebProfile();
+        // Name of the web experience profile. Required. Must be unique
+        $webProfile->setName(Tools::substr(Configuration::get('PS_SHOP_NAME'), 0, 30) . uniqid())
+            // Parameters for flow configuration.
+            ->setFlowConfig($flowConfig)
+            // Parameters for style and presentation.
+            ->setPresentation($presentation)
+            // Parameters for input field customization.
+            ->setInputFields($inputFields)
+            // Indicates whether the profile persists for three hours or permanently. Set to `false` to persist the profile permanently. Set to `true` to persist the profile for three hours.
+            ->setTemporary(false);
+
+        // For Sample Purposes Only.
+        try {
+            // Use this call to create a profile.
+            $createProfileResponse = $webProfile->create($this->_getCredentialsInfo());
+        } catch (\PayPal\Exception\PayPalConnectionException $ex) {
+            $module = Module::getInstanceByName('paypal');
+            $this->errors[] = $module->l('An error occurred while creating your web experience. Check your credentials.', get_class($this));
+            return false;
+        }
+
+        return $createProfileResponse;
     }
 
     /**
@@ -138,7 +205,81 @@ class MethodMB extends AbstractMethodPaypal
      */
     public function init()
     {
+        if ($this->isConfigured() == false) {
+            return '';
+        }
 
+        $payer = new Payer();
+        $payer->setPaymentMethod("paypal");
+        // ### Itemized information
+        // (Optional) Lets you specify item wise information
+
+        $this->_itemList = new ItemList();
+        $this->_amount = new Amount();
+
+        $this->_getPaymentDetails();
+
+        // ### Transaction
+        // A transaction defines the contract of a
+        // payment - what is the payment for and who
+        // is fulfilling it.
+
+
+        $transaction = new Transaction();
+        $transaction->setAmount($this->_amount)
+            ->setItemList($this->_itemList)
+            ->setDescription("Payment description")
+            ->setInvoiceNumber(uniqid());
+
+        // ### Redirect urls
+        // Set the urls that the buyer must be redirected to after
+        // payment approval/ cancellation.
+
+        $redirectUrls = new RedirectUrls();
+        $return_url = Context::getContext()->link->getModuleLink($this->name, 'pppValidation', array(), true);
+        $redirectUrls->setReturnUrl($return_url)
+            ->setCancelUrl(Context::getContext()->link->getPageLink('order', true));
+
+        // ### Payment
+        // A Payment Resource; create one using
+        // the above types and intent set to 'sale'
+
+        $payment = new Payment();
+        $payment->setIntent("sale")
+            ->setPayer($payer)
+            ->setRedirectUrls($redirectUrls)
+            ->setTransactions(array($transaction))
+            ->setExperienceProfileId(Configuration::get('PAYPAL_MB_EXPERIENCE'));
+
+        // ### Create Payment
+        // Create a payment by calling the 'create' method
+        // passing it a valid apiContext.
+        // The return object contains the state and the
+        // url to which the buyer must be redirected to
+        // for payment approval
+
+        try {
+            $payment->create($this->_getCredentialsInfo());
+        } catch (Exception $e) {
+            $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 1)[0];
+            $message = 'Error in ' . $backtrace['file'];
+            $message .= ' (line ' . $backtrace['line'] . '); ';
+            $message .= 'Message: ' . $e->getMessage() . ';';
+            $message .= 'File: ' . $e->getFile() . '; ';
+            $message .= 'Line: ' . $e->getLine();
+
+            ProcessLoggerHandler::openLogger();
+            ProcessLoggerHandler::logError($message);
+            ProcessLoggerHandler::closeLogger();
+
+            return '';
+        }
+
+        // ### Get redirect url
+        // The API response provides the url that you must redirect
+        // the buyer to. Retrieve the url from the $payment->getApprovalLink() method
+        $this->paymentId = $payment->id;
+        return $payment->getApprovalLink();
     }
 
     public function formatPrice($price)
@@ -152,11 +293,6 @@ class MethodMB extends AbstractMethodPaypal
         }
         $price = number_format($price, Paypal::getDecimal(), ".", '');
         return $price;
-    }
-
-    private function _getPaymentDetails()
-    {
-
     }
 
     /**
@@ -222,6 +358,7 @@ class MethodMB extends AbstractMethodPaypal
      */
     public function isConfigured($mode = null)
     {
+        return (bool)Configuration::get('PAYPAL_MB_EXPERIENCE');
     }
 
     public function getTplVars()
@@ -239,6 +376,139 @@ class MethodMB extends AbstractMethodPaypal
 
     public function checkCredentials()
     {
+        $experience_web = $this->createWebExperience();
+        if ($experience_web) {
+            Configuration::updateValue('PAYPAL_MB_EXPERIENCE', $experience_web->id);
+        } else {
+            Configuration::updateValue('PAYPAL_MB_EXPERIENCE', '');
+        }
+    }
 
+    /**
+     * Assign form data for Paypal Plus payment option
+     * @return boolean
+     */
+    public function assignJSvarsPaypalMB()
+    {
+        $context = Context::getContext();
+        try {
+            $approval_url = $this->init();
+            $context->cookie->__set('paypal_plus_mb_payment', $this->paymentId);
+        } catch (Exception $e) {
+            return false;
+        }
+
+        Media::addJsDef(array(
+            'approvalUrlPPP' => $approval_url,
+            'paypalMode' => Configuration::get('PAYPAL_SANDBOX')  ? 'sandbox' : 'live',
+            'payerInfo' => $this->getPayerInfo()
+        ));
+
+        return true;
+    }
+
+    private function _getPaymentDetails()
+    {
+        $paypal = Module::getInstanceByName($this->name);
+        $currency = $paypal->getPaymentCurrencyIso();
+        $this->_getProductsList($currency);
+        //$this->_getDiscountsList($items, $total_products);
+        $this->_getGiftWrapping($currency);
+        $this->_getPaymentValues($currency);
+    }
+
+    private function _getProductsList($currency)
+    {
+        $products = Context::getContext()->cart->getProducts();
+        foreach ($products as $product) {
+            $product['product_tax'] = $this->formatPrice($product['price_wt']) - $this->formatPrice($product['price']);
+            $item = new Item();
+            $item->setName(Tools::substr($product['name'], 0, 126))
+                ->setCurrency($currency)
+                ->setDescription(isset($product['attributes']) ? $product['attributes'] : '')
+                ->setQuantity($product['quantity'])
+                ->setSku($product['id_product']) // Similar to `item_number` in Classic API
+                ->setPrice($this->formatPrice($product['price']));
+
+            $this->_items[] = $item;
+            $this->_itemTotalValue += $this->formatPrice($product['price']) * $product['quantity'];
+            $this->_taxTotalValue += $product['product_tax'] * $product['quantity'];
+        }
+    }
+
+    private function _getGiftWrapping($currency)
+    {
+        $wrapping_price = Context::getContext()->cart->gift ? Context::getContext()->cart->getGiftWrappingPrice() : 0;
+        if ($wrapping_price > 0) {
+            $wrapping_price = $this->formatPrice($wrapping_price);
+            $item = new Item();
+            $item->setName('Gift wrapping')
+                ->setCurrency($currency)
+                ->setQuantity(1)
+                ->setSku('wrapping') // Similar to `item_number` in Classic API
+                ->setPrice($wrapping_price);
+            $this->_items[] = $item;
+            $this->_itemTotalValue += $wrapping_price;
+        }
+    }
+
+    private function _getPaymentValues($currency)
+    {
+        $this->_itemList->setItems($this->_items);
+        $context = Context::getContext();
+        $cart = $context->cart;
+        $shipping_cost_wt = $cart->getTotalShippingCost();
+        $shipping = $this->formatPrice($shipping_cost_wt);
+        $total = $this->formatPrice($cart->getOrderTotal(true, Cart::BOTH));
+        $summary = $cart->getSummaryDetails();
+        $subtotal = $this->formatPrice($summary['total_products']);
+        $total_tax = number_format($this->_taxTotalValue, Paypal::getDecimal(), ".", '');
+        // total shipping amount
+        $shippingTotal = $shipping;
+
+        if ($subtotal != $this->_itemTotalValue) {
+            $subtotal = $this->_itemTotalValue;
+        }
+        //total
+        $total_cart = $shippingTotal + $this->_itemTotalValue + $this->_taxTotalValue;
+
+        if ($total != $total_cart) {
+            $total = $total_cart;
+        }
+
+        // ### Additional payment details
+        // Use this optional field to set additional
+        // payment information such as tax, shipping
+        // charges etc.
+        $details = new Details();
+        $details->setShipping($shippingTotal)
+            ->setTax($total_tax)
+            ->setSubtotal($subtotal);
+        // ### Amount
+        // Lets you specify a payment amount.
+        // You can also specify additional details
+        // such as shipping, tax.
+        $this->_amount->setCurrency($currency)
+            ->setTotal($total)
+            ->setDetails($details);
+    }
+
+    protected function getPayerInfo()
+    {
+        $customer = Context::getContext()->customer;
+        $addressCustomer = new Address(Context::getContext()->cart->id_address_delivery);
+        $countryCustomer = new Country($addressCustomer->id_country);
+        $payerInfo = array();
+        $payerInfo['email'] = $customer->email;
+        $payerInfo['firstName'] = $customer->firstname;
+        $payerInfo['lastName'] = $customer->lastname;
+
+        if ($countryCustomer->iso_code == 'BR') {
+            $payerInfo['taxId'] = '';
+        } else {
+            $payerInfo['taxId'] = '';
+        }
+
+        return $payerInfo;
     }
 }
