@@ -483,7 +483,8 @@ class PayPal extends \PaymentModule
         }
         if ('cart' !== $this->context->controller->php_self ||
             !Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART') ||
-            $this->context->cart->hasProducts() == false) {
+            $this->context->cart->hasProducts() == false ||
+            in_array($this->paypal_method, array('EC', 'PPP')) == false) {
             return false;
         }
         $method = AbstractMethodPaypal::load();
@@ -767,7 +768,9 @@ class PayPal extends \PaymentModule
         if (Module::isEnabled('braintree') && (int)Configuration::get('BRAINTREE_ACTIVATE_PAYPAL')) {
             return;
         }
-        if ('product' !== $this->context->controller->php_self || !Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT')) {
+        if ('product' !== $this->context->controller->php_self ||
+            !Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') ||
+            in_array($this->paypal_method, array('EC', 'PPP')) == false) {
             return false;
         }
         $method = AbstractMethodPaypal::load();
