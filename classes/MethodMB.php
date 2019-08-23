@@ -33,6 +33,7 @@ use PayPal\Api\Details;
 use PayPal\Api\Item;
 use PayPal\Api\ItemList;
 use PayPal\Api\Payer;
+use PayPal\Api\PayerInfo;
 use PayPal\Api\Payment;
 use PayPal\Api\RedirectUrls;
 use PayPal\Api\Transaction;
@@ -69,6 +70,9 @@ class MethodMB extends AbstractMethodPaypal
 
     /** payment Object IDl*/
     public $paymentId;
+
+    /** @var $payerId string*/
+    protected $payerId;
 
     /**
      * @param $values array replace for tools::getValues()
@@ -172,7 +176,7 @@ class MethodMB extends AbstractMethodPaypal
         // Enables the buyer to enter a note to the merchant on the PayPal page during checkout.
         $inputFields->setAllowNote(false)
             // Determines whether or not PayPal displays shipping address fields on the experience pages. Allowed values: 0, 1, or 2. When set to 0, PayPal displays the shipping address on the PayPal pages. When set to 1, PayPal does not display shipping address fields whatsoever. When set to 2, if you do not pass the shipping address, PayPal obtains it from the buyer’s account profile. For digital goods, this field is required, and you must set it to 1.
-            ->setNoShipping(0)
+            ->setNoShipping(1)
             // Determines whether or not the PayPal pages should display the shipping address and not the shipping address on file with PayPal for this buyer. Displaying the PayPal street address on file does not allow the buyer to edit that address. Allowed values: 0 or 1. When set to 0, the PayPal pages should not display the shipping address. When set to 1, the PayPal pages should display the shipping address.
             ->setAddressOverride(1);
         // #### Payment Web experience profile resource
@@ -212,6 +216,7 @@ class MethodMB extends AbstractMethodPaypal
 
         $payer = new Payer();
         $payer->setPaymentMethod("paypal");
+        $payer->setPayerInfo($this->getPayerInfo());
         // ### Itemized information
         // (Optional) Lets you specify item wise information
 
@@ -279,7 +284,7 @@ class MethodMB extends AbstractMethodPaypal
         // ### Get redirect url
         // The API response provides the url that you must redirect
         // the buyer to. Retrieve the url from the $payment->getApprovalLink() method
-        $this->paymentId = $payment->id;
+        $this->setPaymentId($payment->id);
         return $payment->getApprovalLink();
     }
 
@@ -301,14 +306,73 @@ class MethodMB extends AbstractMethodPaypal
      */
     public function validation()
     {
+        $context = Context::getContext();
+        $cart = $context->cart;
+        $customer = new Customer($cart->id_customer);
+
+        if (!Validate::isLoadedObject($customer)) {
+            throw new Exception('Customer is not loaded object');
+        }
+
+        if ($this->getPayerId() == false) {
+            throw new Exception('Payer ID isn\'t setted');
+        }
+
+        if ($this->getPaymentId() == false) {
+            throw new Exception('Payment ID isn\'t setted');
+        }
+
+        $discounts = Context::getContext()->cart->getCartRules();
+        if (count($discounts) > 0) {
+            throw new Exception('The total of the order do not match amount paid.');
+        }
+
+        // Get the payment Object by passing paymentId
+        // payment id was previously stored in session in
+        // CreatePaymentUsingPayPal.php
+        $payment = Payment::get($this->getPaymentId(), $this->_getCredentialsInfo());
+
+        // ### Payment Execute
+        // PaymentExecution object includes information necessary
+        // to execute a PayPal account payment.
+        // The payer_id is added to the request query parameters
+        // when the user is redirected from paypal back to your site
+        $execution = new PaymentExecution();
+        $execution->setPayerId($this->getPayerId());
+        // ### Optional Changes to Amount
+        // If you wish to update the amount that you wish to charge the customer,
+        // based on the shipping address or any other reason, you could
+        // do that by passing the transaction object with just `amount` field in it.
+        $exec_payment = $payment->execute($execution, $this->_getCredentialsInfo());
+        $this->setDetailsTransaction($exec_payment);
+        $currency = $context->currency;
+        $total = (float)$exec_payment->transactions[0]->amount->total;
+        $paypal = Module::getInstanceByName($this->name);
+        $order_state = Configuration::get('PS_OS_PAYMENT');
+        $paypal->validateOrder($cart->id, $order_state, $total, $this->getPaymentMethod(), null, $this->getDetailsTransaction(), (int)$currency->id, false, $customer->secure_key);
     }
 
     public function setDetailsTransaction($transaction)
     {
+        $payment_info = $transaction->transactions[0];
+
+        $this->transaction_detail = array(
+            'method' => 'MB',
+            'currency' => $payment_info->amount->currency,
+            'transaction_id' => pSQL($payment_info->related_resources[0]->sale->id),
+            'payment_status' => $transaction->state,
+            'payment_method' => $transaction->payer->payment_method,
+            'id_payment' => pSQL($transaction->id),
+            'capture' => false,
+            'payment_tool' => isset($transaction->payment_instruction)?$transaction->payment_instruction->instruction_type:'',
+            'date_transaction' => $this->getDateTransaction($transaction)
+        );
     }
 
     public function getDateTransaction($transaction)
     {
+        $dateServer = DateTime::createFromFormat(DateTime::ISO8601, $transaction->update_time);
+        return $dateServer->format('Y-m-d H:i:s');
     }
 
     /**
@@ -392,21 +456,9 @@ class MethodMB extends AbstractMethodPaypal
     public function assignJSvarsPaypalMB()
     {
         $context = Context::getContext();
-        try {
-            $approval_url = $this->init();
-            $context->cookie->__set('paypal_plus_mb_payment', $this->paymentId);
-        } catch (Exception $e) {
-            return false;
-        }
-
         Media::addJsDef(array(
-            'approvalUrlPPP' => $approval_url,
-            'paypalMode' => Configuration::get('PAYPAL_SANDBOX')  ? 'sandbox' : 'live',
-            'payerInfo' => $this->getPayerInfo(),
-            'ajaxPatchUrl' => $context->link->getModuleLink('paypal', 'pppPatch', array(), true)
+            'ajaxPatch' => $context->link->getModuleLink('paypal', 'mbValidation', array(), true)
         ));
-
-        return true;
     }
 
     private function _getPaymentDetails()
@@ -500,17 +552,59 @@ class MethodMB extends AbstractMethodPaypal
         $customer = Context::getContext()->customer;
         $addressCustomer = new Address(Context::getContext()->cart->id_address_delivery);
         $countryCustomer = new Country($addressCustomer->id_country);
-        $payerInfo = array();
-        $payerInfo['email'] = $customer->email;
-        $payerInfo['firstName'] = $customer->firstname;
-        $payerInfo['lastName'] = $customer->lastname;
+        $payerInfo = new PayerInfo();
+        $payerInfo->setEmail($customer->email);
+        $payerInfo->setFirstName($customer->firstname);
+        $payerInfo->setLastName($customer->lastname);
+        $payerInfo->setPayerId(Configuration::get('PAYPAL_MB_EXPERIENCE'));
 
         if ($countryCustomer->iso_code == 'BR') {
-            $payerInfo['taxId'] = '';
+            $payerInfo->setTaxId('');
         } else {
-            $payerInfo['taxId'] = '';
+            $payerInfo->setTaxId('');
         }
 
         return $payerInfo;
+    }
+
+    public function getPaymentInfo()
+    {
+        $context = Context::getContext();
+
+        try {
+            $approval_url = $this->init();
+            $context->cookie->__set('paypal_plus_mb_payment', $this->paymentId);
+        } catch (Exception $e) {
+            return false;
+        }
+
+        $paymentInfo = array(
+            'approvalUrlPPP' => $approval_url,
+            'paymentId' => $this->getPaymentId(),
+            'paypalMode' => Configuration::get('PAYPAL_SANDBOX')  ? 'sandbox' : 'live',
+            'payerInfo' => $this->getPayerInfo()->toArray(),
+        );
+
+        return $paymentInfo;
+    }
+
+    public function setPaymentId($payemtId)
+    {
+        $this->paymentId = $payemtId;
+    }
+
+    public function getPaymentId()
+    {
+        return $this->paymentId;
+    }
+
+    public function setPayerId($payerId)
+    {
+        $this->payerId = $payerId;
+    }
+
+    public function getPayerId()
+    {
+        return $this->payerId;
     }
 }

@@ -19,42 +19,115 @@ const PayPalMB = {
 
     config: null,
 
-    init(approvalUrlPPP, selectorId, mode, payer) {
+    paymentId: null,
+
+    setConfig(paymentInfo, selectorId) {
         this.config = {
-            "approvalUrl": approvalUrlPPP,
+            "approvalUrl": paymentInfo.approvalUrlPPP,
             "placeholder": selectorId,
-            "mode": mode,
-            "payerEmail": payer.email,
-            "payerFirstName": payer.firstName,
-            "payerLastName": payer.lastName,
-            "payerTaxId": payer.taxId
+            "mode": paymentInfo.paypalMode,
+            "payerEmail": paymentInfo.payerInfo.email,
+            "payerFirstName": paymentInfo.payerInfo.first_name,
+            "payerLastName": paymentInfo.payerInfo.last_name,
+            "payerTaxId": paymentInfo.payerInfo.tax_id,
         }
+
+        this.paymentId = paymentInfo.paymentId;
     },
 
     initCheckout() {
-        if (this.ppp == null && this.config != null) {
-            this.ppp = PAYPAL.apps.PPP(this.config);
-            let selector = "#" + this.config.placeholder + " iframe";
-            $(selector).css('width', '100%');
-        }
+        this.getPaymentInfo().then(
+            paymentInformation => {
+                this.setConfig(paymentInformation, "ppplus-mb");
+                this.ppp = PAYPAL.apps.PPP(this.config);
+                let selector = "#" + this.config.placeholder + " iframe";
+                $(selector).css('width', '100%');
+            }
+        ).catch(error => {
+            console.log(error);
+        });
     },
 
     doPayment() {
         if (this.ppp != null) {
-
+            this.ppp.doContinue();
         }
+    },
+
+    getPaymentInfo() {
+        let promise = new Promise((resolve, reject) => {
+            $.ajax({
+                url: ajaxPatch,
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    ajax: true,
+                    action: 'getPaymentInfo',
+                },
+                success (response) {
+                    if (("success" in response) && (response["success"] == true)) {
+                        resolve(response.paymentInfo);
+                    }
+                }
+            });
+        });
+
+        return promise;
+    },
+
+    messageListener(event) {
+        try {
+            let data = JSON.parse(event.data);
+            if (data.action == "checkout" && data.result.state == "APPROVED") {
+                data['paymentId'] = PayPalMB.paymentId;
+                PayPalMB.sendData(data, ajaxPatch);
+            }
+        } catch (exc) {
+            console.log(exc);
+        }
+    },
+
+    sendData(data, action) {
+        let form = document.createElement('form');
+        let input = document.createElement('input');
+
+        input.name = "paymentData";
+        input.value = JSON.stringify(data);
+
+        form.method = "POST";
+        form.action = action;
+
+        form.appendChild(input);
+        document.body.appendChild(form);
+        form.submit();
     }
 
 }
 
 
 $(document).ready(() => {
-    PayPalMB.init(approvalUrlPPP, "ppplus-mb", paypalMode, payerInfo);
-
     $('.payment-options input[name="payment-option"]').click((event) => {
         let paymentOption = $(event.target);
         if (paymentOption.attr('data-module-name') == "paypal_plus_mb") {
             PayPalMB.initCheckout();
         }
     });
+
+    // Order payment button action for paypal plus
+    $('#payment-confirmation button').on('click', (event) => {
+        let selectedOption = $('input[name=payment-option]:checked');
+        if (selectedOption.attr("data-module-name") == "paypal_plus_mb") {
+            event.preventDefault();
+            event.stopPropagation();
+            PayPalMB.doPayment();
+        }
+    });
+
+    if (window.addEventListener) {
+        window.addEventListener("message", PayPalMB.messageListener, false);
+    } else if (window.attachEvent) {
+        window.attachEvent("onmessage", PayPalMB.messageListener);
+    } else {
+        throw new Error("Can't attach message listener");
+    }
 });
