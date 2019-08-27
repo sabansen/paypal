@@ -86,8 +86,6 @@ class PaypalMbValidationModuleFrontController extends PaypalAbstarctModuleFrontC
             'success' => true,
             'paymentInfo' => $paymentInfo
         );
-
-        $response = new JsonResponse($responseContent);
-        $response->send();
+        $this->jsonValues = $responseContent;
     }
 }
