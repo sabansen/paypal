@@ -387,6 +387,30 @@ class MethodMB extends AbstractMethodPaypal
      */
     public function refund($paypal_order)
     {
+        $sale = Sale::get($paypal_order->id_transaction, $this->_getCredentialsInfo($paypal_order->sandbox));
+
+        // Includes both the refunded amount (to Payer)
+        // and refunded fee (to Payee). Use the $amt->details
+        // field to mention fees refund details.
+        $amt = new Amount();
+        $amt->setCurrency($sale->getAmount()->getCurrency())
+            ->setTotal($sale->getAmount()->getTotal());
+        $refundRequest = new RefundRequest();
+        $refundRequest->setAmount($amt);
+
+        $response = $sale->refundSale($refundRequest, $this->_getCredentialsInfo($paypal_order->sandbox));
+
+        $result =  array(
+            'success' => true,
+            'refund_id' => $response->id,
+            'status' => $response->state,
+            'total_amount' => $response->total_refunded_amount->value,
+            'currency' => $response->total_refunded_amount->currency,
+            'saleId' => $response->sale_id,
+            'date_transaction' => $this->getDateTransaction($response)
+        );
+
+        return $result;
     }
 
     /**
@@ -394,6 +418,36 @@ class MethodMB extends AbstractMethodPaypal
      */
     public function partialRefund($params)
     {
+        $paypal_order = PaypalOrder::loadByOrderId(Tools::getValue('id_order'));
+
+        $sale = Sale::get($paypal_order->id_transaction, $this->_getCredentialsInfo($paypal_order->sandbox));
+
+        $amount = 0;
+        foreach ($params['productList'] as $product) {
+            $amount += $product['amount'];
+        }
+        if (Tools::getValue('partialRefundShippingCost')) {
+            $amount += Tools::getValue('partialRefundShippingCost');
+        }
+
+        $amt = new Amount();
+        $amt->setCurrency($sale->getAmount()->getCurrency())
+            ->setTotal(number_format($amount, Paypal::getDecimal(), ".", ''));
+        $refundRequest = new RefundRequest();
+        $refundRequest->setAmount($amt);
+
+        $response = $sale->refundSale($refundRequest, $this->_getCredentialsInfo($paypal_order->sandbox));
+
+        $result =  array(
+            'success' => true,
+            'refund_id' => $response->id,
+            'status' => $response->state,
+            'total_amount' => $response->total_refunded_amount->value,
+            'currency' => $response->total_refunded_amount->currency,
+            'saleId' => $response->sale_id,
+        );
+
+        return $result;
     }
 
     /**
@@ -559,7 +613,7 @@ class MethodMB extends AbstractMethodPaypal
         $payerInfo->setPayerId(Configuration::get('PAYPAL_MB_EXPERIENCE'));
 
         if ($countryCustomer->iso_code == 'BR') {
-            $payerInfo->setTaxId('');
+            $payerInfo->setTaxId($addressCustomer->vat_number);
         } else {
             $payerInfo->setTaxId('');
         }

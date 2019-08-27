@@ -1117,7 +1117,7 @@ class PayPal extends \PaymentModule
         $message = '';
         $ex_detailed_message = '';
         if ($params['newOrderStatus']->id == Configuration::get('PS_OS_CANCELED')) {
-            if ($orderPayPal->method == "PPP" || $orderPayPal->payment_status == "refunded") {
+            if (in_array($orderPayPal->method, array("MB", "PPP")) || $orderPayPal->payment_status == "refunded") {
                 return;
             }
             $paypalCapture = PaypalCapture::loadByOrderPayPalId($orderPayPal->id);
