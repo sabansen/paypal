@@ -124,7 +124,6 @@ class AdminPayPalSetupController extends AdminPayPalController
     {
         $method = AbstractMethodPaypal::load($this->method);
         $tpl_vars = $method->getTplVars();
-
         $tpl_vars['method'] = $this->method;
         $this->context->smarty->assign($tpl_vars);
         $html_content = $this->context->smarty->fetch($this->getTemplatePath() . '_partials/accountSettingsBlock.tpl');
