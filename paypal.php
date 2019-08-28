@@ -184,7 +184,8 @@ class PayPal extends \PaymentModule
          'actionOrderSlipAdd',
          'displayAdminOrderTabOrder',
          'displayAdminOrderContentOrder',
-         'displayAdminCartsView'
+         'displayAdminCartsView',
+         'displayBackOfficeHeader',
      );
 
     /**
@@ -658,6 +659,11 @@ class PayPal extends \PaymentModule
                 'sc_init_url'   => $this->context->link->getModuleLink($this->name, 'ScInit', array(), true),
             ));
         }
+    }
+
+    public function hookDisplayBackOfficeHeader()
+    {
+        $this->checkEnvironment();
     }
 
     /**
@@ -1683,5 +1689,22 @@ class PayPal extends \PaymentModule
         $tabParent->active = true;
         $result &=  $tabParent->save();
         return $result;
+    }
+
+    public function checkEnvironment()
+    {
+        $tab = Tab::getInstanceFromClassName('AdminParentPaypalConfiguration');
+
+        if (Validate::isLoadedObject($tab) == false) {
+            return false;
+        }
+
+        if (getenv('PLATEFORM') == 'PSREAD') {
+            $tab->active = false;
+        } else {
+            $tab->active = true;
+        }
+
+        return $tab->update();
     }
 }
