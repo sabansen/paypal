@@ -49,6 +49,9 @@ class PayPalBraintreeSubmitModuleFrontController extends ModuleFrontController
 
     public function postProcess()
     {
+        if (Tools::getValue('action') == 'getOrderInformation') {
+            return $this->getOrderInformation();
+        }
 
         $paypal = new PayPal();
         $braintree = new PrestaBraintree();
@@ -59,7 +62,7 @@ class PayPalBraintreeSubmitModuleFrontController extends ModuleFrontController
             $this->redirectFailedPayment($paypal->l('failed load cart'));
         }
 
-        if (Configuration::get('PAYPAL_USE_3D_SECURE') && in_array(Tools::getValue('card_type'), array('Visa','MasterCard'))&& Tools::getValue('liabilityShifted') == 'false' && Tools::getValue('liabilityShiftPossible') == 'false') {
+        if (in_array(Tools::getValue('card_type'), array('Visa','MasterCard'))&& Tools::getValue('liabilityShifted') == 'false' && Tools::getValue('liabilityShiftPossible') == 'false') {
             $paypal->reset_context();
             $this->redirectFailedPayment($this->getErrorMessageByCode('gateway_rejected'));
         }
@@ -149,5 +152,50 @@ class PayPalBraintreeSubmitModuleFrontController extends ModuleFrontController
                 $message = $module->l('Your transaction isn\'t valid : ').$code;
         }
         return $message;
+    }
+
+    public function getOrderInformation()
+    {
+        $customer = new Customer($this->context->cart->id_customer);
+        $address = new Address($this->context->cart->id_address_delivery);
+        $country = new Country($address->id_country);
+        $iso = '';
+
+        if ($address->id_state) {
+            $state = new State((int) $address->id_state);
+            $iso = $state->iso_code;
+        }
+
+        $responseContent = array(
+            'success' => true,
+            'orderInformation' => array(
+                'amount' => $this->context->cart->getOrderTotal(true, Cart::BOTH),
+                'email' => $customer->email,
+                'billingAddress' => array(
+                    'givenName' => $customer->firstname,
+                    'surneme' => $customer->lastname,
+                    'phoneNumber' => $address->phone,
+                    'streetAddress' => $address->address1,
+                    'locality' => $address->city,
+                    'countryCodeAlpha2' => $country->iso_code,
+                    'region' => $iso,
+                    'postalCode' => $address->postcode
+                ),
+                'additionalInformation' => array(
+                    'shippingGivenName' => $address->firstname,
+                    'shippingSurname' => $address->lastname,
+                    'shippingPhone' => $address->phone,
+                    'shippingAddress' => array(
+                        'streetAddress' => $address->address1,
+                        'locality' => $address->city,
+                        'countryCodeAlpha2' => $country->iso_code,
+                        'region' => $iso,
+                        'postalCode' => $address->postcode
+                    )
+                )
+            )
+        );
+
+        die(Tools::jsonEncode($responseContent));
     }
 }

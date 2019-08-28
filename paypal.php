@@ -712,7 +712,6 @@ class PayPal extends PaymentModule
             //*TO DELETE* 'PayPal_braintree_public_key'=> Configuration::get('PAYPAL_BRAINTREE_PUBLIC_KEY'),
             //*TO DELETE* 'PayPal_braintree_private_key'=> Configuration::get('PAYPAL_BRAINTREE_PRIVATE_KEY'),
             'PayPal_braintree_merchant_id'=> Configuration::get('PAYPAL_BRAINTREE_MERCHANT_ID'),
-            'PayPal_check3Dsecure'=> Configuration::get('PAYPAL_USE_3D_SECURE'),
             'PayPal_braintree_enabled'=> Configuration::get('PAYPAL_BRAINTREE_ENABLED'),
             // Pour le bouton Braintree
             'User_Country' => PayPal::countryIso2to3(Context::getContext()->country->iso_code),
@@ -822,10 +821,10 @@ class PayPal extends PaymentModule
 
         // JS FOR OPC BRAINTREE
         if ((Configuration::get('PAYPAL_PAYMENT_METHOD') == PVZ || Configuration::get('PAYPAL_BRAINTREE_ENABLED')) && version_compare(PHP_VERSION, '5.4.0', '>=') && $this->context->controller instanceof OrderOpcController) {
-            $process .= '<script src="https://js.braintreegateway.com/web/3.9.0/js/client.min.js"></script>
-	<script src="https://js.braintreegateway.com/web/3.9.0/js/hosted-fields.min.js"></script>
-	<script src="https://js.braintreegateway.com/web/3.9.0/js/data-collector.min.js"></script>
-	<script src="https://js.braintreegateway.com/web/3.9.0/js/three-d-secure.min.js"></script>';
+            $process .= '<script src="https://js.braintreegateway.com/web/3.50.0/js/client.min.js"></script>
+	<script src="https://js.braintreegateway.com/web/3.50.0/js/hosted-fields.min.js"></script>
+	<script src="https://js.braintreegateway.com/web/3.24.0/js/data-collector.min.js"></script>
+	<script src="https://js.braintreegateway.com/web/3.50.0/js/three-d-secure.min.js"></script>';
         }
 
         return $process;
@@ -1035,7 +1034,6 @@ class PayPal extends PaymentModule
                     'braintreeToken'=>$clientToken,
                     'braintreeSubmitUrl'=>$this->context->link->getModuleLink('paypal', 'braintreesubmit', array(), true),
                     'braintreeAmount'=>$this->context->cart->getOrderTotal(),
-                    'check3Dsecure'=>Configuration::get('PAYPAL_USE_3D_SECURE'),
                 ));
 
                 $return_braintree =  $this->fetchTemplate('braintree_payment.tpl');
@@ -1816,7 +1814,6 @@ class PayPal extends PaymentModule
                 Configuration::updateValue('PAYPAL_LOGIN_TPL', (int) Tools::getValue('paypal_login_client_template'));
 
                 Configuration::updateValue('PAYPAL_BRAINTREE_ENABLED', (int) Tools::getValue('braintree_enabled'));
-                Configuration::updateValue('PAYPAL_USE_3D_SECURE', (int) Tools::getValue('use_threedsecure'));
 
                 if ($sandbox && $sandbox != (int) Tools::getValue('sandbox_mode')) {
                     $switch_sandbox = true;
@@ -1831,7 +1828,6 @@ class PayPal extends PaymentModule
                 //*TO DELETE* Configuration::updateValue('PAYPAL_BRAINTREE_PUBLIC_KEY', Tools::getValue('braintree_public_key'));
                 //*TO DELETE* Configuration::updateValue('PAYPAL_BRAINTREE_PRIVATE_KEY', Tools::getValue('braintree_private_key'));
                 // TO DELETE* Configuration::updateValue('PAYPAL_BRAINTREE_MERCHANT_ID', Tools::getValue('braintree_merchant_id'));
-                // TO DELETE* Configuration::updateValue('PAYPAL_USE_3D_SECURE',Tools::getValue('check3Dsecure'));
 
                 /* USE PAYPAL PLUS */
                 if ((int) Tools::getValue('paypal_payment_method') == 5) {

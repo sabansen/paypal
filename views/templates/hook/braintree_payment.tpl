@@ -52,7 +52,7 @@
 					<input type="hidden" name="payment_method_nonce" id="payment_method_nonce"/>
 					<input type="hidden" name="card_type" id="braintree_card_type"/>
                 <div class="paypal_clear"></div>
-				<input type="submit" value="{l s='Pay' mod='paypal'}"  id="braintree_submit" disabled="disabled"/>
+				<input type="submit" value="{l s='Pay' mod='paypal'}"  id="braintree_submit" disabled/>
 				</form>
 			</p>
 		</div>
@@ -61,15 +61,14 @@
 
 
  	{if !$opc}
-	<script src="https://js.braintreegateway.com/web/3.9.0/js/client.min.js"></script>
-	<script src="https://js.braintreegateway.com/web/3.9.0/js/hosted-fields.min.js"></script>
-	<script src="https://js.braintreegateway.com/web/3.9.0/js/data-collector.min.js"></script>
-	<script src="https://js.braintreegateway.com/web/3.9.0/js/three-d-secure.min.js"></script>
+        <script src="https://js.braintreegateway.com/web/3.50.0/js/client.min.js"></script>
+        <script src="https://js.braintreegateway.com/web/3.50.0/js/hosted-fields.min.js"></script>
+        <script src="https://js.braintreegateway.com/web/3.24.0/js/data-collector.min.js"></script>
+        <script src="https://js.braintreegateway.com/web/3.50.0/js/three-d-secure.min.js"></script>
  	{/if}
 {literal}
 	<script>
 		var authorization = '{/literal}{$braintreeToken}{literal}';
-		var submit = document.querySelector('#braintree_submit');
 		var form = document.querySelector('#braintree-form');
 
 		braintree.client.create({
@@ -123,137 +122,155 @@
 					return;
 				}
 
-				submit.removeAttribute('disabled');
+                document.getElementById('braintree_submit').removeAttribute('disabled');
 
 				form.addEventListener('submit', function (event) {
                     event.preventDefault();
                     document.getElementById('braintree_submit').setAttribute('disabled', true);
-					hostedFieldsInstance.tokenize(function (tokenizeErr, payload) {
-						if (tokenizeErr) {
-                            document.getElementById('braintree_submit').removeAttribute('disabled');
-							var popup_message = '';
-							switch (tokenizeErr.code) {
-								case 'HOSTED_FIELDS_FIELDS_EMPTY':
-									popup_message = "{/literal}{l s='All fields are empty! Please fill out the form.' mod='paypal'}{literal}";
-									break;
-								case 'HOSTED_FIELDS_FIELDS_INVALID':
-									popup_message = "{/literal}{l s='Some fields are invalid :' mod='paypal'}{literal} "+tokenizeErr.details.invalidFieldKeys;
-									break;
-								case 'HOSTED_FIELDS_FAILED_TOKENIZATION':
-									popup_message = "{/literal}{l s='Tokenization failed server side. Is the card valid?' mod='paypal'}{literal}";
-									break;
-								case 'HOSTED_FIELDS_TOKENIZATION_NETWORK_ERROR':
-									popup_message = "{/literal}{l s='Network error occurred when tokenizing.' mod='paypal'}{literal}";
-									break;
-								default:
-									popup_message = "{/literal}{l s='Tokenize failed' mod='paypal'}{literal}";
-							}
-							$.fancybox.open([
-								{
-									type: 'inline',
-									autoScale: true,
-									minHeight: 30,
-									content: '<p class="braintree-error">'+popup_message+'</p>'
-								}
-							]);
-							return false;
-						}
-						{/literal}{if $check3Dsecure}{literal}
-						braintree.threeDSecure.create({
-							client: clientInstance
-						}, function (ThreeDSecureerror,threeDSecure) {
 
-							if(ThreeDSecureerror)
-							{
-                                document.getElementById('braintree_submit').removeAttribute('disabled');
-								switch (ThreeDSecureerror.code) {
-									case 'THREEDS_HTTPS_REQUIRED':
-										popup_message = "{/literal}{l s='3D Secure requires HTTPS.' mod='paypal'}{literal}";
-										break;
-									default:
-										popup_message = "{/literal}{l s='Load 3D Secure Failed' mod='paypal'}{literal}";
-								}
-								$.fancybox.open([
-									{
-										type: 'inline',
-										autoScale: true,
-										minHeight: 30,
-										content: '<p class="braintree-error">'+popup_message+'</p>'
-									}
-								]);
-								return false;
-							}
-							threeDSecure.verifyCard({
-								nonce: payload.nonce,
-								amount: {/literal}{$braintreeAmount|escape:'htmlall':'UTF-8'}{literal},
-								addFrame: function (err, iframe) {
-									$.fancybox.open([
-										{
-											type: 'inline',
-											autoScale: true,
-											minHeight: 30,
-											content: '<p class="braintree-iframe">'+iframe.outerHTML+'</p>'
-										}
-									]);
-								},
-								removeFrame: function () {
+                    getOrderInformation(hostedFieldsInstance).then(function (response) {
+                        var bt3Dinformation = response["orderInformation"];
+                        var payload = response["payload"];
+                        braintree.threeDSecure.create({
+                            version: 2,
+                            //Using 3DS 2
+                            client: clientInstance
+                        }, function (ThreeDSecureerror, threeDSecure) {
+                            if (ThreeDSecureerror) {
+                                switch (ThreeDSecureerror.code) {
+                                    case 'THREEDS_HTTPS_REQUIRED':
+                                        popup_message = bt_translations_https;
+                                        break;
 
-								}
-							}, function (err, three_d_secure_response) {
-								if (err) {
+                                    default:
+                                        popup_message = bt_translations_load_3d;
+                                }
+
+                                $('[data-bt-card-error-msg]').show().text(popup_message);
+                                return false;
+                            }
+
+                            threeDSecure.verifyCard(bt3Dinformation, function (err, three_d_secure_response) {
+                                var popup_message = '';
+
+                                if (err) {
                                     document.getElementById('braintree_submit').removeAttribute('disabled');
-									var popup_message = '';
-									switch (err.code) {
-										case 'CLIENT_REQUEST_ERROR':
-											popup_message = "{/literal}{l s='There was a problem with your request.' mod='paypal'}{literal}";
-											break;
-										default:
-											popup_message = "{/literal}{l s='3D Secure Failed' mod='paypal'}{literal}";
-									}
-									$.fancybox.open([
-										{
-											type: 'inline',
-											autoScale: true,
-											minHeight: 30,
-											content: '<p class="braintree-error">'+popup_message+'</p>'
-										}
-									]);
-									return false;
-								}
-								if(three_d_secure_response.liabilityShifted)
-								{
-									document.querySelector('input[name="liabilityShifted"]').value = three_d_secure_response.liabilityShifted;
-								}
-								else
-								{
-									document.querySelector('input[name="liabilityShifted"]').value = false;
-								}
+                                    switch (err.code) {
+                                        case 'THREEDS_HTTPS_REQUIRED':
+                                            popup_message = "{/literal}{l s='3D Secure requires HTTPS.' mod='paypal'}{literal}";
+                                            break;
+                                        default:
+                                            popup_message = "{/literal}{l s='Load 3D Secure Failed' mod='paypal'}{literal}";
+                                    }
+                                    $.fancybox.open([
+                                        {
+                                            type: 'inline',
+                                            autoScale: true,
+                                            minHeight: 30,
+                                            content: '<p class="braintree-error">'+popup_message+'</p>'
+                                        }
+                                    ]);
+                                    return false;
+                                }
 
-								if(three_d_secure_response.liabilityShiftPossible)
-								{
-									document.querySelector('input[name="liabilityShiftPossible"]').value = three_d_secure_response.liabilityShiftPossible;
-								}
-								else
-								{
-									document.querySelector('input[name="liabilityShiftPossible"]').value = false;
-								}
-								document.querySelector('input[name="payment_method_nonce"]').value = three_d_secure_response.nonce;
-								document.querySelector('input[name="card_type"]').value = payload.details.cardType;
-								form.submit();
+                                if (three_d_secure_response.threeDSecureInfo.status == "lookup_enrolled") {
+                                    document.getElementById('braintree_submit').removeAttribute('disabled');
+                                    return false;
+                                }
 
-							});
-						});
+                                if(three_d_secure_response.liabilityShifted)
+                                {
+                                    document.querySelector('input[name="liabilityShifted"]').value = three_d_secure_response.liabilityShifted;
+                                }
+                                else
+                                {
+                                    document.querySelector('input[name="liabilityShifted"]').value = false;
+                                }
 
+                                if(three_d_secure_response.liabilityShiftPossible)
+                                {
+                                    document.querySelector('input[name="liabilityShiftPossible"]').value = three_d_secure_response.liabilityShiftPossible;
+                                }
+                                else
+                                {
+                                    document.querySelector('input[name="liabilityShiftPossible"]').value = false;
+                                }
 
-						{/literal}{else}{literal}
-						document.querySelector('input[name="payment_method_nonce"]').value = payload.nonce;
-						form.submit();
-						{/literal}{/if}{literal}
+                                document.querySelector('input[name="payment_method_nonce"]').value = three_d_secure_response.nonce;
+                                document.querySelector('input[name="card_type"]').value = payload.details.cardType;
+
+                                form.submit();
+                            });
+                        });
+                    }, function (errroMessage) {
+                        $.fancybox.open([
+                            {
+                                type: 'inline',
+                                autoScale: true,
+                                minHeight: 30,
+                                content: '<p class="braintree-error">'+errroMessage+'</p>'
+                            }
+                        ]);
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
 
 					});
-				},true);
-			});
+            });
+
 		});
+
+        function getOrderInformation(bt_hosted_fileds) {
+            var promise = new Promise(function (resolve, reject) {
+                $.ajax({
+                    url: "{/literal}{$braintreeSubmitUrl|addslashes}{literal}",
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: {
+                        action: 'getOrderInformation'
+                    },
+                    success: function success(response) {
+                        if ("success" in response && response["success"] == true) {
+                            response["orderInformation"]["onLookupComplete"] = function (data, next) {
+                                next();
+                            };
+
+                            bt_hosted_fileds.tokenize(function (tokenizeErr, payload) {
+                                if (tokenizeErr) {
+                                    Object.entries(bt_hosted_fileds._state.fields).forEach(function (entry) {
+                                        setErrorMsg(entry[0], entry[1]);
+                                    });
+                                    var _popup_message = '';
+
+                                    if (tokenizeErr.code !== 'HOSTED_FIELDS_FIELDS_EMPTY' && tokenizeErr.code !== 'HOSTED_FIELDS_FIELDS_INVALID') {
+                                        switch (tokenizeErr.code) {
+                                            case 'HOSTED_FIELDS_FAILED_TOKENIZATION':
+                                                _popup_message = bt_translations_token;
+                                                break;
+
+                                            case 'HOSTED_FIELDS_TOKENIZATION_NETWORK_ERROR':
+                                                _popup_message = bt_translations_network;
+                                                break;
+
+                                            default:
+                                                _popup_message = bt_translations_tkn_failed;
+                                        }
+
+                                        reject(_popup_message);
+                                    }
+                                } else {
+                                    response["orderInformation"]["nonce"] = payload.nonce;
+                                    response["orderInformation"]["bin"] = payload.details.bin;
+                                    response["payload"] = payload;
+                                    resolve(response);
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+            return promise;
+        }
 	</script>
 
 {/literal}
