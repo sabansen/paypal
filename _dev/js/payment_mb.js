@@ -30,7 +30,11 @@ const PayPalMB = {
             "payerFirstName": paymentInfo.payerInfo.first_name,
             "payerLastName": paymentInfo.payerInfo.last_name,
             "payerTaxId": paymentInfo.payerInfo.tax_id,
-        }
+            "language": paymentInfo.language,
+            "country": paymentInfo.country,
+            "disallowRememberedCards": true,
+            "onError": this.handleError
+        };
 
         this.paymentId = paymentInfo.paymentId;
     },
@@ -40,8 +44,6 @@ const PayPalMB = {
             paymentInformation => {
                 this.setConfig(paymentInformation, "ppplus-mb");
                 this.ppp = PAYPAL.apps.PPP(this.config);
-                let selector = "#" + this.config.placeholder + " iframe";
-                $(selector).css('width', '100%');
             }
         ).catch(error => {
             console.log(error);
@@ -85,6 +87,10 @@ const PayPalMB = {
         } catch (exc) {
             console.log(exc);
         }
+    },
+
+    handleError(error) {
+        console.log(error, typeof error);
     },
 
     sendData(data, action) {

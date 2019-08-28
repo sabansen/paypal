@@ -610,7 +610,6 @@ class MethodMB extends AbstractMethodPaypal
         $payerInfo->setEmail($customer->email);
         $payerInfo->setFirstName($customer->firstname);
         $payerInfo->setLastName($customer->lastname);
-        $payerInfo->setPayerId(Configuration::get('PAYPAL_MB_EXPERIENCE'));
 
         if ($countryCustomer->iso_code == 'BR') {
             $payerInfo->setTaxId($addressCustomer->vat_number);
@@ -632,11 +631,16 @@ class MethodMB extends AbstractMethodPaypal
             return false;
         }
 
+        $addressCustomer = new Address(Context::getContext()->cart->id_address_delivery);
+        $countryCustomer = new Country($addressCustomer->id_country);
+
         $paymentInfo = array(
             'approvalUrlPPP' => $approval_url,
             'paymentId' => $this->getPaymentId(),
             'paypalMode' => Configuration::get('PAYPAL_SANDBOX')  ? 'sandbox' : 'live',
             'payerInfo' => $this->getPayerInfo()->toArray(),
+            'language' => str_replace("-", "_", $context->language->locale),
+            'country' => $countryCustomer->iso_code
         );
 
         return $paymentInfo;
