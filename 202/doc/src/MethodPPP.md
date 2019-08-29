@@ -1,5 +1,5 @@
 ---
-name: MethodEC
+name: MethodPPP
 category: Classes
 ---
 
@@ -24,17 +24,7 @@ related to the payment method "Express checkout"
     
     - **Return Values**
     
-      `array` returns array of the parameters for creating of the connection with PayPal
-      
-- **_getDiscountsList(currency)**
-
-    - **Parametres**
-      
-      currency: `string` ISO of the currency
-    
-    - **Return Values**
-    
-      `void` adds the information related to the used discounts to the transaction  
+      `array` returns array of the parameters for creating of the connection with PayPal  
 
 - **__getGiftWrapping(currency)**
 
@@ -73,12 +63,6 @@ related to the payment method "Express checkout"
     
       `void` adds the information about the products of the order to the transaction
 
-- **_getShippingAddress()**
-    
-    - **Return Values**
-    
-      `object` returns the PayPal\EBLBaseComponents\AddressType object
-
 - **checkCredentials($mode = null)**
 
     - **Parametres**
@@ -87,18 +71,7 @@ related to the payment method "Express checkout"
     
     - **Return Values**
     
-      `void` check if the credentials are right and update the value 'PAYPAL_CONNECTION_EC_CONFIGURED'
-      in DB
-
-- **confirmCapture($paypal_order)**
-
-    - **Parametres**
-          
-      paypal_order: `object` the PaypalOrder object
-    
-    - **Return Values**
-    
-      `array` returns the result of the transaction confirmation
+      `void` check if the credentials are right and update the value 'PAYPAL_PLUS_EXPERIENCE' in DB
       
 - **formatPrice($price)**
 
@@ -108,13 +81,7 @@ related to the payment method "Express checkout"
     
     - **Return Values**
     
-      `string` returns the converted price      
-      
-- **getInfo()**
-    
-    - **Return Values**
-    
-      `object` returns the \PayPal\PayPalAPI\GetExpressCheckoutDetailsResponseType object
+      `string` returns the converted price
 
 - **getLinkToTransaction($id_transaction, $sandbox)**
 
@@ -152,29 +119,32 @@ related to the payment method "Express checkout"
     
     - **Return Values**
     
-      `void` does unconnecting with PayPal by deleting the saved credentials      
+      `void` does unconnecting with PayPal by deleting the saved credentials       
       
-- **redirectToAPI($method)**
+- **getInstructionInfo($id_payment)**
 
     - **Parametres**
           
-      method: `string` EC, PPP
+      id_payment: `string` id of the payment
     
     - **Return Values**
     
-      `string` returns the link      
-      
-- **useMobile()**
-    
-    - **Return Values**
-    
-      `boolean` should use the mobile view or desktop      
-      
-    
+      `object|boolean` returns the \PayPal\Api\PaymentInstruction object or False    
             
+- **renderExpressCheckoutShortCut(&$context, $type, $page_source)**
+
+    - **Parametres**
+    
+      context: `object` the Context object
       
-      
-      
+      type: `string` PPP
+          
+      page_source: `string` product or cart
+    
+    - **Return Values**
+    
+      `string` returns the html code      
+           
       
       
       
