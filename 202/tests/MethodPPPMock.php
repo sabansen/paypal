@@ -24,20 +24,12 @@
 
 namespace PayPalTest;
 
-$pathConfig = dirname(__FILE__) . '/../../../../config/config.inc.php';
-$pathInit = dirname(__FILE__) . '/../../../../init.php';
-if (file_exists($pathConfig)) {
-    require_once $pathConfig;
-}
-if (file_exists($pathInit)) {
-    require_once $pathInit;
-}
-require_once _PS_MODULE_DIR_.'paypal/vendor/autoload.php';
-require_once _PS_MODULE_DIR_.'paypal/classes/MethodPPP.php';
-
 use PHPUnit\Framework\TestCase;
 use PayPal\Rest\ApiContext;
 use PayPal\Auth\OAuthTokenCredential;
+
+require_once _PS_MODULE_DIR_.'paypal/vendor/autoload.php';
+require_once _PS_MODULE_DIR_.'paypal/classes/MethodPPP.php';
 
 class MethodPPPMock extends TestCase
 {

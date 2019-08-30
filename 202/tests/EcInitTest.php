@@ -24,21 +24,13 @@
 
 namespace PayPalTest;
 
-$pathConfig = dirname(__FILE__) . '/../../../../config/config.inc.php';
-$pathInit = dirname(__FILE__) . '/../../../../init.php';
-if (file_exists($pathConfig)) {
-    require_once $pathConfig;
-}
-if (file_exists($pathInit)) {
-    require_once $pathInit;
-}
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+
 require_once _PS_MODULE_DIR_.'paypal/vendor/autoload.php';
 require_once _PS_MODULE_DIR_.'paypal/controllers/front/ecInit.php';
 require_once _PS_MODULE_DIR_.'paypal/classes/MethodEC.php';
 require_once _PS_MODULE_DIR_.'paypal/paypal.php';
-
-use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 class EcInitTest extends TestCase
 {
