@@ -19,8 +19,5 @@
       "paypal/merchant-sdk-php": "~3.12",
       "paypal/permissions-sdk-php": "~3.9",
       "paypal/rest-api-sdk-php": "1.*"
-    },
-    "require-dev": {
-      "phpunit/phpunit": "~5.7"
     }
 }
