@@ -34,12 +34,12 @@ if (file_exists($pathInit)) {
 }
 require_once _PS_MODULE_DIR_.'paypal/vendor/autoload.php';
 require_once _PS_MODULE_DIR_.'paypal/classes/MethodPPP.php';
+require_once 'MethodPPPMock.php';
 
 use PHPUnit\Framework\TestCase;
 use PayPal\Rest\ApiContext;
 use PayPal\Api\CreateProfileResponse;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
-use PayPalTest\MethodPPPMock;
 
 class MethodPPPTest extends TestCase
 {
