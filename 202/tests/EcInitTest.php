@@ -24,62 +24,49 @@
 
 namespace PayPalTest;
 
-use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PayPalTest\TotTest;
 
 require_once _PS_MODULE_DIR_.'paypal/vendor/autoload.php';
 require_once _PS_MODULE_DIR_.'paypal/controllers/front/ecInit.php';
 require_once _PS_MODULE_DIR_.'paypal/classes/MethodEC.php';
 require_once _PS_MODULE_DIR_.'paypal/paypal.php';
 
-class EcInitTest extends TestCase
+class EcInitTest extends TotTest
 {
-    public $moduleManagerBuilder;
-
-    public $moduleManager;
-
-    public $moduleNames;
+    protected $methodMock;
 
     protected function setUp()
     {
-        $_GET['module'] = 'paypal';
-
-        $this->moduleManagerBuilder = ModuleManagerBuilder::getInstance();
-        $this->moduleManager = $this->moduleManagerBuilder->build();
-        $this->moduleNames = 'paypal';
-    }
-
-    public function testInstall()
-    {
-        $employees = \Employee::getEmployeesByProfile(_PS_ADMIN_PROFILE_);
-        $contextTest = \Context::getContext();
-        $contextTest->employee = new \Employee((int)$employees[0]['id_employee']);
-        $contextTest->cookie->update();
-        \Context::setInstanceForTesting($contextTest);
-        $this->assertTrue((bool)$this->moduleManager->install($this->moduleNames), "Could not install $this->moduleNames");
+        parent::setUp();
     }
 
 
-    /**
-     * @dataProvider providerPostProcessFailureRedirect
-     */
-    public function testPostProcessFailureRedirect($values, $methodMock)
+    public function testPostProcessFailureRedirect()
     {
+        $methodMock = $this->getMockBuilder(\MethodEC::class)
+            ->setMethods(array('init'))
+            ->getMock();
+
+        $methodMock->method('init')->willThrowException(new \Exception('test exception'));
+
         $ecInit = new \PaypalEcInitModuleFrontController();
-        $ecInit->values = $values;
+        $ecInit->values = array('getToken' => false);
         $ecInit->setMethod($methodMock);
         $ecInit->postProcess();
         $this->assertNotEmpty($ecInit->errors);
         $this->assertContains('controller=error', $ecInit->redirectUrl);
     }
 
-    /**
-     * @dataProvider providerPostProcessFailureJson
-     */
-    public function testPostProcessFailureJson($values, $methodMock)
+    public function testPostProcessFailureJson()
     {
+        $methodMock = $this->getMockBuilder(\MethodEC::class)
+            ->setMethods(array('init'))
+            ->getMock();
+
+        $methodMock->method('init')->willThrowException(new \Exception('test exception'));
+
         $ecInit = new \PaypalEcInitModuleFrontController();
-        $ecInit->values = $values;
+        $ecInit->values = array('getToken' => true);
         $ecInit->setMethod($methodMock);
         $ecInit->postProcess();
         $this->assertNotEmpty($ecInit->errors);
@@ -87,98 +74,36 @@ class EcInitTest extends TestCase
         $this->assertArrayHasKey('redirect_link', $ecInit->jsonValues);
     }
 
-    /**
-     * @dataProvider providerPostProcessSuccessRedirect
-     */
-    public function testPostProcessSuccessRedirect($values, $methodMock)
-    {
-        $ecInit = new \PaypalEcInitModuleFrontController();
-        $ecInit->values = $values;
-        $ecInit->setMethod($methodMock);
-        $ecInit->postProcess();
-        $this->assertEmpty($ecInit->errors);
-        $this->assertTrue(is_string($ecInit->redirectUrl));
-    }
-
-    /**
-     * @dataProvider providerPostProcessSuccessJson
-     */
-    public function testPostProcessSuccessJson($values, $methodMock)
-    {
-        $ecInit = new \PaypalEcInitModuleFrontController();
-        $ecInit->values = $values;
-        $ecInit->setMethod($methodMock);
-        $ecInit->postProcess();
-        $this->assertEmpty($ecInit->errors);
-        $this->assertTrue($ecInit->jsonValues['success']);
-        $this->assertArrayHasKey('token', $ecInit->jsonValues);
-    }
-
-    public function providerPostProcessFailureRedirect()
-    {
-        $methodMock = $this->getMockBuilder(\MethodEC::class)
-            ->setMethods(array('init'))
-            ->getMock();
-
-        $methodMock->method('init')->willThrowException(new \Exception('test exception'));
-        $data = array(
-            array(
-                array('getToken' => false),
-                $methodMock
-            )
-        );
-
-        return $data;
-    }
-
-    public function providerPostProcessFailureJson()
-    {
-        $methodMock = $this->getMockBuilder(\MethodEC::class)
-            ->setMethods(array('init'))
-            ->getMock();
-
-        $methodMock->method('init')->willThrowException(new \Exception('test exception'));
-        $data = array(
-            array(
-                array('getToken' => true),
-                $methodMock
-            )
-        );
-
-        return $data;
-    }
-
-    public function providerPostProcessSuccessRedirect()
+    public function testPostProcessSuccessRedirect()
     {
         $methodMock = $this->getMockBuilder(\MethodEC::class)
             ->setMethods(array('init'))
             ->getMock();
 
         $methodMock->method('init')->willReturn($methodMock->redirectToAPI('setExpressCheckout'));
-        $data = array(
-            array(
-                array('getToken' => false),
-                $methodMock
-            )
-        );
 
-        return $data;
+        $ecInit = new \PaypalEcInitModuleFrontController();
+        $ecInit->values = array('getToken' => false);
+        $ecInit->setMethod($methodMock);
+        $ecInit->postProcess();
+        $this->assertEmpty($ecInit->errors);
+        $this->assertTrue(is_string($ecInit->redirectUrl));
     }
 
-    public function providerPostProcessSuccessJson()
+    public function testPostProcessSuccessJson()
     {
         $methodMock = $this->getMockBuilder(\MethodEC::class)
             ->setMethods(array('init'))
             ->getMock();
 
         $methodMock->token = 'testToken';
-        $data = array(
-            array(
-                array('getToken' => true),
-                $methodMock
-            )
-        );
 
-        return $data;
+        $ecInit = new \PaypalEcInitModuleFrontController();
+        $ecInit->values = array('getToken' => true);
+        $ecInit->setMethod($methodMock);
+        $ecInit->postProcess();
+        $this->assertEmpty($ecInit->errors);
+        $this->assertTrue($ecInit->jsonValues['success']);
+        $this->assertArrayHasKey('token', $ecInit->jsonValues);
     }
 }

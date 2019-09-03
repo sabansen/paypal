@@ -24,13 +24,12 @@
 
 namespace PayPalTest;
 
-use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PayPalTest\TotTest;
 
 require_once _PS_MODULE_DIR_.'paypal/vendor/autoload.php';
 require_once _PS_MODULE_DIR_.'paypal/paypal.php';
 
-class PaypalTest extends TestCase
+class PaypalTest extends TotTest
 {
     public $moduleManagerBuilder;
 
@@ -43,20 +42,8 @@ class PaypalTest extends TestCase
 
     protected function setUp()
     {
+        parent::setUp();
         $this->paypal = new \PayPal();
-        $this->moduleManagerBuilder = ModuleManagerBuilder::getInstance();
-        $this->moduleManager = $this->moduleManagerBuilder->build();
-        $this->moduleNames = 'paypal';
-    }
-
-    public function testInstall()
-    {
-        $employees = \Employee::getEmployeesByProfile(_PS_ADMIN_PROFILE_);
-        $contextTest = \Context::getContext();
-        $contextTest->employee = new \Employee((int)$employees[0]['id_employee']);
-        $contextTest->cookie->update();
-        \Context::setInstanceForTesting($contextTest);
-        $this->assertTrue((bool)$this->moduleManager->install($this->moduleNames), "Could not install $this->moduleNames");
     }
 
     public function testGetDecimal()

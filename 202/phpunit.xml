@@ -16,6 +16,7 @@
     <php>
         <ini name="error_reporting" value="-1" />
         <env name="addon_name" value="paypal"/>
+        <get name="module" value="paypal"/>
     </php>
 
     <filter>
