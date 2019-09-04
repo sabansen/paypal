@@ -44,9 +44,9 @@ class AdminPayPalController extends \ModuleAdminController
     public function initContent()
     {
         if ((int)\Configuration::get('PAYPAL_SANDBOX') == 1) {
-            $message = $this->l('Your PayPal account is currently configured to accept payments on Sandbox.');
-            $message .= ' (<b>' . $this->l('test environment') . '</b>). ';
-            $message .= $this->l('Any transaction will be fictitious. Disable the option to accept actual payments (live environment) and log in with your PayPal credentials.');
+            $message = $this->module->l('Your PayPal account is currently configured to accept payments on Sandbox.', 'AdminPayPalController');
+            $message .= ' (<b>' . $this->module->l('test environment', 'AdminPayPalController') . '</b>). ';
+            $message .= $this->module->l('Any transaction will be fictitious. Disable the option to accept actual payments (live environment) and log in with your PayPal credentials.', 'AdminPayPalController');
             $this->warnings[] = $message;
         }
 
@@ -173,7 +173,7 @@ class AdminPayPalController extends \ModuleAdminController
 
         if (\Tools::isSubmit($this->controller_name . '_config')) {
             if ($this->saveForm()) {
-                $this->confirmations[] = $this->l('Successful update.');
+                $this->confirmations[] = $this->module->l('Successful update.', 'AdminPayPalController');
             }
         }
 
