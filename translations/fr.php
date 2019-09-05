@@ -170,7 +170,7 @@ $_MODULE['<{paypal}prestashop>forbraintreeusers_a58c147220666b9844c3cc90fa8726b3
 $_MODULE['<{paypal}prestashop>forbraintreeusers_c4e26e9f1ceeeb8fefb7028cf2d2a2e9'] = 'Vous pourrez migrer les paramètres de votre compte et les commandes créées via Braintree lorsque vous aurez installé le nouveau module Braintree.';
 $_MODULE['<{paypal}prestashop>forbraintreeusers_b1b3a9e5f00eb52d0b92a977ee82181c'] = 'Nous vous recommandons vivement de désinstaller le module PayPal lorsque vous aurez terminé la migration de vos paramètres Braintree.';
 $_MODULE['<{paypal}prestashop>forbraintreeusers_bf51567cd44ed14522f9674cddbbdad3'] = 'Je comprends.[br]Vous souhaitez utiliser PayPal sans Braintree.';
-$_MODULE['<{paypal}prestashop>adminpaypalcontroller_4bbd4f1aa67855053aecbcbbaa33d4d9'] = 'Votre compte PayPal est actuellement configuré pour accepter des paiements dans l\'environnement de test.';
+$_MODULE['<{paypal}prestashop>adminpaypalcontroller_4bbd4f1aa67855053aecbcbbaa33d4d9'] = 'Votre compte PayPal est actuellement configuré pour accepter des paiements dans Sandbox ';
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_a3016160c7a837dc134314e6191a7c46'] = 'environnement test';
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_e97db78085f532d60c2156f86248b985'] = 'Toutes les transactions seront fictives. Désactivez l\'option pour accepter des paiements réels (environnement de production) et connectez-vous avec vos identifiants PayPal.';
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_5ee8825eb41716424065ccd113abb596'] = 'Pour activer une solution de paiement, sélectionnez votre pays par défaut.';
