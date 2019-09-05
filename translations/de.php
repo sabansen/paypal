@@ -144,11 +144,11 @@ $_MODULE['<{paypal}prestashop>blockpreviewbuttoncontext_3aebc542a79474bc605a817e
 $_MODULE['<{paypal}prestashop>block_info_0f1f01f9c2def9ea0e53bd7cc51934cb'] = 'Wenn bei Ihren Bestellungen Probleme beim auf- oder abrunden auftreten, ändern Sie den Prestashop-Rundungsmodus in [a @href1@]Einstellungen > Allgemein[/a] und ändern Sie anschließend:';
 $_MODULE['<{paypal}prestashop>block_info_e287d4ed564774c343fdaf3bd1494ad6'] = 'Rundungsmodus: \"Von Null aufrunden, wenn es die Hälfte erreicht (empfohlen)\"';
 $_MODULE['<{paypal}prestashop>block_info_27a3066cd34cd1e683f1c2d04483163a'] = 'Rundungstyp: \"Jeden Artikel ab-/aufrunden\"';
-$_MODULE['<{paypal}prestashop>headerlogo_2b01e7c182040ea95514ee1854afc8fd'] = 'Aktivieren Sie das PayPal-Modul, um an mehr als 250 Millionen PayPal-Kunden auf der ganzen Welt zu verkaufen.';
+$_MODULE['<{paypal}prestashop>headerlogo_2b01e7c182040ea95514ee1854afc8fd'] = 'Aktivieren Sie das PayPal-Modul, um an mehr als 250 Millionen PayPal-Kunden auf der ganzen Welt zu verkaufen';
 $_MODULE['<{paypal}prestashop>headerlogo_c3d2b0bfba763295a377b71aae0841f1'] = 'In drei einfachen Schritten aktivieren';
-$_MODULE['<{paypal}prestashop>headerlogo_1193eddeac9b924352d0914cf8361758'] = 'Verknüpfen Sie unten Ihr bestehendes Braintree-Konto oder erstellen Sie ein neues.';
+$_MODULE['<{paypal}prestashop>headerlogo_1193eddeac9b924352d0914cf8361758'] = 'Verknüpfen Sie unten Ihr bestehendes Braintree-Konto oder erstellen Sie ein neues';
 $_MODULE['<{paypal}prestashop>headerlogo_dfe4283340c6369e764585c747cbd74a'] = 'Passen Sie Ihre Zahlungseinstellung so an, dass Sie entweder sofort Zahlungen einziehen (Verkauf) oder wenn Sie die Bestellung bestätigen (Autorisation)';
-$_MODULE['<{paypal}prestashop>headerlogo_ab527c36284b90820e085125a7a27c96'] = 'Achten Sie darauf, dass das Modul auf den Produktionsmodus gesetzt ist.';
+$_MODULE['<{paypal}prestashop>headerlogo_ab527c36284b90820e085125a7a27c96'] = 'Achten Sie darauf, dass das Modul auf den Produktionsmodus gesetzt ist';
 $_MODULE['<{paypal}prestashop>helperoptioninfo_36c23650a89439d28101b389567fe2f5'] = 'Les logs avec ID de commande ne seront pas effacés.';
 $_MODULE['<{paypal}prestashop>statusblock_ac69a4de1e317c711c7a2225aa26566c'] = 'Land des Händlers:';
 $_MODULE['<{paypal}prestashop>statusblock_d905465066339087fee7afcadf323cde'] = 'So ändern Sie das Land: [a @href1@]International > Lokalisierung[/a]';
