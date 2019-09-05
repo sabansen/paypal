@@ -298,7 +298,6 @@ class PayPal extends \PaymentModule
             return false;
         }
 
-        $this->checkPaypalStats();
         if (!Configuration::updateValue('PAYPAL_MERCHANT_ID_SANDBOX', '')
             || !Configuration::updateValue('PAYPAL_MERCHANT_ID_LIVE', '')
             || !Configuration::updateValue('PAYPAL_USERNAME_SANDBOX', '')

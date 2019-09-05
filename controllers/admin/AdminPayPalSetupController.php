@@ -272,7 +272,6 @@ class AdminPayPalSetupController extends AdminPayPalController
             $method->logOut();
             $content['status'] = true;
             $content['redirectUrl'] = $this->context->link->getAdminLink($this->controller_name);
-            $this->module->checkPaypalStats();
         }
 
         $response->setContent(\Tools::jsonEncode($content));
@@ -299,7 +298,6 @@ class AdminPayPalSetupController extends AdminPayPalController
             }
         }
 
-        $this->module->checkPaypalStats();
         return $result;
     }
 }
