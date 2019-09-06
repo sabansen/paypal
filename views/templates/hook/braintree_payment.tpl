@@ -131,6 +131,8 @@
                     getOrderInformation(hostedFieldsInstance).then(function (response) {
                         var bt3Dinformation = response["orderInformation"];
                         var payload = response["payload"];
+                        var use3dVerification = response["use3dVerification"];
+
                         braintree.threeDSecure.create({
                             version: 2,
                             //Using 3DS 2
@@ -150,57 +152,62 @@
                                 return false;
                             }
 
-                            threeDSecure.verifyCard(bt3Dinformation, function (err, three_d_secure_response) {
-                                var popup_message = '';
+                            if (use3dVerification) {
+                                threeDSecure.verifyCard(bt3Dinformation, function (err, three_d_secure_response) {
+                                    var popup_message = '';
 
-                                if (err) {
-                                    document.getElementById('braintree_submit').removeAttribute('disabled');
-                                    switch (err.code) {
-                                        case 'THREEDS_HTTPS_REQUIRED':
-                                            popup_message = "{/literal}{l s='3D Secure requires HTTPS.' mod='paypal'}{literal}";
-                                            break;
-                                        default:
-                                            popup_message = "{/literal}{l s='Load 3D Secure Failed' mod='paypal'}{literal}";
-                                    }
-                                    $.fancybox.open([
-                                        {
-                                            type: 'inline',
-                                            autoScale: true,
-                                            minHeight: 30,
-                                            content: '<p class="braintree-error">'+popup_message+'</p>'
+                                    if (err) {
+                                        document.getElementById('braintree_submit').removeAttribute('disabled');
+                                        switch (err.code) {
+                                            case 'THREEDS_HTTPS_REQUIRED':
+                                                popup_message = "{/literal}{l s='3D Secure requires HTTPS.' mod='paypal'}{literal}";
+                                                break;
+                                            default:
+                                                popup_message = "{/literal}{l s='Load 3D Secure Failed' mod='paypal'}{literal}";
                                         }
-                                    ]);
-                                    return false;
-                                }
+                                        $.fancybox.open([
+                                            {
+                                                type: 'inline',
+                                                autoScale: true,
+                                                minHeight: 30,
+                                                content: '<p class="braintree-error">'+popup_message+'</p>'
+                                            }
+                                        ]);
+                                        return false;
+                                    }
 
-                                if (three_d_secure_response.threeDSecureInfo.status == "lookup_enrolled") {
-                                    document.getElementById('braintree_submit').removeAttribute('disabled');
-                                    return false;
-                                }
+                                    if (three_d_secure_response.threeDSecureInfo.status == "lookup_enrolled") {
+                                        document.getElementById('braintree_submit').removeAttribute('disabled');
+                                        return false;
+                                    }
 
-                                if(three_d_secure_response.liabilityShifted)
-                                {
-                                    document.querySelector('input[name="liabilityShifted"]').value = three_d_secure_response.liabilityShifted;
-                                }
-                                else
-                                {
-                                    document.querySelector('input[name="liabilityShifted"]').value = false;
-                                }
+                                    if(three_d_secure_response.liabilityShifted)
+                                    {
+                                        document.querySelector('input[name="liabilityShifted"]').value = three_d_secure_response.liabilityShifted;
+                                    }
+                                    else
+                                    {
+                                        document.querySelector('input[name="liabilityShifted"]').value = false;
+                                    }
 
-                                if(three_d_secure_response.liabilityShiftPossible)
-                                {
-                                    document.querySelector('input[name="liabilityShiftPossible"]').value = three_d_secure_response.liabilityShiftPossible;
-                                }
-                                else
-                                {
-                                    document.querySelector('input[name="liabilityShiftPossible"]').value = false;
-                                }
+                                    if(three_d_secure_response.liabilityShiftPossible)
+                                    {
+                                        document.querySelector('input[name="liabilityShiftPossible"]').value = three_d_secure_response.liabilityShiftPossible;
+                                    }
+                                    else
+                                    {
+                                        document.querySelector('input[name="liabilityShiftPossible"]').value = false;
+                                    }
 
-                                document.querySelector('input[name="payment_method_nonce"]').value = three_d_secure_response.nonce;
-                                document.querySelector('input[name="card_type"]').value = payload.details.cardType;
+                                    document.querySelector('input[name="payment_method_nonce"]').value = three_d_secure_response.nonce;
+                                    document.querySelector('input[name="card_type"]').value = payload.details.cardType;
 
+                                    form.submit();
+                                });
+                            } else {
+                                document.querySelector('input[name="payment_method_nonce"]').value = payload.nonce;
                                 form.submit();
-                            });
+                            }
                         });
                     }, function (errroMessage) {
                         $.fancybox.open([

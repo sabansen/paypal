@@ -107,7 +107,7 @@ class PrestaBraintree
                 'options' => array(
                     'submitForSettlement' => !Configuration::get('PAYPAL_CAPTURE'),
                     'three_d_secure' => array(
-                        'required' => true
+                        'required' => Configuration::get('PAYPAL_USE_3D_SECURE')
                     )
                 )
             );

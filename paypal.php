@@ -712,6 +712,7 @@ class PayPal extends PaymentModule
             //*TO DELETE* 'PayPal_braintree_public_key'=> Configuration::get('PAYPAL_BRAINTREE_PUBLIC_KEY'),
             //*TO DELETE* 'PayPal_braintree_private_key'=> Configuration::get('PAYPAL_BRAINTREE_PRIVATE_KEY'),
             'PayPal_braintree_merchant_id'=> Configuration::get('PAYPAL_BRAINTREE_MERCHANT_ID'),
+            'PayPal_check3Dsecure'=> Configuration::get('PAYPAL_USE_3D_SECURE'),
             'PayPal_braintree_enabled'=> Configuration::get('PAYPAL_BRAINTREE_ENABLED'),
             // Pour le bouton Braintree
             'User_Country' => PayPal::countryIso2to3(Context::getContext()->country->iso_code),
@@ -1814,6 +1815,7 @@ class PayPal extends PaymentModule
                 Configuration::updateValue('PAYPAL_LOGIN_TPL', (int) Tools::getValue('paypal_login_client_template'));
 
                 Configuration::updateValue('PAYPAL_BRAINTREE_ENABLED', (int) Tools::getValue('braintree_enabled'));
+                Configuration::updateValue('PAYPAL_USE_3D_SECURE', (int) Tools::getValue('use_threedsecure'));
 
                 if ($sandbox && $sandbox != (int) Tools::getValue('sandbox_mode')) {
                     $switch_sandbox = true;

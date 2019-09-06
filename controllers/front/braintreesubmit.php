@@ -62,7 +62,7 @@ class PayPalBraintreeSubmitModuleFrontController extends ModuleFrontController
             $this->redirectFailedPayment($paypal->l('failed load cart'));
         }
 
-        if (in_array(Tools::getValue('card_type'), array('Visa','MasterCard'))&& Tools::getValue('liabilityShifted') == 'false' && Tools::getValue('liabilityShiftPossible') == 'false') {
+        if (in_array(Tools::getValue('card_type'), array('Visa','MasterCard')) && Tools::getValue('liabilityShifted') == 'false' && Tools::getValue('liabilityShiftPossible') == 'false') {
             $paypal->reset_context();
             $this->redirectFailedPayment($this->getErrorMessageByCode('gateway_rejected'));
         }
@@ -168,6 +168,7 @@ class PayPalBraintreeSubmitModuleFrontController extends ModuleFrontController
 
         $responseContent = array(
             'success' => true,
+            'use3dVerification' => (int)Configuration::get('PAYPAL_USE_3D_SECURE'),
             'orderInformation' => array(
                 'amount' => $this->context->cart->getOrderTotal(true, Cart::BOTH),
                 'email' => $customer->email,
