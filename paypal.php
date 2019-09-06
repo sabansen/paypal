@@ -110,6 +110,7 @@ class PayPal extends PaymentModule
 
         parent::__construct();
         $country = new Country(Configuration::get('PS_COUNTRY_DEFAULT'));
+        require_once realpath(dirname(__FILE__) .'/smarty/plugins') . '/modifier.paypalreplace.php';
 
         if ($country->iso_code == 'FR') {
             $this->description = $this->l('Benefit from PayPal\'s complete payments platform and grow your business online, on mobile and internationally and discover a new payment experience with Braintree.Accept credit cards, debit cards and PayPal payments.');

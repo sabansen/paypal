@@ -23,6 +23,26 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
+<div class="bootstrap">
+	<div class="alert alert-info">
+		<p>
+            {l s='Note : As part of European Regulation PSD2 and related SCA (Strong Customer Authentication) planned on September 14th 2019, all transactions will have to go through SCA (3DS 2.0) with the aim to reduce friction (fewer “client challenges”) while raise conversion and protection (more liability shifts from merchant to bank).' mod='paypal'}
+		</p>
+
+		<p>
+            {l s='It is thus recommended to enable 3D Secure in order to avoid bank declines and impact to your business.' mod='paypal'}
+		</p>
+
+		<p>
+            {{l s='More info in our blog post [b]to get the last updates:[/b]' mod='paypal'}|paypalreplace}
+			<a href="https://www.braintreepayments.com/ie/features/3d-secure">
+				https://www.braintreepayments.com/ie/features/3d-secure
+			</a>
+		</p>
+	</div>
+</div>
+
+
 <div id="paypal-wrapper">
 	{if !empty($hss_errors)}
         <div style="background-color: red; color: white; font-weight: bolder; padding: 5px; margin-top: 10px;">
