@@ -40,6 +40,5 @@ function upgrade_module_4_5_0($module)
     $installer->installObjectModel('PaypalOrder');
     $installer->installAdminControllers();
     $installer->installExtensions();
-    $module->checkPaypalStats();
     return true;
 }

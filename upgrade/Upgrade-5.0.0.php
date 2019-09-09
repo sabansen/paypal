@@ -41,7 +41,6 @@ function upgrade_module_5_0_0($module)
     $installer = new ModuleInstaller($module);
     $installer->registerHooks();
     $installer->installAdminControllers();
-    $module->checkPaypalStats();
     $module->renameTabParent();
     $method = AbstractMethodPaypal::load('EC');
     $method->checkCredentials();

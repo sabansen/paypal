@@ -24,51 +24,23 @@
 
 namespace PayPalTest;
 
-$pathConfig = dirname(__FILE__) . '/../../../../config/config.inc.php';
-$pathInit = dirname(__FILE__) . '/../../../../init.php';
-if (file_exists($pathConfig)) {
-    require_once $pathConfig;
-}
-if (file_exists($pathInit)) {
-    require_once $pathInit;
-}
+use PayPalTest\TotTest;
+use \PayPal\PayPalAPI\GetExpressCheckoutDetailsResponseType;
+use PaypalAddons\classes\PaypalException;
+
 require_once _PS_MODULE_DIR_.'paypal/vendor/autoload.php';
 require_once _PS_MODULE_DIR_.'paypal/classes/MethodEC.php';
 
-use PHPUnit\Framework\TestCase;
-use \PayPal\PayPalAPI\GetExpressCheckoutDetailsResponseType;
-use PaypalAddons\classes\PaypalException;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
-use PayPalTest\MethodECMock;
-
-class MethodECTest extends TestCase
+class MethodECTest extends TotTest
 {
-    /* @var MethodECMock*/
+    /* @var \MethodEC*/
     protected $method;
-
-    public $moduleManagerBuilder;
-
-    public $moduleManager;
-
-    public $moduleNames;
 
     protected function setUp()
     {
-        $methodMock = new MethodECMock();
-        $this->method = $methodMock->getInstance();
-        $this->moduleManagerBuilder = ModuleManagerBuilder::getInstance();
-        $this->moduleManager = $this->moduleManagerBuilder->build();
-        $this->moduleNames = 'paypal';
-    }
+        parent::setUp();
 
-    public function testInstall()
-    {
-        $employees = \Employee::getEmployeesByProfile(_PS_ADMIN_PROFILE_);
-        $contextTest = \Context::getContext();
-        $contextTest->employee = new \Employee((int)$employees[0]['id_employee']);
-        $contextTest->cookie->update();
-        \Context::setInstanceForTesting($contextTest);
-        $this->assertTrue((bool)$this->moduleManager->install($this->moduleNames), "Could not install $this->moduleNames");
+        $this->method = new \MethodEC();
     }
 
     /**
@@ -76,7 +48,6 @@ class MethodECTest extends TestCase
      */
     public function testGetCredentialsInfo($mode)
     {
-        $method = new \MethodEC();
         $keys = array(
             'acct1.UserName',
             'acct1.Password',
@@ -85,7 +56,7 @@ class MethodECTest extends TestCase
             'mode',
             'log.LogEnabled'
         );
-        $credentialInfo = $method->_getCredentialsInfo($mode);
+        $credentialInfo = $this->method->_getCredentialsInfo($mode);
         $this->assertTrue(is_array($credentialInfo));
 
         foreach ($keys as $key) {
@@ -219,7 +190,6 @@ class MethodECTest extends TestCase
         $data = array(
             array($context, 'EC', 'product'),
             array($context, 'PPP', 'product'),
-            array($context, 'BT', 'order'),
             array($context, 'EC', 'order'),
             array($context, 'PPP', 'order'),
             array($context, 'string', 'string'),

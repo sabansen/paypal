@@ -35,8 +35,8 @@
 					data-toggle="tooltip"
 					data-html="true"
 					title=""
-					data-original-title="<p style='text-align:left'>Activating Express Checkout Shortcut on Cart Page is recommended in specific cases only:</p>
-						<p style='text-align:left'>- Multi Products web sites</p>"
+					data-original-title="<p style='text-align:left'>{l s='Activating Express Checkout Shortcut on Cart Page is recommended in specific cases only:' mod='paypal'}</p>
+						<p style='text-align:left'>- {l s='Multi Products web sites' mod='paypal'}</p>"
 					>
 					{l s="Cart Page" mod="paypal"}
 				</span>
@@ -56,14 +56,14 @@
 					data-toggle="tooltip"
 					data-html="true"
 					title=""
-					data-original-title="<p style='text-align:left'>Activating Express Checkout Shortcut on Product Pages is recommended in specific cases only:</p>
-						<p style='text-align:left'>- Mono Product</p>
-						<p style='text-align:left'>- Digital Goods</p>
-						<p style='text-align:left'>Example:</p>
-						<p style='text-align:left'>- Parking lot rental</p>
-						<p style='text-align:left'>- Escape game reservation</p>
-						<p style='text-align:left'>- Booking services</p>
-						<p style='text-align:left'>- Single product sale</p>"
+					data-original-title="<p style='text-align:left'>{l s='Activating Express Checkout Shortcut on Product Pages is recommended in specific cases only:' mod='paypal'}</p>
+						<p style='text-align:left'>- {l s='Mono Product' mod='paypal'}</p>
+						<p style='text-align:left'>- {l s='Digital Goods' mod='paypal'}</p>
+						<p style='text-align:left'>{l s='Example:' mod='paypal'}</p>
+						<p style='text-align:left'>- {l s='Parking lot rental' mod='paypal'}</p>
+						<p style='text-align:left'>- {l s='Escape game reservation' mod='paypal'}</p>
+						<p style='text-align:left'>- {l s='Booking services' mod='paypal'}</p>
+						<p style='text-align:left'>- {l s='Single product sale' mod='paypal'}</p>"
 					>
 					{l s="Product Pages" mod="paypal"}
 				</span>

@@ -24,48 +24,19 @@
 
 namespace PayPalTest;
 
-$pathConfig = dirname(__FILE__) . '/../../../../config/config.inc.php';
-$pathInit = dirname(__FILE__) . '/../../../../init.php';
-if (file_exists($pathConfig)) {
-    require_once $pathConfig;
-}
-if (file_exists($pathInit)) {
-    require_once $pathInit;
-}
+use PayPalTest\TotTest;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+
 require_once _PS_MODULE_DIR_.'paypal/vendor/autoload.php';
 require_once _PS_MODULE_DIR_.'paypal/controllers/front/ScInit.php';
 require_once _PS_MODULE_DIR_.'paypal/classes/MethodEC.php';
 
-use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
-
-class ScInitTest extends TestCase
+class ScInitTest extends TotTest
 {
-    public $moduleManagerBuilder;
-
-    public $moduleManager;
-
-    public $moduleNames;
-
     protected function setUp()
     {
-        $_GET['module'] = 'paypal';
-
-        $this->moduleManagerBuilder = ModuleManagerBuilder::getInstance();
-        $this->moduleManager = $this->moduleManagerBuilder->build();
-        $this->moduleNames = 'paypal';
+        parent::setUp();
     }
-
-    public function testInstall()
-    {
-        $employees = \Employee::getEmployeesByProfile(_PS_ADMIN_PROFILE_);
-        $contextTest = \Context::getContext();
-        $contextTest->employee = new \Employee((int)$employees[0]['id_employee']);
-        $contextTest->cookie->update();
-        \Context::setInstanceForTesting($contextTest);
-        $this->assertTrue((bool)$this->moduleManager->install($this->moduleNames), "Could not install $this->moduleNames");
-    }
-
 
     /**
      * @dataProvider providerCheckAvailability
@@ -92,8 +63,13 @@ class ScInitTest extends TestCase
     /**
      * @dataProvider providerSuccessProductRedirect
      */
-    public function testSuccessProductRedirect($values, $methodMock)
+    public function testSuccessProductRedirect($values)
     {
+        $methodMock = $this->getMockBuilder(\MethodEC::class)
+            ->setMethods(array('init'))
+            ->getMock();
+        $methodMock->method('init')->willReturn($methodMock->redirectToAPI('setExpressCheckout'));
+
         $scInitMock = $this->getMockBuilder(\PaypalScInitModuleFrontController::class)
             ->setMethods(array('prepareProduct'))
             ->getMock();
@@ -108,8 +84,13 @@ class ScInitTest extends TestCase
     /**
      * @dataProvider providerSuccessProductJson
      */
-    public function testSuccessProductJson($values, $methodMock)
+    public function testSuccessProductJson($values)
     {
+        $methodMock = $this->getMockBuilder(\MethodEC::class)
+            ->setMethods(array('init'))
+            ->getMock();
+        $methodMock->token = 'testToken';
+
         $scInitMock = $this->getMockBuilder(\PaypalScInitModuleFrontController::class)
             ->setMethods(array('prepareProduct'))
             ->getMock();
@@ -125,8 +106,13 @@ class ScInitTest extends TestCase
     /**
      * @dataProvider providerFailureCartRedirect
      */
-    public function testFailureCartRedirect($values, $methodMock)
+    public function testFailureCartRedirect($values)
     {
+        $methodMock = $this->getMockBuilder(\MethodEC::class)
+        ->setMethods(array('init'))
+        ->getMock();
+        $methodMock->method('init')->willThrowException(new \Exception('test exception'));
+
         $scInitMock = $this->getMockBuilder(\PaypalScInitModuleFrontController::class)
             ->setMethods(array('prepareProduct'))
             ->getMock();
@@ -141,8 +127,13 @@ class ScInitTest extends TestCase
     /**
      * @dataProvider providerFailureCartJson
      */
-    public function testFailureCartJson($values, $methodMock)
+    public function testFailureCartJson($values)
     {
+        $methodMock = $this->getMockBuilder(\MethodEC::class)
+            ->setMethods(array('init'))
+            ->getMock();
+        $methodMock->method('init')->willThrowException(new \Exception('test exception'));
+
         $scInitMock = $this->getMockBuilder(\PaypalScInitModuleFrontController::class)
             ->setMethods(array('prepareProduct'))
             ->getMock();
@@ -207,19 +198,12 @@ class ScInitTest extends TestCase
 
     public function providerSuccessProductRedirect()
     {
-        $methodMock = $this->getMockBuilder(\MethodEC::class)
-            ->setMethods(array('init'))
-            ->getMock();
-
-        $methodMock->method('init')->willReturn($methodMock->redirectToAPI('setExpressCheckout'));
         $data = array(
             'source_cart' => array(
-                array('checkAvailability' => false, 'source_page' => 'cart', 'getToken' => false),
-                $methodMock
+                array('checkAvailability' => false, 'source_page' => 'cart', 'getToken' => false)
             ),
             'source_product' => array(
-                array('checkAvailability' => false, 'source_page' => 'product', 'getToken' => false),
-                $methodMock
+                array('checkAvailability' => false, 'source_page' => 'product', 'getToken' => false)
             )
         );
 
@@ -228,19 +212,12 @@ class ScInitTest extends TestCase
 
     public function providerSuccessProductJson()
     {
-        $methodMock = $this->getMockBuilder(\MethodEC::class)
-            ->setMethods(array('init'))
-            ->getMock();
-
-        $methodMock->token = 'testToken';
         $data = array(
             'source_cart' => array(
-                array('checkAvailability' => false, 'source_page' => 'cart', 'getToken' => true),
-                $methodMock
+                array('checkAvailability' => false, 'source_page' => 'cart', 'getToken' => true)
             ),
             'source_product' => array(
-                array('checkAvailability' => false, 'source_page' => 'product', 'getToken' => true),
-                $methodMock
+                array('checkAvailability' => false, 'source_page' => 'product', 'getToken' => true)
             )
         );
 
@@ -249,15 +226,9 @@ class ScInitTest extends TestCase
 
     public function providerFailureCartRedirect()
     {
-        $methodMock = $this->getMockBuilder(\MethodEC::class)
-            ->setMethods(array('init'))
-            ->getMock();
-
-        $methodMock->method('init')->willThrowException(new \Exception('test exception'));
         $data = array(
             'source_cart' => array(
-                array('checkAvailability' => false, 'source_page' => 'cart', 'getToken' => false),
-                $methodMock
+                array('checkAvailability' => false, 'source_page' => 'cart', 'getToken' => false)
             )
         );
 
@@ -266,15 +237,9 @@ class ScInitTest extends TestCase
 
     public function providerFailureCartJson()
     {
-        $methodMock = $this->getMockBuilder(\MethodEC::class)
-            ->setMethods(array('init'))
-            ->getMock();
-
-        $methodMock->method('init')->willThrowException(new \Exception('test exception'));
         $data = array(
             'source_cart' => array(
-                array('checkAvailability' => false, 'source_page' => 'cart', 'getToken' => true),
-                $methodMock
+                array('checkAvailability' => false, 'source_page' => 'cart', 'getToken' => true)
             )
         );
 

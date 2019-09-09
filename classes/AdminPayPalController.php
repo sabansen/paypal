@@ -57,9 +57,9 @@ class AdminPayPalController extends \ModuleAdminController
     public function initContent()
     {
         if ((int)\Configuration::get('PAYPAL_SANDBOX') == 1) {
-            $message = $this->l('Your PayPal account is currently configured to accept payments on Sandbox.');
-            $message .= ' (<b>' . $this->l('test environment') . '</b>). ';
-            $message .= $this->l('Any transaction will be fictitious. Disable the option to accept actual payments (live environment) and log in with your PayPal credentials.');
+            $message = $this->module->l('Your PayPal account is currently configured to accept payments on Sandbox.', 'AdminPayPalController');
+            $message .= ' (<b>' . $this->module->l('test environment', 'AdminPayPalController') . '</b>). ';
+            $message .= $this->module->l('Any transaction will be fictitious. Disable the option to accept actual payments (live environment) and log in with your PayPal credentials.', 'AdminPayPalController');
             $this->warnings[] = $message;
         }
 
@@ -117,21 +117,21 @@ class AdminPayPalController extends \ModuleAdminController
 
         if ((int)\Configuration::get('PS_COUNTRY_DEFAULT') == false) {
             $response['success'] = false;
-            $response['message'][] = $this->l('To activate a payment solution, please select your default country.');
+            $response['message'][] = $this->module->l('To activate a payment solution, please select your default country.', 'AdminPayPalController');
         }
 
         if ($this->module->isSslActive() == false) {
             $response['success'] = false;
-            $response['message'][] = $this->l('SSL should be enabled on your website.');
+            $response['message'][] = $this->module->l('SSL should be enabled on your website.', 'AdminPayPalController');
         }
 
         $tls_check = $this->_checkTLSVersion();
         if ($tls_check['status'] == false) {
             $response['success'] = false;
-            $response['message'][] = $this->l('Tls verification failed.').' '.$tls_check['error_message'];
+            $response['message'][] = $this->module->l('Tls verification failed.', 'AdminPayPalController').' '.$tls_check['error_message'];
         }
         if ($response['success']) {
-            $response['message'][] = $this->l('Your shop configuration is OK. You can start configuring your Braintree module.');
+            $response['message'][] = $this->module->l('Your shop configuration is OK. You can start configuring your Braintree module.', 'AdminPayPalController');
         }
         return $response;
     }
@@ -157,7 +157,7 @@ class AdminPayPalController extends \ModuleAdminController
                 $return['status'] = false;
                 $curl_info = curl_getinfo($curl);
                 if ($curl_info['http_code'] == 401) {
-                    $return['error_message'] = $this->l('401 Unauthorized. Please note that the TLS verification can not be done if you have a htaccess password protection enabled on your website.');
+                    $return['error_message'] = $this->module->l('401 Unauthorized. Please note that the TLS verification can not be done if you have a htaccess password protection enabled on your website.', 'AdminPayPalController');
                 } else {
                     $return['error_message'] = curl_error($curl);
                 }
@@ -167,9 +167,9 @@ class AdminPayPalController extends \ModuleAdminController
         } else {
             $return['status'] = false;
             if (version_compare(curl_version()['version'], '7.34.0', '<')) {
-                $return['error_message'] = $this->l('You are using an old version of cURL. Please update your cURL extension to version 7.34.0 or higher.');
+                $return['error_message'] = $this->module->l('You are using an old version of cURL. Please update your cURL extension to version 7.34.0 or higher.', 'AdminPayPalController');
             } else {
-                $return['error_message'] = $this->l('TLS version is not compatible');
+                $return['error_message'] = $this->module->l('TLS version is not compatible', 'AdminPayPalController');
             }
         }
         return $return;
@@ -193,7 +193,7 @@ class AdminPayPalController extends \ModuleAdminController
 
         if (\Tools::isSubmit($this->controller_name . '_config')) {
             if ($this->saveForm()) {
-                $this->confirmations[] = $this->l('Successful update.');
+                $this->confirmations[] = $this->module->l('Successful update.', 'AdminPayPalController');
             }
         }
 

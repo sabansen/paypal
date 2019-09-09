@@ -24,43 +24,16 @@
 
 namespace PayPalTest;
 
-$pathConfig = dirname(__FILE__) . '/../../../../config/config.inc.php';
-$pathInit = dirname(__FILE__) . '/../../../../init.php';
-if (file_exists($pathConfig)) {
-    require_once $pathConfig;
-}
-if (file_exists($pathInit)) {
-    require_once $pathInit;
-}
+use PayPalTest\TotTest;
+
 require_once _PS_MODULE_DIR_.'paypal/vendor/autoload.php';
 require_once _PS_MODULE_DIR_.'paypal/classes/PaypalCapture.php';
 
-use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
-
-class PaypalCaptureTest extends TestCase
+class PaypalCaptureTest extends TotTest
 {
-    public $moduleManagerBuilder;
-
-    public $moduleManager;
-
-    public $moduleNames;
-
     protected function setUp()
     {
-        $this->moduleManagerBuilder = ModuleManagerBuilder::getInstance();
-        $this->moduleManager = $this->moduleManagerBuilder->build();
-        $this->moduleNames = 'paypal';
-    }
-
-    public function testInstall()
-    {
-        $employees = \Employee::getEmployeesByProfile(_PS_ADMIN_PROFILE_);
-        $contextTest = \Context::getContext();
-        $contextTest->employee = new \Employee((int)$employees[0]['id_employee']);
-        $contextTest->cookie->update();
-        \Context::setInstanceForTesting($contextTest);
-        $this->assertTrue((bool)$this->moduleManager->install($this->moduleNames), "Could not install $this->moduleNames");
+        parent::setUp();
     }
 
     /**

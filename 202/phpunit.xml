@@ -8,14 +8,15 @@
         convertErrorsToExceptions="true"
         convertNoticesToExceptions="true"
         convertWarningsToExceptions="true"
-        processIsolation="false"
-        stopOnFailure="false"
+        processIsolation="true"
+        stopOnFailure="true"
         syntaxCheck="true"
         bootstrap="./build/prestashop/admin-dev/bootstrap.php"
 >
     <php>
         <ini name="error_reporting" value="-1" />
         <env name="addon_name" value="paypal"/>
+        <get name="module" value="paypal"/>
     </php>
 
     <filter>
@@ -32,6 +33,7 @@
                 <directory>./build/prestashop/modules/paypal/sdk</directory>
                 <directory>./build/prestashop/modules/paypal/202</directory>
                 <directory>./build/prestashop/modules/paypal/vendor</directory>
+                <directory>./build/prestashop/modules/paypal/smarty</directory>
                 <directory suffix="index.php">./build/prestashop/modules/paypal/</directory>
                 <directory suffix="index.php">./build/prestashop/modules/paypal/*/</directory>
                 <directory suffix="index.php">./build/prestashop/modules/paypal/*/*/</directory>
