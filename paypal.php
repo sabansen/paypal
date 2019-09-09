@@ -213,7 +213,13 @@ class PayPal extends \PaymentModule
         array(
             'name' => array(
                 'en' => 'Setup',
-                'fr' => 'Setup'
+                'fr' => 'Paramètres',
+                'pt' => 'Definições',
+                'pl' => 'Ustawienia',
+                'nl' => 'Instellingen',
+                'it' => 'Impostazioni',
+                'es' => 'Configuración',
+                'de' => 'Einstellungen'
             ),
             'class_name' => 'AdminPayPalSetup',
             'parent_class_name' => 'AdminPayPalConfiguration',
@@ -222,7 +228,13 @@ class PayPal extends \PaymentModule
         array(
             'name' => array(
                 'en' => 'Experience',
-                'fr' => 'Experience'
+                'fr' => 'Expérience',
+                'de' => 'User Experience',
+                'pt' => 'Experiência',
+                'pl' => 'Doświadczenie',
+                'nl' => 'Ervaring',
+                'it' => 'Percorso clinte',
+                'es' => 'Experiencia'
             ),
             'class_name' => 'AdminPayPalCustomizeCheckout',
             'parent_class_name' => 'AdminPayPalConfiguration',
@@ -231,7 +243,13 @@ class PayPal extends \PaymentModule
         array(
             'name' => array(
                 'en' => 'Help',
-                'fr' => 'Help'
+                'fr' => 'Aide',
+                'pt' => 'Ajuda',
+                'pl' => 'Pomoc',
+                'nl' => 'Hulp',
+                'it' => 'Aiuto',
+                'es' => 'Ayuda',
+                'de' => 'Hilfe'
             ),
             'class_name' => 'AdminPayPalHelp',
             'parent_class_name' => 'AdminPayPalConfiguration',
@@ -240,7 +258,13 @@ class PayPal extends \PaymentModule
         array(
             'name' => array(
                 'en' => 'Logs',
-                'fr' => 'Logs'
+                'fr' => 'Logs',
+                'de' => 'Logs',
+                'pt' => 'Logs',
+                'pl' => 'Dzienniki',
+                'nl' => 'Logs',
+                'it' => 'Logs',
+                'es' => 'Logs'
             ),
             'class_name' => 'AdminPayPalLogs',
             'parent_class_name' => 'AdminPayPalConfiguration',

@@ -241,3 +241,4 @@ $_MODULE['<{paypal}prestashop>accountsettingsblock_5ba82ead337af776b86db00ba9b6d
 $_MODULE['<{paypal}prestashop>accountsettingsblock_c4159369ab0d9986c1ef1a5949a5c900'] = 'Click \'Show\' below \'Secret\'';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_7f161ed5b9f8fd29729abb01773e8dbc'] = 'Copy/paste your \'Client ID\' and \'Secret\' below for each environment';
 $_MODULE['<{paypal}prestashop>headerlogo_68eeb96e9cc91f14eb1c462e57d1ea8e'] = 'Voilà! Your shop is ready to accept payments';
+$_MODULE['<{paypal}prestashop>adminpaypalcontroller_b4a34d3f58b039e7685c2e39b5413757'] = 'Successful update.';

@@ -180,6 +180,9 @@ $_MODULE['<{paypal}prestashop>adminpaypalcontroller_81618d71d454c0993d01b9a53299
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_2c4493f4907a8c500557d79dd978f452'] = 'Erreur 401 Non autorisé. La vérification TLS ne peut pas être effectuée si vous avez activé une protection de mot de passe htaccess sur votre site.';
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_d8e95938c82a618f755c13b35d4277c4'] = 'Vous utilisez une ancienne version de cURL. Mettez à jour votre extension cURL vers la version 7.34.0 ou supérieure.';
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_38dc1dc4db247b4c01b26636e6bf9666'] = 'La version de TLS n\'est pas compatible.';
+$_MODULE['<{paypal}prestashop>adminpaypalcontroller_b4a34d3f58b039e7685c2e39b5413757'] = 'Mise à jour réussie.';
+$_MODULE['<{paypal}prestashop>methodec_51a9f5fc2e4d9b1c8aa4a60a7c725243'] = 'Une erreur est survenue lors de la création de votre expérience web. Vérifiez vos identifiants.';
+$_MODULE['<{paypal}prestashop>methodppp_51a9f5fc2e4d9b1c8aa4a60a7c725243'] = 'Une erreur est survenue lors de la création de votre expérience web. Vérifiez vos identifiants.';
 $_MODULE['<{paypal}prestashop>adminprocessloggercontroller_d3b206d196cd6be3a2764c1fb90b200f'] = 'Supprimer la sélection';
 $_MODULE['<{paypal}prestashop>adminprocessloggercontroller_b718adec73e04ce3ec720dd11a06a308'] = 'ID';
 $_MODULE['<{paypal}prestashop>adminprocessloggercontroller_650be61892bf690026089544abbd9d26'] = 'Mode';
