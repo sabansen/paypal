@@ -260,3 +260,5 @@ $_MODULE['<{paypal}prestashop>blockpreviewbuttoncontext_9b225b71f142b09f7955060e
 $_MODULE['<{paypal}prestashop>blockpreviewbuttoncontext_81325ec58e0ddf0c0687678c8980622e'] = 'Réservation escape game';
 $_MODULE['<{paypal}prestashop>blockpreviewbuttoncontext_bb755380e0e58acace05c472c60b7991'] = 'Réservation d\'hotel';
 $_MODULE['<{paypal}prestashop>blockpreviewbuttoncontext_b401397858880fcfe0c8da19133356cd'] = 'Produit unique sans configuration';
+$_MODULE['<{paypal}prestashop>blockpreviewbuttoncontext_468a21d1076328f1b4cd946b72e2d5cd'] = 'Page Panier';
+$_MODULE['<{paypal}prestashop>blockpreviewbuttoncontext_0fcaf0531dd6d6a53f7bde67adafd035'] = 'Page Produit';

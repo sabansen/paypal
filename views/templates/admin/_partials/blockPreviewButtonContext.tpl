@@ -38,7 +38,7 @@
 					data-original-title="<p style='text-align:left'>{l s='Activating Express Checkout Shortcut on Cart Page is recommended in specific cases only:' mod='paypal'}</p>
 						<p style='text-align:left'>- {l s='Multi Products web sites' mod='paypal'}</p>"
 					>
-					{l s="Cart Page" mod="paypal"}
+					{l s='Cart Page' mod='paypal'}
 				</span>
 			</label>
 		</div>
@@ -65,7 +65,7 @@
 						<p style='text-align:left'>- {l s='Booking services' mod='paypal'}</p>
 						<p style='text-align:left'>- {l s='Single product sale' mod='paypal'}</p>"
 					>
-					{l s="Product Pages" mod="paypal"}
+					{l s='Product Pages' mod='paypal'}
 				</span>
 			</label>
 		</div>
