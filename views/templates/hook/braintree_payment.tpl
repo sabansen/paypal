@@ -176,11 +176,6 @@
                                         return false;
                                     }
 
-                                    if (three_d_secure_response.threeDSecureInfo.status == "lookup_enrolled") {
-                                        document.getElementById('braintree_submit').removeAttribute('disabled');
-                                        return false;
-                                    }
-
                                     if(three_d_secure_response.liabilityShifted)
                                     {
                                         document.querySelector('input[name="liabilityShifted"]').value = three_d_secure_response.liabilityShifted;
@@ -206,6 +201,7 @@
                                 });
                             } else {
                                 document.querySelector('input[name="payment_method_nonce"]').value = payload.nonce;
+                                document.querySelector('input[name="card_type"]').value = payload.details.cardType;
                                 form.submit();
                             }
                         });
