@@ -62,7 +62,7 @@ class PayPalBraintreeSubmitModuleFrontController extends ModuleFrontController
             $this->redirectFailedPayment($paypal->l('failed load cart'));
         }
 
-        if (in_array(Tools::getValue('card_type'), array('Visa','MasterCard')) && Tools::getValue('liabilityShifted') == 'false') {
+        if (Tools::getValue('liabilityShifted') == 'false') {
             $paypal->reset_context();
             $this->redirectFailedPayment($this->getErrorMessageByCode('gateway_rejected'));
         }
