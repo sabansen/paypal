@@ -195,7 +195,7 @@ class MethodPPP extends AbstractMethodPaypal
         try {
             // Use this call to create a profile.
             $createProfileResponse = $webProfile->create($this->_getCredentialsInfo());
-        } catch (\PayPal\Exception\PayPalConnectionException $ex) {
+        } catch (Exception $ex) {
             $module = Module::getInstanceByName('paypal');
             $this->errors[] = $module->l('An error occurred while creating your web experience. Check your credentials.', get_class($this));
             return false;

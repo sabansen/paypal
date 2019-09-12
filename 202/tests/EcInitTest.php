@@ -24,14 +24,13 @@
 
 namespace PayPalTest;
 
-use PayPalTest\TotTest;
-
+require_once dirname(__FILE__) . '/TotTestCase.php';
 require_once _PS_MODULE_DIR_.'paypal/vendor/autoload.php';
 require_once _PS_MODULE_DIR_.'paypal/controllers/front/ecInit.php';
 require_once _PS_MODULE_DIR_.'paypal/classes/MethodEC.php';
 require_once _PS_MODULE_DIR_.'paypal/paypal.php';
 
-class EcInitTest extends TotTest
+class EcInitTest extends \TotTestCase
 {
     protected $methodMock;
 

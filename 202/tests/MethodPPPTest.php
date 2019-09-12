@@ -24,14 +24,14 @@
 
 namespace PayPalTest;
 
-use PayPalTest\TotTest;
 use PayPal\Rest\ApiContext;
 use PayPal\Api\CreateProfileResponse;
 
+require_once dirname(__FILE__) . '/TotTestCase.php';
 require_once _PS_MODULE_DIR_.'paypal/vendor/autoload.php';
 require_once _PS_MODULE_DIR_.'paypal/classes/MethodPPP.php';
 
-class MethodPPPTest extends TotTest
+class MethodPPPTest extends \TotTestCase
 {
     /* @var \MethodPPP*/
     protected $method;

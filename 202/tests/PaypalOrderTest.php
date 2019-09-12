@@ -24,12 +24,11 @@
 
 namespace PayPalTest;
 
-use PayPalTest\TotTest;
-
+require_once dirname(__FILE__) . '/TotTestCase.php';
 require_once _PS_MODULE_DIR_.'paypal/vendor/autoload.php';
 require_once _PS_MODULE_DIR_.'paypal/classes/PaypalOrder.php';
 
-class PaypalOrderTest extends TotTest
+class PaypalOrderTest extends \TotTestCase
 {
     protected function setUp()
     {
