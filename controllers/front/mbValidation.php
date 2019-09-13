@@ -52,6 +52,7 @@ class PaypalMbValidationModuleFrontController extends PaypalAbstarctModuleFrontC
         $payemtData = Tools::jsonDecode(Tools::getValue('paymentData'));
         $this->method->setPaymentId($payemtData->paymentId);
         $this->method->setPayerId($payemtData->result->payer->payer_info->payer_id);
+        $this->method->setRememberedCards($payemtData->result->rememberedCards);
 
         try {
             $this->method->validation();

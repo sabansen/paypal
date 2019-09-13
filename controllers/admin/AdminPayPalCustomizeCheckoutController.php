@@ -37,7 +37,8 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             'paypal_config_brand',
             'paypal_express_checkout_shortcut',
             'paypal_express_checkout_shortcut_cart',
-            'paypal_api_card'
+            'paypal_api_card',
+            'paypal_vaulting'
         );
     }
 
@@ -168,6 +169,28 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
                     ),
                     array(
                         'id' => 'paypal_api_card_off',
+                        'value' => 0,
+                        'label' => $this->l('Disabled'),
+                    )
+                ),
+            );
+        }
+
+        if ($this->method == 'MB') {
+            $this->fields_form['form']['form']['input'][] = array(
+                'type' => 'switch',
+                'label' => $this->l('Enable vaulting'),
+                'name' => 'paypal_vaulting',
+                'is_bool' => true,
+                'hint' => $this->l(''),
+                'values' => array(
+                    array(
+                        'id' => 'paypal_vaulting_on',
+                        'value' => 1,
+                        'label' => $this->l('Enabled'),
+                    ),
+                    array(
+                        'id' => 'paypal_vaulting_off',
                         'value' => 0,
                         'label' => $this->l('Disabled'),
                     )

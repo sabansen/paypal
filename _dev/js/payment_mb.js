@@ -32,7 +32,8 @@ const PayPalMB = {
             "payerTaxId": paymentInfo.payerInfo.tax_id,
             "language": paymentInfo.language,
             "country": paymentInfo.country,
-            "disallowRememberedCards": true,
+            "disallowRememberedCards": paymentInfo.disallowRememberedCards,
+            "rememberedCards": paymentInfo.rememberedCards,
             "onError": this.handleError
         };
 

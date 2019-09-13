@@ -43,6 +43,7 @@ include_once 'classes/AbstractMethodPaypal.php';
 include_once 'classes/PaypalCapture.php';
 include_once 'classes/PaypalOrder.php';
 include_once 'classes/PaypalLog.php';
+include_once 'classes/PaypalVaulting.php';
 
 const BT_CARD_PAYMENT = 'card-braintree';
 const BT_PAYPAL_PAYMENT = 'paypal-braintree';
@@ -156,6 +157,7 @@ class PayPal extends \PaymentModule
     public $objectModels = array(
         'PaypalCapture',
         'PaypalOrder',
+        'PaypalVaulting'
     );
 
     /**
@@ -594,7 +596,7 @@ class PayPal extends \PaymentModule
                         $this->context->smarty->assign('path', $this->_path);
                         $payment_options->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_mb.tpl'));
                     } catch (Exception $e) {
-                        die($e);
+                        return;
                     }
                     $payments_options[] = $payment_options;
                 }

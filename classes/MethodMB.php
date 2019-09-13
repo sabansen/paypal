@@ -44,6 +44,7 @@ use PayPal\Api\Refund;
 use PayPal\Api\RefundRequest;
 use PayPal\Api\Sale;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
+use PaypalAddons\services\ServicePaypalVaulting;
 
 /**
  * Class MethodPPP
@@ -73,6 +74,16 @@ class MethodMB extends AbstractMethodPaypal
 
     /** @var $payerId string*/
     protected $payerId;
+
+    /** @var string hash of the remembered card ids*/
+    protected $rememeberedCards;
+
+    protected $servicePaypalVaulting;
+
+    public function __construct()
+    {
+        $this->servicePaypalVaulting = new ServicePaypalVaulting();
+    }
 
     /**
      * @param $values array replace for tools::getValues()
@@ -325,6 +336,10 @@ class MethodMB extends AbstractMethodPaypal
         $discounts = Context::getContext()->cart->getCartRules();
         if (count($discounts) > 0) {
             throw new Exception('The total of the order do not match amount paid.');
+        }
+
+        if (Validate::isLoadedObject($customer) && $this->getRememberedCards()) {
+            $this->servicePaypalVaulting->createOrUpdatePaypalVaulting($customer->id, $this->getRememberedCards());
         }
 
         // Get the payment Object by passing paymentId
@@ -640,7 +655,9 @@ class MethodMB extends AbstractMethodPaypal
             'paypalMode' => Configuration::get('PAYPAL_SANDBOX')  ? 'sandbox' : 'live',
             'payerInfo' => $this->getPayerInfo()->toArray(),
             'language' => str_replace("-", "_", $context->language->locale),
-            'country' => $countryCustomer->iso_code
+            'country' => $countryCustomer->iso_code,
+            'disallowRememberedCards' => (bool)Configuration::get('PAYPAL_VAULTING') == false,
+            'rememberedCards' => $this->servicePaypalVaulting->getRememberedCardsByIdCustomer($context->customer->id)
         );
 
         return $paymentInfo;
@@ -665,4 +682,15 @@ class MethodMB extends AbstractMethodPaypal
     {
         return $this->payerId;
     }
+
+    public function setRememberedCards($rememberedCards)
+    {
+        $this->rememeberedCards = $rememberedCards;
+    }
+
+    public function getRememberedCards()
+    {
+        return $this->rememeberedCards;
+    }
+
 }
