@@ -49,6 +49,14 @@ class ServicePaypalVaulting
             $paypalVaultingObject = new \PaypalVaulting();
             $paypalVaultingObject->id_customer = $idCustomer;
             $paypalVaultingObject->sandbox = (int)$mode;
+
+            if ((int)$mode) {
+                $profileKey = md5(\Configuration::get('PAYPAL_MB_SANDBOX_CLIENTID'));
+            } else {
+                $profileKey = md5(\Configuration::get('PAYPAL_MB_LIVE_CLIENTID'));
+            }
+
+            $paypalVaultingObject->profile_key = $profileKey;
         }
 
         $paypalVaultingObject->rememberedCards = $rememberedCards;
@@ -90,9 +98,17 @@ class ServicePaypalVaulting
             $mode = (int)\Configuration::get('PAYPAL_SANDBOX');
         }
 
+        if ((int)$mode) {
+            $profileKey = md5(\Configuration::get('PAYPAL_MB_SANDBOX_CLIENTID'));
+        } else {
+            $profileKey = md5(\Configuration::get('PAYPAL_MB_LIVE_CLIENTID'));
+        }
+
+
         $collection = new \PrestaShopCollection(\PaypalVaulting::class);
         $collection->where('id_customer', '=', (int)$idCustomer);
         $collection->where('sandbox', '=', (int)$mode);
+        $collection->where('profile_key', '=', $profileKey);
         return $collection->getFirst();
     }
 }
