@@ -166,23 +166,6 @@ class MethodMB extends AbstractMethodPaypal
      */
     public function createWebExperience()
     {
-        $brand_name = Configuration::get('PAYPAL_PPP_CONFIG_BRAND')?Configuration::get('PAYPAL_PPP_CONFIG_BRAND'):Configuration::get('PS_SHOP_NAME');
-        $brand_logo = file_exists(_PS_MODULE_DIR_.'paypal/views/img/ppp_logo'.Context::getContext()->shop->id.'.png')?Context::getContext()->link->getBaseLink(Context::getContext()->shop->id, true).'modules/paypal/views/img/ppp_logo'.Context::getContext()->shop->id.'.png':Context::getContext()->link->getBaseLink().'img/'.Configuration::get('PS_LOGO');
-        $flowConfig = new \PayPal\Api\FlowConfig();
-        // When set to "commit", the buyer is shown an amount, and the button text will read "Pay Now" on the checkout page.
-        $flowConfig->setUserAction("commit");
-        // Defines the HTTP method to use to redirect the user to a return URL. A valid value is `GET` or `POST`.
-        $flowConfig->setReturnUriHttpMethod("GET");
-        // Parameters for style and presentation.
-        $presentation = new \PayPal\Api\Presentation();
-        // A URL to logo image. Allowed vaues: .gif, .jpg, or .png.
-        $presentation->setLogoImage($brand_logo)
-            //	A label that overrides the business name in the PayPal account on the PayPal pages.
-            ->setBrandName($brand_name)
-            //  Locale of pages displayed by PayPal payment experience.
-            ->setLocaleCode(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')))
-            // A label to use as hypertext for the return to merchant link.
-            ->setReturnUrlLabel("Return");
         // Parameters for input fields customization.
         $inputFields = new \PayPal\Api\InputFields();
         // Enables the buyer to enter a note to the merchant on the PayPal page during checkout.
@@ -195,10 +178,6 @@ class MethodMB extends AbstractMethodPaypal
         $webProfile = new \PayPal\Api\WebProfile();
         // Name of the web experience profile. Required. Must be unique
         $webProfile->setName(Tools::substr(Configuration::get('PS_SHOP_NAME'), 0, 30) . uniqid())
-            // Parameters for flow configuration.
-            ->setFlowConfig($flowConfig)
-            // Parameters for style and presentation.
-            ->setPresentation($presentation)
             // Parameters for input field customization.
             ->setInputFields($inputFields)
             // Indicates whether the profile persists for three hours or permanently. Set to `false` to persist the profile permanently. Set to `true` to persist the profile for three hours.
