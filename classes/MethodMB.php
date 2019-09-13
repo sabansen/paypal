@@ -45,6 +45,7 @@ use PayPal\Api\RefundRequest;
 use PayPal\Api\Sale;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use PaypalAddons\services\ServicePaypalVaulting;
+use \PayPal\Api\ShippingAddress;
 
 /**
  * Class MethodPPP
@@ -625,6 +626,7 @@ class MethodMB extends AbstractMethodPaypal
         $payerInfo->setEmail($customer->email);
         $payerInfo->setFirstName($customer->firstname);
         $payerInfo->setLastName($customer->lastname);
+        $payerInfo->setShippingAddress($this->getPayerShippingAddress());
 
         if ($countryCustomer->iso_code == 'BR') {
             $payerInfo->setTaxId($addressCustomer->vat_number);
@@ -633,6 +635,24 @@ class MethodMB extends AbstractMethodPaypal
         }
 
         return $payerInfo;
+    }
+
+    protected function getPayerShippingAddress()
+    {
+        $addressCustomer = new Address(Context::getContext()->cart->id_address_delivery);
+        $payerShippingAddress = new ShippingAddress();
+        $payerShippingAddress->setCountryCode(Country::getIsoById($addressCustomer->id_country));
+        $payerShippingAddress->setCity($addressCustomer->city);
+        $payerShippingAddress->setLine1($addressCustomer->address1);
+        $payerShippingAddress->setPostalCode($addressCustomer->postcode);
+        $payerShippingAddress->setRecipientName(implode(" ", array($addressCustomer->firstname, $addressCustomer->lastname)));
+
+        if ((int)$addressCustomer->id_state) {
+            $state = new State($addressCustomer->id_state);
+            $payerShippingAddress->setState($state->iso_code);
+        }
+
+        return $payerShippingAddress;
     }
 
     public function getPaymentInfo()
