@@ -44,6 +44,7 @@ include_once 'classes/PaypalCapture.php';
 include_once 'classes/PaypalOrder.php';
 include_once 'classes/PaypalLog.php';
 include_once 'classes/PaypalVaulting.php';
+include_once 'classes/PaypalIpn.php';
 
 const BT_CARD_PAYMENT = 'card-braintree';
 const BT_PAYPAL_PAYMENT = 'paypal-braintree';
@@ -157,7 +158,8 @@ class PayPal extends \PaymentModule
     public $objectModels = array(
         'PaypalCapture',
         'PaypalOrder',
-        'PaypalVaulting'
+        'PaypalVaulting',
+        'PaypalIpn'
     );
 
     /**
@@ -1716,5 +1718,11 @@ class PayPal extends \PaymentModule
         }
 
         return $hooksUnregistered;
+    }
+
+    public function getIpnPaypalListener()
+    {
+        $listenerUrl = 'https://ipnpb.paypal.com/cgi-bin/webscr';
+        return $listenerUrl;
     }
 }

@@ -226,7 +226,8 @@ class MethodMB extends AbstractMethodPaypal
         $transaction->setAmount($this->_amount)
             ->setItemList($this->_itemList)
             ->setDescription("Payment description")
-            ->setInvoiceNumber(uniqid());
+            ->setInvoiceNumber(uniqid())
+            ->setNotifyUrl(Context::getContext()->link->getModuleLink($this->name, 'ipn'));
 
         // ### Redirect urls
         // Set the urls that the buyer must be redirected to after
