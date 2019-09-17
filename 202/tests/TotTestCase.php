@@ -22,9 +22,6 @@
  * @license   Commercial license
  */
 
-namespace PayPalTest;
-
-
 use PHPUnit\Framework\TestCase;
 
 require_once _PS_MODULE_DIR_.'paypal/vendor/autoload.php';
@@ -34,7 +31,7 @@ require_once _PS_MODULE_DIR_.'paypal/classes/PaypalLog.php';
 require_once _PS_MODULE_DIR_.'paypal/paypal.php';
 
 
-class TotTest extends TestCase
+class TotTestCase extends TestCase
 {
     protected function setUp()
     {

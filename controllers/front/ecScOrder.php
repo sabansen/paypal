@@ -148,9 +148,9 @@ class PaypalEcScOrderModuleFrontController extends PaypalAbstarctModuleFrontCont
         }
         if (!$address_exist) {
             $orderAddress = new Address();
-            $pos_separator = strpos($ship_addr->Name, ' ');
-            $orderAddress->firstname = Tools::substr($ship_addr->Name, 0, $pos_separator);
-            $orderAddress->lastname = Tools::substr($ship_addr->Name, $pos_separator+1);
+            $nameArray = explode(" ", $ship_addr->Name);
+            $orderAddress->firstname = $nameArray[0];
+            $orderAddress->lastname = $nameArray[1];
             $orderAddress->address1 = $ship_addr->Street1;
             if (isset($ship_addr->Street2)) {
                 $orderAddress->address2 = $ship_addr->Street2;
@@ -175,6 +175,7 @@ class PaypalEcScOrderModuleFrontController extends PaypalAbstarctModuleFrontCont
             if ($country->active == false) {
                 $validationMessage = $module->l('Country is not active', pathinfo(__FILE__)['filename']);
             }
+
             if (is_string($validationMessage)) {
                 $vars = array(
                     'newAddress' => 'delivery',
@@ -192,6 +193,7 @@ class PaypalEcScOrderModuleFrontController extends PaypalAbstarctModuleFrontCont
                 $_SESSION['notifications'] = Tools::jsonEncode(array('error' => $validationMessage));
                 $url = Context::getContext()->link->getPageLink('order', null, null, $vars);
                 $this->redirectUrl = $url;
+                return;
             }
             $orderAddress->save();
             $id_address = $orderAddress->id;
@@ -212,6 +214,7 @@ class PaypalEcScOrderModuleFrontController extends PaypalAbstarctModuleFrontCont
             $_SESSION['notifications'] = Tools::jsonEncode(array('error' => $this->l('Your address is incomplete, please update it.')));
             $url = Context::getContext()->link->getPageLink('order', null, null, $vars);
             $this->redirectUrl = $url;
+            return;
         }
 
         $products = $this->context->cart->getProducts();

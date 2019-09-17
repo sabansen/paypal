@@ -24,14 +24,14 @@
 
 namespace PayPalTest;
 
-use PayPalTest\TotTest;
 use \PayPal\PayPalAPI\GetExpressCheckoutDetailsResponseType;
 use PaypalAddons\classes\PaypalException;
 
+require_once dirname(__FILE__) . '/TotTestCase.php';
 require_once _PS_MODULE_DIR_.'paypal/vendor/autoload.php';
 require_once _PS_MODULE_DIR_.'paypal/classes/MethodEC.php';
 
-class MethodECTest extends TotTest
+class MethodECTest extends \TotTestCase
 {
     /* @var \MethodEC*/
     protected $method;

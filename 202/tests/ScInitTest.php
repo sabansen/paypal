@@ -24,14 +24,12 @@
 
 namespace PayPalTest;
 
-use PayPalTest\TotTest;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
-
+require_once dirname(__FILE__) . '/TotTestCase.php';
 require_once _PS_MODULE_DIR_.'paypal/vendor/autoload.php';
 require_once _PS_MODULE_DIR_.'paypal/controllers/front/ScInit.php';
 require_once _PS_MODULE_DIR_.'paypal/classes/MethodEC.php';
 
-class ScInitTest extends TotTest
+class ScInitTest extends \TotTestCase
 {
     protected function setUp()
     {
