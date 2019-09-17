@@ -452,7 +452,7 @@ class PayPal extends \PaymentModule
 
     public function hookDisplayShoppingCartFooter()
     {
-        if (Module::isEnabled('braintree') && (int)Configuration::get('BRAINTREE_ACTIVATE_PAYPAL')) {
+        if (Module::isEnabled('braintreeofficial') && (int)Configuration::get('BRAINTREEOFFICIAL_ACTIVATE_PAYPAL')) {
             return;
         }
         if ('cart' !== $this->context->controller->php_self ||
@@ -482,7 +482,7 @@ class PayPal extends \PaymentModule
      */
     public function hookPaymentOptions($params)
     {
-        if (Module::isEnabled('braintree') && (int)Configuration::get('BRAINTREE_ACTIVATE_PAYPAL')) {
+        if (Module::isEnabled('braintreeofficial') && (int)Configuration::get('BRAINTREEOFFICIAL_ACTIVATE_PAYPAL')) {
             return array();
         }
         $isoCountryDefault = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
@@ -685,7 +685,7 @@ class PayPal extends \PaymentModule
 
     public function hookDisplayReassurance()
     {
-        if (Module::isEnabled('braintree') && (int)Configuration::get('BRAINTREE_ACTIVATE_PAYPAL')) {
+        if (Module::isEnabled('braintreeofficial') && (int)Configuration::get('BRAINTREEOFFICIAL_ACTIVATE_PAYPAL')) {
             return;
         }
         if ('product' !== $this->context->controller->php_self || !Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT')) {
@@ -869,7 +869,7 @@ class PayPal extends \PaymentModule
         if (!Validate::isLoadedObject($paypal_order)) {
             return false;
         }
-        if ($paypal_order->method == 'BT' && (Module::isInstalled('braintree') == false)) {
+        if ($paypal_order->method == 'BT' && (Module::isInstalled('braintreeofficial') == false)) {
             $tmpMessage = "<p class='paypal-warning'>";
             $tmpMessage .= $this->l('This order has been paid via Braintree payment solution provided by PayPal module prior v5.0. ') . "</br>";
             $tmpMessage .= $this->l('Starting from v5.0.0 of PayPal module, Braintree payment solution won\'t be available via PayPal module anymore. You can continue using Braintree by installing the new Braintree module available via ') . "<a href='https://addons.prestashop.com/' target='_blank'>" . $this->l('addons.prestashop') . "</a>" . "</br>";
