@@ -1720,9 +1720,16 @@ class PayPal extends \PaymentModule
         return $hooksUnregistered;
     }
 
-    public function getIpnPaypalListener()
+    public function getIpnPaypalListener($sandbox = null)
     {
-        $listenerUrl = 'https://ipnpb.paypal.com/cgi-bin/webscr';
-        return $listenerUrl;
+        if ($sandbox === null) {
+            $sandbox = (int)Configuration::get('PAYPAL_SANDBOX');
+        }
+
+        if ((int)$sandbox) {
+            return 'https://ipnpb.sandbox.paypal.com/cgi-bin/webscr';
+        } else {
+            return 'https://ipnpb.paypal.com/cgi-bin/webscr';
+        }
     }
 }

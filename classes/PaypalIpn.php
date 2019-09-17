@@ -49,7 +49,7 @@ class PaypalIpn extends ObjectModel
         'primary' => 'id_paypal_ipn',
         'multilang' => false,
         'fields' => array(
-            'id_transaction' => array('type' => self::TYPE_STRING, 'validate' => 'isUnsignedId'),
+            'id_transaction' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
             'status' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
             'response' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 1000),
             'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),

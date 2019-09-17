@@ -26,13 +26,20 @@
 
 include_once _PS_MODULE_DIR_.'paypal/classes/AbstractMethodPaypal.php';
 include_once _PS_MODULE_DIR_.'paypal/controllers/front/abstract.php';
+include_once _PS_MODULE_DIR_.'paypal/classes/PaypalIpn.php';
+
+use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 
 
 class PaypalIpnModuleFrontController extends PaypalAbstarctModuleFrontController
 {
     public function run()
     {
-        $response = file_get_contents($this->module->getIpnPaypalListener() . '?cmd=_notify-validate&' . http_build_query($_POST));
+        $curl = curl_init($this->module->getIpnPaypalListener() . '?cmd=_notify-validate&' . http_build_query($_POST));
+        curl_setopt($curl, CURLOPT_HEADER, 0);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 90);
+        $response = curl_exec($curl);
 
         if (trim($response) == 'VERIFIED') {
             $this->handleIpn(Tools::getAllValues());
@@ -43,5 +50,29 @@ class PaypalIpnModuleFrontController extends PaypalAbstarctModuleFrontController
     protected function handleIpn($data)
     {
 
+        $paypalIpn = new PaypalIpn();
+        $paypalIpn->id_transaction = $data['txn_id'];
+        $paypalIpn->status = $data['payment_status'];
+        $paypalIpn->response = Tools::jsonEncode($data);
+        try {
+            $paypalIpn->save();
+        } catch (Exception $e) {
+            $message = 'Error code: ' . $e->getCode() . '.';
+            $message .= 'Short message: ' . $e->getMessage() . '.';
+
+            ProcessLoggerHandler::openLogger();
+            ProcessLoggerHandler::logError(
+                $message,
+                null,
+                null,
+                null,
+                null,
+                isset($data['txn_id']) ? $data['txn_id'] : null,
+                (int)\Configuration::get('PAYPAL_SANDBOX'),
+                null
+            );
+            ProcessLoggerHandler::closeLogger();
+            throw $e;
+        }
     }
 }
