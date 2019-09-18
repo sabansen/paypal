@@ -34,7 +34,8 @@ const PayPalMB = {
             "country": paymentInfo.country,
             "disallowRememberedCards": paymentInfo.disallowRememberedCards,
             "rememberedCards": paymentInfo.rememberedCards,
-            "onError": this.handleError
+            "onError": this.handleError,
+            "merchantInstallmentSelectionOptional": paymentInfo.merchantInstallmentSelectionOptional
         };
 
         this.paymentId = paymentInfo.paymentId;
