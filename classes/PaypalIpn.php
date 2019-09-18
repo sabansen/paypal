@@ -51,7 +51,7 @@ class PaypalIpn extends ObjectModel
         'fields' => array(
             'id_transaction' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
             'status' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
-            'response' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 1000),
+            'response' => array('type' => self::TYPE_HTML, 'validate' => 'isString'),
             'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
         )
     );

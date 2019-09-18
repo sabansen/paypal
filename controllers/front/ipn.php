@@ -24,39 +24,36 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-include_once _PS_MODULE_DIR_.'paypal/classes/AbstractMethodPaypal.php';
+include_once _PS_MODULE_DIR_.'paypal/classes/PaypalOrder.php';
 include_once _PS_MODULE_DIR_.'paypal/controllers/front/abstract.php';
 include_once _PS_MODULE_DIR_.'paypal/classes/PaypalIpn.php';
 
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
+use PaypalAddons\services\ServicePaypalIpn;
 
 
 class PaypalIpnModuleFrontController extends PaypalAbstarctModuleFrontController
 {
-    public function run()
-    {
-        $curl = curl_init($this->module->getIpnPaypalListener() . '?cmd=_notify-validate&' . http_build_query($_POST));
-        curl_setopt($curl, CURLOPT_HEADER, 0);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_TIMEOUT, 90);
-        $response = curl_exec($curl);
+    /** @var ServicePaypalIpn*/
+    protected $servicePaypalIpn;
 
-        if (trim($response) == 'VERIFIED') {
-            $this->handleIpn(Tools::getAllValues());
-            header("HTTP/1.1 200 OK");
-        }
+    public function __construct()
+    {
+        parent::__construct();
+        $this->servicePaypalIpn = new ServicePaypalIpn();
     }
 
-    protected function handleIpn($data)
+    public function run()
     {
-
-        $paypalIpn = new PaypalIpn();
-        $paypalIpn->id_transaction = $data['txn_id'];
-        $paypalIpn->status = $data['payment_status'];
-        $paypalIpn->response = Tools::jsonEncode($data);
         try {
-            $paypalIpn->save();
-        } catch (Exception $e) {
+            if ($this->requestIsValid()) {
+                if ($this->handleIpn(Tools::getAllValues())) {
+                    header("HTTP/1.1 200 OK");
+                } else {
+                    header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
+                }
+            }
+        } catch (\Exception $e) {
             $message = 'Error code: ' . $e->getCode() . '.';
             $message .= 'Short message: ' . $e->getMessage() . '.';
 
@@ -67,12 +64,105 @@ class PaypalIpnModuleFrontController extends PaypalAbstarctModuleFrontController
                 null,
                 null,
                 null,
-                isset($data['txn_id']) ? $data['txn_id'] : null,
+                \Tools::getValue('txn_id') ? \Tools::getValue('txn_id') : null,
                 (int)\Configuration::get('PAYPAL_SANDBOX'),
                 null
             );
             ProcessLoggerHandler::closeLogger();
-            throw $e;
+
+            header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
         }
+
     }
+
+    /**
+     * @param $data array Ipn message data
+     * @return bool
+     */
+    protected function handleIpn($data)
+    {
+        if ($this->alreadyHandled($data)) {
+            return true;
+        }
+
+        $paypalIpn = new PaypalIpn();
+        $paypalIpn->id_transaction = $data['txn_id'];
+        $paypalIpn->status = $data['payment_status'];
+        $paypalIpn->response = $this->jsonEncode($data);
+        $paypalIpn->save();
+
+        if ($data['payment_status'] == 'Completed') {
+            $this->setOrderStatus($data['txn_id'], (int)\Configuration::get('PS_OS_PAYMENT'));
+        }
+
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function requestIsValid()
+    {
+        $curl = curl_init($this->module->getIpnPaypalListener() . '?cmd=_notify-validate&' . http_build_query($_POST));
+        curl_setopt($curl, CURLOPT_HEADER, 0);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 90);
+        $response = curl_exec($curl);
+
+        return trim($response) == 'VERIFIED';
+    }
+
+    protected function alreadyHandled($data)
+    {
+        return $this->servicePaypalIpn->exists($data['txn_id'], $data['payment_status']);
+    }
+
+    /**
+     * @param $idTransaction string
+     * @param $idState int
+     * @return bool
+     */
+    protected function setOrderStatus($idTransaction, $idState)
+    {
+        $orders = $this->servicePaypalIpn->getOrdersPsByTransaction($idTransaction);
+
+        if (is_array($orders) == false || empty($orders)) {
+            return false;
+        }
+
+        /** @var $order \Order*/
+        foreach ($orders as $order) {
+            $order->setCurrentState((int)$idState);
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $value mixed
+     * @return string
+     */
+    public function jsonEncode($value)
+    {
+        $result = json_encode($value);
+
+        if (json_last_error() == JSON_ERROR_UTF8) {
+            $result = json_encode($this->utf8ize($value));
+        }
+
+        return $result;
+    }
+
+    public function utf8ize($mixed)
+    {
+        if (is_array($mixed)) {
+            foreach ($mixed as $key => $value) {
+                $mixed[$key] = $this->utf8ize($value);
+            }
+        } else if (is_string ($mixed)) {
+            return utf8_encode($mixed);
+        }
+        return $mixed;
+    }
+
 }

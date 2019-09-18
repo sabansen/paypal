@@ -344,7 +344,7 @@ class MethodMB extends AbstractMethodPaypal
         $currency = $context->currency;
         $total = (float)$exec_payment->transactions[0]->amount->total;
         $paypal = Module::getInstanceByName($this->name);
-        $order_state = Configuration::get('PS_OS_PAYMENT');
+        $order_state = Configuration::get('PAYPAL_OS_WAITING');
         $paypal->validateOrder($cart->id, $order_state, $total, $this->getPaymentMethod(), null, $this->getDetailsTransaction(), (int)$currency->id, false, $customer->secure_key);
     }
 
