@@ -40,7 +40,7 @@
 
             <strong>
                 {if isset($paypal_api_user_name) && is_string($paypal_api_user_name)}
-                    {$paypal_api_user_name|replace:'_api':'@'}
+                    {$paypal_api_user_name|regex_replace:'/_api[\d]*\./':'@'}
                 {/if}
             </strong>
         {else}
