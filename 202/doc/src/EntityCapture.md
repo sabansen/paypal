@@ -21,3 +21,46 @@ Only for payments in mode "Authorization"
 |date_upd|datetime|Date of the update||
 
 
+## Methods
+
+
+- **getByOrderId(id_order)**
+
+    - **Parametres**
+    
+        - id_order: `integer` ID of the prestashop order
+    
+    - **Return Values**
+    
+      `array` return array of the PaypalCapture entity
+      
+- **loadByOrderPayPalId(orderPayPalId)**
+
+    - **Parametres**
+    
+        - orderPayPalId: `integer` ID of the PayPal order
+    
+    - **Return Values**
+    
+      `object` return the PaypalCapture object by ID of the PayPal order
+      
+- **updateCapture(transaction_id, amount, status, id_paypal_order)**
+
+    - **Parametres**
+    
+        - transaction_id: `string` Transaction ID
+        
+        - amount: `float` the amount of the transaction
+        
+        - id_paypal_order: `integer` ID of the PayPal order
+    
+    - **Return Values**
+      
+      `void` update the information of the capture
+    
+    
+    
+    
+    
+    
+      

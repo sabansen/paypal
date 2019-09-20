@@ -93,18 +93,18 @@
     var bt_amount = {$braintreeAmount|escape:'htmlall':'UTF-8'};
     var check3DS = {$check3Dsecure|escape:'htmlall':'UTF-8'};
     var bt_translations = {
-        client:"{l s='Error create Client' mod='paypal'}",
+        client:"{l s='Error creating Client Token' mod='paypal'}",
         card_nmb:"{l s='Card number' mod='paypal'}",
         cvc:"{l s='CVC' mod='paypal'}",
         date:"{l s='MM/YY' mod='paypal'}",
-        hosted:"{l s='Error create Hosted fields' mod='paypal'}",
+        hosted:"{l s='Error creating Hosted Fields' mod='paypal'}",
         empty:"{l s='All fields are empty! Please fill out the form.' mod='paypal'}",
         invalid:"{l s='Some fields are invalid :' mod='paypal'}",
         token:"{l s='Tokenization failed server side. Is the card valid?' mod='paypal'}",
         network:"{l s='Network error occurred when tokenizing.' mod='paypal'}",
         tkn_failed:"{l s='Tokenize failed' mod='paypal'}",
         https:"{l s='3D Secure requires HTTPS.' mod='paypal'}",
-        load_3d:"{l s='Load 3D Secure Failed' mod='paypal'}",
+        load_3d:"{l s='Loading 3D Secure failed' mod='paypal'}",
         request_problem:"{l s='There was a problem with your request.' mod='paypal'}",
         failed_3d:"{l s='3D Secure Failed' mod='paypal'}",
         empty_field:"{l s='is empty.' mod='paypal'}",

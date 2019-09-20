@@ -23,6 +23,5 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-
 <p>{l s='You will be redirected to the PayPal website to process your card payment.' mod='paypal'}</p>
 <p>{l s='PayPal secures your payment and protect your financial information with strong encryption tools.' mod='paypal'}</p>

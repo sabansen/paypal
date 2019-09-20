@@ -27,18 +27,18 @@
     {$error_msg|escape:'htmlall':'UTF-8'}
 </div>
 {/if}
-<li id="paypal_transaction_id">
+<li data-paypal-transaction-id>
     {if $method == 'BT'}
-        {l s='Braintree transaction id :' mod='paypal'}
+        {l s='Braintree transaction id:' mod='paypal'}
     {else}
-        {l s='Paypal transaction id :' mod='paypal'}
+        {l s='PayPal transaction id:' mod='paypal'}
     {/if}
     {$transaction_id|escape:'htmlall':'UTF-8'}
 </li>
 {if isset($ppp_information)}
     <dl>
         <dd>
-            {l s='The bank name' mod='paypal'} : {$ppp_information->recipient_banking_instruction->bank_name|escape:'htmlall':'UTF-8'}
+            {l s='Bank name' mod='paypal'} : {$ppp_information->recipient_banking_instruction->bank_name|escape:'htmlall':'UTF-8'}
         </dd>
         <dd>
             {l s='Account holder name' mod='paypal'} : {$ppp_information->recipient_banking_instruction->account_holder_name|escape:'htmlall':'UTF-8'}

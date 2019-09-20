@@ -27,7 +27,9 @@
 namespace PaypalAddons\services;
 
 use PaypalPPBTlib\Extensions\ProcessLogger\Classes\ProcessLoggerObjectModel;
-use Symfony\Component\VarDumper\VarDumper;
+
+require_once dirname(__FILE__) . '/../classes/PaypalOrder.php';
+require_once dirname(__FILE__) . '/../classes/AbstractMethodPaypal.php';
 
 class ServicePaypalLog
 {
@@ -42,7 +44,7 @@ class ServicePaypalLog
         }
         /** @var $paypalOrder \PaypalOrder object*/
         $paypalOrder = \PaypalOrder::loadByOrderId($log->id_order);
-        if (\Validate::isLoadedObject($paypalOrder) == false) {
+        if (\Validate::isLoadedObject($paypalOrder) == false || $paypalOrder->method == 'BT') {
             return '';
         }
         $method = \AbstractMethodPaypal::load($paypalOrder->method);

@@ -131,34 +131,21 @@ class AdminProcessLoggerController extends \ModuleAdminController
             'processLogger' => array(
                 'image'       => '../img/admin/cog.gif',
                 'title'       => $this->module->l('Process Logger Settings', 'AdminProcessLoggerController'),
-                'description' => $this->module->l(
-                    'Here you can change the default configuration for this Process Logger',
-                    'AdminProcessLoggerController'
+                'description' => $this->module->l('Here you can change the default configuration for this Process Logger', 'AdminProcessLoggerController'),
+                'info' => $this->module->displayWarning(
+                    $this->module->l('Logs with order ID will not be erased.', 'AdminProcessLoggerController')
                 ),
-                'info' => \Context::getContext()->smarty->fetch(_PS_MODULE_DIR_ . 'paypal/views/templates/admin/_partials/helperOptionInfo.tpl'),
                 'fields'      => array(
                     'PAYPAL_EXTLOGS_ERASING_DISABLED' => array(
-                        'title'        => $this->module->l(
-                            'Disable auto erasing',
-                            'AdminProcessLoggerController'
-                        ),
-                        'hint'         => $this->module->l(
-                            'If disabled, logs will be automatically erased after the delay',
-                            'AdminProcessLoggerController'
-                        ),
+                        'title'        => $this->module->l('Disable auto erasing', 'AdminProcessLoggerController'),
+                        'hint'         => $this->module->l('If disabled, logs will be automatically erased after the delay', 'AdminProcessLoggerController'),
                         'validation'   => 'isBool',
                         'cast'         => 'intval',
                         'type'         => 'bool',
                     ),
                     'PAYPAL_EXTLOGS_ERASING_DAYSMAX' => array(
-                        'title'        => $this->module->l(
-                            'Auto erasing delay (in days)',
-                            'AdminProcessLoggerController'
-                        ),
-                        'hint'         => $this->module->l(
-                            'Choose the number of days you want to keep logs in database',
-                            'AdminProcessLoggerController'
-                        ),
+                        'title'        => $this->module->l('Auto erasing delay (in days)', 'AdminProcessLoggerController'),
+                        'hint'         => $this->module->l('Choose the number of days you want to keep logs in database', 'AdminProcessLoggerController'),
                         'validation'   => 'isInt',
                         'cast'         => 'intval',
                         'type'         => 'text',
@@ -302,7 +289,7 @@ class AdminProcessLoggerController extends \ModuleAdminController
         $result = Db::getInstance()->delete($this->table);
 
         if ($result) {
-            $this->confirmations[] = $this->module->l('All logs has been erased', 'AdminProcessLoggerController');
+            $this->confirmations[] = $this->module->l('All logs have been erased', 'AdminProcessLoggerController');
         }
 
         return $result;
@@ -346,7 +333,7 @@ class AdminProcessLoggerController extends \ModuleAdminController
                     $shop['id_shop']
                 );
                 $this->confirmations[] = $this->module->l(
-                    'Log parameters are successfully updated!',
+                    'Successful update.',
                     'AdminProcessLoggerController'
                 );
             }

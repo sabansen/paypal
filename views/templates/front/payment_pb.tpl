@@ -34,7 +34,7 @@
                     <input type="hidden" name="payment_method_nonce" id="paypal_payment_method_nonce"/>
                     <input type="hidden" name="payment_method_bt" value="{$bt_method|escape:'htmlall':'UTF-8'}"/>
                     <div id="paypal-button"></div>
-                    <div id="paypal-vault-info"><p>{l s='You have to finish your payment done with your account PayPal:' mod='paypal'}</p></div>
+                    <div id="paypal-vault-info"><p>{l s='You have to finish your payment done with your PayPal account:' mod='paypal'}</p></div>
                     {if isset($active_vaulting) && $active_vaulting}
                         <div class="save-in-vault">
                             <input type="checkbox" name="save_account_in_vault" id="save_account_in_vault"/> <label for="save_account_in_vault"> {l s='Memorize my PayPal account' mod='paypal'}</label>

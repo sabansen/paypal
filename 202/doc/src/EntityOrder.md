@@ -28,6 +28,46 @@ Entity for orders payment related information.
 |date_add|datetime|Date of the creation||
 |date_upd|datetime|Date of the update||
 
+## Methods
+
+
+- **getIdOrderByTransactionId(id_transaction)**
+
+    - **Parametres**
+    
+        - id_transaction: `string` Transaction ID
+    
+    - **Return Values**
+    
+      `integer` ID of the prestashop order
+
+
+- **getOrderById(id_order)**
+
+    - **Parametres**
+
+        - id_order: `integer` ID of the prestashop order
+    
+    - **Return Values**
+    
+      `array` PayPal order entity
+      
+- **getPaypalBtOrdersIds()**
+    
+    - **Return Values**
+    
+      return array of the PaypalOrder objects that were created by the braintree method
+
+- **loadByOrderId(id_order)**
+
+    - **Parametres**
+
+        - id_order: `integer` ID of the prestashop order
+    
+    - **Return Values**
+    
+      `object` return PaypalOrder object by id of the prestashop order
+
 
 
 

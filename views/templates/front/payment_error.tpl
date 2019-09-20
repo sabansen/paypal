@@ -48,17 +48,13 @@
             <section id="main">
                 <section id="content" class="page-content card card-block">
                     {include file='_partials/breadcrumb.tpl'}
-                    {if $method == 'BT'}
-                        <h2>{l s='Error in Braintree' mod='paypal'}</h2>
-                    {else}
-                        <h2>{l s='Error in Paypal' mod='paypal'}</h2>
-                    {/if}
+                    <h2>{l s='Error in Paypal' mod='paypal'}</h2>
 
                     <div class="table-responsive-row clearfix">
                         <p class="paypal_error_msg">
                             {if $error_msg == '' && $msg_long == ''}
                                 {if $error_code}<span class="code">[{$error_code|escape:'htmlall':'UTF-8'}]</span>{/if}
-                                {l s='Unexpected error occurred.' mod='paypal'}
+                                {l s='Unexpected error occurred. Please contact shop administrator.' mod='paypal'}
                             {else}
                                 {if $error_code}<span class="code">[{$error_code|escape:'htmlall':'UTF-8'}]</span>{/if}
                                 {if $error_msg}<span class="short">{$error_msg|escape:'htmlall':'UTF-8'}</span>{/if}
