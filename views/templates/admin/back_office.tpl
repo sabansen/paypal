@@ -178,7 +178,13 @@
                         </label>
                         <span id="braintree_message" style="{$Braintree_Style|escape:'htmlall':'UTF-8'}">{$Braintree_Message|escape:'htmlall':'UTF-8'}</span>
                         <div id="paypal_braintree">
-							{include './button_braintree.tpl'}
+							<div>
+                                {include './sectionBraintreeCredentials.tpl'}
+							</div>
+
+							<div>
+                                {include './button_braintree.tpl'}
+							</div>
 						</div>
                     {/if}
                 {/if}

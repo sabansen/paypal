@@ -339,3 +339,16 @@ $_MODULE['<{paypal}prestashop>paypal_cart_summary_694e8d1f2ee056f98ee488bdc4982d
 $_MODULE['<{paypal}prestashop>paypal_cart_summary_e2867a925cba382f1436d1834bb52a1c'] = 'The total amount of your order is';
 $_MODULE['<{paypal}prestashop>paypal_cart_summary_1f87346a16cf80c372065de3c54c86d9'] = '(tax incl.)';
 $_MODULE['<{paypal}prestashop>paypal_cart_summary_8ed356c32b198c9cb2abab7c3d262b93'] = 'We accept the following currency to be sent by PayPal:';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_87194d3fb348a93b585147b627828132'] = 'Para averiguar tus claves de API, sigue estos pasos:';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_78b889a8fa7b7ddfb942afdd4a16c78b'] = 'Inicia sesión en tu [a @href1@]cuenta[/a]';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_9ff77bd3d61cd4ed209293283ef922df'] = 'Haz clic en Parámetros (el logotipo de rueda dentada)';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_8258080b2001c14b75014329dbb07ed4'] = 'Haz clic en API';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_ce98ec2f851e8f9d5ee87f124326a3a3'] = 'Haz clic en \"Generar nueva clave de API\"';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_b322bce65e09c6719fbe8c0f0b2a30c2'] = 'Haz clic en \"Ver\" en la columna \"Clave privada\"';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_b019ab576a27965f2ecf7ed2129ea0a6'] = 'Copie su \"Key privada\", \"Key pública\" y \"ID del comerciante\" y péguelas a continuación:';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_d69368e9f10df3cdfab518814ee99ccd'] = 'Para obtener las claves de API del entorno de pruebas, repite los pasos en una [a @href1@]cuenta de entorno de pruebas[/a] existente o crea [a @href2@]una nueva[/a]';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_955ad3298db330b5ee880c2c9e6f23a0'] = 'En producción';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_ed6445336472aef39084720adcf903b9'] = 'Clave pública';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_6eb9040e470e8018db394832a528f56a'] = 'Clave privada';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_229a7ec501323b94db7ff3157a7623c9'] = 'Id. de vendedor';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_2652eec977dcb2a5aea85f5bec235b05'] = 'Entorno de pruebas';

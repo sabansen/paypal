@@ -38,6 +38,7 @@ include_once _PS_MODULE_DIR_.'paypal/paypal_login/PayPalLoginUser.php';
 include_once _PS_MODULE_DIR_.'paypal/classes/PaypalCapture.php';
 include_once _PS_MODULE_DIR_.'paypal/classes/AuthenticatePaymentMethods.php';
 include_once _PS_MODULE_DIR_.'paypal/classes/PaypalPlusPui.php';
+include_once _PS_MODULE_DIR_.'paypal/classes/Braintree.php';
 
 define('WPS', 1); //Paypal Integral
 define('HSS', 2); //Paypal Integral Evolution
@@ -654,7 +655,8 @@ class PayPal extends PaymentModule
 
         // Check if all Braintree credentials are present
         $braintree_configured = false;
-        if (Configuration::get('PAYPAL_BRAINTREE_ACCESS_TOKEN') && Configuration::get('PAYPAL_BRAINTREE_EXPIRES_AT') && Configuration::get('PAYPAL_BRAINTREE_REFRESH_TOKEN')) {
+        $prestaBraintree = new PrestaBraintree();
+        if ($prestaBraintree->isConfigured()) {
             $braintree_configured = true;
         }
 
@@ -731,6 +733,12 @@ class PayPal extends PaymentModule
             'Braintree_Expires_At' => strtotime(Configuration::get('PAYPAL_BRAINTREE_EXPIRES_AT')),
             'ps_ssl_active' => Configuration::get('PS_SSL_ENABLED'),
             'tls_link_ajax' => $this->context->link->getModuleLink($this->name, 'tlscurltest', array('ajax'=>1)),
+            'paypal_braintree_pub_key_live' => Configuration::get('PAYPAL_BRAINTREE_PUB_KEY_LIVE'),
+            'paypal_braintree_priv_key_live' => Configuration::get('PAYPAL_BRAINTREE_PRIV_KEY_LIVE'),
+            'paypal_braintree_merchant_id_live' => Configuration::get('PAYPAL_BRAINTREE_MERCHANT_ID_LIVE'),
+            'paypal_braintree_pub_key_sandbox' => Configuration::get('PAYPAL_BRAINTREE_PUB_KEY_SANDBOX'),
+            'paypal_braintree_priv_key_sandbox' => Configuration::get('PAYPAL_BRAINTREE_PRIV_KEY_SANDBOX'),
+            'paypal_braintree_merchant_id_sandbox' => Configuration::get('PAYPAL_BRAINTREE_MERCHANT_ID_SANDBOX'),
         ));
 
         $hss_errors = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'paypal_hss_email_error`');
@@ -740,6 +748,9 @@ class PayPal extends PaymentModule
 
         $this->getTranslations();
 
+        $output .= $this->displayWarning(
+            $this->l('Note: the new version of the module (v3.14.0) requires to add your credentials details.')
+        );
         $output .= $this->fetchTemplate('/views/templates/admin/back_office.tpl');
 
         if ($this->active == false) {
@@ -1018,8 +1029,6 @@ class PayPal extends PaymentModule
 
         if (($method == PVZ || Configuration::get('PAYPAL_BRAINTREE_ENABLED')) && version_compare(PHP_VERSION, '5.4.0', '>') && $this->context->currency->iso_code == 'EUR') {
             $id_account_braintree = $this->set_good_context();
-
-            include_once _PS_MODULE_DIR_.'paypal/classes/Braintree.php';
 
             $braintree = new PrestaBraintree();
 
@@ -1867,6 +1876,14 @@ class PayPal extends PaymentModule
 
                 $account_brain = Tools::getValue('account_braintree');
                 Configuration::updateValue('PAYPAL_ACCOUNT_BRAINTREE', Tools::jsonEncode($account_brain));
+                // Start save Braintree credentials
+                Configuration::updateValue('PAYPAL_BRAINTREE_PUB_KEY_LIVE', Tools::getValue('paypal_braintree_pub_key_live'));
+                Configuration::updateValue('PAYPAL_BRAINTREE_PRIV_KEY_LIVE', Tools::getValue('paypal_braintree_priv_key_live'));
+                Configuration::updateValue('PAYPAL_BRAINTREE_MERCHANT_ID_LIVE', Tools::getValue('paypal_braintree_merchant_id_live'));
+                Configuration::updateValue('PAYPAL_BRAINTREE_PUB_KEY_SANDBOX', Tools::getValue('paypal_braintree_pub_key_sandbox'));
+                Configuration::updateValue('PAYPAL_BRAINTREE_PRIV_KEY_SANDBOX', Tools::getValue('paypal_braintree_priv_key_sandbox'));
+                Configuration::updateValue('PAYPAL_BRAINTREE_MERCHANT_ID_SANDBOX', Tools::getValue('paypal_braintree_merchant_id_sandbox'));
+                // End save Braintree credentials
 
                 $this->context->smarty->assign('PayPal_save_success', true);
 
@@ -1881,13 +1898,6 @@ class PayPal extends PaymentModule
                 $this->_html = $this->displayError(implode('<br />', $this->_errors)); // Not displayed at this time
                 $this->context->smarty->assign('PayPal_save_failure', true);
             }
-        } else if (Tools::getValue('accessToken')) {
-            Configuration::updateValue('PAYPAL_BRAINTREE_ENABLED', 1);
-
-            Configuration::updateValue('PAYPAL_BRAINTREE_ACCESS_TOKEN', Tools::getValue('accessToken'));
-            Configuration::updateValue('PAYPAL_BRAINTREE_EXPIRES_AT', Tools::getValue('expiresAt'));
-            Configuration::updateValue('PAYPAL_BRAINTREE_REFRESH_TOKEN', Tools::getValue('refreshToken'));
-            Configuration::updateValue('PAYPAL_BRAINTREE_MERCHANT_ID', Tools::getValue('merchantId'));
         }
 
         return $this->loadLangDefault();

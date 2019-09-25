@@ -339,3 +339,16 @@ $_MODULE['<{paypal}prestashop>paypal_cart_summary_694e8d1f2ee056f98ee488bdc4982d
 $_MODULE['<{paypal}prestashop>paypal_cart_summary_e2867a925cba382f1436d1834bb52a1c'] = 'The total amount of your order is';
 $_MODULE['<{paypal}prestashop>paypal_cart_summary_1f87346a16cf80c372065de3c54c86d9'] = '(tax incl.)';
 $_MODULE['<{paypal}prestashop>paypal_cart_summary_8ed356c32b198c9cb2abab7c3d262b93'] = 'We accept the following currency to be sent by PayPal:';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_87194d3fb348a93b585147b627828132'] = 'Per trovare le tue chiavi API, segui questi passaggi:';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_78b889a8fa7b7ddfb942afdd4a16c78b'] = 'Accedi al tuo [a @href1@]conto[/a]';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_9ff77bd3d61cd4ed209293283ef922df'] = 'Clicca \"Parameters\" (Parametri, l\'icona a ingranaggio)';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_8258080b2001c14b75014329dbb07ed4'] = 'Clicca \"API\"';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_ce98ec2f851e8f9d5ee87f124326a3a3'] = 'Clicca \"Generate New API Key\" (Genera nuova chiave API)';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_b322bce65e09c6719fbe8c0f0b2a30c2'] = 'Clicca \"View\" (Vedi) nella colonna \"Private Key\" (Chiave privata)';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_b019ab576a27965f2ecf7ed2129ea0a6'] = 'Copiare la \"chiave privata\", la \"chiave pubblica\" e il suo \"ID commerciante\" e incollarli di seguito:';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_d69368e9f10df3cdfab518814ee99ccd'] = 'Per recuperare le API sandbox, ripeti le operazioni collegandoti al [a @href1@]conto sandbox[/a] o creandone [a @href2@]uno nuovo[/a]';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_955ad3298db330b5ee880c2c9e6f23a0'] = 'Live';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_ed6445336472aef39084720adcf903b9'] = 'Chiave pubblica';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_6eb9040e470e8018db394832a528f56a'] = 'Chiave privata';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_229a7ec501323b94db7ff3157a7623c9'] = 'Codice commerciante';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_2652eec977dcb2a5aea85f5bec235b05'] = 'Sandbox';
