@@ -1318,9 +1318,11 @@ class PayPal extends \PaymentModule
         $urlParams = array(
             'active_method' => Tools::getValue('method'),
             'paypal_set_config' => 1,
-            'with_card' => 0
+            'with_card' => 0,
+            'id_shop' => $this->context->shop->id
         );
         $return_url = $this->context->link->getAdminLink('AdminPayPalSetup', true, null, $urlParams);
+        
         if ($this->context->country->iso_code == "CN") {
             $country = "C2";
         } else {

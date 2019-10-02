@@ -129,7 +129,8 @@ class MethodEC extends AbstractMethodPaypal
     {
         $mode = Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
         $paypal = Module::getInstanceByName($this->name);
-        if (isset($params['api_username']) && isset($params['api_password']) && isset($params['api_signature'])) {
+
+        if (isset($params['api_username']) && isset($params['api_password']) && isset($params['api_signature']) && $params['id_shop'] == Context::getContext()->shop->id) {
             Configuration::updateValue('PAYPAL_EXPRESS_CHECKOUT', 1);
             Configuration::updateValue('PAYPAL_USERNAME_'.$mode, $params['api_username']);
             Configuration::updateValue('PAYPAL_PSWD_'.$mode, $params['api_password']);
