@@ -15,7 +15,7 @@
 let ppp = {},
     exec_ppp_payment = true;
 $(document).ready( () => {
-  if ($('section#checkout-payment-step').hasClass('js-current-step')) {
+  if ($('#checkout-payment-step').hasClass('js-current-step')) {
     let showPui = false;
     if (modePPP == 'sandbox') {
       showPui = true;
