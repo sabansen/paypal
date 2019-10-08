@@ -30,6 +30,7 @@ class AdminPayPalLogsController extends AdminPayPalProcessLoggerController
     public function initContent()
     {
         $this->context->smarty->assign('showWarningForUserBraintree', $this->module->showWarningForUserBraintree());
+        $this->context->smarty->assign('moduleDir', _MODULE_DIR_);
         $this->content = $this->context->smarty->fetch($this->getTemplatePath() . '_partials/headerLogo.tpl');
         $this->content .= parent::initContent();
     }
