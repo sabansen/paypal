@@ -40,7 +40,7 @@ class AdminPayPalHelpController extends AdminPayPalController
         $this->context->smarty->assign($tpl_vars);
         $this->content = $this->context->smarty->fetch($this->getTemplatePath() . 'help.tpl');
         $this->context->smarty->assign('content', $this->content);
-        $this->addJS('modules/' . $this->module->name . '/views/js/helpAdmin.js');
+        $this->addJS(_PS_MODULE_DIR_ . $this->module->name . '/views/js/helpAdmin.js');
     }
 
     public function displayAjaxCheckCredentials()
