@@ -25,7 +25,7 @@
 
 <div class="panel active-panel pp__flex pp__align-items-center">
 	<div class="pp__pr-4">
-		<img style="width: 135px" src="/modules/paypal/views/img/paypal.png">
+		<img style="width: 135px" src="{$moduleDir|addslashes}paypal/views/img/paypal.png">
 	</div>
 	<div class="pp__pl-5">
 		<p>

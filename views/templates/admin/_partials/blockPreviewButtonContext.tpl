@@ -42,7 +42,7 @@
 				</span>
 			</label>
 		</div>
-		<img src="/modules/paypal/views/img/cart_page_button.png" class="img-responsive" alt="cart_page">
+		<img src="{$moduleDir|addslashes}paypal/views/img/cart_page_button.png" class="img-responsive" alt="cart_page">
 	</div>
 
 	<div class="pp__py-2 pp__px-1">
@@ -69,7 +69,7 @@
 				</span>
 			</label>
 		</div>
-		<img src="/modules/paypal/views/img/product_page_button.png" alt="product_page_button">
+		<img src="{$moduleDir|addslashes}paypal/views/img/product_page_button.png" alt="product_page_button">
 	</div>
 </div>
 
