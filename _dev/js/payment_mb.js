@@ -42,6 +42,7 @@ const PayPalMB = {
     },
 
     initCheckout() {
+        this.setLoader("#ppplus-mb");
         this.getPaymentInfo().then(
             paymentInformation => {
                 this.setConfig(paymentInformation, "ppplus-mb");
@@ -50,6 +51,11 @@ const PayPalMB = {
         ).catch(error => {
             console.log(error);
         });
+    },
+
+    setLoader(selector) {
+        let loader = '<div class="pp__flex pp__justify-content-center"><div class="paypal-loader"></div></div>';
+        $(selector).html(loader);
     },
 
     doPayment() {
@@ -67,6 +73,9 @@ const PayPalMB = {
                 data: {
                     ajax: true,
                     action: 'getPaymentInfo',
+                },
+                before () {
+
                 },
                 success (response) {
                     if (("success" in response) && (response["success"] == true)) {

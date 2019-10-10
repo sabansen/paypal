@@ -611,6 +611,7 @@ class PayPal extends \PaymentModule
 
     public function hookHeader()
     {
+        $this->context->controller->registerStylesheet($this->name . '-fo', 'modules/' . $this->name . '/views/css/paypal_fo.css');
         if (Tools::getValue('controller') == "order") {
             $active = false;
             $modules = Hook::getHookModuleExecList('paymentOptions');

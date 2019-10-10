@@ -25,6 +25,7 @@ const config = {
     'js/payment_mb': './_dev/js/payment_mb.js',
 
     'css/paypal_bo': './_dev/scss/paypal_bo.scss',
+    'css/paypal_fo': './_dev/scss/paypal_fo.scss',
   },
 
   output: {
