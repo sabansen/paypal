@@ -53,12 +53,8 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             return;
         }
 
-        if ($this->method == 'MB') {
-            $currencyDefault = new Currency((int)Configuration::get('PS_CURRENCY_DEFAULT'));
-
-            if (in_array($currencyDefault->iso_code, array('USD', 'MXN', 'EUR')) == false) {
-                $this->warnings[] = $this->l('The currencies supported are: MXN, USD, and EUR. For changing your Currency restrictions please go to the "Payment -> Preferences" page." please add link to the "Payment -> Preferences');
-            }
+        if ($this->method == 'MB' && $this->showCurrencyRestrictionWarning()) {
+            $this->warnings[] = $this->l('The currencies supported are: MXN, USD, and EUR. For changing your Currency restrictions please go to the "Payment -> Preferences" page." please add link to the "Payment -> Preferences');
         }
 
         if (Tools::getValue('deleteLogo')) {
@@ -273,5 +269,21 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
         }
 
         return $result;
+    }
+
+    public function showCurrencyRestrictionWarning()
+    {
+        $currencyMode = Currency::getPaymentCurrenciesSpecial($this->module->id);
+        if (isset($currencyMode['id_currency']) == false || $currencyMode['id_currency'] == -1) {
+            return false;
+        }
+
+        if ($currencyMode['id_currency'] == -2) {
+            $currency = new Currency((int)Configuration::get('PS_CURRENCY_DEFAULT'));
+        } else {
+            $currency = new Currency((int)$currencyMode['id_currency']);
+        }
+
+        return in_array($currency->iso_code, array('USD', 'MXN', 'EUR')) == false;
     }
 }
