@@ -55,7 +55,5 @@ class PaypalIpn extends ObjectModel
             'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
         )
     );
-
-
 }
 

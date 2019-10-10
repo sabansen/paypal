@@ -125,6 +125,7 @@ $_MODULE['<{paypal}prestashop>block_info_27a3066cd34cd1e683f1c2d04483163a'] = 'M
 $_MODULE['<{paypal}prestashop>accountsettingsblock_075ee17d7f295d8a872482181a3a285d'] = 'PayPal-rekening';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_84931c71e4f4b4f78a594109145263a4'] = 'Om de module te activeren dient u uw bestaande PayPal-rekening te koppelen of een nieuwe te openen.';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_7f14d6041f61f946ecda3a1748b8a6f0'] = 'Gekoppelde rekening';
+$_MODULE['<{paypal}prestashop>accountsettingsblock_e39f889bebfc87e80eecdbb6c104bceb'] = 'Uw rekening is nu gekoppeld.';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_f0a6d7b55e7a6d7880408de73f5f0cfb'] = 'Uw rekening is nu gekoppeld. Maak een \'REST API-app\'';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_0323de4f66a1700e2173e9bcdce02715'] = 'Uitloggen';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_1a62e25acfc39191546704505349bb49'] = 'Een PayPal-rekening koppelen of openen';

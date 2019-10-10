@@ -125,6 +125,7 @@ $_MODULE['<{paypal}prestashop>block_info_27a3066cd34cd1e683f1c2d04483163a'] = 'R
 $_MODULE['<{paypal}prestashop>accountsettingsblock_075ee17d7f295d8a872482181a3a285d'] = 'PayPal-Konto';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_84931c71e4f4b4f78a594109145263a4'] = 'Wenn Sie das Modul aktivieren wollen, müssen Sie Ihr vorhandenes PayPal-Konto verknüpfen oder ein neues erstellen.';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_7f14d6041f61f946ecda3a1748b8a6f0'] = 'Verknüpftes Konto';
+$_MODULE['<{paypal}prestashop>accountsettingsblock_e39f889bebfc87e80eecdbb6c104bceb'] = 'Ihr PayPal-Konto ist jetzt verknüpft.';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_f0a6d7b55e7a6d7880408de73f5f0cfb'] = 'Ihr PayPal-Konto ist jetzt verknüpft. Erstellen Sie eine REST-API-App';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_0323de4f66a1700e2173e9bcdce02715'] = 'Ausloggen';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_1a62e25acfc39191546704505349bb49'] = 'PayPal-Konto verknüpfen oder erstellen';

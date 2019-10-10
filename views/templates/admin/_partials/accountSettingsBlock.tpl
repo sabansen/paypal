@@ -43,6 +43,10 @@
                     {$paypal_api_user_name|regex_replace:'/_api[\d]*\./':'@'}
                 {/if}
             </strong>
+        {elseif isset($method) && $method == 'MB'}
+            <span class="pp__mr-4">
+				{l s='Your account is now connected!' mod='paypal'}
+            </span>
         {else}
             <span class="pp__mr-4">
 				{l s='Your account is now connected!Create a « REST API apps »Create a « REST API apps »' mod='paypal'}

@@ -125,6 +125,7 @@ $_MODULE['<{paypal}prestashop>block_info_27a3066cd34cd1e683f1c2d04483163a'] = 'T
 $_MODULE['<{paypal}prestashop>accountsettingsblock_075ee17d7f295d8a872482181a3a285d'] = 'Konto PayPal';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_84931c71e4f4b4f78a594109145263a4'] = 'Aby uaktywni_ modu_, powi__ istniej_ce konto PayPal lub utwórz nowe.';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_7f14d6041f61f946ecda3a1748b8a6f0'] = 'Powi_zane konto';
+$_MODULE['<{paypal}prestashop>accountsettingsblock_e39f889bebfc87e80eecdbb6c104bceb'] = 'Twoje konto jest teraz powi_zane!';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_f0a6d7b55e7a6d7880408de73f5f0cfb'] = 'Twoje konto jest teraz powi_zane! Utwórz aplikacj_ interfejsu API REST.';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_0323de4f66a1700e2173e9bcdce02715'] = 'Wyloguj si_';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_1a62e25acfc39191546704505349bb49'] = 'Powi__ lub utwórz konto PayPal';

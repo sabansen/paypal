@@ -125,6 +125,7 @@ $_MODULE['<{paypal}prestashop>block_info_27a3066cd34cd1e683f1c2d04483163a'] = 'A
 $_MODULE['<{paypal}prestashop>accountsettingsblock_075ee17d7f295d8a872482181a3a285d'] = 'Conto PayPal';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_84931c71e4f4b4f78a594109145263a4'] = 'Per attivare il modulo, devi collegare il tuo conto PayPal esistente oppure crearne uno nuovo.';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_7f14d6041f61f946ecda3a1748b8a6f0'] = 'Conto collegato';
+$_MODULE['<{paypal}prestashop>accountsettingsblock_e39f889bebfc87e80eecdbb6c104bceb'] = 'Il tuo conto è stato collegato.';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_f0a6d7b55e7a6d7880408de73f5f0cfb'] = 'Il tuo conto è stato collegato. Crea una \'app API REST\'';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_0323de4f66a1700e2173e9bcdce02715'] = 'Esci';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_1a62e25acfc39191546704505349bb49'] = 'Collega o crea un conto PayPal';

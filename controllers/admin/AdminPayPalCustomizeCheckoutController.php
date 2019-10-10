@@ -38,7 +38,8 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             'paypal_express_checkout_shortcut',
             'paypal_express_checkout_shortcut_cart',
             'paypal_api_card',
-            'paypal_vaulting'
+            'paypal_vaulting',
+            'paypal_merchant_installment'
         );
     }
 
@@ -50,6 +51,14 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             $this->content = $this->context->smarty->fetch($this->getTemplatePath() . '_partials/messages/forBraintreeUsers.tpl');
             $this->context->smarty->assign('content', $this->content);
             return;
+        }
+
+        if ($this->method == 'MB') {
+            $currencyDefault = new Currency((int)Configuration::get('PS_CURRENCY_DEFAULT'));
+
+            if (in_array($currencyDefault->iso_code, array('USD', 'MXN', 'EUR')) == false) {
+                $this->warnings[] = $this->l('The currencies supported are: MXN, USD, and EUR. For changing your Currency restrictions please go to the "Payment -> Preferences" page." please add link to the "Payment -> Preferences');
+            }
         }
 
         if (Tools::getValue('deleteLogo')) {
@@ -70,6 +79,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             'paypal_express_checkout_shortcut' => (int)Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT'),
             'paypal_express_checkout_shortcut_cart' => (int)Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART')
         );
+
         $isoCountryDefault = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
         $this->context->smarty->assign($tpl_vars);
         $htmlContent = $this->context->smarty->fetch($this->getTemplatePath() . '_partials/blockPreviewButtonContext.tpl');
@@ -79,74 +89,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
                 'icon' => 'icon-cogs',
             ),
             'input' => array(
-                array(
-                    'type' => 'select',
-                    'label' => $this->l('PayPal checkout'),
-                    'name' => 'paypal_express_checkout_in_context',
-                    'hint' => $this->l('PayPal opens in a pop-up window, allowing your buyers to finalize their payment without leaving your website. Optimized, modern and reassuring experience which benefits from the same security standards than during a redirection to the PayPal website.'),
-                    'options' => array(
-                        'query' => array(
-                            array(
-                                'id' => '1',
-                                'name' => $this->l('IN-CONTEXT'),
-                            ),
-                            array(
-                                'id' => '0',
-                                'name' => $this->l('REDIRECT'),
-                            )
-                        ),
-                        'id' => 'id',
-                        'name' => 'name'
-                    )
-                ),
-                array(
-                    'type' => 'html',
-                    'label' => '',
-                    'name' => '',
-                    'html_content' => $this->module->displayInformation($this->l('In-Context has shown better conversion rate')),
-                ),
-                array(
-                    'type' => 'html',
-                    'label' => $this->l('PayPal Express Checkout Shortcut on'),
-                    'hint' => $this->l('The PayPal Shortcut is displayed directly on your cart or on your product pages, allowing a faster checkout for your buyers. PayPal provides you with the client\'s shipping and billing information so that you don\'t have to collect it yourself.'),
-                    'name' => '',
-                    'html_content' => $htmlContent
-                ),
-                array(
-                    'type' => 'switch',
-                    'label' => $this->l('Show PayPal benefits to your customers'),
-                    'name' => 'paypal_api_advantages',
-                    'is_bool' => true,
-                    'hint' => $this->l('You can increase your conversion rate by presenting PayPal benefits to your customers on payment methods selection page.'),
-                    'values' => array(
-                        array(
-                            'id' => 'paypal_api_advantages_on',
-                            'value' => 1,
-                            'label' => $this->l('Enabled'),
-                        ),
-                        array(
-                            'id' => 'paypal_api_advantages_off',
-                            'value' => 0,
-                            'label' => $this->l('Disabled'),
-                        )
-                    ),
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => $this->l('Brand name shown on top left during PayPal checkout'),
-                    'name' => 'paypal_config_brand',
-                    'placeholder' => $this->l('Leave it empty to use your Shop name setup on your PayPal account'),
-                    'hint' => $this->l('A label that overrides the business name in the PayPal account on the PayPal pages. If logo is set, then brand name won\'t be shown.', get_class($this)),
-                ),
-                array(
-                    'type' => 'file',
-                    'label' => $this->l('Shop logo shown on top right during PayPal checkout'),
-                    'name' => 'paypal_config_logo',
-                    'display_image' => true,
-                    'image' => file_exists(Configuration::get('PAYPAL_CONFIG_LOGO'))?'<img src="'.Context::getContext()->link->getBaseLink().'modules/paypal/views/img/p_logo_'.Context::getContext()->shop->id.'.png" class="img img-thumbnail" />':'',
-                    'delete_url' => $this->context->link->getAdminLink($this->controller_name, true, null, array('deleteLogo' => 1)),
-                    'hint' => $this->l('An image must be stored on a secure (https) server. Use a valid graphics format, such as .gif, .jpg, or .png. Limit the image to 190 pixels wide by 60 pixels high. PayPal crops images that are larger. This logo will replace brand name at the top of the cart review area if PayPal checkout experience is set to REDIRECT.'),
-                ),
+
             ),
             'submit' => array(
                 'title' => $this->l('Save'),
@@ -154,7 +97,105 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             ),
         );
 
-        if (in_array($isoCountryDefault, $this->module->countriesApiCartUnavailable) == false) {
+        if (in_array($this->method, array('EC', 'PPP'))) {
+            $this->fields_form['form']['form']['input'][] = array(
+                'type' => 'select',
+                'label' => $this->l('PayPal checkout'),
+                'name' => 'paypal_express_checkout_in_context',
+                'hint' => $this->l('PayPal opens in a pop-up window, allowing your buyers to finalize their payment without leaving your website. Optimized, modern and reassuring experience which benefits from the same security standards than during a redirection to the PayPal website.'),
+                'options' => array(
+                    'query' => array(
+                        array(
+                            'id' => '1',
+                            'name' => $this->l('IN-CONTEXT'),
+                        ),
+                        array(
+                            'id' => '0',
+                            'name' => $this->l('REDIRECT'),
+                        )
+                    ),
+                    'id' => 'id',
+                    'name' => 'name'
+                )
+            );
+
+            $this->fields_form['form']['form']['input'][] = array(
+                'type' => 'html',
+                'label' => '',
+                'name' => '',
+                'html_content' => $this->module->displayInformation($this->l('In-Context has shown better conversion rate')),
+            );
+
+            $this->fields_form['form']['form']['input'][] = array(
+                'type' => 'html',
+                'label' => $this->l('PayPal Express Checkout Shortcut on'),
+                'hint' => $this->l('The PayPal Shortcut is displayed directly on your cart or on your product pages, allowing a faster checkout for your buyers. PayPal provides you with the client\'s shipping and billing information so that you don\'t have to collect it yourself.'),
+                'name' => '',
+                'html_content' => $htmlContent
+            );
+
+            $this->fields_form['form']['form']['input'][] = array(
+                'type' => 'text',
+                'label' => $this->l('Brand name shown on top left during PayPal checkout'),
+                'name' => 'paypal_config_brand',
+                'placeholder' => $this->l('Leave it empty to use your Shop name setup on your PayPal account'),
+                'hint' => $this->l('A label that overrides the business name in the PayPal account on the PayPal pages. If logo is set, then brand name won\'t be shown.', get_class($this)),
+            );
+
+            $this->fields_form['form']['form']['input'][] = array(
+                'type' => 'file',
+                'label' => $this->l('Shop logo shown on top right during PayPal checkout'),
+                'name' => 'paypal_config_logo',
+                'display_image' => true,
+                'image' => file_exists(Configuration::get('PAYPAL_CONFIG_LOGO'))?'<img src="'.Context::getContext()->link->getBaseLink().'modules/paypal/views/img/p_logo_'.Context::getContext()->shop->id.'.png" class="img img-thumbnail" />':'',
+                'delete_url' => $this->context->link->getAdminLink($this->controller_name, true, null, array('deleteLogo' => 1)),
+                'hint' => $this->l('An image must be stored on a secure (https) server. Use a valid graphics format, such as .gif, .jpg, or .png. Limit the image to 190 pixels wide by 60 pixels high. PayPal crops images that are larger. This logo will replace brand name at the top of the cart review area if PayPal checkout experience is set to REDIRECT.'),
+            );
+        }
+
+        if ($this->method == 'MB') {
+            $this->fields_form['form']['form']['input'][] = array(
+                'type' => 'switch',
+                'label' => $this->l('Enable vaulting'),
+                'name' => 'paypal_vaulting',
+                'is_bool' => true,
+                'hint' => $this->l('The Vault is used to process payments so your customers don\'t need to re-enter their information each time they make a purchase from you.'),
+                'values' => array(
+                    array(
+                        'id' => 'paypal_vaulting_on',
+                        'value' => 1,
+                        'label' => $this->l('Enabled'),
+                    ),
+                    array(
+                        'id' => 'paypal_vaulting_off',
+                        'value' => 0,
+                        'label' => $this->l('Disabled'),
+                    )
+                ),
+            );
+
+            $this->fields_form['form']['form']['input'][] = array(
+                'type' => 'switch',
+                'label' => $this->l('Payments with installments'),
+                'name' => 'paypal_merchant_installment',
+                'is_bool' => true,
+                'hint' => $this->l('Enable this option if you want to enable installments. If enabled, your clients will be able to change the number of installments (by default, 1x payment will be offered). This option can be available only for registered users.'),
+                'values' => array(
+                    array(
+                        'id' => 'paypal_merchant_installment_on',
+                        'value' => 1,
+                        'label' => $this->l('Enabled'),
+                    ),
+                    array(
+                        'id' => 'paypal_merchant_installment_off',
+                        'value' => 0,
+                        'label' => $this->l('Disabled'),
+                    )
+                ),
+            );
+        }
+
+        if (in_array($isoCountryDefault, $this->module->countriesApiCartUnavailable) == false && in_array($this->method, array('EC', 'PPP'))) {
             $this->fields_form['form']['form']['input'][] = array(
                 'type' => 'switch',
                 'label' => $this->l('Accept credit and debit card payment'),
@@ -176,27 +217,25 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             );
         }
 
-        if ($this->method == 'MB') {
-            $this->fields_form['form']['form']['input'][] = array(
-                'type' => 'switch',
-                'label' => $this->l('Enable vaulting'),
-                'name' => 'paypal_vaulting',
-                'is_bool' => true,
-                'hint' => $this->l(''),
-                'values' => array(
-                    array(
-                        'id' => 'paypal_vaulting_on',
-                        'value' => 1,
-                        'label' => $this->l('Enabled'),
-                    ),
-                    array(
-                        'id' => 'paypal_vaulting_off',
-                        'value' => 0,
-                        'label' => $this->l('Disabled'),
-                    )
+        $this->fields_form['form']['form']['input'][] = array(
+            'type' => 'switch',
+            'label' => $this->l('Show PayPal benefits to your customers'),
+            'name' => 'paypal_api_advantages',
+            'is_bool' => true,
+            'hint' => $this->l('You can increase your conversion rate by presenting PayPal benefits to your customers on payment methods selection page.'),
+            'values' => array(
+                array(
+                    'id' => 'paypal_api_advantages_on',
+                    'value' => 1,
+                    'label' => $this->l('Enabled'),
                 ),
-            );
-        }
+                array(
+                    'id' => 'paypal_api_advantages_off',
+                    'value' => 0,
+                    'label' => $this->l('Disabled'),
+                )
+            ),
+        );
 
         $values = array();
         foreach ($this->parametres as $parametre) {
