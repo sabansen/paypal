@@ -19,7 +19,7 @@
  *
  * @author    202-ecommerce <tech@202-ecommerce.com>
  * @copyright Copyright (c) 202-ecommerce
- * @license   Commercial license
+ * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @version   develop
  */
 include_once(_PS_MODULE_DIR_.'paypal/vendor/autoload.php');
@@ -70,7 +70,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
         $this->context->smarty->assign('form', $this->renderForm());
         $this->content = $this->context->smarty->fetch($this->getTemplatePath() . 'customizeCheckout.tpl');
         $this->context->smarty->assign('content', $this->content);
-        $this->addJS('modules/' . $this->module->name . '/views/js/adminCheckout.js');
+        $this->addJS(_PS_MODULE_DIR_ . $this->module->name . '/views/js/adminCheckout.js');
     }
 
     public function initForm()
