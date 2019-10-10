@@ -153,6 +153,7 @@ $_MODULE['<{paypal}prestashop>statusblock_ba54b8645ec3d87e95b4da1b5baad66f'] = '
 $_MODULE['<{paypal}prestashop>statusblock_5914be43ea057f2fd9fa49180f5db5bf'] = 'Tem de ligar a sua conta PayPal';
 $_MODULE['<{paypal}prestashop>helperoptioninfo_36c23650a89439d28101b389567fe2f5'] = 'Les logs avec ID de commande ne seront pas effacés.';
 $_MODULE['<{paypal}prestashop>headerlogo_2b01e7c182040ea95514ee1854afc8fd'] = 'Ativar módulo PayPal para começar a vender a mais de 250 milhões de clientes do PayPal em todo o mundo';
+$_MODULE['<{paypal}prestashop>headerlogo_536b624906878dc3954749a6cef3b0fa'] = 'Ativar em 2 passos simples';
 $_MODULE['<{paypal}prestashop>headerlogo_c3d2b0bfba763295a377b71aae0841f1'] = 'Ativar em 3 passos simples';
 $_MODULE['<{paypal}prestashop>headerlogo_1193eddeac9b924352d0914cf8361758'] = 'Ligar à sua conta PayPal existente (abaixo) ou criar nova conta';
 $_MODULE['<{paypal}prestashop>headerlogo_dfe4283340c6369e764585c747cbd74a'] = 'Ajustar definição do PayPal para capturar pagamentos de imediato (Venda) ou depois de confirmar o pedido (Autorização)';

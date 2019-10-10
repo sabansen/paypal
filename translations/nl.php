@@ -153,6 +153,7 @@ $_MODULE['<{paypal}prestashop>statusblock_ba54b8645ec3d87e95b4da1b5baad66f'] = '
 $_MODULE['<{paypal}prestashop>statusblock_5914be43ea057f2fd9fa49180f5db5bf'] = 'U moet uw PayPal-rekening koppelen';
 $_MODULE['<{paypal}prestashop>helperoptioninfo_36c23650a89439d28101b389567fe2f5'] = 'Les logs avec ID de commande ne seront pas effacés.';
 $_MODULE['<{paypal}prestashop>headerlogo_2b01e7c182040ea95514ee1854afc8fd'] = 'Activeer de PayPal-module om aan de slag te gaan en aan meer dan 250 miljoen PayPal-klanten over de hele wereld te verkopen';
+$_MODULE['<{paypal}prestashop>headerlogo_536b624906878dc3954749a6cef3b0fa'] = 'Activeer in 2 eenvoudige stappen';
 $_MODULE['<{paypal}prestashop>headerlogo_c3d2b0bfba763295a377b71aae0841f1'] = 'Activeer in drie eenvoudige stappen';
 $_MODULE['<{paypal}prestashop>headerlogo_1193eddeac9b924352d0914cf8361758'] = 'Koppel hieronder uw bestaande PayPal-rekening of open een nieuwe rekening';
 $_MODULE['<{paypal}prestashop>headerlogo_dfe4283340c6369e764585c747cbd74a'] = 'Pas uw betaalinstelling aan om betalingen direct te innen (Verkoop) of nadat u de bestelling heeft bevestigd (Autoriseren)';
