@@ -85,10 +85,27 @@ class PaypalIpnModuleFrontController extends PaypalAbstarctModuleFrontController
             return true;
         }
 
+        $logResponse = array(
+            'payment_status' => isset($data['payment_status']) ? $data['payment_status'] : null,
+            'ipn_track_id' => isset($data['ipn_track_id']) ? $data['ipn_track_id'] : null
+        );
+
+        ProcessLoggerHandler::openLogger();
+        ProcessLoggerHandler::logInfo(
+            'IPN response : ' . $this->jsonEncode($logResponse),
+            isset($data['txn_id']) ? $data['txn_id'] : null,
+            null,
+            null,
+            null,
+            'PayPal',
+            (int)Configuration::get('PAYPAL_SANDBOX')
+        );
+        ProcessLoggerHandler::closeLogger();
+
         $paypalIpn = new PaypalIpn();
         $paypalIpn->id_transaction = $data['txn_id'];
         $paypalIpn->status = $data['payment_status'];
-        $paypalIpn->response = $this->jsonEncode($data);
+        $paypalIpn->response = $this->jsonEncode($logResponse);
         $paypalIpn->save();
 
         if ($data['payment_status'] == 'Completed') {
