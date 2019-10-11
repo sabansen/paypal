@@ -466,16 +466,10 @@
 					{/if}
 				</div>
 				{/if}
-				{if isset($PayPal_save_failure)}
-				<div class="box paypal-hide" id="paypal-save-failure">
-					<h3>{l s='Error !' mod='paypal'}</h3>
-					<p>{l s='You need to complete the PayPal identification Information in step 3 otherwise you won\'t be able to accept payment.' mod='paypal'}</p>
-				</div>
-				{/if}
 
 				<div class="box paypal-hide" id="js-paypal-save-failure">
 					<h3>{l s='Error !' mod='paypal'}</h3>
-					<p>{l s='You need to complete the PayPal identification Information in step 3 otherwise you won\'t be able to accept payment.' mod='paypal'}</p>
+					<p>{l s='You need to complete the PayPal identification Information in step 4 otherwise you won\'t be able to accept payment.' mod='paypal'}</p>
 				</div>
 
 				<hr />
