@@ -63,6 +63,7 @@ class PayPal extends \PaymentModule
     public $module_link;
     public $errors;
     public $countriesApiCartUnavailable = array("FR", "GB", "IT", "ES", "DE");
+    public $currencyMB = array('USD', 'MXN', 'EUR', 'BRL');
     public $paypal_method;
     /** @var array matrix of state iso codes between paypal and prestashop */
     public static $state_iso_code_matrix = array(
@@ -586,7 +587,7 @@ class PayPal extends \PaymentModule
 
                 break;
             case 'MB':
-                if ($method->isConfigured()) {
+                if ($method->isConfigured() && in_array($this->context->currency->iso_code, $this->currencyMB)) {
                     $payment_options = new PaymentOption();
                     $action_text = $this->l('Pay with PayPal Plus');
                     if (Configuration::get('PAYPAL_API_ADVANTAGES')) {

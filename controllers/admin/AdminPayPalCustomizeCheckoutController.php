@@ -284,6 +284,6 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             $currency = new Currency((int)$currencyMode['id_currency']);
         }
 
-        return in_array($currency->iso_code, array('USD', 'MXN', 'EUR')) == false;
+        return in_array($currency->iso_code, $this->module->currencyMB) == false;
     }
 }
