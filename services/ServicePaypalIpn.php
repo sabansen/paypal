@@ -57,7 +57,7 @@ class ServicePaypalIpn
         }
 
         $orderCollection = new \PrestaShopCollection(\Order::class);
-        $orderCollection->where('id_cart', '=', $cart->id);
+        $orderCollection->where('id_cart', '=', (int)$cart->id);
 
         return $orderCollection->getResults();
     }
