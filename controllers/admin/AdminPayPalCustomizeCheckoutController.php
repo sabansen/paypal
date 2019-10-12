@@ -54,7 +54,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
         }
 
         if ($this->method == 'MB' && $this->showCurrencyRestrictionWarning()) {
-            $this->warnings[] = $this->l('The currencies supported are: MXN, USD, and EUR. For changing your Currency restrictions please go to the "Payment -> Preferences" page." please add link to the "Payment -> Preferences');
+            $this->warnings[] = $this->l('The currencies supported are: MXN, BRL, USD and EUR. For changing your Currency restrictions please go to the "Payment -> Preferences" page." please add link to the "Payment -> Preferences');
         }
 
         if (Tools::getValue('deleteLogo')) {
