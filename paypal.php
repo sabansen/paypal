@@ -193,6 +193,34 @@ class PayPal extends \PaymentModule
     );
 
     /**
+     * @var array
+     */
+    public $moduleConfigs = array(
+        'PAYPAL_MERCHANT_ID_SANDBOX' => '',
+        'PAYPAL_MERCHANT_ID_LIVE' => '',
+        'PAYPAL_USERNAME_SANDBOX' => '',
+        'PAYPAL_PSWD_SANDBOX' => '',
+        'PAYPAL_SIGNATURE_SANDBOX' => '',
+        'PAYPAL_SANDBOX_ACCESS' => 0,
+        'PAYPAL_USERNAME_LIVE' => '',
+        'PAYPAL_PSWD_LIVE' => '',
+        'PAYPAL_SIGNATURE_LIVE' => '',
+        'PAYPAL_LIVE_ACCESS' => 0,
+        'PAYPAL_SANDBOX' => 0,
+        'PAYPAL_API_INTENT' => 'sale',
+        'PAYPAL_API_ADVANTAGES' => 1,
+        'PAYPAL_API_CARD' => 0,
+        'PAYPAL_METHOD' => '',
+        'PAYPAL_EXPRESS_CHECKOUT_SHORTCUT' => 0,
+        'PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART' => 1,
+        'PAYPAL_CRON_TIME' => '',
+        'PAYPAL_BY_BRAINTREE' => 0,
+        'PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT' => 0,
+        'PAYPAL_VAULTING' => 0,
+        'PAYPAL_REQUIREMENTS' => 0,
+    );
+
+    /**
      * List of admin tabs used in this Module
      */
     public $moduleAdminControllers = array(
@@ -277,6 +305,9 @@ class PayPal extends \PaymentModule
         ),
     );
 
+
+
+
     public function __construct()
     {
         $this->name = 'paypal';
@@ -340,31 +371,12 @@ class PayPal extends \PaymentModule
             return false;
         }
 
-        if (!Configuration::updateValue('PAYPAL_MERCHANT_ID_SANDBOX', '')
-            || !Configuration::updateValue('PAYPAL_MERCHANT_ID_LIVE', '')
-            || !Configuration::updateValue('PAYPAL_USERNAME_SANDBOX', '')
-            || !Configuration::updateValue('PAYPAL_PSWD_SANDBOX', '')
-            || !Configuration::updateValue('PAYPAL_SIGNATURE_SANDBOX', '')
-            || !Configuration::updateValue('PAYPAL_SANDBOX_ACCESS', 0)
-            || !Configuration::updateValue('PAYPAL_USERNAME_LIVE', '')
-            || !Configuration::updateValue('PAYPAL_PSWD_LIVE', '')
-            || !Configuration::updateValue('PAYPAL_SIGNATURE_LIVE', '')
-            || !Configuration::updateValue('PAYPAL_LIVE_ACCESS', 0)
-            || !Configuration::updateValue('PAYPAL_SANDBOX', 0)
-            || !Configuration::updateValue('PAYPAL_API_INTENT', 'sale')
-            || !Configuration::updateValue('PAYPAL_API_ADVANTAGES', 1)
-            || !Configuration::updateValue('PAYPAL_API_CARD', 0)
-            || !Configuration::updateValue('PAYPAL_METHOD', '')
-            || !Configuration::updateValue('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT', 0)
-            || !Configuration::updateValue('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART', 1)
-            || !Configuration::updateValue('PAYPAL_CRON_TIME', date('Y-m-d H:m:s'))
-            || !Configuration::updateValue('PAYPAL_BY_BRAINTREE', 0)
-            || !Configuration::updateValue('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT', 0)
-            || !Configuration::updateValue('PAYPAL_VAULTING', 0)
-            || !Configuration::updateValue('PAYPAL_REQUIREMENTS', 0)
-        ) {
-            return false;
+        foreach ($this->moduleConfigs as $key => $value) {
+            if (!Configuration::updateValue($key, $value)) {
+                return false;
+            }
         }
+        Configuration::updateValue('PAYPAL_CRON_TIME', date('Y-m-d H:m:s'));
 
         return true;
     }
@@ -425,11 +437,13 @@ class PayPal extends \PaymentModule
     {
         $installer = new ModuleInstaller($this);
 
-        if ((parent::uninstall() && $installer->uninstall()) == false) {
-            return false;
+        foreach ($this->moduleConfigs as $key => $value) {
+            if (!Configuration::deleteByName($key)) {
+                return false;
+            }
         }
 
-        if ($this->uninstallOrderStates() == false) {
+        if ($installer->uninstallModuleAdminControllers() == false) {
             return false;
         }
 
