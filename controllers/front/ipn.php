@@ -90,16 +90,24 @@ class PaypalIpnModuleFrontController extends PaypalAbstarctModuleFrontController
             'ipn_track_id' => isset($data['ipn_track_id']) ? $data['ipn_track_id'] : null
         );
 
+        $orders = $this->servicePaypalIpn->getOrdersPsByTransaction($data['txn_id']);
+
+        if (is_array($orders) == false || empty($orders)) {
+            return false;
+        }
+
         ProcessLoggerHandler::openLogger();
-        ProcessLoggerHandler::logInfo(
-            'IPN response : ' . $this->jsonEncode($logResponse),
-            isset($data['txn_id']) ? $data['txn_id'] : null,
-            null,
-            null,
-            null,
-            'PayPal',
-            (int)Configuration::get('PAYPAL_SANDBOX')
-        );
+        foreach ($orders as $order) {
+            ProcessLoggerHandler::logInfo(
+                'IPN response : ' . $this->jsonEncode($logResponse),
+                isset($data['txn_id']) ? $data['txn_id'] : null,
+                $order->id,
+                $order->id_cart,
+                null,
+                'PayPal',
+                (int)Configuration::get('PAYPAL_SANDBOX')
+            );
+        }
         ProcessLoggerHandler::closeLogger();
 
         $paypalIpn = new PaypalIpn();
@@ -109,7 +117,7 @@ class PaypalIpnModuleFrontController extends PaypalAbstarctModuleFrontController
         $paypalIpn->save();
 
         if ($data['payment_status'] == 'Completed') {
-            $this->setOrderStatus($data['txn_id'], (int)\Configuration::get('PS_OS_PAYMENT'));
+            $this->setOrderStatus($orders, (int)\Configuration::get('PS_OS_PAYMENT'));
         }
 
         return true;
@@ -135,18 +143,12 @@ class PaypalIpnModuleFrontController extends PaypalAbstarctModuleFrontController
     }
 
     /**
-     * @param $idTransaction string
+     * @param $orders array
      * @param $idState int
      * @return bool
      */
-    protected function setOrderStatus($idTransaction, $idState)
+    protected function setOrderStatus($orders, $idState)
     {
-        $orders = $this->servicePaypalIpn->getOrdersPsByTransaction($idTransaction);
-
-        if (is_array($orders) == false || empty($orders)) {
-            return false;
-        }
-
         /** @var $order \Order*/
         foreach ($orders as $order) {
             $order->setCurrentState((int)$idState);
