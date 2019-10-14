@@ -849,9 +849,11 @@ class PayPal extends \PaymentModule
                 Tools::redirect(Context::getContext()->link->getModuleLink('paypal', 'error', array('error_msg' => $msg, 'no_retry' => true)));
             }
         }
+
+        $orderState = new OrderState($id_order_state, Configuration::get('PS_LANG_DEFAULT'));
         ProcessLoggerHandler::openLogger();
         ProcessLoggerHandler::logInfo(
-            'Payment successful',
+            $orderState->name,
             isset($transaction['transaction_id']) ? $transaction['transaction_id'] : null,
             $this->currentOrder,
             (int)$id_cart,
