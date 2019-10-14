@@ -38,8 +38,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             'paypal_express_checkout_shortcut',
             'paypal_express_checkout_shortcut_cart',
             'paypal_api_card',
-            'paypal_vaulting',
-            'paypal_merchant_installment'
+            'paypal_vaulting'
         );
     }
 
@@ -164,26 +163,6 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
                     ),
                     array(
                         'id' => 'paypal_vaulting_off',
-                        'value' => 0,
-                        'label' => $this->l('Disabled'),
-                    )
-                ),
-            );
-
-            $this->fields_form['form']['form']['input'][] = array(
-                'type' => 'switch',
-                'label' => $this->l('Payments with installments'),
-                'name' => 'paypal_merchant_installment',
-                'is_bool' => true,
-                'hint' => $this->l('Enable this option if you want to enable installments. If enabled, your clients will be able to change the number of installments (by default, 1x payment will be offered). This option can be available only for registered users.'),
-                'values' => array(
-                    array(
-                        'id' => 'paypal_merchant_installment_on',
-                        'value' => 1,
-                        'label' => $this->l('Enabled'),
-                    ),
-                    array(
-                        'id' => 'paypal_merchant_installment_off',
                         'value' => 0,
                         'label' => $this->l('Disabled'),
                     )
