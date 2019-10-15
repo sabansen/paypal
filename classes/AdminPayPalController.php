@@ -19,7 +19,7 @@
  *
  * @author    202-ecommerce <tech@202-ecommerce.com>
  * @copyright Copyright (c) 202-ecommerce
- * @license   Commercial license
+ * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @version   develop
  */
  
@@ -53,6 +53,7 @@ class AdminPayPalController extends \ModuleAdminController
         $showWarningForUserBraintree = $this->module->showWarningForUserBraintree();
         $this->context->smarty->assign('showWarningForUserBraintree', $showWarningForUserBraintree);
         $this->context->smarty->assign('methodType', $this->method);
+        $this->context->smarty->assign('moduleDir', _MODULE_DIR_);
     }
 
     public function renderForm($fields_form = null)
