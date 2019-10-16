@@ -156,7 +156,12 @@ class MethodMB extends AbstractMethodPaypal
                 'cache.enabled' => true,
             )
         );
-        $apiContext->addRequestHeader('PayPal-Partner-Attribution-Id', (getenv('PLATEFORM') == 'PSREAD')?'PrestaShop_Cart_Ready_PPP':'PrestaShop_Cart_PPP');
+        if (Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')) == 'MX') {
+            $bnCodeSuffix = 'Mexico';
+        } else {
+            $bnCodeSuffix = 'Brazil';
+        }
+        $apiContext->addRequestHeader('PayPal-Partner-Attribution-Id', (getenv('PLATEFORM') == 'PSREAD')?'PrestaShop_Cart_Ready_'.$bnCodeSuffix:'PrestaShop_Cart_'.$bnCodeSuffix);
         return $apiContext;
     }
 
