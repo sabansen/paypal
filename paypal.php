@@ -490,16 +490,23 @@ class PayPal extends \PaymentModule
         if ('cart' !== $this->context->controller->php_self ||
             !Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART') ||
             $this->context->cart->nbProducts() == 0 ||
-            in_array($this->paypal_method, array('EC', 'PPP')) == false) {
+            $this->paypal_method == 'MB' && (bool)Configuration::get('PAYPAL_MB_EC_ENABLED') == false) {
             return false;
         }
-        $method = AbstractMethodPaypal::load();
+
+        if ($this->paypal_method == 'MB') {
+            $methodType = 'EC';
+        } else {
+            $methodType = $this->paypal_method;
+        }
+
+        $method = AbstractMethodPaypal::load($methodType);
 
         if ($method->isConfigured() == false) {
             return;
         }
 
-        return $method->renderExpressCheckoutShortCut($this->context, $this->paypal_method, 'cart');
+        return $method->renderExpressCheckoutShortCut($this->context, $methodType, 'cart');
     }
 
     public function getContent()
@@ -519,6 +526,88 @@ class PayPal extends \PaymentModule
             return array();
         }
         $isoCountryDefault = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
+
+        $payments_options = array();
+        $method = AbstractMethodPaypal::load();
+        switch ($this->paypal_method) {
+            case 'EC':
+                if ($method->isConfigured()) {
+                    $paymentOptionsEc = $this->renderEcPaymentOptions($params);
+                    $payments_options = array_merge($payments_options, $paymentOptionsEc);
+
+                    if (Configuration::get('PAYPAL_API_CARD') && (in_array($isoCountryDefault, $this->countriesApiCartUnavailable) == false)) {
+                        $payment_option = new PaymentOption();
+                        $action_text = $this->l('Pay with debit or credit card');
+                        $payment_option->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/logo_card.png'));
+                        $payment_option->setCallToActionText($action_text);
+                        $payment_option->setModuleName($this->name);
+                        $payment_option->setAction($this->context->link->getModuleLink($this->name, 'ecInit', array('credit_card' => '1'), true));
+                        $payment_option->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_infos_card.tpl'));
+                        $payments_options[] = $payment_option;
+                    }
+                }
+                break;
+            case 'PPP':
+                if ($method->isConfigured()) {
+                    $payment_option = new PaymentOption();
+                    $action_text = $this->l('Pay with PayPal Plus');
+                    if (Configuration::get('PAYPAL_API_ADVANTAGES')) {
+                        $action_text .= ' | ' . $this->l('It\'s simple, fast and secure');
+                    }
+                    $payment_option->setCallToActionText($action_text);
+                    $payment_option->setModuleName('paypal_plus');
+                    try {
+                        $this->context->smarty->assign('path', $this->_path);
+                        $payment_option->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_ppp.tpl'));
+                    } catch (Exception $e) {
+                        die($e);
+                    }
+                    $payments_options[] = $payment_option;
+                    if ((Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART')) && isset($this->context->cookie->paypal_pSc)) {
+                        $payment_option = new PaymentOption();
+                        $action_text = $this->l('Pay with paypal plus shortcut');
+                        $payment_option->setCallToActionText($action_text);
+                        $payment_option->setModuleName('paypal_plus_schortcut');
+                        $payment_option->setAction($this->context->link->getModuleLink($this->name, 'pppValidation', array('short_cut' => '1'), true));
+                        $payments_options[] = $payment_option;
+                    }
+                }
+
+                break;
+            case 'MB':
+                if ($method->isConfigured() && in_array($this->context->currency->iso_code, $this->currencyMB)) {
+                    if ((int)Configuration::get('PAYPAL_MB_EC_ENABLED')) {
+                        $paymentOptionsEc = $this->renderEcPaymentOptions($params);
+                        $payments_options = array_merge($payments_options, $paymentOptionsEc);
+                    }
+                    $payment_option = new PaymentOption();
+                    $action_text = $this->l('Pay with PayPal Plus');
+                    $payment_option->setCallToActionText($action_text);
+                    $payment_option->setModuleName('paypal_plus_mb');
+                    try {
+                        $this->context->smarty->assign('path', $this->_path);
+                        $payment_option->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_mb.tpl'));
+                    } catch (Exception $e) {
+                        return;
+                    }
+                    $payments_options[] = $payment_option;
+                }
+
+                break;
+        }
+
+        return $payments_options;
+    }
+
+    /**
+     * @param $params
+     * @return array of the PaymentOption objects
+     * @throws Exception
+     * @throws SmartyException
+     */
+    public function renderEcPaymentOptions($params)
+    {
+        $paymentOptions = array();
         $is_virtual = 0;
         foreach ($params['cart']->getProducts() as $key => $product) {
             if ($product['is_virtual']) {
@@ -526,102 +615,38 @@ class PayPal extends \PaymentModule
                 break;
             }
         }
-
-        $payments_options = array();
-        $method = AbstractMethodPaypal::load();
-        switch ($this->paypal_method) {
-            case 'EC':
-                if ($method->isConfigured()) {
-                    $payment_options = new PaymentOption();
-                    $action_text = $this->l('Pay with Paypal');
-                    $payment_options->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/paypal_sm.png'));
-                    $payment_options->setModuleName($this->name);
-                    if (Configuration::get('PAYPAL_API_ADVANTAGES')) {
-                        $action_text .= ' | ' . $this->l('It\'s simple, fast and secure');
-                    }
-                    $this->context->smarty->assign(array(
-                        'path' => $this->_path,
-                    ));
-                    $payment_options->setCallToActionText($action_text);
-                    if (Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT')) {
-                        $payment_options->setAction('javascript:ECInContext()');
-                    } else {
-                        $payment_options->setAction($this->context->link->getModuleLink($this->name, 'ecInit', array('credit_card' => '0'), true));
-                    }
-                    if (!$is_virtual) {
-                        $payment_options->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_infos.tpl'));
-                    }
-                    $payments_options[] = $payment_options;
-
-                    if (Configuration::get('PAYPAL_API_CARD') && (in_array($isoCountryDefault, $this->countriesApiCartUnavailable) == false)) {
-                        $payment_options = new PaymentOption();
-                        $action_text = $this->l('Pay with debit or credit card');
-                        $payment_options->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/logo_card.png'));
-                        $payment_options->setCallToActionText($action_text);
-                        $payment_options->setModuleName($this->name);
-                        $payment_options->setAction($this->context->link->getModuleLink($this->name, 'ecInit', array('credit_card' => '1'), true));
-                        $payment_options->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_infos_card.tpl'));
-                        $payments_options[] = $payment_options;
-                    }
-                    if ((Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART')) && isset($this->context->cookie->paypal_ecs)) {
-                        $payment_options = new PaymentOption();
-                        $action_text = $this->l('Pay with paypal express checkout');
-                        $payment_options->setCallToActionText($action_text);
-                        $payment_options->setModuleName('express_checkout_schortcut');
-                        $payment_options->setAction($this->context->link->getModuleLink($this->name, 'ecValidation', array('short_cut' => '1'), true));
-                        $payments_options[] = $payment_options;
-                    }
-                }
-                break;
-            case 'PPP':
-                if ($method->isConfigured()) {
-                    $payment_options = new PaymentOption();
-                    $action_text = $this->l('Pay with PayPal Plus');
-                    if (Configuration::get('PAYPAL_API_ADVANTAGES')) {
-                        $action_text .= ' | ' . $this->l('It\'s simple, fast and secure');
-                    }
-                    $payment_options->setCallToActionText($action_text);
-                    $payment_options->setModuleName('paypal_plus');
-                    try {
-                        $this->context->smarty->assign('path', $this->_path);
-                        $payment_options->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_ppp.tpl'));
-                    } catch (Exception $e) {
-                        die($e);
-                    }
-                    $payments_options[] = $payment_options;
-                    if ((Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART')) && isset($this->context->cookie->paypal_pSc)) {
-                        $payment_options = new PaymentOption();
-                        $action_text = $this->l('Pay with paypal plus shortcut');
-                        $payment_options->setCallToActionText($action_text);
-                        $payment_options->setModuleName('paypal_plus_schortcut');
-                        $payment_options->setAction($this->context->link->getModuleLink($this->name, 'pppValidation', array('short_cut' => '1'), true));
-                        $payments_options[] = $payment_options;
-                    }
-                }
-
-                break;
-            case 'MB':
-                if ($method->isConfigured() && in_array($this->context->currency->iso_code, $this->currencyMB)) {
-                    $payment_options = new PaymentOption();
-                    $action_text = $this->l('Pay with PayPal Plus');
-                    if (Configuration::get('PAYPAL_API_ADVANTAGES')) {
-                        $action_text .= ' | '.$this->l('It\'s simple, fast and secure');
-                    }
-                    $payment_options->setCallToActionText($action_text);
-                    $payment_options->setModuleName('paypal_plus_mb');
-                    try {
-                        $this->context->smarty->assign('path', $this->_path);
-                        $payment_options->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_mb.tpl'));
-                    } catch (Exception $e) {
-                        return;
-                    }
-                    $payments_options[] = $payment_options;
-                }
-
-                break;
+        $paymentOption = new PaymentOption();
+        $action_text = $this->l('Pay with Paypal');
+        $paymentOption->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/paypal_sm.png'));
+        $paymentOption->setModuleName($this->name);
+        if (Configuration::get('PAYPAL_API_ADVANTAGES')) {
+            $action_text .= ' | ' . $this->l('It\'s simple, fast and secure');
+        }
+        $this->context->smarty->assign(array(
+            'path' => $this->_path,
+        ));
+        $paymentOption->setCallToActionText($action_text);
+        if (Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT')) {
+            $paymentOption->setAction('javascript:ECInContext()');
+        } else {
+            $paymentOption->setAction($this->context->link->getModuleLink($this->name, 'ecInit', array('credit_card' => '0'), true));
+        }
+        if (!$is_virtual) {
+            $paymentOption->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_infos.tpl'));
         }
 
-        return $payments_options;
+        $paymentOptions[] = $paymentOption;
+
+        if ((Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART')) && isset($this->context->cookie->paypal_ecs)) {
+            $paymentOption = new PaymentOption();
+            $action_text = $this->l('Pay with paypal express checkout');
+            $paymentOption->setCallToActionText($action_text);
+            $paymentOption->setModuleName('express_checkout_schortcut');
+            $paymentOption->setAction($this->context->link->getModuleLink($this->name, 'ecValidation', array('short_cut' => '1'), true));
+            $paymentOptions[] = $paymentOption;
+        }
+
+        return $paymentOptions;
     }
 
     public function hookHeader()
@@ -664,7 +689,8 @@ class PayPal extends \PaymentModule
                 Media::addJsDefL('scPaypalCheckedMsg', $this->l('You are about to pay with your PayPal account ') . $cookie_paypal_email);
             }
 
-            if ($this->paypal_method == 'EC' && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT')) {
+            if (($this->paypal_method == 'EC' && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT')) ||
+                ($this->paypal_method == 'MB' && (int)Configuration::get('PAYPAL_MB_EC_ENABLED') && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT'))) {
                 $environment = (Configuration::get('PAYPAL_SANDBOX') ? 'sandbox' : 'live');
                 Media::addJsDef(array(
                     'environment' => $environment,
@@ -687,9 +713,11 @@ class PayPal extends \PaymentModule
                 $this->context->controller->registerJavascript($this->name . '-mb-payment-js', 'modules/' . $this->name . '/views/js/payment_mb.js');
             }
         }
+
         if ((Tools::getValue('controller') == "product" && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT'))
             || (Tools::getValue('controller') == "cart" && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART'))) {
-            if (Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT') && $this->paypal_method == 'EC') {
+            if ((Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT') && $this->paypal_method == 'EC') ||
+                ($this->paypal_method == 'MB' && (int)Configuration::get('PAYPAL_MB_EC_ENABLED') && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT'))) {
                 $environment = (Configuration::get('PAYPAL_SANDBOX') ? 'sandbox' : 'live');
                 Media::addJsDef(array(
                     'ec_sc_in_context' => 1,
@@ -749,16 +777,23 @@ class PayPal extends \PaymentModule
         }
         if ('product' !== $this->context->controller->php_self ||
             !Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') ||
-            in_array($this->paypal_method, array('EC', 'PPP')) == false) {
+            $this->paypal_method == 'MB' && (bool)Configuration::get('PAYPAL_MB_EC_ENABLED') == false) {
             return false;
         }
-        $method = AbstractMethodPaypal::load();
+
+        if ($this->paypal_method == 'MB') {
+            $methodType = 'EC';
+        } else {
+            $methodType = $this->paypal_method;
+        }
+
+        $method = AbstractMethodPaypal::load($methodType);
 
         if ($method->isConfigured() == false) {
             return;
         }
 
-        return $method->renderExpressCheckoutShortCut($this->context, $this->paypal_method, 'product');
+        return $method->renderExpressCheckoutShortCut($this->context, $methodType, 'product');
     }
 
     /**
