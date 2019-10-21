@@ -44,24 +44,21 @@
                 {/if}
             </strong>
         {elseif isset($method) && $method == 'MB'}
-            <span class="pp__mr-4">
-				{l s='Your account is now connected!' mod='paypal'}
-            </span>
+            {include './mbCredentialsForm.tpl'}
         {else}
             <span class="pp__mr-4">
 				{l s='Your account is now connected!Create a « REST API apps »Create a « REST API apps »' mod='paypal'}
             </span>
         {/if}
 
-
-        <span class="btn btn-default pp__ml-4" id="logoutAccount">
+        {if isset($method) && in_array($method, array('EC', 'PPP'))}
+            <span class="btn btn-default pp__ml-4" id="logoutAccount">
 				{l s='Logout' mod='paypal'}
-        </span>
+            </span>
+        {/if}
     {else}
         {if isset($method) && $method == 'MB'}
-            <span class="btn btn-default" data-toggle="modal" data-target="#credentialBlockMB">
-                {l s='Connect or create PayPal account' mod='paypal'}
-            </span>
+            {include './mbCredentialsForm.tpl'}
         {elseif isset($country_iso) && in_array($country_iso, ['IN', 'JP'])}
             <span class="btn btn-default" data-toggle="modal" data-target="#credentialBlockEC">
                 {l s='Connect or create PayPal account' mod='paypal'}
@@ -116,54 +113,6 @@
                     <p>
                         <label for="live_secret">{l s='Secret' mod='paypal'}</label>
                         <input type="password" id="live_secret" name="paypal_live_secret" value="{if isset($paypal_live_secret)}{$paypal_live_secret|escape:'htmlall':'UTF-8'}{/if}"/>
-                    </p>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{l s='Cancel' mod='paypal'}</button>
-                    <button type="button" id="confirmCredentials" class="btn btn-primary">{l s='Confirm API Credentials' mod='paypal'}</button>
-                </div>
-            </div>
-        </div>
-    </div>
-{/if}
-
-{if isset($method) && $method == 'MB'}
-    <div class="modal fade" id="credentialBlockMB" role="dialog" aria-labelledby="credentialBlockMB" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <h4>{l s='API Credentials' mod='paypal'}</h4>
-                    <p>{l s='In order to accept PayPal Plus payments, please fill in your API REST credentials.' mod='paypal'}</p>
-                    <ul>
-                        <li>{l s='Access' mod='paypal'} <a target="_blank" href="https://developer.paypal.com/developer/applications/">{l s='https://developer.paypal.com/developer/applications/' mod='paypal'}</a></li>
-                        <li>{l s='Log in or Create a business account' mod='paypal'}</li>
-                        <li>{l s='Create a « REST API apps »' mod='paypal'}</li>
-                        <li>{l s='Click « Show » below « Secret: »' mod='paypal'}</li>
-                        <li>{l s='Copy/paste your « Client ID » and « Secret » below for each environment' mod='paypal'}</li>
-                    </ul>
-                    <hr/>
-                    <input type="hidden" class="method met" name="method" data-method-paypal/>
-                    <h4>{l s='Sandbox' mod='paypal'}</h4>
-                    <p>
-                        <label for="sandbox_mb_client_id">{l s='Client ID' mod='paypal'}</label>
-                        <input type="text" id="sandbox_mb_client_id" name="paypal_mb_sandbox_clientid" value="{if isset($paypal_mb_sandbox_clientid)}{$paypal_mb_sandbox_clientid|escape:'htmlall':'UTF-8'}{/if}"/>
-                    </p>
-                    <p>
-                        <label for="sandbox_mb_secret">{l s='Secret' mod='paypal'}</label>
-                        <input type="password" id="sandbox_mb_secret" name="paypal_mb_sandbox_secret" value="{if isset($paypal_mb_sandbox_secret)}{$paypal_mb_sandbox_secret|escape:'htmlall':'UTF-8'}{/if}"/>
-                    </p>
-                    <h4>{l s='Live' mod='paypal'}</h4>
-                    <ul>
-                        <li>{l s='You can switch to "Live" environment on top right' mod='paypal'}</li>
-                    </ul>
-                    <p>
-                        <label for="live_mb_client_id">{l s='Client ID' mod='paypal'}</label>
-                        <input type="text" id="live_mb_client_id" name="paypal_mb_live_clientid" value="{if isset($paypal_mb_live_clientid)}{$paypal_mb_live_clientid|escape:'htmlall':'UTF-8'}{/if}"/>
-                    </p>
-                    <p>
-                        <label for="live_mb_secret">{l s='Secret' mod='paypal'}</label>
-                        <input type="password" id="live_mb_secret" name="paypal_mb_live_secret" value="{if isset($paypal_mb_live_secret)}{$paypal_mb_live_secret|escape:'htmlall':'UTF-8'}{/if}"/>
                     </p>
 
                 </div>

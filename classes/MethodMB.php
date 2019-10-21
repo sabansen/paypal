@@ -483,13 +483,29 @@ class MethodMB extends AbstractMethodPaypal
 
     public function getTplVars()
     {
-        $tpl_vars = array(
-            'paypal_mb_sandbox_clientid' => Configuration::get('PAYPAL_MB_SANDBOX_CLIENTID'),
-            'paypal_mb_live_clientid' => Configuration::get('PAYPAL_MB_LIVE_CLIENTID'),
-            'paypal_mb_sandbox_secret' => Configuration::get('PAYPAL_MB_SANDBOX_SECRET'),
-            'paypal_mb_live_secret' => Configuration::get('PAYPAL_MB_LIVE_SECRET'),
-            'accountConfigured' => $this->isConfigured(),
-        );
+        $sandboxMode = (int)Configuration::get('PAYPAL_SANDBOX');
+
+        if ($sandboxMode) {
+            $tpl_vars = array(
+                'paypal_mb_sandbox_clientid' => Configuration::get('PAYPAL_MB_SANDBOX_CLIENTID'),
+                'paypal_mb_sandbox_secret' => Configuration::get('PAYPAL_MB_SANDBOX_SECRET'),
+                'paypal_api_user_name' => Configuration::get('PAYPAL_USERNAME_SANDBOX'),
+                'paypal_pswd' => Configuration::get('PAYPAL_PSWD_SANDBOX'),
+                'paypal_signature' => Configuration::get('PAYPAL_SIGNATURE_SANDBOX'),
+                'paypal_merchant_id' => Configuration::get('PAYPAL_MERCHANT_ID_SANDBOX'),
+                'mode' => 'SANDBOX'
+            );
+        } else {
+            $tpl_vars = array(
+                'paypal_mb_live_clientid' => Configuration::get('PAYPAL_MB_LIVE_CLIENTID'),
+                'paypal_mb_live_secret' => Configuration::get('PAYPAL_MB_LIVE_SECRET'),
+                'paypal_api_user_name' => Configuration::get('PAYPAL_USERNAME_LIVE'),
+                'paypal_pswd' => Configuration::get('PAYPAL_PSWD_LIVE'),
+                'paypal_signature' => Configuration::get('PAYPAL_SIGNATURE_LIVE'),
+                'paypal_merchant_id' => Configuration::get('PAYPAL_MERCHANT_ID_LIVE'),
+                'mode' => 'LIVE'
+            );
+        }
 
         return $tpl_vars;
     }

@@ -180,7 +180,7 @@ class AdminPayPalController extends \ModuleAdminController
     {
 
         if (\Tools::isSubmit("paypal_set_config")) {
-            $method = \AbstractMethodPaypal::load($this->method);
+            $method = \AbstractMethodPaypal::load('EC');
             $method->setConfig(\Tools::getAllValues());
             $method->checkCredentials();
 

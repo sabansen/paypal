@@ -71,12 +71,14 @@ class AdminPayPalSetupController extends AdminPayPalController
         $this->clearFieldsForm();
         $tpl_vars['formAccountSettings'] = $formAccountSettings;
 
-        if ($this->method == 'EC') {
+        if (in_array($this->method, array('EC', 'MB'))) {
             $this->initPaymentSettingsBlock();
             $formPaymentSettings = $this->renderForm();
             $this->clearFieldsForm();
             $tpl_vars['formPaymentSettings'] = $formPaymentSettings;
+        }
 
+        if ($this->method == 'EC') {
             $this->initApiUserNameForm();
             $formApiUserName = $this->renderForm();
             $this->clearFieldsForm();
@@ -118,6 +120,13 @@ class AdminPayPalSetupController extends AdminPayPalController
             ),
             'id_form' => 'pp_config_account'
         );
+
+        if ($this->method == 'MB') {
+            $this->fields_form['form']['form']['submit'] = array(
+                'title' => $this->l('Save'),
+                'class' => 'btn btn-default pull-right button',
+            );
+        }
     }
 
     public function getHtmlBlockAccountSetting()
