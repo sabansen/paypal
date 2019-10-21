@@ -24,13 +24,16 @@
 *}
 
 <div>
-    <p class="h3">
-        {l s='PayPal Account' mod='paypal'}
-    </p>
 
-    <p>
-        {l s='In order to activate the module, you must connect your existing PayPal account or create a new one.' mod='paypal'}
-    </p>
+    {if isset($method) && in_array($method, array('EC', 'PPP'))}
+        <p class="h3">
+            {l s='PayPal Account' mod='paypal'}
+        </p>
+
+        <p>
+            {l s='In order to activate the module, you must connect your existing PayPal account or create a new one.' mod='paypal'}
+        </p>
+    {/if}
 
     {if isset($accountConfigured) && $accountConfigured}
         {if isset($method) && $method == 'EC'}

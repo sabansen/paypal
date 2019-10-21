@@ -32,7 +32,60 @@ var CustomizeCheckout = {
     $('.defaultForm').on('mouseleave', (e) => {
       $(e.currentTarget).removeClass('pp-settings-link-on');
     });
+
+    if (typeof(paypalMethod) == 'string' && paypalMethod == 'MB') {
+        CustomizeCheckout.checkConfigurations();
+        $('input').change(CustomizeCheckout.checkConfigurations);
+    }
   },
+
+    checkConfigurations() {
+      const paypalEcEnabled = $('input[name="paypal_mb_ec_enabled"]');
+      const paypalApiCard = $('input[name="paypal_api_card"]');
+      const EcOptions = [
+          'paypal_express_checkout_in_context',
+          'paypal_express_checkout_shortcut_cart',
+          'paypal_api_advantages',
+          'paypal_config_brand',
+          'paypal_config_logo'
+      ];
+      const MbCardOptions = [
+          'paypal_vaulting'
+      ];
+
+      if (paypalEcEnabled.prop('checked') == true) {
+        EcOptions.forEach(CustomizeCheckout.showConfiguration);
+        $('.message-context').show();
+      } else {
+          EcOptions.forEach(CustomizeCheckout.hideConfiguration);
+          $('.message-context').hide();
+      }
+
+      if (paypalApiCard.prop('checked') == true) {
+          MbCardOptions.forEach(CustomizeCheckout.showConfiguration);
+      } else {
+          MbCardOptions.forEach(CustomizeCheckout.hideConfiguration);
+      }
+
+    },
+
+    // Hide block while switch inactive
+    hideConfiguration(name) {
+        let selector = `[name="${name}"]`;
+        let configuration = $(selector);
+        let formGroup = configuration.closest('.col-lg-9').closest('.form-group');
+
+        formGroup.hide();
+    },
+
+    // Show block while switch is active
+    showConfiguration(name) {
+        let selector = `[name="${name}"]`;
+        let configuration = $(selector);
+        let formGroup = configuration.closest('.col-lg-9').closest('.form-group');
+
+        formGroup.show();
+    },
 
 }
 
