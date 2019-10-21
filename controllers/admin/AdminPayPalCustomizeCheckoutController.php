@@ -215,7 +215,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
         if ($this->method == 'MB') {
             $this->fields_form['form']['form']['input'][] = array(
                 'type' => 'switch',
-                'label' => $this->l('Enable vaulting'),
+                'label' => $this->l('Enable "Remember my cards" feature'),
                 'name' => 'paypal_vaulting',
                 'is_bool' => true,
                 'hint' => $this->l('The Vault is used to process payments so your customers don\'t need to re-enter their information each time they make a purchase from you.'),

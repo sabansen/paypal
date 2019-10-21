@@ -209,7 +209,7 @@ class PayPal extends \PaymentModule
         'PAYPAL_SANDBOX' => 0,
         'PAYPAL_API_INTENT' => 'sale',
         'PAYPAL_API_ADVANTAGES' => 1,
-        'PAYPAL_API_CARD' => 0,
+        'PAYPAL_API_CARD' => 1,
         'PAYPAL_METHOD' => '',
         'PAYPAL_EXPRESS_CHECKOUT_SHORTCUT' => 0,
         'PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART' => 1,
@@ -218,6 +218,7 @@ class PayPal extends \PaymentModule
         'PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT' => 0,
         'PAYPAL_VAULTING' => 0,
         'PAYPAL_REQUIREMENTS' => 0,
+        'PAYPAL_MB_EC_ENABLED' => 1,
     );
 
     /**
@@ -580,17 +581,20 @@ class PayPal extends \PaymentModule
                         $paymentOptionsEc = $this->renderEcPaymentOptions($params);
                         $payments_options = array_merge($payments_options, $paymentOptionsEc);
                     }
-                    $payment_option = new PaymentOption();
-                    $action_text = $this->l('Pay with PayPal Plus');
-                    $payment_option->setCallToActionText($action_text);
-                    $payment_option->setModuleName('paypal_plus_mb');
-                    try {
-                        $this->context->smarty->assign('path', $this->_path);
-                        $payment_option->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_mb.tpl'));
-                    } catch (Exception $e) {
-                        return;
+
+                    if ((int)Configuration::get('PAYPAL_API_CARD')) {
+                        $payment_option = new PaymentOption();
+                        $action_text = $this->l('Pay with PayPal Plus');
+                        $payment_option->setCallToActionText($action_text);
+                        $payment_option->setModuleName('paypal_plus_mb');
+                        try {
+                            $this->context->smarty->assign('path', $this->_path);
+                            $payment_option->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_mb.tpl'));
+                        } catch (Exception $e) {
+                            return;
+                        }
+                        $payments_options[] = $payment_option;
                     }
-                    $payments_options[] = $payment_option;
                 }
 
                 break;
