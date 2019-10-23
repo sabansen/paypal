@@ -59,7 +59,14 @@ const PayPalMB = {
 
     doPayment() {
         if (this.ppp != null) {
-            this.ppp.doContinue();
+          $('#ppplus-mb').append('<div class="paypal-loader-container"></div>')
+          this.setLoader(".paypal-loader-container");
+          this.ppp.setIframeHeight(30);
+          $('#ppplus-mb').css({
+            'height': '45px',
+            'overflow': 'hidden'
+          });
+          this.ppp.doContinue();
         }
     },
 
