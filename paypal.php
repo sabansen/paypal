@@ -101,7 +101,7 @@ class PayPal extends PaymentModule
         $this->name = 'paypal';
         $this->tab = 'payments_gateways';
         $this->version = '@version@';
-        $this->author = 'PrestaShop';
+        $this->author = '202-ecommerce';
         $this->is_eu_compatible = 1;
         $this->ps_versions_compliancy = array('min' => '1.5', 'max' => '1.6');
 
