@@ -26,7 +26,7 @@
 {if isset($hooks) && is_array($hooks) && empty($hooks) == false}
     <div>
         <p>
-            {l s='The module is not registered with the following hooks :' mod='braintree'}
+            {l s='The module is not registered with the following hooks :' mod='paypal'}
         </p>
 
         <ul>
@@ -42,7 +42,7 @@
         <div class="pp__mt-5">
             <a href="{$link->getAdminLink('AdminPayPalHelp', true, null, ['registerHooks' => 1])}"
                class="btn btn-default">
-                {l s='Install the required hooks automatically' mod='braitnree'}
+                {l s='Install the required hooks automatically' mod='paypal'}
             </a>
         </div>
     </div>
