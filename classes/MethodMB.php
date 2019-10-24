@@ -678,7 +678,8 @@ class MethodMB extends AbstractMethodPaypal
             'language' => str_replace("-", "_", $context->language->locale),
             'country' => $countryCustomer->iso_code,
             'disallowRememberedCards' => (bool)Configuration::get('PAYPAL_VAULTING') == false,
-            'rememberedCards' => $this->servicePaypalVaulting->getRememberedCardsByIdCustomer($context->customer->id)
+            'rememberedCards' => $this->servicePaypalVaulting->getRememberedCardsByIdCustomer($context->customer->id),
+            'merchantInstallmentSelectionOptional' => (int)Configuration::get('PAYPAL_MERCHANT_INSTALLMENT')
         );
 
         return $paymentInfo;
