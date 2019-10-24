@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
     $(document).on('click', '#paypal_process_payment, #payment_paypal_express_checkout', function(event) {
         event.preventDefault();
-        if ($('#paypal_ssl_enabled').val()) {
+        if ($('#paypal_ssl_enabled').val() == '1') {
             var baseDirPP = baseDir.replace('http:', 'https:');
         } else {
             var baseDirPP = baseDir;
