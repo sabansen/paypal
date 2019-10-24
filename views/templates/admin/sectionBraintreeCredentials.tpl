@@ -24,7 +24,7 @@
 *}
 <div class="bootstrap">
     <div class="bootstrap alert alert-warning">
-        {l s='Note: the new version of the module (v3.14.0) requires to add your credentials details.' mod='paypal'}
+        {l s='Note: the new version of the module (v3.14.0) requires to add your credentials details if you need to change your account settings.' mod='paypal'}
     </div>
 </div>
 
