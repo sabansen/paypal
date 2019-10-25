@@ -676,7 +676,7 @@ class PayPal extends \PaymentModule
             if ($method->isConfigured() == false) {
                 return false;
             }
-
+            $resources = array();
             if ((Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART')) && (isset($this->context->cookie->paypal_ecs) || isset($this->context->cookie->paypal_pSc))) {
                 $this->context->controller->registerJavascript($this->name . '-paypal-ec-sc', 'modules/' . $this->name . '/views/js/shortcut_payment.js');
                 if (isset($this->context->cookie->paypal_ecs)) {
@@ -703,18 +703,21 @@ class PayPal extends \PaymentModule
                 ));
                 $this->context->controller->registerJavascript($this->name . '-paypal-checkout', 'https://www.paypalobjects.com/api/checkout.min.js', array('server' => 'remote'));
                 $this->context->controller->registerJavascript($this->name . '-paypal-checkout-in-context', 'modules/' . $this->name . '/views/js/ec_in_context.js');
+                $resources[] = 'https://www.paypalobjects.com/api/checkout.min.js';
             }
             if ($this->paypal_method == 'PPP') {
                 $method->assignJSvarsPaypalPlus();
                 $this->context->controller->registerJavascript($this->name . '-plus-minjs', 'https://www.paypalobjects.com/webstatic/ppplus/ppplus.min.js', array('server' => 'remote'));
                 $this->context->controller->registerJavascript($this->name . '-plus-payment-js', 'modules/' . $this->name . '/views/js/payment_ppp.js');
                 $this->context->controller->addJqueryPlugin('fancybox');
+                $resources[] = 'https://www.paypalobjects.com/webstatic/ppplus/ppplus.min.js';
             }
 
             if ($this->paypal_method == 'MB') {
                 $method->assignJSvarsPaypalMB();
                 $this->context->controller->registerJavascript($this->name . '-plusdcc-minjs', 'https://www.paypalobjects.com/webstatic/ppplusdcc/ppplusdcc.min.js', array('server' => 'remote'));
                 $this->context->controller->registerJavascript($this->name . '-mb-payment-js', 'modules/' . $this->name . '/views/js/payment_mb.js');
+                $resources[] = 'https://www.paypalobjects.com/webstatic/ppplusdcc/ppplusdcc.min.js';
             }
         }
 
@@ -732,10 +735,14 @@ class PayPal extends \PaymentModule
             }
             $this->context->controller->registerJavascript($this->name . '-paypal-checkout', 'https://www.paypalobjects.com/api/checkout.min.js', array('server' => 'remote'));
             $this->context->controller->registerJavascript($this->name . '-paypal-shortcut', 'modules/' . $this->name . '/views/js/shortcut.js');
+            $resources[] = 'https://www.paypalobjects.com/api/checkout.min.js';
             Media::addJsDef(array(
                 'sc_init_url' => $this->context->link->getModuleLink($this->name, 'ScInit', array(), true),
             ));
         }
+
+        $this->context->smarty->assign('resources', $resources);
+        return $this->context->smarty->fetch('module:paypal/views/templates/front/prefetch.tpl');
     }
 
     /**
