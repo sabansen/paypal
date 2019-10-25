@@ -200,6 +200,15 @@ class PayPalInstall
         Configuration::deleteByName('PAYPAL_BRAINTREE_EXPIRE_AT');
         Configuration::deleteByName('PAYPAL_BRAINTREE_REFRESH_TOKEN');
         Configuration::deleteByName('PAYPAL_BRAINTREE_MERCHANT_ID');
+
+        Configuration::deleteByName('PAYPAL_BRAINTREE_PUB_KEY_LIVE');
+        Configuration::deleteByName('PAYPAL_BRAINTREE_PRIV_KEY_LIVE');
+        Configuration::deleteByName('PAYPAL_BRAINTREE_MERCHANT_ID_LIVE');
+        Configuration::deleteByName('PAYPAL_BRAINTREE_PUB_KEY_SANDBOX');
+        Configuration::deleteByName('PAYPAL_BRAINTREE_PRIV_KEY_SANDBOX');
+        Configuration::deleteByName('PAYPAL_BRAINTREE_MERCHANT_ID_SANDBOX');
+
+
     }
 
     /**
