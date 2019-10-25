@@ -178,23 +178,23 @@ class AdminPayPalController extends \ModuleAdminController
 
     public function postProcess()
     {
-
         if (\Tools::isSubmit("paypal_set_config")) {
             $method = \AbstractMethodPaypal::load('EC');
             $method->setConfig(\Tools::getAllValues());
             $method->checkCredentials();
-
-            if (empty($method->errors) == false) {
-                foreach ($method->errors as $error) {
-                    $this->errors[] = $error;
-                    $this->log($error);
-                }
-            }
+            $this->errors = array_merge($this->errors, $method->errors);
         }
 
         if (\Tools::isSubmit($this->controller_name . '_config')) {
             if ($this->saveForm()) {
                 $this->confirmations[] = $this->module->l('Successful update.', 'AdminPayPalController');
+            }
+        }
+
+        if (empty($this->errors) == false) {
+            $this->errors = array_unique($this->errors);
+            foreach ($this->errors as $error) {
+                $this->log($error);
             }
         }
 

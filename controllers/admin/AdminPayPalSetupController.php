@@ -302,13 +302,7 @@ class AdminPayPalSetupController extends AdminPayPalController
         $result = parent::saveForm();
         $method = AbstractMethodPaypal::load($this->method);
         $method->checkCredentials();
-
-        if (empty($method->errors) == false) {
-            foreach ($method->errors as $error) {
-                $this->errors[] = $error;
-                $this->log($error);
-            }
-        }
+        $this->errors = array_merge($this->errors, $method->errors);
 
         return $result;
     }
