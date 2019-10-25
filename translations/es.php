@@ -3,7 +3,6 @@
 global $_MODULE;
 
 $_MODULE = array();
-
 $_MODULE['<{paypal}prestashop>paypal_connect_d1f14cc4a2dade80c92421d26422fea0'] = 'Abrir una nueva conexión con';
 $_MODULE['<{paypal}prestashop>paypal_connect_94a27811a721ef512ad7bfa06cab34e0'] = 'Error de la conexión con el método cURL';
 $_MODULE['<{paypal}prestashop>paypal_connect_70215486455daee13382c68b1a230b82'] = 'La conexión con el método cURL se ha desarrollado con éxito';

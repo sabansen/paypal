@@ -21,6 +21,7 @@ $_MODULE['<{paypal}prestashop>paypal_98aba438b26738216a5674199a9a4159'] = 'Votre
 $_MODULE['<{paypal}prestashop>paypal_3561ead2eb61bae51846055b28d11bb7'] = 'Votre compte Braintree est maintenant configuré en mode sandbox. Uniquement l\'Euro est utilisé. Si vous rencontrez un problème, contactez-nous au 08 05 54 27 14.';
 $_MODULE['<{paypal}prestashop>paypal_e3b6254241629c649ac441fb85ecf695'] = 'Votre compte Braintree est maintenant configuré en mode production. Si vous rencontrez un problème, contactez-nous au 08 05 54 27 14.';
 $_MODULE['<{paypal}prestashop>paypal_7c52f2d084c19bb0511be6eba8f7387c'] = 'Braintree n\'est pas configuré. Si vous rencontrez un problème, contactez-nous au 08 05 54 27 14.';
+$_MODULE['<{paypal}prestashop>paypal_240f15aa2c9d57f4673d921be74ed008'] = 'Le système d\'authentification sera obsolète et supprimé en faveur de l\'ajout manuel de vos informations d\'identification. Le nouveau module PayPal (v3.14.0) pour PrestaShop 1.6 sera disponible en novembre 2019. Merci de mettre à jour votre module avant la fin de l\'année.';
 $_MODULE['<{paypal}prestashop>paypal_9b88c95a15e018c3f8038a7d0160145c'] = 'PayPal';
 $_MODULE['<{paypal}prestashop>paypal_a93d958df2932f0740ef598317304fab'] = 'PayPal, Carte de débit, Carte de crédit, Facture';
 $_MODULE['<{paypal}prestashop>paypal_20fda49ece75d93bea97648ab1f1f1cf'] = 'Annulation des produits :';

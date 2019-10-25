@@ -101,8 +101,8 @@ class PayPal extends PaymentModule
     {
         $this->name = 'paypal';
         $this->tab = 'payments_gateways';
-        $this->version = '3.13.0';
-        $this->author = 'PrestaShop';
+        $this->version = '@version@';
+        $this->author = '202-ecommerce';
         $this->is_eu_compatible = 1;
         $this->ps_versions_compliancy = array('min' => '1.5', 'max' => '1.6');
 
@@ -747,6 +747,12 @@ class PayPal extends PaymentModule
         ));
 
         $this->getTranslations();
+
+        if ((int)Configuration::get('PAYPAL_BRAINTREE_ENABLED')) {
+            $output .= $this->displayWarning(
+                $this->l('Important Notice: Authentication system will be deprecated and remove in favor to manual addition of your credentials. New PayPal module (v3.14.0) for PrestaShop 1.6 will be available in November 2019, so please make sure that your module is updated until the end of the year.')
+            );
+        }
 
         $output .= $this->fetchTemplate('/views/templates/admin/back_office.tpl');
 
