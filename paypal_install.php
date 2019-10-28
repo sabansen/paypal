@@ -140,7 +140,7 @@ class PayPalInstall
     {
         Configuration::updateValue('PAYPAL_SANDBOX', 0);
         Configuration::updateValue('PAYPAL_HEADER', '');
-        Configuration::updateValue('PAYPAL_BUSINESS', 0);
+        Configuration::updateValue('PAYPAL_BUSINESS', 1);
         Configuration::updateValue('PAYPAL_BUSINESS_ACCOUNT', 'paypal@prestashop.com');
         Configuration::updateValue('PAYPAL_API_USER', '');
         Configuration::updateValue('PAYPAL_API_PASSWORD', '');
