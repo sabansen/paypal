@@ -120,6 +120,10 @@ class PaypalIpnModuleFrontController extends PaypalAbstarctModuleFrontController
             $this->setOrderStatus($orders, (int)\Configuration::get('PS_OS_PAYMENT'));
         }
 
+        if (in_array($data['payment_status'], array('Failed', 'Expired', 'Denied'))) {
+            $this->setOrderStatus($orders, (int)\Configuration::get('PS_OS_CANCELED'));
+        }
+
         return true;
     }
 
