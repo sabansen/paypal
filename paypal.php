@@ -1798,4 +1798,19 @@ class PayPal extends \PaymentModule
             return 'https://ipnpb.paypal.com/cgi-bin/webscr';
         }
     }
+
+    /**
+     * @return bool
+     */
+    public function showWarningForPayPalPlusUsers()
+    {
+        $result = true;
+        $methodPPP = AbstractMethodPaypal::load('PPP');
+        $methodEC = AbstractMethodPaypal::load('EC');
+        $result &= $this->paypal_method == 'PPP';
+        $result &= $methodPPP->isConfigured() == false;
+        $result &= $methodEC->isConfigured();
+
+        return $result;
+    }
 }

@@ -33,9 +33,13 @@
             {/if}
 
         </div>
-        <div class="col-lg-4">
+        <div class="col-lg-4 pp__flex pp__flex_direction_column pp__justify-content-between">
             {if isset($formEnvironmentSettings)}
                 {$formEnvironmentSettings nofilter} {* the variable contains html code *}
+            {/if}
+
+            {if isset($formStatusTop)}
+                {$formStatusTop nofilter} {* the variable contains html code *}
             {/if}
         </div>
     </div>

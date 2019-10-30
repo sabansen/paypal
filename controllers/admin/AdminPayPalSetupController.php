@@ -65,6 +65,11 @@ class AdminPayPalSetupController extends AdminPayPalController
             $this->context->smarty->assign('content', $this->content);
             return;
         }
+
+        if ($this->method == 'PPP' && $this->module->showWarningForPayPalPlusUsers()) {
+            $this->warnings[] = $this->context->smarty->fetch($this->getTemplatePath() . '_partials/messages/forPayPalPlusUsers.tpl');
+        }
+
         $tpl_vars = array();
         $this->initAccountSettingsBlock();
         $formAccountSettings = $this->renderForm();
@@ -94,7 +99,12 @@ class AdminPayPalSetupController extends AdminPayPalController
         $this->initStatusBlock();
         $formStatus = $this->renderForm();
         $this->clearFieldsForm();
-        $tpl_vars['formStatus'] = $formStatus;
+
+        if ($this->method == 'PPP') {
+            $tpl_vars['formStatusTop'] = $formStatus;
+        } else {
+            $tpl_vars['formStatus'] = $formStatus;
+        }
 
         $this->context->smarty->assign($tpl_vars);
         $this->content = $this->context->smarty->fetch($this->getTemplatePath() . 'setup.tpl');
@@ -121,7 +131,7 @@ class AdminPayPalSetupController extends AdminPayPalController
             'id_form' => 'pp_config_account'
         );
 
-        if ($this->method == 'MB') {
+        if (in_array($this->method, array('MB', 'PPP'))) {
             $this->fields_form['form']['form']['submit'] = array(
                 'title' => $this->l('Save'),
                 'class' => 'btn btn-default pull-right button',
