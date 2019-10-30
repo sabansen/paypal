@@ -161,6 +161,7 @@ class PayPalInstall
 
         Configuration::updateValue('VZERO_ENABLED', 0);
         Configuration::updateValue('PAYPAL_BRAINTREE_ENABLED', 0);
+        Configuration::updateValue('PAYPAL_USE_3D_SECURE', 1);
     }
 
     /**
@@ -207,6 +208,7 @@ class PayPalInstall
         Configuration::deleteByName('PAYPAL_BRAINTREE_PUB_KEY_SANDBOX');
         Configuration::deleteByName('PAYPAL_BRAINTREE_PRIV_KEY_SANDBOX');
         Configuration::deleteByName('PAYPAL_BRAINTREE_MERCHANT_ID_SANDBOX');
+        Configuration::deleteByName('PAYPAL_USE_3D_SECURE');
 
 
     }
