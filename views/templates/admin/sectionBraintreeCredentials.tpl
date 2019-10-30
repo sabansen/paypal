@@ -22,11 +22,14 @@
 *  @license	http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<div class="bootstrap">
-    <div class="bootstrap alert alert-warning">
-        {l s='Note: the new version of the module (v3.14.0) requires to add your credentials details if you need to change your account settings.' mod='paypal'}
+
+{if isset($showWarningForBraintreeUsers) && $showWarningForBraintreeUsers}
+    <div class="bootstrap">
+        <div class="bootstrap alert alert-warning">
+            {l s='Note: the new version of the module (v3.14.0) requires to add your credentials details if you need to change your account settings.' mod='paypal'}
+        </div>
     </div>
-</div>
+{/if}
 
 <p>
     {l s='To find your API Keys, please follow those steps:' mod='paypal'}

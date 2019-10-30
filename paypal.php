@@ -739,6 +739,7 @@ class PayPal extends PaymentModule
             'paypal_braintree_pub_key_sandbox' => Configuration::get('PAYPAL_BRAINTREE_PUB_KEY_SANDBOX'),
             'paypal_braintree_priv_key_sandbox' => Configuration::get('PAYPAL_BRAINTREE_PRIV_KEY_SANDBOX'),
             'paypal_braintree_merchant_id_sandbox' => Configuration::get('PAYPAL_BRAINTREE_MERCHANT_ID_SANDBOX'),
+            'showWarningForBraintreeUsers' => $braintree_configured == false && Configuration::get('PAYPAL_BRAINTREE_ACCESS_TOKEN')
         ));
 
         $hss_errors = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'paypal_hss_email_error`');
