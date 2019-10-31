@@ -656,6 +656,7 @@ class PayPal extends \PaymentModule
     public function hookHeader()
     {
         $this->context->controller->registerStylesheet($this->name . '-fo', 'modules/' . $this->name . '/views/css/paypal_fo.css');
+        $resources = array();
         if (Tools::getValue('controller') == "order") {
             $active = false;
             $modules = Hook::getHookModuleExecList('paymentOptions');
@@ -676,7 +677,7 @@ class PayPal extends \PaymentModule
             if ($method->isConfigured() == false) {
                 return false;
             }
-            $resources = array();
+
             if ((Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART')) && (isset($this->context->cookie->paypal_ecs) || isset($this->context->cookie->paypal_pSc))) {
                 $this->context->controller->registerJavascript($this->name . '-paypal-ec-sc', 'modules/' . $this->name . '/views/js/shortcut_payment.js');
                 if (isset($this->context->cookie->paypal_ecs)) {
