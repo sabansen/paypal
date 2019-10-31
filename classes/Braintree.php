@@ -38,16 +38,8 @@ class PrestaBraintree
      */
     private function initConfig($sandboxMode = null)
     {
-        if ($sandboxMode !== null) {
-            $this->mode = $sandboxMode ? 'SANDBOX' : 'LIVE';
-        } else {
-            $this->mode = Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
-        }
-
-        $this->gateway = new Braintree_Gateway(array('environment' => $this->mode == 'SANDBOX' ? 'sandbox' : 'production',
-            'publicKey' => Configuration::get('PAYPAL_BRAINTREE_PUB_KEY_' . $this->mode),
-            'privateKey' => Configuration::get('PAYPAL_BRAINTREE_PRIV_KEY_' . $this->mode),
-            'merchantId' => Configuration::get('PAYPAL_BRAINTREE_MERCHANT_ID_' . $this->mode)));
+        $configurations = $this->getConfigurations($sandboxMode);
+        $this->gateway = new Braintree_Gateway($configurations);
         $this->error = '';
     }
 
@@ -289,5 +281,68 @@ class PrestaBraintree
     public function isValidStatus($status)
     {
         return in_array($status, array('submitted_for_settlement','authorized','settled'));
+    }
+
+    protected function getConfigurations($sandboxMode = null)
+    {
+        $configurations = array();
+        if ($this->useToken()) {
+            $this->_checkToken();
+            $configurations['accessToken'] = Configuration::get('PAYPAL_BRAINTREE_ACCESS_TOKEN');
+        } else {
+            if ($sandboxMode !== null) {
+                $this->mode = $sandboxMode ? 'SANDBOX' : 'LIVE';
+            } else {
+                $this->mode = Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
+            }
+
+            $configurations['environment'] = $this->mode == 'SANDBOX' ? 'sandbox' : 'production';
+            $configurations['publicKey'] = Configuration::get('PAYPAL_BRAINTREE_PUB_KEY_' . $this->mode);
+            $configurations['privateKey'] = Configuration::get('PAYPAL_BRAINTREE_PRIV_KEY_' . $this->mode);
+            $configurations['merchantId'] = Configuration::get('PAYPAL_BRAINTREE_MERCHANT_ID_' . $this->mode);
+        }
+
+        return $configurations;
+    }
+
+    public function useToken()
+    {
+        $return = true;
+        $mode = Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
+        $return &= Configuration::get('PAYPAL_BRAINTREE_PUB_KEY_' . $mode) == false;
+        $return &= Configuration::get('PAYPAL_BRAINTREE_PRIV_KEY_' . $mode) == false;
+        $return &= Configuration::get('PAYPAL_BRAINTREE_MERCHANT_ID_' . $mode) == false;
+        $return &= Configuration::get('PAYPAL_BRAINTREE_ACCESS_TOKEN') != false;
+
+        return $return;
+    }
+
+    /**
+     * Check if token is still valid by comparing the "expiresAt" parameter to the time
+     */
+    private function _checkToken()
+    {
+        if (Configuration::get('PAYPAL_BRAINTREE_EXPIRES_AT') && Configuration::get('PAYPAL_BRAINTREE_REFRESH_TOKEN')) {
+            $datetime_bt = DateTime::createFromFormat(DateTime::ISO8601, Configuration::get('PAYPAL_BRAINTREE_EXPIRES_AT'));
+            $datetime_now = new DateTime();
+            $datetime_bt->format(DateTime::ISO8601);
+            $datetime_now->format(DateTime::ISO8601);
+            if ($datetime_now->getTimestamp() >= $datetime_bt->getTimestamp()) {
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, PROXY_HOST.'prestashop/refreshToken?refreshToken='.urlencode(Configuration::get('PAYPAL_BRAINTREE_REFRESH_TOKEN')));
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_ENCODING, '');
+                $resp = curl_exec($ch);
+                curl_close($ch);
+                $json = Tools::jsonDecode($resp);
+                Configuration::updateValue('PAYPAL_BRAINTREE_ACCESS_TOKEN', $json->data->accessToken);
+                Configuration::updateValue('PAYPAL_BRAINTREE_REFRESH_TOKEN', $json->data->refreshToken);
+                Configuration::updateValue('PAYPAL_BRAINTREE_EXPIRES_AT', $json->data->expiresAt);
+                return true;
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 }
