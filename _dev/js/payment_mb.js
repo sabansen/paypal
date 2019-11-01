@@ -30,6 +30,7 @@ const PayPalMB = {
             "payerFirstName": paymentInfo.payerInfo.first_name,
             "payerLastName": paymentInfo.payerInfo.last_name,
             "payerTaxId": paymentInfo.payerInfo.tax_id,
+            "payerTaxIdType": paymentInfo.payerInfo.tax_id_type,
             "language": paymentInfo.language,
             "country": paymentInfo.country,
             "disallowRememberedCards": paymentInfo.disallowRememberedCards,
@@ -46,11 +47,24 @@ const PayPalMB = {
         this.getPaymentInfo().then(
             paymentInformation => {
                 this.setConfig(paymentInformation, "ppplus-mb");
+
+                if (this.config.country == 'BR' && this.config.payerTaxId == '') {
+                    let message = typeof(EMPTY_TAX_ID) != 'undefined' ? EMPTY_TAX_ID : 'Payer tax id is empty';
+                    this.showError(message, '#ppplus-mb');
+                    return;
+                }
+
                 this.ppp = PAYPAL.apps.PPP(this.config);
             }
         ).catch(error => {
             console.log(error);
         });
+    },
+
+    showError(message, selector) {
+        let errorContainer = $('<div class="alert alert-danger" />');
+        errorContainer.text(message);
+        $(selector).html(errorContainer);
     },
 
     setLoader(selector) {

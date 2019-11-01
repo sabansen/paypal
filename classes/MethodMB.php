@@ -54,6 +54,12 @@ use \PayPal\Api\ShippingAddress;
  */
 class MethodMB extends AbstractMethodPaypal
 {
+    /* @var string type of the payer tax*/
+    const BR_CPF = 'BR_CPF';
+
+    /* @var string type of the payer tax*/
+    const BR_CNPJ = 'BR_CNPJ';
+
     private $_items = array();
 
     private $_itemTotalValue = 0;
@@ -527,8 +533,10 @@ class MethodMB extends AbstractMethodPaypal
     public function assignJSvarsPaypalMB()
     {
         $context = Context::getContext();
+        $module = Module::getInstanceByName($this->name);
         Media::addJsDef(array(
-            'ajaxPatch' => $context->link->getModuleLink('paypal', 'mbValidation', array(), true)
+            'ajaxPatch' => $context->link->getModuleLink('paypal', 'mbValidation', array(), true),
+            'EMPTY_TAX_ID' => $module->l('For processing you payment via PayPal it is required to add a VAT number to your address. Please fill it and complete your payment.', false, get_class($this)),
         ));
     }
 
@@ -631,8 +639,10 @@ class MethodMB extends AbstractMethodPaypal
 
         if ($countryCustomer->iso_code == 'BR') {
             $payerInfo->setTaxId($addressCustomer->vat_number);
+            $payerInfo->setTaxIdType($this->getTaxIdType($addressCustomer->vat_number));
         } else {
             $payerInfo->setTaxId('');
+            $payerInfo->setTaxIdType('');
         }
 
         return $payerInfo;
@@ -713,6 +723,31 @@ class MethodMB extends AbstractMethodPaypal
     public function getRememberedCards()
     {
         return $this->rememeberedCards;
+    }
+
+    /**
+     * @param $vatNumber string
+     * @return string
+     */
+    public function getTaxIdType($vatNumber)
+    {
+        if (is_string($vatNumber) == false || empty($vatNumber)) {
+            return '';
+        }
+
+        $vatNumberArray = str_split($vatNumber);
+
+        if (count($vatNumberArray) != 11) {
+            return self::BR_CNPJ;
+        }
+
+        foreach ($vatNumberArray as $symbol) {
+            if (is_numeric($symbol) == false) {
+                return self::BR_CNPJ;
+            }
+        }
+
+        return self::BR_CPF;
     }
 
 }
