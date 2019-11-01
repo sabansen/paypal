@@ -151,31 +151,39 @@ class AdminPayPalSetupController extends AdminPayPalController
 
     public function initPaymentSettingsBlock()
     {
+        $inputGroup = array(
+            'type' => 'select',
+            'name' => 'paypal_api_intent',
+            'options' => array(
+                'query' => array(
+                    array(
+                        'id' => 'sale',
+                        'name' => $this->l('Sale')
+                    ),
+                    array(
+                        'id' => 'authorization',
+                        'name' => $this->l('Authorize')
+                    )
+                ),
+                'id' => 'id',
+                'name' => 'name'
+            ),
+        );
+
+        if ($this->method == 'MB') {
+            $inputGroup['label'] = $this->l('Payment action (for PayPal Express Checkout only)');
+            $inputGroup['hint'] = $this->l('You can change the payment action only for PayPal Express Checkout payments. If you are using PayPal Plus the "Sale" action is the only possible action.');
+        } else {
+            $inputGroup['label'] = $this->l('Payment action');
+        }
+
         $this->fields_form['form']['form'] = array(
             'legend' => array(
                 'title' => $this->l('Payment settings'),
                 'icon' => 'icon-cogs',
             ),
             'input' => array(
-                array(
-                    'type' => 'select',
-                    'label' => $this->l('Payment action'),
-                    'name' => 'paypal_api_intent',
-                    'options' => array(
-                        'query' => array(
-                            array(
-                                'id' => 'sale',
-                                'name' => $this->l('Sale')
-                            ),
-                            array(
-                                'id' => 'authorization',
-                                'name' => $this->l('Authorize')
-                            )
-                        ),
-                        'id' => 'id',
-                        'name' => 'name'
-                    ),
-                ),
+                $inputGroup,
                 array(
                     'type' => 'html',
                     'name' => '',
