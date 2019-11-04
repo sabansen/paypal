@@ -536,7 +536,7 @@ class MethodMB extends AbstractMethodPaypal
         $module = Module::getInstanceByName($this->name);
         Media::addJsDef(array(
             'ajaxPatch' => $context->link->getModuleLink('paypal', 'mbValidation', array(), true),
-            'EMPTY_TAX_ID' => $module->l('For processing you payment via PayPal it is required to add a VAT number to your address. Please fill it and complete your payment.', false, get_class($this)),
+            'EMPTY_TAX_ID' => $module->l('For processing you payment via PayPal it is required to add a VAT number to your address. Please fill it and complete your payment.', get_class($this)),
         ));
     }
 
