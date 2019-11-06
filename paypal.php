@@ -444,6 +444,10 @@ class PayPal extends \PaymentModule
             }
         }
 
+        if (parent::uninstall() == false) {
+            return false;
+        }
+
         if ($installer->uninstallModuleAdminControllers() == false) {
             return false;
         }
