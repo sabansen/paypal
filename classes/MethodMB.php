@@ -638,8 +638,9 @@ class MethodMB extends AbstractMethodPaypal
         $payerInfo->setShippingAddress($this->getPayerShippingAddress());
 
         if ($countryCustomer->iso_code == 'BR') {
-            $payerInfo->setTaxId($addressCustomer->vat_number);
-            $payerInfo->setTaxIdType($this->getTaxIdType($addressCustomer->vat_number));
+            $payerTaxId = str_replace(array('.', '-', '/'), '', $addressCustomer->vat_number);
+            $payerInfo->setTaxId($payerTaxId);
+            $payerInfo->setTaxIdType($this->getTaxIdType($payerTaxId));
         } else {
             $payerInfo->setTaxId('');
             $payerInfo->setTaxIdType('');
@@ -735,7 +736,6 @@ class MethodMB extends AbstractMethodPaypal
             return '';
         }
 
-        $vatNumber = str_replace(array('.', '-', '/'), '', $vatNumber);
         $vatNumberArray = str_split($vatNumber);
 
         if (count($vatNumberArray) != 11) {
