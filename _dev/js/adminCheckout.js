@@ -50,7 +50,8 @@ var CustomizeCheckout = {
           'paypal_config_logo'
       ];
       const MbCardOptions = [
-          'paypal_vaulting'
+          'paypal_vaulting',
+          'paypal_merchant_installment'
       ];
 
       if (paypalEcEnabled.prop('checked') == true) {
