@@ -176,7 +176,7 @@ $_MODULE['<{paypal}prestashop>adminpaypalcontroller_e97db78085f532d60c2156f86248
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_5ee8825eb41716424065ccd113abb596'] = 'Para ativar uma solução de pagamento, selecione o seu país predefinido.';
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_b0fb9d7e6d4ed47cb12f3092943fafc2'] = 'O SSL deve estar ativado no seu site.';
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_aaf6d0534e41ba08c928421597f9ab26'] = 'Falha na verificação TLS.';
-$_MODULE['<{paypal}prestashop>adminpaypalcontroller_81618d71d454c0993d01b9a5329937c4'] = 'A configuração da sua loja está OK. Pode começar a configurar o seu módulo Braintree.';
+$_MODULE['<{paypal}prestashop>adminpaypalcontroller_ef6cad8536ea150596af086ac2adacef'] = 'A configuração da sua loja está OK. Pode começar a configurar o seu módulo PayPal.';
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_2c4493f4907a8c500557d79dd978f452'] = '401 Não autorizado. Tenha em atenção que não é possível executar a verificação TLS se tiver uma proteção por palavra-passe htaccess ativada no seu site.';
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_d8e95938c82a618f755c13b35d4277c4'] = 'Está a usar uma versão antiga do cURL. Atualize a sua extensão cURL para a versão 7.34.0 ou superior.';
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_38dc1dc4db247b4c01b26636e6bf9666'] = 'A versão do TLS não é compatível';
