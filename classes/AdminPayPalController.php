@@ -132,7 +132,7 @@ class AdminPayPalController extends \ModuleAdminController
             $response['message'][] = $this->module->l('Tls verification failed.', 'AdminPayPalController').' '.$tls_check['error_message'];
         }
         if ($response['success']) {
-            $response['message'][] = $this->module->l('Your shop configuration is OK. You can start configuring your Braintree module.', 'AdminPayPalController');
+            $response['message'][] = $this->module->l('Your shop configuration is OK. You can start configuring your PayPal module.', 'AdminPayPalController');
         }
         return $response;
     }

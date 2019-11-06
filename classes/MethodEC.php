@@ -465,6 +465,27 @@ class MethodEC extends AbstractMethodPaypal
     }
 
     /**
+     * @param $cart Cart
+     * @return string additional payment information
+     */
+    public function getCustomFieldInformation(Cart $cart)
+    {
+        $module = Module::getInstanceByName($this->name);
+        $return = $module->l('Cart ID: ',  get_class($this)) . $cart->id . '.';
+
+        if (Shop::isFeatureActive()) {
+            $shop = new Shop($cart->id_shop, $cart->id_lang);
+
+            if (Validate::isLoadedObject($shop)) {
+                $return .= $module->l('Shop name: ',  get_class($this)) . $shop->name;
+            }
+        }
+
+        return $return;
+
+    }
+
+    /**
      * @see AbstractMethodPaypal::validation()
      */
     public function validation()
@@ -479,6 +500,7 @@ class MethodEC extends AbstractMethodPaypal
 
         $this->_paymentDetails = new PaymentDetailsType();
         $this->_paymentDetails->ButtonSource = 'PrestaShop_Cart_'.(getenv('PLATEFORM') == 'PSREADY' ? 'Ready_':'').'EC';
+        $this->_paymentDetails->Custom = $this->getCustomFieldInformation($cart);
 
         if (!Context::getContext()->cart->isVirtualCart()) {
             $address = $this->_getShippingAddress();
@@ -501,6 +523,7 @@ class MethodEC extends AbstractMethodPaypal
         $DoECReq->DoExpressCheckoutPaymentRequest = $DoECRequest;
 
         $paypalService = new PayPalAPIInterfaceServiceService($this->_getCredentialsInfo());
+
         $exec_payment = $paypalService->DoExpressCheckoutPayment($DoECReq);
 
         if (isset($exec_payment->Errors)) {

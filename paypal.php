@@ -267,7 +267,7 @@ class PayPal extends \PaymentModule
                 'pt' => 'Experiência',
                 'pl' => 'Doświadczenie',
                 'nl' => 'Ervaring',
-                'it' => 'Percorso clinte',
+                'it' => 'Percorso Cliente',
                 'es' => 'Experiencia'
             ),
             'class_name' => 'AdminPayPalCustomizeCheckout',
