@@ -588,7 +588,7 @@ class PayPal extends \PaymentModule
 
                     if ((int)Configuration::get('PAYPAL_API_CARD')) {
                         $payment_option = new PaymentOption();
-                        $action_text = $this->l('Pay with PayPal Plus');
+                        $action_text = $this->l('Pay with credit or debit card');
                         $payment_option->setCallToActionText($action_text);
                         $payment_option->setModuleName('paypal_plus_mb');
                         try {
