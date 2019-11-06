@@ -176,7 +176,7 @@ $_MODULE['<{paypal}prestashop>adminpaypalcontroller_e97db78085f532d60c2156f86248
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_5ee8825eb41716424065ccd113abb596'] = 'Selecteer uw standaardland om een betaaloplossing te activeren.';
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_b0fb9d7e6d4ed47cb12f3092943fafc2'] = 'SSL moet op uw website ingeschakeld zijn.';
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_aaf6d0534e41ba08c928421597f9ab26'] = 'TLS-verificatie is mislukt.';
-$_MODULE['<{paypal}prestashop>adminpaypalcontroller_81618d71d454c0993d01b9a5329937c4'] = 'Uw winkelconfiguratie is in orde. U kunt nu beginnen met het configureren van uw Braintree-module.';
+$_MODULE['<{paypal}prestashop>adminpaypalcontroller_ef6cad8536ea150596af086ac2adacef'] = 'Uw winkelconfiguratie is in orde. U kunt nu beginnen met het configureren van uw PayPal-module.';
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_2c4493f4907a8c500557d79dd978f452'] = '401 Niet toegestaan. Houd er rekening mee dat de TLS-verificatie niet kan worden uitgevoerd als u htaccess-wachtwoordbeveiliging op uw website heeft ingeschakeld.';
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_d8e95938c82a618f755c13b35d4277c4'] = 'U gebruikt een oude versie van cURL. Update uw cURL-extensie naar versie 7.34.0 of hoger.';
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_38dc1dc4db247b4c01b26636e6bf9666'] = 'TLS-versie is niet compatibel';
