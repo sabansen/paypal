@@ -735,6 +735,7 @@ class MethodMB extends AbstractMethodPaypal
             return '';
         }
 
+        $vatNumber = str_replace(array('.', '-', '/'), '', $vatNumber);
         $vatNumberArray = str_split($vatNumber);
 
         if (count($vatNumberArray) != 11) {
