@@ -74,9 +74,8 @@ const PayPalMB = {
 
     doPayment() {
         if (this.ppp != null) {
-          $('#ppplus-mb').append('<div class="paypal-loader-container"></div>')
+          $('#ppplus-mb').append('<div class="paypal-loader-container"></div>');
           this.setLoader(".paypal-loader-container");
-          this.ppp.setIframeHeight(30);
           $('#ppplus-mb').css({
             'height': '45px',
             'overflow': 'hidden'
@@ -122,6 +121,10 @@ const PayPalMB = {
     },
 
     handleError(error) {
+        $('.paypal-loader-container').hide();
+        $('#ppplus-mb').css({
+          'height': '610px'
+        });
         console.log(error, typeof error);
     },
 
