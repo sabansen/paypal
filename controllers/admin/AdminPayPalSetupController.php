@@ -318,6 +318,11 @@ class AdminPayPalSetupController extends AdminPayPalController
     public function saveForm()
     {
         $result = parent::saveForm();
+
+        if (Tools::isSubmit('paypal_sandbox')) {
+            return $result;
+        }
+
         $method = AbstractMethodPaypal::load($this->method);
         $method->checkCredentials();
         $this->errors = array_merge($this->errors, $method->errors);
