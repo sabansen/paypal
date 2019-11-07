@@ -660,19 +660,8 @@ class PayPal extends \PaymentModule
     public function hookHeader()
     {
         $this->context->controller->registerStylesheet($this->name . '-fo', 'modules/' . $this->name . '/views/css/paypal_fo.css');
-        $resources = array();
         if (Tools::getValue('controller') == "order") {
-            $active = false;
-            $modules = Hook::getHookModuleExecList('paymentOptions');
-            if (empty($modules)) {
-                return;
-            }
-            foreach ($modules as $module) {
-                if ($module['module'] == 'paypal') {
-                    $active = true;
-                }
-            }
-            if (!$active) {
+            if (!$this->checkActiveModule()) {
                 return;
             }
 
@@ -708,22 +697,36 @@ class PayPal extends \PaymentModule
                 ));
                 $this->context->controller->registerJavascript($this->name . '-paypal-checkout', 'https://www.paypalobjects.com/api/checkout.min.js', array('server' => 'remote'));
                 $this->context->controller->registerJavascript($this->name . '-paypal-checkout-in-context', 'modules/' . $this->name . '/views/js/ec_in_context.js');
-                $resources[] = 'https://www.paypalobjects.com/api/checkout.min.js';
             }
             if ($this->paypal_method == 'PPP') {
                 $method->assignJSvarsPaypalPlus();
                 $this->context->controller->registerJavascript($this->name . '-plus-minjs', 'https://www.paypalobjects.com/webstatic/ppplus/ppplus.min.js', array('server' => 'remote'));
                 $this->context->controller->registerJavascript($this->name . '-plus-payment-js', 'modules/' . $this->name . '/views/js/payment_ppp.js');
                 $this->context->controller->addJqueryPlugin('fancybox');
-                $resources[] = 'https://www.paypalobjects.com/webstatic/ppplus/ppplus.min.js';
             }
 
             if ($this->paypal_method == 'MB') {
                 $method->assignJSvarsPaypalMB();
                 $this->context->controller->registerJavascript($this->name . '-plusdcc-minjs', 'https://www.paypalobjects.com/webstatic/ppplusdcc/ppplusdcc.min.js', array('server' => 'remote'));
                 $this->context->controller->registerJavascript($this->name . '-mb-payment-js', 'modules/' . $this->name . '/views/js/payment_mb.js');
+            }
+        } elseif (Tools::getValue('controller') == "cart") {
+            if (!$this->checkActiveModule()) {
+                return;
+            }
+            $resources = array();
+            if (($this->paypal_method == 'EC' && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT')) ||
+                ($this->paypal_method == 'MB' && (int)Configuration::get('PAYPAL_MB_EC_ENABLED') && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT'))) {
+                $resources[] = 'https://www.paypalobjects.com/api/checkout.min.js';
+            }
+            if ($this->paypal_method == 'PPP') {
+                $resources[] = 'https://www.paypalobjects.com/webstatic/ppplus/ppplus.min.js';
+            }
+            if ($this->paypal_method == 'MB') {
                 $resources[] = 'https://www.paypalobjects.com/webstatic/ppplusdcc/ppplusdcc.min.js';
             }
+            $this->context->smarty->assign('resources', $resources);
+            return $this->context->smarty->fetch('module:paypal/views/templates/front/prefetch.tpl');
         }
 
         if ((Tools::getValue('controller') == "product" && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT'))
@@ -740,14 +743,25 @@ class PayPal extends \PaymentModule
             }
             $this->context->controller->registerJavascript($this->name . '-paypal-checkout', 'https://www.paypalobjects.com/api/checkout.min.js', array('server' => 'remote'));
             $this->context->controller->registerJavascript($this->name . '-paypal-shortcut', 'modules/' . $this->name . '/views/js/shortcut.js');
-            $resources[] = 'https://www.paypalobjects.com/api/checkout.min.js';
             Media::addJsDef(array(
                 'sc_init_url' => $this->context->link->getModuleLink($this->name, 'ScInit', array(), true),
             ));
         }
+    }
 
-        $this->context->smarty->assign('resources', $resources);
-        return $this->context->smarty->fetch('module:paypal/views/templates/front/prefetch.tpl');
+    public function checkActiveModule()
+    {
+        $active = false;
+        $modules = Hook::getHookModuleExecList('paymentOptions');
+        if (empty($modules)) {
+            return;
+        }
+        foreach ($modules as $module) {
+            if ($module['module'] == $this->name) {
+                $active = true;
+            }
+        }
+        return $active;
     }
 
     /**
