@@ -1136,13 +1136,7 @@ class PayPal extends PaymentModule
             return null;
         }
 
-        $use_mobile = $this->useMobile();
-
-        if ($use_mobile) {
-            $method = ECS;
-        } else {
-            $method = (int) Configuration::get('PAYPAL_PAYMENT_METHOD');
-        }
+        $method = (int) Configuration::get('PAYPAL_PAYMENT_METHOD');
 
         if (isset($this->context->cookie->express_checkout)) {
             $this->redirectToConfirmation();
