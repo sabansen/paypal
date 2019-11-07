@@ -1274,6 +1274,10 @@ class PayPal extends \PaymentModule
         }
 
         if ($params['newOrderStatus']->id == Configuration::get('PS_OS_REFUND')) {
+            if ($this->context->controller instanceof PaypalIpnModuleFrontController) {
+                return true;
+            }
+
             $capture = PaypalCapture::loadByOrderPayPalId($orderPayPal->id);
             if (Validate::isLoadedObject($capture) && !$capture->id_capture) {
                 ProcessLoggerHandler::openLogger();

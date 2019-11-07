@@ -90,7 +90,13 @@ class PaypalIpnModuleFrontController extends PaypalAbstarctModuleFrontController
             'ipn_track_id' => isset($data['ipn_track_id']) ? $data['ipn_track_id'] : null
         );
 
-        $orders = $this->servicePaypalIpn->getOrdersPsByTransaction($data['txn_id']);
+        if ($data['payment_status'] == 'Refunded' && isset($data['parent_txn_id'])) {
+            $transactionRef = $data['parent_txn_id'];
+        } else {
+            $transactionRef = $data['txn_id'];
+        }
+
+        $orders = $this->servicePaypalIpn->getOrdersPsByTransaction($transactionRef);
 
         if (is_array($orders) == false || empty($orders)) {
             return false;
@@ -100,7 +106,7 @@ class PaypalIpnModuleFrontController extends PaypalAbstarctModuleFrontController
         foreach ($orders as $order) {
             ProcessLoggerHandler::logInfo(
                 'IPN response : ' . $this->jsonEncode($logResponse),
-                isset($data['txn_id']) ? $data['txn_id'] : null,
+                $data['txn_id'],
                 $order->id,
                 $order->id_cart,
                 null,
@@ -118,6 +124,10 @@ class PaypalIpnModuleFrontController extends PaypalAbstarctModuleFrontController
 
         if ($data['payment_status'] == 'Completed') {
             $this->setOrderStatus($orders, (int)\Configuration::get('PS_OS_PAYMENT'));
+        }
+        
+        if ($data['payment_status'] == 'Refunded') {
+            $this->setOrderStatus($orders, (int)\Configuration::get('PS_OS_REFUND'));
         }
 
         if (in_array($data['payment_status'], array('Failed', 'Reversed', 'Denied'))) {
