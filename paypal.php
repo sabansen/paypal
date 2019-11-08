@@ -684,7 +684,18 @@ class PayPal extends \PaymentModule
                     ));
                     $cookie_paypal_email = $this->context->cookie->paypal_pSc_email;
                 }
-                Media::addJsDefL('scPaypalCheckedMsg', $this->l('You are about to pay with your PayPal account ') . $cookie_paypal_email);
+
+                $this->context->smarty->assign('paypalEmail', $cookie_paypal_email);
+                $carrierFees = $this->context->cart->getOrderTotal(true, Cart::ONLY_SHIPPING);
+
+                if ($carrierFees == 0) {
+                    $messageForCustomer = $this->context->smarty->fetch('module:paypal/views/templates/front/_partials/messageForCustomerOne.tpl');
+                } else {
+                    $this->context->smarty->assign('carrierFees', Tools::displayPrice($carrierFees));
+                    $messageForCustomer = $this->context->smarty->fetch('module:paypal/views/templates/front/_partials/messageForCustomerTwo.tpl');
+                }
+
+                Media::addJsDefL('scPaypalCheckedMsg', $messageForCustomer);
             }
 
             if (($this->paypal_method == 'EC' && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT')) ||

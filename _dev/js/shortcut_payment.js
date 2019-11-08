@@ -20,7 +20,7 @@ $(document).ready( ()=> {
     $('.payment-options div').hide();
     if (el.length > 0) {
       el.click();
-      $('.payment-options').append($(`<p>${scPaypalCheckedMsg}</p>`));
+      $('.payment-options').append(scPaypalCheckedMsg);
     }
   }
 });
