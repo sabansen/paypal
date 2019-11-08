@@ -25,6 +25,7 @@
 
 
 <div class="row">
+  <div id="ppplus-mb-error-message"></div>
   <div id="ppplus-mb" class="pp__position-relative"></div>
 </div>
 

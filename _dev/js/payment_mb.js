@@ -121,10 +121,31 @@ const PayPalMB = {
     },
 
     handleError(error) {
+        let message;
         $('.paypal-loader-container').hide();
         $('#ppplus-mb').css({
           'height': '610px'
         });
+
+        for (let key in error) {
+            // skip loop if the property is from prototype
+            if (!error.hasOwnProperty(key)) {
+                continue;
+            }
+
+            let errorMessage = error[key];
+            switch (errorMessage) {
+                case "Invalid 'payerTaxId'.":
+                    if (typeof(INVALID_PAYER_TAX_ID) == 'undefined') {
+                        message = errorMessage;
+                    } else {
+                        message = INVALID_PAYER_TAX_ID;
+                    }
+
+                    PayPalMB.showError(message, '#ppplus-mb-error-message');
+            }
+        }
+
         console.log(error, typeof error);
     },
 
