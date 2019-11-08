@@ -660,6 +660,8 @@ class PayPal extends \PaymentModule
     public function hookHeader()
     {
         $this->context->controller->registerStylesheet($this->name . '-fo', 'modules/' . $this->name . '/views/css/paypal_fo.css');
+        $resources = array();
+
         if (Tools::getValue('controller') == "order") {
             if (!$this->checkActiveModule()) {
                 return;
@@ -725,7 +727,7 @@ class PayPal extends \PaymentModule
             if (!$this->checkActiveModule()) {
                 return;
             }
-            $resources = array();
+
             if (($this->paypal_method == 'EC' && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT')) ||
                 ($this->paypal_method == 'MB' && (int)Configuration::get('PAYPAL_MB_EC_ENABLED') && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT'))) {
                 $resources[] = 'https://www.paypalobjects.com/api/checkout.min.js';
@@ -736,8 +738,6 @@ class PayPal extends \PaymentModule
             if ($this->paypal_method == 'MB') {
                 $resources[] = 'https://www.paypalobjects.com/webstatic/ppplusdcc/ppplusdcc.min.js';
             }
-            $this->context->smarty->assign('resources', $resources);
-            return $this->context->smarty->fetch('module:paypal/views/templates/front/prefetch.tpl');
         }
 
         if ((Tools::getValue('controller') == "product" && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT'))
@@ -758,6 +758,9 @@ class PayPal extends \PaymentModule
                 'sc_init_url' => $this->context->link->getModuleLink($this->name, 'ScInit', array(), true),
             ));
         }
+
+        $this->context->smarty->assign('resources', $resources);
+        return $this->context->smarty->fetch('module:paypal/views/templates/front/prefetch.tpl');
     }
 
     public function checkActiveModule()
