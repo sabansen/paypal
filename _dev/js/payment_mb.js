@@ -50,7 +50,7 @@ const PayPalMB = {
 
                 if (this.config.country == 'BR' && this.config.payerTaxId == '') {
                     let message = typeof(EMPTY_TAX_ID) != 'undefined' ? EMPTY_TAX_ID : 'Payer tax id is empty';
-                    this.showError(message, '#ppplus-mb');
+                    this.showMessage(message, '#ppplus-mb', 'danger');
                     return;
                 }
 
@@ -61,10 +61,10 @@ const PayPalMB = {
         });
     },
 
-    showError(message, selector) {
-        let errorContainer = $('<div class="alert alert-danger" />');
-        errorContainer.text(message);
-        $(selector).html(errorContainer);
+    showMessage(message, selector, type) {
+        let messageContainer = $(`<div class="alert alert-${type}" />`);
+        messageContainer.text(message);
+        $(selector).html(messageContainer);
     },
 
     setLoader(selector) {
@@ -74,12 +74,6 @@ const PayPalMB = {
 
     doPayment() {
         if (this.ppp != null) {
-          $('#ppplus-mb').append('<div class="paypal-loader-container"></div>');
-          this.setLoader(".paypal-loader-container");
-          $('#ppplus-mb').css({
-            'height': '45px',
-            'overflow': 'hidden'
-          });
           this.ppp.doContinue();
         }
     },
@@ -142,7 +136,7 @@ const PayPalMB = {
                         message = INVALID_PAYER_TAX_ID;
                     }
 
-                    PayPalMB.showError(message, '#ppplus-mb-error-message');
+                    PayPalMB.showMessage(message, '#ppplus-mb-error-message', 'danger');
             }
         }
 
@@ -150,6 +144,16 @@ const PayPalMB = {
     },
 
     sendData(data, action) {
+        let messageSuccess;
+
+        if (typeof(PAYMENT_SUCCESS) != 'undefined') {
+            messageSuccess = PAYMENT_SUCCESS;
+        } else {
+            messageSuccess = 'Payment successful! You will be redirected to the payment confirmation page in a couple of seconds.';
+        }
+
+        PayPalMB.showMessage(messageSuccess, '#ppplus-mb', 'success');
+        $('#ppplus-mb').css('height', '100%');
         let form = document.createElement('form');
         let input = document.createElement('input');
 
