@@ -30,6 +30,7 @@ include_once _PS_MODULE_DIR_.'paypal/classes/PaypalIpn.php';
 
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use PaypalAddons\services\ServicePaypalIpn;
+use PaypalAddons\services\ServicePaypalOrder;
 
 
 class PaypalIpnModuleFrontController extends PaypalAbstarctModuleFrontController
@@ -37,10 +38,14 @@ class PaypalIpnModuleFrontController extends PaypalAbstarctModuleFrontController
     /** @var ServicePaypalIpn*/
     protected $servicePaypalIpn;
 
+    /** @var ServicePaypalOrder*/
+    protected $servicePaypalOrder;
+
     public function __construct()
     {
         parent::__construct();
         $this->servicePaypalIpn = new ServicePaypalIpn();
+        $this->servicePaypalOrder = new ServicePaypalOrder();
     }
 
     public function run()
@@ -96,11 +101,13 @@ class PaypalIpnModuleFrontController extends PaypalAbstarctModuleFrontController
             $transactionRef = $data['txn_id'];
         }
 
-        $orders = $this->servicePaypalIpn->getOrdersPsByTransaction($transactionRef);
+        $paypalOrder = $this->servicePaypalOrder->getPaypalOrderByTransaction($transactionRef);
 
-        if (is_array($orders) == false || empty($orders)) {
+        if (Validate::isLoadedObject($paypalOrder)) {
             return false;
         }
+
+        $orders = $this->servicePaypalOrder->getPsOrders($paypalOrder);
 
         ProcessLoggerHandler::openLogger();
         foreach ($orders as $order) {
@@ -122,19 +129,57 @@ class PaypalIpnModuleFrontController extends PaypalAbstarctModuleFrontController
         $paypalIpn->response = $this->jsonEncode($logResponse);
         $paypalIpn->save();
 
-        if ($data['payment_status'] == 'Completed') {
-            $this->setOrderStatus($orders, (int)\Configuration::get('PS_OS_PAYMENT'));
-        }
-        
-        if ($data['payment_status'] == 'Refunded') {
-            $this->setOrderStatus($orders, (int)\Configuration::get('PS_OS_REFUND'));
-        }
+        $psOrderStatus = $this->getPsOrderStatus($data['payment_status']);
 
-        if (in_array($data['payment_status'], array('Failed', 'Reversed', 'Denied'))) {
-            $this->setOrderStatus($orders, (int)\Configuration::get('PS_OS_CANCELED'));
+        if ($psOrderStatus > 0) {
+            $this->servicePaypalOrder->setOrderStatus($paypalOrder, $psOrderStatus);
         }
 
         return true;
+    }
+
+    protected function getPsOrderStatus($transactionStatus)
+    {
+        $orderStatus = 0;
+        if ((int)Configuration::get('PAYPAL_CUSTOMIZE_ORDER_STATUS')) {
+            switch ($transactionStatus) {
+                case 'Completed':
+                    $orderStatus = (int)Configuration::get('PAYPAL_OS_ACCEPTED_TWO');
+                    break;
+                case 'Refunded':
+                    $orderStatus = (int)Configuration::get('PAYPAL_OS_REFUNDED_PAYPAL');
+                    break;
+                case 'Failed':
+                    $orderStatus = (int)Configuration::get('PAYPAL_OS_VALIDATION_ERROR');
+                    break;
+                case 'Reversed':
+                    $orderStatus = (int)Configuration::get('PAYPAL_OS_VALIDATION_ERROR');
+                    break;
+                case 'Denied':
+                    $orderStatus = (int)Configuration::get('PAYPAL_OS_VALIDATION_ERROR');
+                    break;
+            }
+        } else {
+            switch ($transactionStatus) {
+                case 'Completed':
+                    $orderStatus = (int)Configuration::get('PS_OS_PAYMENT');
+                    break;
+                case 'Refunded':
+                    $orderStatus = (int)Configuration::get('PS_OS_REFUND');
+                    break;
+                case 'Failed':
+                    $orderStatus = (int)Configuration::get('PS_OS_CANCELED');
+                    break;
+                case 'Reversed':
+                    $orderStatus = (int)Configuration::get('PS_OS_CANCELED');
+                    break;
+                case 'Denied':
+                    $orderStatus = (int)Configuration::get('PS_OS_CANCELED');
+                    break;
+            }
+        }
+
+        return $orderStatus;
     }
 
     /**

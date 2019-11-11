@@ -38,10 +38,26 @@ use PaypalPPBTlib\Install\ModuleInstaller;
  */
 function upgrade_module_5_1_0($module)
 {
+    $configs = array(
+        'PAYPAL_CUSTOMIZE_ORDER_STATUS' => 0,
+        'PAYPAL_OS_REFUNDED_ONE' => (int)Configuration::get('PS_OS_REFUND'),
+        'PAYPAL_OS_CANCELED' => (int)Configuration::get('PS_OS_CANCELED'),
+        'PAYPAL_OS_ACCEPTED' => (int)Configuration::get('PS_OS_PAYMENT'),
+        'PAYPAL_OS_CAPTURE_CANCELED' => (int)Configuration::get('PS_OS_CANCELED'),
+        'PAYPAL_OS_ACCEPTED_TWO' => (int)Configuration::get('PS_OS_PAYMENT'),
+        'PAYPAL_OS_WAITING_VALIDATION' => (int)Configuration::get('PAYPAL_OS_WAITING'),
+        'PAYPAL_OS_PROCESSING' => (int)Configuration::get('PAYPAL_OS_WAITING'),
+        'PAYPAL_OS_VALIDATION_ERROR' => (int)Configuration::get('PS_OS_ERROR'),
+        'PAYPAL_OS_REFUNDED_PAYPAL' => (int)Configuration::get('PS_OS_REFUND')
+    );
     $return = true;
     $installer = new ModuleInstaller($module);
     $return &= $installer->uninstallObjectModel('PaypalVaulting');
     $return &= $installer->installObjectModel('PaypalVaulting');
+
+    foreach ($configs as $config => $value) {
+        $return &= Configuration::updateValue($config, $value);
+    }
 
     return $return;
 }

@@ -195,31 +195,7 @@ class PayPal extends \PaymentModule
     /**
      * @var array
      */
-    public $moduleConfigs = array(
-        'PAYPAL_MERCHANT_ID_SANDBOX' => '',
-        'PAYPAL_MERCHANT_ID_LIVE' => '',
-        'PAYPAL_USERNAME_SANDBOX' => '',
-        'PAYPAL_PSWD_SANDBOX' => '',
-        'PAYPAL_SIGNATURE_SANDBOX' => '',
-        'PAYPAL_SANDBOX_ACCESS' => 0,
-        'PAYPAL_USERNAME_LIVE' => '',
-        'PAYPAL_PSWD_LIVE' => '',
-        'PAYPAL_SIGNATURE_LIVE' => '',
-        'PAYPAL_LIVE_ACCESS' => 0,
-        'PAYPAL_SANDBOX' => 0,
-        'PAYPAL_API_INTENT' => 'sale',
-        'PAYPAL_API_ADVANTAGES' => 1,
-        'PAYPAL_API_CARD' => 1,
-        'PAYPAL_METHOD' => '',
-        'PAYPAL_EXPRESS_CHECKOUT_SHORTCUT' => 0,
-        'PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART' => 1,
-        'PAYPAL_CRON_TIME' => '',
-        'PAYPAL_BY_BRAINTREE' => 0,
-        'PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT' => 0,
-        'PAYPAL_VAULTING' => 0,
-        'PAYPAL_REQUIREMENTS' => 0,
-        'PAYPAL_MB_EC_ENABLED' => 1,
-    );
+    public $moduleConfigs = array();
 
     /**
      * List of admin tabs used in this Module
@@ -350,6 +326,42 @@ class PayPal extends \PaymentModule
             default:
                 $this->paypal_method = "EC";
         }
+
+        $this->moduleConfigs = array(
+            'PAYPAL_MERCHANT_ID_SANDBOX' => '',
+            'PAYPAL_MERCHANT_ID_LIVE' => '',
+            'PAYPAL_USERNAME_SANDBOX' => '',
+            'PAYPAL_PSWD_SANDBOX' => '',
+            'PAYPAL_SIGNATURE_SANDBOX' => '',
+            'PAYPAL_SANDBOX_ACCESS' => 0,
+            'PAYPAL_USERNAME_LIVE' => '',
+            'PAYPAL_PSWD_LIVE' => '',
+            'PAYPAL_SIGNATURE_LIVE' => '',
+            'PAYPAL_LIVE_ACCESS' => 0,
+            'PAYPAL_SANDBOX' => 0,
+            'PAYPAL_API_INTENT' => 'sale',
+            'PAYPAL_API_ADVANTAGES' => 1,
+            'PAYPAL_API_CARD' => 1,
+            'PAYPAL_METHOD' => '',
+            'PAYPAL_EXPRESS_CHECKOUT_SHORTCUT' => 0,
+            'PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART' => 1,
+            'PAYPAL_CRON_TIME' => '',
+            'PAYPAL_BY_BRAINTREE' => 0,
+            'PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT' => 0,
+            'PAYPAL_VAULTING' => 0,
+            'PAYPAL_REQUIREMENTS' => 0,
+            'PAYPAL_MB_EC_ENABLED' => 1,
+            'PAYPAL_CUSTOMIZE_ORDER_STATUS' => 0,
+            'PAYPAL_OS_REFUNDED_ONE' => (int)Configuration::get('PS_OS_REFUND'),
+            'PAYPAL_OS_CANCELED' => (int)Configuration::get('PS_OS_CANCELED'),
+            'PAYPAL_OS_ACCEPTED' => (int)Configuration::get('PS_OS_PAYMENT'),
+            'PAYPAL_OS_CAPTURE_CANCELED' => (int)Configuration::get('PS_OS_CANCELED'),
+            'PAYPAL_OS_ACCEPTED_TWO' => (int)Configuration::get('PS_OS_PAYMENT'),
+            'PAYPAL_OS_WAITING_VALIDATION' => (int)Configuration::get('PAYPAL_OS_WAITING'),
+            'PAYPAL_OS_PROCESSING' => (int)Configuration::get('PAYPAL_OS_WAITING'),
+            'PAYPAL_OS_VALIDATION_ERROR' => (int)Configuration::get('PS_OS_ERROR'),
+            'PAYPAL_OS_REFUNDED_PAYPAL' => (int)Configuration::get('PS_OS_REFUND')
+        );
     }
 
     public function install()

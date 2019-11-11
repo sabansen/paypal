@@ -541,13 +541,31 @@ class MethodEC extends AbstractMethodPaypal
 
         $total = $payment_info->GrossAmount->value;
         $paypal = Module::getInstanceByName($this->name);
-        if (Configuration::get('PAYPAL_API_INTENT') == "sale") {
-            $order_state = Configuration::get('PS_OS_PAYMENT');
-        } else {
-            $order_state = Configuration::get('PAYPAL_OS_WAITING');
-        }
+        $order_state = $this->getOrderStatus();
 
         $paypal->validateOrder($cart->id, $order_state, $total, $this->getPaymentMethod(), null, $this->getDetailsTransaction(), (int)$currency->id, false, $customer->secure_key);
+    }
+
+    /**
+     * @return int id of the order status
+     **/
+    public function getOrderStatus()
+    {
+        if ((int)Configuration::get('PAYPAL_CUSTOMIZE_ORDER_STATUS')) {
+            if (Configuration::get('PAYPAL_API_INTENT') == "sale") {
+                $orderStatus = (int)Configuration::get('PAYPAL_OS_WAITING_VALIDATION');
+            } else {
+                $orderStatus = (int)Configuration::get('PAYPAL_OS_WAITING');
+            }
+        } else {
+            if (Configuration::get('PAYPAL_API_INTENT') == "sale") {
+                $orderStatus = (int)Configuration::get('PS_OS_PAYMENT');
+            } else {
+                $orderStatus = (int)Configuration::get('PAYPAL_OS_WAITING');
+            }
+        }
+
+        return $orderStatus;
     }
 
     public function setDetailsTransaction($transaction)

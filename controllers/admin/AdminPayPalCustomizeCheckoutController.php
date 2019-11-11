@@ -42,10 +42,10 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             'paypal_mb_ec_enabled',
             'paypal_merchant_installment',
             'paypal_customize_order_status',
-            'paypal_os_refunded_one',
-            'paypal_os_canceled_one',
+            'paypal_os_refunded',
+            'paypal_os_canceled',
             'paypal_os_accepted_one',
-            'paypal_os_capture_canceled_one'
+            'paypal_os_capture_canceled'
         );
     }
 
@@ -314,7 +314,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
         $inputs[] = array(
             'type' => 'select',
             'label' => $this->l('Order Status for triggering the refund on PayPal : Refunded (by default)'),
-            'name' => 'paypal_os_refunded_one',
+            'name' => 'paypal_os_refunded',
             'hint' => $this->l('You can refund the orders paid via PayPal directly via your PrestaShop BackOffice. Here you can choose the order status that triggers the refund on PayPal. Choose the option "no actions" if you would like to change the order status without triggering the automatic refund on PayPal.'),
             'options' => array(
                 'query' => $orderStatuses,
@@ -326,7 +326,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
         $inputs[] = array(
             'type' => 'select',
             'label' => $this->l('Order Status for triggering the cancellation on PayPal : Canceled (by default)'),
-            'name' => 'paypal_os_canceled_one',
+            'name' => 'paypal_os_canceled',
             'hint' => $this->l('You can cancel orders paid via PayPal directly via your PrestaShop BackOffice. Here you can choose the order status that triggers the PayPal voiding of an authorized transaction on PayPal. Choose the option "no actions" if you would like to change the order status without triggering the automatic cancellation on PayPal.'),
             'options' => array(
                 'query' => $orderStatuses,
@@ -351,7 +351,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             $inputs[] = array(
                 'type' => 'select',
                 'label' => $this->l('Payment canceled via BO (call PayPal to cancel the capture) : Canceled (by default)'),
-                'name' => 'paypal_os_capture_canceled_one',
+                'name' => 'paypal_os_capture_canceled',
                 'hint' => $this->l('You are currently using the Authorize mode. It means that you separate the payment authorization from the capture of the authorized payment. For canceling the authorized payment you have to change the order status to "canceled" (or to a custom status with the same meaning). Here you can choose an order status for canceling the order and voiding the transaction in Authorize mode.'),
                 'options' => array(
                     'query' => $orderStatuses,
