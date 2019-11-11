@@ -40,7 +40,12 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             'paypal_api_card',
             'paypal_vaulting',
             'paypal_mb_ec_enabled',
-            'paypal_merchant_installment'
+            'paypal_merchant_installment',
+            'paypal_customize_order_status',
+            'paypal_os_refunded_one',
+            'paypal_os_canceled_one',
+            'paypal_os_accepted_one',
+            'paypal_os_capture_canceled_one'
         );
     }
 
@@ -64,7 +69,12 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
         }
 
         $this->initForm();
-        $this->context->smarty->assign('form', $this->renderForm());
+        $this->context->smarty->assign('formBehavior', $this->renderForm());
+
+        $this->clearFieldsForm();
+        $this->initAdvancedForm();
+        $this->context->smarty->assign('formAdvanced', $this->renderForm());
+
         $this->content = $this->context->smarty->fetch($this->getTemplatePath() . 'customizeCheckout.tpl');
         $this->context->smarty->assign('content', $this->content);
         Media::addJsDef(array('paypalMethod' => $this->method));
@@ -262,9 +272,133 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
         $this->tpl_form_vars = array_merge($this->tpl_form_vars, $values);
     }
 
+    public function initAdvancedForm()
+    {
+        $method = AbstractMethodPaypal::load($this->method);
+        $orderStatuses = $this->module->getOrderStatuses();
+        $inputs = array();
+        $inputsMethod = $method->getAdvancedFormInputs();
+
+        $inputs[] = array(
+            'type' => 'html',
+            'name' => '',
+            'html_content' => $this->module->displayInformation($this->l('You can customize your orders\' status for each possible action in the PayPal module.'), false)
+        );
+
+        $inputs[] = array(
+            'type' => 'switch',
+            'label' => $this->l('Customize your order status'),
+            'name' => 'paypal_customize_order_status',
+            'hint' => $this->l('Please use this option only if you want to change the assigned default PayPal status on PrestaShop Order statuses.'),
+            'is_bool' => true,
+            'values' => array(
+                array(
+                    'id' => 'paypal_customize_order_status_on',
+                    'value' => 1,
+                    'label' => $this->l('Enabled'),
+                ),
+                array(
+                    'id' => 'paypal_customize_order_status_off',
+                    'value' => 0,
+                    'label' => $this->l('Disabled'),
+                )
+            ),
+        );
+
+        $inputs[] = array(
+            'type' => 'html',
+            'name' => '',
+            'html_content' => $this->context->smarty->fetch($this->getTemplatePath() . '_partials/messages/formAdvancedHelpOne.tpl')
+        );
+
+        $inputs[] = array(
+            'type' => 'select',
+            'label' => $this->l('Order Status for triggering the refund on PayPal : Refunded (by default)'),
+            'name' => 'paypal_os_refunded_one',
+            'hint' => $this->l('You can refund the orders paid via PayPal directly via your PrestaShop BackOffice. Here you can choose the order status that triggers the refund on PayPal. Choose the option "no actions" if you would like to change the order status without triggering the automatic refund on PayPal.'),
+            'options' => array(
+                'query' => $orderStatuses,
+                'id' => 'id',
+                'name' => 'name'
+            )
+        );
+
+        $inputs[] = array(
+            'type' => 'select',
+            'label' => $this->l('Order Status for triggering the cancellation on PayPal : Canceled (by default)'),
+            'name' => 'paypal_os_canceled_one',
+            'hint' => $this->l('You can cancel orders paid via PayPal directly via your PrestaShop BackOffice. Here you can choose the order status that triggers the PayPal voiding of an authorized transaction on PayPal. Choose the option "no actions" if you would like to change the order status without triggering the automatic cancellation on PayPal.'),
+            'options' => array(
+                'query' => $orderStatuses,
+                'id' => 'id',
+                'name' => 'name'
+            )
+        );
+
+        if ($this->method != 'PPP' && Configuration::get('PAYPAL_API_INTENT') == 'authorization') {
+            $inputs[] = array(
+                'type' => 'select',
+                'label' => $this->l('Payment accepted via BO (call PayPal to get the payment) : Payment accepted (by default)'),
+                'name' => 'paypal_os_accepted_one',
+                'hint' => $this->l('You are currently using the Authorize mode. It means that you separate the payment authorization from the capture of the authorized payment. For capturing the authorized payement you have to change the order status to "payment accepted" (or to a custom status with the same meaning). Here you can choose a custom order status for accepting the order and validating transaction in Authorize mode.'),
+                'options' => array(
+                    'query' => $orderStatuses,
+                    'id' => 'id',
+                    'name' => 'name'
+                )
+            );
+
+            $inputs[] = array(
+                'type' => 'select',
+                'label' => $this->l('Payment canceled via BO (call PayPal to cancel the capture) : Canceled (by default)'),
+                'name' => 'paypal_os_capture_canceled_one',
+                'hint' => $this->l('You are currently using the Authorize mode. It means that you separate the payment authorization from the capture of the authorized payment. For canceling the authorized payment you have to change the order status to "canceled" (or to a custom status with the same meaning). Here you can choose an order status for canceling the order and voiding the transaction in Authorize mode.'),
+                'options' => array(
+                    'query' => $orderStatuses,
+                    'id' => 'id',
+                    'name' => 'name'
+                )
+            );
+        }
+
+        $inputs[] = array(
+            'type' => 'html',
+            'name' => '',
+            'html_content' => $this->context->smarty->fetch($this->getTemplatePath() . '_partials/messages/formAdvancedHelpTwo.tpl')
+        );
+
+        $inputs = array_merge($inputs, $inputsMethod);
+
+        $this->fields_form['form']['form'] = array(
+            'legend' => array(
+                'title' => $this->l('Behavior'),
+                'icon' => 'icon-cogs',
+            ),
+            'input' => $inputs,
+            'submit' => array(
+                'title' => $this->l('Save'),
+                'class' => 'btn btn-default pull-right button',
+                'name' => 'saveAdvancedForm'
+            ),
+        );
+
+        $values = array();
+        $this->parametres = array_merge($this->parametres, $method->advancedFormParametres);
+
+        foreach ($this->parametres as $parametre) {
+            $values[$parametre] = Configuration::get(Tools::strtoupper($parametre));
+        }
+
+        $this->tpl_form_vars = array_merge($this->tpl_form_vars, $values);
+    }
+
     public function saveForm()
     {
         $result = true;
+        if (\Tools::isSubmit('saveAdvancedForm')) {
+            $methodCurrent = \AbstractMethodPaypal::load($this->method);
+            $this->parametres = array_merge($this->parametres, $methodCurrent->advancedFormParametres);
+        }
 
         foreach ($this->parametres as $parametre) {
             $result &= \Configuration::updateValue(\Tools::strtoupper($parametre), pSQL(\Tools::getValue($parametre), ''));

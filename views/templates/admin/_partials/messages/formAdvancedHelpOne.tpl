@@ -23,13 +23,11 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{include './_partials/headerLogo.tpl'}
-
-{if isset($formBehavior)}
-    {$formBehavior nofilter} {* the variable contains html code *}
-{/if}
-
-{if isset($formAdvanced)}
-    {$formAdvanced nofilter} {* the variable contains html code *}
-{/if}
+<div class="alert alert-info">
+    {l s='You can find below the list of the order status for triggering actions on PayPal.' mod='paypal'}
+    <br>
+    {l s='Some manual actions trigger some events on the PayPal side.' mod='paypal'}
+    <br>
+    {l s='Ex: You update the order status to "refunded". This action triggers an automatic refund on PayPal.' mod='paypal'}
+</div>
 

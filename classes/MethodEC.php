@@ -86,6 +86,11 @@ class MethodEC extends AbstractMethodPaypal
 
     public $errors = array();
 
+    public $advancedFormParametres = array(
+        'paypal_os_accepted_two',
+        'paypal_os_waiting_validation'
+    );
+
     /**
      * @param $values array replace for tools::getValues()
      */
@@ -871,5 +876,40 @@ class MethodEC extends AbstractMethodPaypal
         }
 
         return $tpl_vars;
+    }
+
+    public function getAdvancedFormInputs()
+    {
+        $inputs = array();
+        $module = Module::getInstanceByName($this->name);
+        $orderStatuses = $module->getOrderStatuses();
+
+        if (Configuration::get('PAYPAL_API_INTENT') == 'authorization') {
+            $inputs[] = array(
+                'type' => 'select',
+                'label' => $module->l('Payment authorized and waiting for validation by admin : Waiting for PayPal payment (by default)', get_class($this)),
+                'name' => 'paypal_os_waiting_validation',
+                'hint' => $module->l('You are currently using the Authorize mode. It means that you separate the payment authorization from the capture of the authorized payment. By default the orders will be created in the "Waiting for PayPal payment" but you can customize it if needed.', get_class($this)),
+                'options' => array(
+                    'query' => $orderStatuses,
+                    'id' => 'id',
+                    'name' => 'name'
+                )
+            );
+        } else {
+            $inputs[] = array(
+                'type' => 'select',
+                'label' => $module->l('Payment accepted and transaction completed: Payment accepted (by default)', get_class($this)),
+                'name' => 'paypal_os_accepted_two',
+                'hint' => $module->l('You are currently using the Sale mode (the authorization and capture occur at the same time as the sale). So the payement is accepted instantly and the new order is created in the "Payment accepted" status. You can customize the status for orders with completed transactions. Ex : you can create an additional status "Payment accepted via PayPal" and set it as the default status.', get_class($this)),
+                'options' => array(
+                    'query' => $orderStatuses,
+                    'id' => 'id',
+                    'name' => 'name'
+                )
+            );
+        }
+
+        return $inputs;
     }
 }
