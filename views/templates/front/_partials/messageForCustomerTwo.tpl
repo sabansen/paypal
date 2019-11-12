@@ -29,6 +29,12 @@
     </div>
 
     <div>
+        {l s='by accepting the terms of service and clicking on the order validation button below.' mod='paypal'}
+    </div>
+
+    <br>
+
+    <div>
         {l s='Please note that the additional delivery fees (%1s) have been applied. For more details, please check your order summary.' sprintf=[$carrierFees] mod='paypal'}
     </div>
 </div>

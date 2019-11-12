@@ -27,4 +27,8 @@
     <div>
         {{l s='You have to [b]finish your payment[/b] done with your PayPal account ' mod='paypal'}|paypalreplace nofilter} {if isset($paypalEmail)}{$paypalEmail|escape:'htmlall':'utf-8'}{/if}
     </div>
+
+    <div>
+        {l s='by accepting the terms of service and clicking on the order validation button below.' mod='paypal'}
+    </div>
 </div>
