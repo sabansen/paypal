@@ -718,13 +718,22 @@ class MethodPPP extends AbstractMethodPaypal
 
     public function getTplVars()
     {
-        $tpl_vars = array(
-            'paypal_sandbox_clientid' => Configuration::get('PAYPAL_SANDBOX_CLIENTID'),
-            'paypal_live_clientid' => Configuration::get('PAYPAL_LIVE_CLIENTID'),
-            'paypal_sandbox_secret' => Configuration::get('PAYPAL_SANDBOX_SECRET'),
-            'paypal_live_secret' => Configuration::get('PAYPAL_LIVE_SECRET'),
-            'accountConfigured' => $this->isConfigured(),
-        );
+        $sandboxMode = (int)Configuration::get('PAYPAL_SANDBOX');
+
+        if ($sandboxMode) {
+            $tpl_vars = array(
+                'paypal_sandbox_clientid' => Configuration::get('PAYPAL_SANDBOX_CLIENTID'),
+                'paypal_sandbox_secret' => Configuration::get('PAYPAL_SANDBOX_SECRET'),
+            );
+        } else {
+            $tpl_vars = array(
+                'paypal_live_secret' => Configuration::get('PAYPAL_LIVE_SECRET'),
+                'paypal_live_clientid' => Configuration::get('PAYPAL_LIVE_CLIENTID')
+            );
+        }
+
+        $tpl_vars['accountConfigured'] = $this->isConfigured();
+        $tpl_vars['sandboxMode'] = $sandboxMode;
 
         return $tpl_vars;
     }

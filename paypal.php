@@ -1657,4 +1657,18 @@ class PayPal extends \PaymentModule
         $result &= $tabParent->save();
         return $result;
     }
+
+    /**
+     * @return bool
+     */
+    public function showWarningForPayPalPlusUsers()
+    {
+        $result = true;
+        $methodPPP = AbstractMethodPaypal::load('PPP');
+        $methodEC = AbstractMethodPaypal::load('EC');
+        $result &= $this->paypal_method == 'PPP';
+        $result &= $methodPPP->isConfigured() == false;
+        $result &= $methodEC->isConfigured();
+        return $result;
+    }
 }
