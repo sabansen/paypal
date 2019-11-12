@@ -124,6 +124,13 @@ class AdminPayPalSetupController extends AdminPayPalController
             ),
             'id_form' => 'pp_config_account'
         );
+
+        if ($this->method == 'PPP') {
+            $this->fields_form['form']['form']['submit'] = array(
+                'title' => $this->l('Save'),
+                'class' => 'btn btn-default pull-right button',
+            );
+        }
     }
 
     public function getHtmlBlockAccountSetting()
