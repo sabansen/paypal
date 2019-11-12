@@ -242,3 +242,16 @@ $_MODULE['<{paypal}prestashop>accountsettingsblock_c4159369ab0d9986c1ef1a5949a5c
 $_MODULE['<{paypal}prestashop>accountsettingsblock_7f161ed5b9f8fd29729abb01773e8dbc'] = 'Copy/paste your \'Client ID\' and \'Secret\' below for each environment';
 $_MODULE['<{paypal}prestashop>headerlogo_68eeb96e9cc91f14eb1c462e57d1ea8e'] = 'Voilà! Your shop is ready to accept payments';
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_b4a34d3f58b039e7685c2e39b5413757'] = 'Successful update.';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_1624e46cbfe7dbe4a96a59090061d15b'] = 'API credentials';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_54ca61db74af81cf576c81234e2afbe1'] = 'In order to accept PayPal Plus payments, please fill in your API REST credentials.';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_bf733d8a933c1601697f364223fc7ecb'] = 'Access';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_1d18bf3e09ec1ad0236145e6e55fe193'] = 'https://developer.paypal.com/developer/applications/';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_d87d45b4afb0f16d79ad4b3bc17f2d97'] = 'Log in or create a business account';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_5ba82ead337af776b86db00ba9b6d541'] = 'Create a \'REST API app\'';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_c4159369ab0d9986c1ef1a5949a5c900'] = 'Click \'Show\' below \'Secret\'';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_7f161ed5b9f8fd29729abb01773e8dbc'] = 'Copy/paste your \'Client ID\' and \'Secret\' below for each environment';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_2652eec977dcb2a5aea85f5bec235b05'] = 'Sandbox';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_76525f0f34b48475e5ca33f71d296f3b'] = 'Client ID';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_1e6947ac7fb3a9529a9726eb692c8cc5'] = 'Secret';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_955ad3298db330b5ee880c2c9e6f23a0'] = 'Live';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_8914753a79f56d24f12a63c4578e4880'] = 'You can switch to a live environment on the top right';
