@@ -50,7 +50,7 @@ $_MODULE['<{paypal}prestashop>adminpaypalcontroller_ef6cad8536ea150596af086ac2ad
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_2c4493f4907a8c500557d79dd978f452'] = '401 Brak autoryzacji. Należy pamiętać, że nie można dokonać weryfikacji TLS, jeśli dostęp do Twojej witryny internetowej jest chroniony hasłem.';
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_d8e95938c82a618f755c13b35d4277c4'] = 'Używasz starej wersji cURL. Zaktualizuj rozszerzenie cURL do wersji 7.34.0 lub nowszej.';
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_38dc1dc4db247b4c01b26636e6bf9666'] = 'Wersja TLS nie jest kompatybilna';
-$_MODULE['<{paypal}prestashop>adminpaypalcontroller_b4a34d3f58b039e7685c2e39b5413757'] = 'Pomy_lna aktualizacja.';
+$_MODULE['<{paypal}prestashop>adminpaypalcontroller_b4a34d3f58b039e7685c2e39b5413757'] = 'Pomyślna aktualizacja.';
 $_MODULE['<{paypal}prestashop>methodec_51a9f5fc2e4d9b1c8aa4a60a7c725243'] = 'Wystąpił błąd podczas tworzenia strony internetowej. Sprawdź swoje dane uwierzytelniające.';
 $_MODULE['<{paypal}prestashop>methodppp_51a9f5fc2e4d9b1c8aa4a60a7c725243'] = 'Wystąpił błąd podczas tworzenia strony internetowej. Sprawdź swoje dane uwierzytelniające.';
 $_MODULE['<{paypal}prestashop>methodppp_d1733321d6ae942df34b7f0aa743fb69'] = 'Za kilka sekund nastąpi przekierowanie do systemu PayPal. Czekaj.';
