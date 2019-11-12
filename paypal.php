@@ -1216,7 +1216,14 @@ class PayPal extends \PaymentModule
         $method = AbstractMethodPaypal::load($orderPayPal->method);
         $message = '';
         $ex_detailed_message = '';
-        if ($params['newOrderStatus']->id == Configuration::get('PS_OS_CANCELED')) {
+        $osCanceled = (int)Configuration::get('PAYPAL_CUSTOMIZE_ORDER_STATUS') ? (int)Configuration::get('PAYPAL_OS_CANCELED') : (int)Configuration::get('PS_OS_CANCELED');
+        $osRefunded = (int)Configuration::get('PAYPAL_CUSTOMIZE_ORDER_STATUS') ? (int)Configuration::get('PAYPAL_OS_REFUNDED') : (int)Configuration::get('PS_OS_REFUND');
+
+        if ($params['newOrderStatus']->id == $osCanceled) {
+            if ($this->context->controller instanceof PaypalIpnModuleFrontController) {
+                return true;
+            }
+
             if (in_array($orderPayPal->method, array("MB", "PPP")) || $orderPayPal->payment_status == "refunded") {
                 return;
             }
@@ -1299,7 +1306,7 @@ class PayPal extends \PaymentModule
             }
         }
 
-        if ($params['newOrderStatus']->id == Configuration::get('PS_OS_REFUND')) {
+        if ($params['newOrderStatus']->id == $osRefunded) {
             if ($this->context->controller instanceof PaypalIpnModuleFrontController) {
                 return true;
             }

@@ -390,7 +390,7 @@ class MethodMB extends AbstractMethodPaypal
             'payment_status' => $transaction->state,
             'payment_method' => $transaction->payer->payment_method,
             'id_payment' => pSQL($transaction->id),
-            'capture' => false,
+            'capture' => true,
             'payment_tool' => isset($transaction->payment_instruction)?$transaction->payment_instruction->instruction_type:'',
             'date_transaction' => $this->getDateTransaction($transaction)
         );

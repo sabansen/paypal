@@ -28,6 +28,8 @@ use PaypalAddons\classes\AdminPayPalController;
 
 class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
 {
+    protected $advanceFormParametres = array();
+
     public function __construct()
     {
         parent::__construct();
@@ -41,6 +43,9 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             'paypal_vaulting',
             'paypal_mb_ec_enabled',
             'paypal_merchant_installment',
+        );
+
+        $this->advanceFormParametres = array(
             'paypal_customize_order_status',
             'paypal_os_refunded',
             'paypal_os_canceled',
@@ -102,6 +107,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             'submit' => array(
                 'title' => $this->l('Save'),
                 'class' => 'btn btn-default pull-right button',
+                'name' => 'behaviorForm'
             ),
         );
 
@@ -383,9 +389,9 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
         );
 
         $values = array();
-        $this->parametres = array_merge($this->parametres, $method->advancedFormParametres);
+        $this->advanceFormParametres = array_merge($this->advanceFormParametres, $method->advancedFormParametres);
 
-        foreach ($this->parametres as $parametre) {
+        foreach ($this->advanceFormParametres as $parametre) {
             $values[$parametre] = Configuration::get(Tools::strtoupper($parametre));
         }
 
@@ -397,12 +403,19 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
         $result = true;
         if (\Tools::isSubmit('saveAdvancedForm')) {
             $methodCurrent = \AbstractMethodPaypal::load($this->method);
-            $this->parametres = array_merge($this->parametres, $methodCurrent->advancedFormParametres);
+            $this->advanceFormParametres = array_merge($this->advanceFormParametres, $methodCurrent->advancedFormParametres);
+
+            foreach ($this->advanceFormParametres as $parametre) {
+                $result &= \Configuration::updateValue(\Tools::strtoupper($parametre), pSQL(\Tools::getValue($parametre), ''));
+            }
         }
 
-        foreach ($this->parametres as $parametre) {
-            $result &= \Configuration::updateValue(\Tools::strtoupper($parametre), pSQL(\Tools::getValue($parametre), ''));
+        if (Tools::isSubmit('behaviorForm')) {
+            foreach ($this->parametres as $parametre) {
+                $result &= \Configuration::updateValue(\Tools::strtoupper($parametre), pSQL(\Tools::getValue($parametre), ''));
+            }
         }
+
 
         if (isset($_FILES['paypal_config_logo']['tmp_name']) && $_FILES['paypal_config_logo']['tmp_name'] != '') {
             if (!in_array($_FILES['paypal_config_logo']['type'], array('image/gif', 'image/png', 'image/jpeg'))) {
