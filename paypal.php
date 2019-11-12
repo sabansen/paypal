@@ -941,7 +941,9 @@ class PayPal extends \PaymentModule
             }
         }
 
-        $orderState = new OrderState($id_order_state, Configuration::get('PS_LANG_DEFAULT'));
+        $adminEmployee = new Employee(_PS_ADMIN_PROFILE_);
+        $orderState = new OrderState($id_order_state, $adminEmployee->id_lang);
+
         ProcessLoggerHandler::openLogger();
         ProcessLoggerHandler::logInfo(
             $orderState->name,
