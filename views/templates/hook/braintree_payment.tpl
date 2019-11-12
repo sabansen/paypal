@@ -139,15 +139,7 @@
                             client: clientInstance
                         }, function (ThreeDSecureerror, threeDSecure) {
                             if (ThreeDSecureerror) {
-                                switch (ThreeDSecureerror.code) {
-                                    case 'THREEDS_HTTPS_REQUIRED':
-                                        popup_message = bt_translations_https;
-                                        break;
-
-                                    default:
-                                        popup_message = bt_translations_load_3d;
-                                }
-
+                                popup_message = ThreeDSecureerror.message;
                                 $('[data-bt-card-error-msg]').show().text(popup_message);
                                 return false;
                             }
@@ -240,27 +232,7 @@
 
                             bt_hosted_fileds.tokenize(function (tokenizeErr, payload) {
                                 if (tokenizeErr) {
-                                    Object.entries(bt_hosted_fileds._state.fields).forEach(function (entry) {
-                                        setErrorMsg(entry[0], entry[1]);
-                                    });
-                                    var _popup_message = '';
-
-                                    if (tokenizeErr.code !== 'HOSTED_FIELDS_FIELDS_EMPTY' && tokenizeErr.code !== 'HOSTED_FIELDS_FIELDS_INVALID') {
-                                        switch (tokenizeErr.code) {
-                                            case 'HOSTED_FIELDS_FAILED_TOKENIZATION':
-                                                _popup_message = bt_translations_token;
-                                                break;
-
-                                            case 'HOSTED_FIELDS_TOKENIZATION_NETWORK_ERROR':
-                                                _popup_message = bt_translations_network;
-                                                break;
-
-                                            default:
-                                                _popup_message = bt_translations_tkn_failed;
-                                        }
-
-                                        reject(_popup_message);
-                                    }
+                                    reject(tokenizeErr.message);
                                 } else {
                                     response["orderInformation"]["nonce"] = payload.nonce;
                                     response["orderInformation"]["bin"] = payload.details.bin;
