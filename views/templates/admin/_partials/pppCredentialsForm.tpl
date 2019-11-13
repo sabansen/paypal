@@ -35,6 +35,7 @@
     </ul>
     <hr/>
     <input type="hidden" class="method met" name="method" data-method-paypal/>
+
     {if isset($sandboxMode) && $sandboxMode}
         <h4>{l s='Sandbox' mod='paypal'}</h4>
         <p>
@@ -45,6 +46,7 @@
             <label for="sandbox_secret">{l s='Secret' mod='paypal'}</label>
             <input type="password" id="sandbox_secret" name="paypal_sandbox_secret" value="{if isset($paypal_sandbox_secret)}{$paypal_sandbox_secret|escape:'htmlall':'UTF-8'}{/if}"/>
         </p>
+
     {else}
         <h4>{l s='Live' mod='paypal'}</h4>
         <ul>
@@ -60,4 +62,7 @@
         </p>
     {/if}
 </div>
+
+
+
 

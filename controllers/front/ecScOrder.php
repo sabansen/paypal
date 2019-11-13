@@ -150,7 +150,7 @@ class PaypalEcScOrderModuleFrontController extends PaypalAbstarctModuleFrontCont
             $orderAddress = new Address();
             $nameArray = explode(" ", $ship_addr->Name);
             $orderAddress->firstname = $nameArray[0];
-            $orderAddress->lastname = $nameArray[1];
+            $orderAddress->lastname = isset($nameArray[1]) ? $nameArray[1] : '';
             $orderAddress->address1 = $ship_addr->Street1;
             if (isset($ship_addr->Street2)) {
                 $orderAddress->address2 = $ship_addr->Street2;

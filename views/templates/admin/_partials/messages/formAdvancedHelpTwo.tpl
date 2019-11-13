@@ -23,12 +23,11 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<p>
-    <div>
-        {l s='You are using the German merchant account. Starting from the v5.0.0 of the PayPal Official module it is required to use PayPal Plus instead of PayPal Express Checkout.' mod='paypal'}
-    </div>
+<div class="alert alert-info">
+    {l s='It is also possible to customize the default status for the orders created via PayPal. You can find below the list of the different cases and corresponding order status.' mod='paypal'}
+    <br>
+    {l s='Ex: If the transaction is completed an order will be created on the PrestaShop. By default, the order status "Payment accepted" is applied for all completed transactions.' mod='paypal'}
+    <br>
+    {l s='You can manage the order status below:' mod='paypal'}
+</div>
 
-    <div>
-        {{l s='Please add your REST API credentials below to setup your account and continue to offer the PayPal payment solution to your customers. [a @href1@]Learn more about PayPal Plus[/a].' mod='paypal'}|paypalreplace:['@href1@' => {'https://www.paypal.com/de/webapps/mpp/paypal-plus'}, '@target@' => {'target="blank"'}]}
-    </div>
-</p>

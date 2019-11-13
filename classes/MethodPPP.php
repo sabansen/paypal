@@ -74,6 +74,10 @@ class MethodPPP extends AbstractMethodPaypal
 
     protected $payment_method = 'PayPal';
 
+    public $advancedFormParametres = array(
+        'paypal_os_accepted_two'
+    );
+
     /**
      * @param $values array replace for tools::getValues()
      */
@@ -484,8 +488,19 @@ class MethodPPP extends AbstractMethodPaypal
         $currency = $context->currency;
         $total = (float)$exec_payment->transactions[0]->amount->total;
         $paypal = Module::getInstanceByName($this->name);
-        $order_state = Configuration::get('PS_OS_PAYMENT');
+        $order_state = $this->getOrderStatus();
         $paypal->validateOrder($cart->id, $order_state, $total, $this->getPaymentMethod(), null, $this->getDetailsTransaction(), (int)$currency->id, false, $customer->secure_key);
+    }
+
+    public function getOrderStatus()
+    {
+        if ((int)Configuration::get('PAYPAL_CUSTOMIZE_ORDER_STATUS')) {
+            $orderStatus = (int)Configuration::get('PAYPAL_OS_ACCEPTED_TWO');
+        } else {
+            $orderStatus = (int)Configuration::get('PS_OS_PAYMENT');
+        }
+
+        return $orderStatus;
     }
 
     public function setDetailsTransaction($transaction)
@@ -735,6 +750,7 @@ class MethodPPP extends AbstractMethodPaypal
         $tpl_vars['accountConfigured'] = $this->isConfigured();
         $tpl_vars['sandboxMode'] = $sandboxMode;
 
+
         return $tpl_vars;
     }
 
@@ -746,5 +762,27 @@ class MethodPPP extends AbstractMethodPaypal
         } else {
             Configuration::updateValue('PAYPAL_PLUS_EXPERIENCE', '');
         }
+    }
+
+    public function getAdvancedFormInputs()
+    {
+        $inputs = array();
+        $module = Module::getInstanceByName($this->name);
+        $orderStatuses = $module->getOrderStatuses();
+
+        $inputs[] = array(
+            'type' => 'select',
+            'label' => $module->l('Payment accepted and transaction completed', get_class($this)),
+            'name' => 'paypal_os_accepted_two',
+            'hint' => $module->l('You are currently using the Sale mode (the authorization and capture occur at the same time as the sale). So the payement is accepted instantly and the new order is created in the "Payment accepted" status. You can customize the status for orders with completed transactions. Ex : you can create an additional status "Payment accepted via PayPal" and set it as the default status.', get_class($this)),
+            'desc' => $module->l('Default status : Payment accepted', get_class($this)),
+            'options' => array(
+                'query' => $orderStatuses,
+                'id' => 'id',
+                'name' => 'name'
+            )
+        );
+
+        return $inputs;
     }
 }

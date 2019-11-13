@@ -23,12 +23,12 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<p>
+<div class="alert alert-info">
     <div>
-        {l s='You are using the German merchant account. Starting from the v5.0.0 of the PayPal Official module it is required to use PayPal Plus instead of PayPal Express Checkout.' mod='paypal'}
+        {{l s='You have to [b]finish your payment[/b] done with your PayPal account ' mod='paypal'}|paypalreplace nofilter} {if isset($paypalEmail)}{$paypalEmail|escape:'htmlall':'utf-8'}{/if}
     </div>
 
     <div>
-        {{l s='Please add your REST API credentials below to setup your account and continue to offer the PayPal payment solution to your customers. [a @href1@]Learn more about PayPal Plus[/a].' mod='paypal'}|paypalreplace:['@href1@' => {'https://www.paypal.com/de/webapps/mpp/paypal-plus'}, '@target@' => {'target="blank"'}]}
+        {l s='by accepting the terms of service and clicking on the order validation button below.' mod='paypal'}
     </div>
-</p>
+</div>

@@ -41,7 +41,11 @@ class AdminPayPalSetupController extends AdminPayPalController
             'paypal_sandbox_clientid',
             'paypal_live_clientid',
             'paypal_sandbox_secret',
-            'paypal_live_secret'
+            'paypal_live_secret',
+            'paypal_mb_sandbox_clientid',
+            'paypal_mb_live_clientid',
+            'paypal_mb_sandbox_secret',
+            'paypal_mb_live_secret'
         );
     }
 
@@ -72,12 +76,14 @@ class AdminPayPalSetupController extends AdminPayPalController
         $this->clearFieldsForm();
         $tpl_vars['formAccountSettings'] = $formAccountSettings;
 
-        if ($this->method == 'EC') {
+        if (in_array($this->method, array('EC', 'MB'))) {
             $this->initPaymentSettingsBlock();
             $formPaymentSettings = $this->renderForm();
             $this->clearFieldsForm();
             $tpl_vars['formPaymentSettings'] = $formPaymentSettings;
+        }
 
+        if ($this->method == 'EC') {
             $this->initApiUserNameForm();
             $formApiUserName = $this->renderForm();
             $this->clearFieldsForm();
@@ -125,7 +131,7 @@ class AdminPayPalSetupController extends AdminPayPalController
             'id_form' => 'pp_config_account'
         );
 
-        if ($this->method == 'PPP') {
+        if (in_array($this->method, array('MB', 'PPP'))) {
             $this->fields_form['form']['form']['submit'] = array(
                 'title' => $this->l('Save'),
                 'class' => 'btn btn-default pull-right button',
@@ -137,7 +143,6 @@ class AdminPayPalSetupController extends AdminPayPalController
     {
         $method = AbstractMethodPaypal::load($this->method);
         $tpl_vars = $method->getTplVars();
-
         $tpl_vars['method'] = $this->method;
         $this->context->smarty->assign($tpl_vars);
         $html_content = $this->context->smarty->fetch($this->getTemplatePath() . '_partials/accountSettingsBlock.tpl');
@@ -146,31 +151,39 @@ class AdminPayPalSetupController extends AdminPayPalController
 
     public function initPaymentSettingsBlock()
     {
+        $inputGroup = array(
+            'type' => 'select',
+            'name' => 'paypal_api_intent',
+            'options' => array(
+                'query' => array(
+                    array(
+                        'id' => 'sale',
+                        'name' => $this->l('Sale')
+                    ),
+                    array(
+                        'id' => 'authorization',
+                        'name' => $this->l('Authorize')
+                    )
+                ),
+                'id' => 'id',
+                'name' => 'name'
+            ),
+        );
+
+        if ($this->method == 'MB') {
+            $inputGroup['label'] = $this->l('Payment action (for PayPal Express Checkout only)');
+            $inputGroup['hint'] = $this->l('You can change the payment action only for PayPal Express Checkout payments. If you are using PayPal Plus the "Sale" action is the only possible action.');
+        } else {
+            $inputGroup['label'] = $this->l('Payment action');
+        }
+
         $this->fields_form['form']['form'] = array(
             'legend' => array(
                 'title' => $this->l('Payment settings'),
                 'icon' => 'icon-cogs',
             ),
             'input' => array(
-                array(
-                    'type' => 'select',
-                    'label' => $this->l('Payment action'),
-                    'name' => 'paypal_api_intent',
-                    'options' => array(
-                        'query' => array(
-                            array(
-                                'id' => 'sale',
-                                'name' => $this->l('Sale')
-                            ),
-                            array(
-                                'id' => 'authorization',
-                                'name' => $this->l('Authorize')
-                            )
-                        ),
-                        'id' => 'id',
-                        'name' => 'name'
-                    ),
-                ),
+                $inputGroup,
                 array(
                     'type' => 'html',
                     'name' => '',
@@ -305,15 +318,13 @@ class AdminPayPalSetupController extends AdminPayPalController
     public function saveForm()
     {
         $result = parent::saveForm();
+
         $method = AbstractMethodPaypal::load($this->method);
         $method->checkCredentials();
-
-        if (empty($method->errors) == false) {
-            foreach ($method->errors as $error) {
-                $this->errors[] = $error;
-                $this->log($error);
-            }
+        if (Tools::isSubmit('paypal_sandbox') == false) {
+            $this->errors = array_merge($this->errors, $method->errors);
         }
+
 
         return $result;
     }

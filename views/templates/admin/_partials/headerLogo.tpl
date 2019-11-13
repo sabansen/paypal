@@ -32,7 +32,12 @@
 			{l s='Activate the PayPal module to start selling to +250M PayPal customers around the globe' mod='paypal'}.
 		</p>
 		{if $page_header_toolbar_title !== 'Help' && $page_header_toolbar_title !== 'Logs'}
-			<p>{l s='Activate in three easy steps' mod='paypal'}: </p>
+        	{if isset($methodType) && $methodType == 'EC'}
+				<p>{l s='Activate in three easy steps' mod='paypal'}: </p>
+			{else}
+				<p>{l s='Activate in two easy steps' mod='paypal'}: </p>
+        	{/if}
+
 			<p>
 				<ul>
 					<li>

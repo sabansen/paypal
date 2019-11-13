@@ -17,19 +17,15 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author 202-ecommerce <tech@202-ecommerce.com>
-*  @copyright 202-ecommerce
-*  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*}
+* @author 202-ecommerce <tech@202-ecommerce.com>
+  * @copyright 202-ecommerce
+  * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+  * International Registered Trademark & Property of PrestaShop SA
+  *}
 
-{include './_partials/headerLogo.tpl'}
-
-{if isset($formBehavior)}
-    {$formBehavior nofilter} {* the variable contains html code *}
-{/if}
-
-{if isset($formAdvanced)}
-    {$formAdvanced nofilter} {* the variable contains html code *}
+{if isset($resources) && is_array($resources) && empty($resources) == false}
+    {foreach from=$resources item=resource}
+      <link href="{$resource|addslashes}" rel="prefetch" as="script">
+    {/foreach}
 {/if}
 

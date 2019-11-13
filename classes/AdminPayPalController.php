@@ -38,7 +38,20 @@ class AdminPayPalController extends \ModuleAdminController
         parent::__construct();
         $this->bootstrap = true;
         $countryDefault = new \Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
-        $this->method = $countryDefault->iso_code == "DE" ? "PPP" : "EC";
+
+        switch ($countryDefault->iso_code) {
+            case "DE":
+                $this->method = "PPP";
+                break;
+            case "BR":
+                $this->method = "MB";
+                break;
+            case "MX":
+                $this->method = "MB";
+                break;
+            default:
+                $this->method = "EC";
+        }
     }
 
     public function initContent()
@@ -96,6 +109,12 @@ class AdminPayPalController extends \ModuleAdminController
             'success' => true,
             'message' => array()
         );
+        $hooksUnregistered = $this->module->getHooksUnregistered();
+
+        if (empty($hooksUnregistered) == false) {
+            $response['success'] = false;
+            $response['message'][] = $this->getHooksUnregisteredMessage($hooksUnregistered);
+        }
 
         if ((int)\Configuration::get('PS_COUNTRY_DEFAULT') == false) {
             $response['success'] = false;
@@ -159,23 +178,23 @@ class AdminPayPalController extends \ModuleAdminController
 
     public function postProcess()
     {
-
         if (\Tools::isSubmit("paypal_set_config")) {
-            $method = \AbstractMethodPaypal::load($this->method);
+            $method = \AbstractMethodPaypal::load('EC');
             $method->setConfig(\Tools::getAllValues());
             $method->checkCredentials();
-
-            if (empty($method->errors) == false) {
-                foreach ($method->errors as $error) {
-                    $this->errors[] = $error;
-                    $this->log($error);
-                }
-            }
+            $this->errors = array_merge($this->errors, $method->errors);
         }
 
         if (\Tools::isSubmit($this->controller_name . '_config')) {
             if ($this->saveForm()) {
                 $this->confirmations[] = $this->module->l('Successful update.', 'AdminPayPalController');
+            }
+        }
+
+        if (empty($this->errors) == false) {
+            $this->errors = array_unique($this->errors);
+            foreach ($this->errors as $error) {
+                $this->log($error);
             }
         }
 
@@ -200,5 +219,19 @@ class AdminPayPalController extends \ModuleAdminController
         ProcessLoggerHandler::openLogger();
         ProcessLoggerHandler::logError($message);
         ProcessLoggerHandler::closeLogger();
+    }
+
+    /**
+     *  @param array $hooks array of the hooks name
+     *  @return string
+     */
+    public function getHooksUnregisteredMessage($hooks)
+    {
+        if (is_array($hooks) == false || empty($hooks)) {
+            return '';
+        }
+
+        $this->context->smarty->assign('hooks', $hooks);
+        return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/messages/unregisteredHooksMessage.tpl');
     }
 }
