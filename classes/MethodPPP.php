@@ -772,9 +772,10 @@ class MethodPPP extends AbstractMethodPaypal
 
         $inputs[] = array(
             'type' => 'select',
-            'label' => $module->l('Payment accepted and transaction completed: Payment accepted (by default)', get_class($this)),
+            'label' => $module->l('Payment accepted and transaction completed', get_class($this)),
             'name' => 'paypal_os_accepted_two',
             'hint' => $module->l('You are currently using the Sale mode (the authorization and capture occur at the same time as the sale). So the payement is accepted instantly and the new order is created in the "Payment accepted" status. You can customize the status for orders with completed transactions. Ex : you can create an additional status "Payment accepted via PayPal" and set it as the default status.', get_class($this)),
+            'desc' => $module->l('Default status : Payment accepted', get_class($this)),
             'options' => array(
                 'query' => $orderStatuses,
                 'id' => 'id',

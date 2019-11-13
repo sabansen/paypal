@@ -350,9 +350,9 @@ class PayPal extends \PaymentModule
             'PAYPAL_REQUIREMENTS' => 0,
             'PAYPAL_MB_EC_ENABLED' => 1,
             'PAYPAL_CUSTOMIZE_ORDER_STATUS' => 0,
-            'PAYPAL_OS_REFUNDED_ONE' => (int)Configuration::get('PS_OS_REFUND'),
+            'PAYPAL_OS_REFUNDED' => (int)Configuration::get('PS_OS_REFUND'),
             'PAYPAL_OS_CANCELED' => (int)Configuration::get('PS_OS_CANCELED'),
-            'PAYPAL_OS_ACCEPTED' => (int)Configuration::get('PS_OS_PAYMENT'),
+            'PAYPAL_OS_ACCEPTED_ONE' => (int)Configuration::get('PS_OS_PAYMENT'),
             'PAYPAL_OS_CAPTURE_CANCELED' => (int)Configuration::get('PS_OS_CANCELED'),
             'PAYPAL_OS_ACCEPTED_TWO' => (int)Configuration::get('PS_OS_PAYMENT'),
             'PAYPAL_OS_WAITING_VALIDATION' => (int)Configuration::get('PAYPAL_OS_WAITING'),
@@ -1218,6 +1218,7 @@ class PayPal extends \PaymentModule
         $ex_detailed_message = '';
         $osCanceled = (int)Configuration::get('PAYPAL_CUSTOMIZE_ORDER_STATUS') ? (int)Configuration::get('PAYPAL_OS_CANCELED') : (int)Configuration::get('PS_OS_CANCELED');
         $osRefunded = (int)Configuration::get('PAYPAL_CUSTOMIZE_ORDER_STATUS') ? (int)Configuration::get('PAYPAL_OS_REFUNDED') : (int)Configuration::get('PS_OS_REFUND');
+        $osPaymentAccepted = (int)Configuration::get('PAYPAL_CUSTOMIZE_ORDER_STATUS') ? (int)Configuration::get('PAYPAL_OS_ACCEPTED') : (int)Configuration::get('PS_OS_PAYMENT');
 
         if ($params['newOrderStatus']->id == $osCanceled) {
             if ($this->context->controller instanceof PaypalIpnModuleFrontController) {
@@ -1404,7 +1405,7 @@ class PayPal extends \PaymentModule
             }
         }
 
-        if ($params['newOrderStatus']->paid == 1) {
+        if ($params['newOrderStatus']->id == $osPaymentAccepted) {
             $capture = PaypalCapture::loadByOrderPayPalId($orderPayPal->id);
             if (!Validate::isLoadedObject($capture)) {
                 return false;
