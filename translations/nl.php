@@ -176,7 +176,7 @@ $_MODULE['<{paypal}prestashop>adminpaypalcontroller_e97db78085f532d60c2156f86248
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_5ee8825eb41716424065ccd113abb596'] = 'Selecteer uw standaardland om een betaaloplossing te activeren.';
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_b0fb9d7e6d4ed47cb12f3092943fafc2'] = 'SSL moet op uw website ingeschakeld zijn.';
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_aaf6d0534e41ba08c928421597f9ab26'] = 'TLS-verificatie is mislukt.';
-$_MODULE['<{paypal}prestashop>adminpaypalcontroller_81618d71d454c0993d01b9a5329937c4'] = 'Uw winkelconfiguratie is in orde. U kunt nu beginnen met het configureren van uw Braintree-module.';
+$_MODULE['<{paypal}prestashop>adminpaypalcontroller_ef6cad8536ea150596af086ac2adacef'] = 'Uw winkelconfiguratie is in orde. U kunt nu beginnen met het configureren van uw PayPal-module.';
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_2c4493f4907a8c500557d79dd978f452'] = '401 Niet toegestaan. Houd er rekening mee dat de TLS-verificatie niet kan worden uitgevoerd als u htaccess-wachtwoordbeveiliging op uw website heeft ingeschakeld.';
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_d8e95938c82a618f755c13b35d4277c4'] = 'U gebruikt een oude versie van cURL. Update uw cURL-extensie naar versie 7.34.0 of hoger.';
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_38dc1dc4db247b4c01b26636e6bf9666'] = 'TLS-versie is niet compatibel';
@@ -262,3 +262,16 @@ $_MODULE['<{paypal}prestashop>blockpreviewbuttoncontext_bb755380e0e58acace05c472
 $_MODULE['<{paypal}prestashop>blockpreviewbuttoncontext_b401397858880fcfe0c8da19133356cd'] = 'Één productverkoop';
 $_MODULE['<{paypal}prestashop>blockpreviewbuttoncontext_468a21d1076328f1b4cd946b72e2d5cd'] = 'Winkelwagen pagina';
 $_MODULE['<{paypal}prestashop>blockpreviewbuttoncontext_0fcaf0531dd6d6a53f7bde67adafd035'] = 'Product pagina\'s';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_1624e46cbfe7dbe4a96a59090061d15b'] = 'API-inloggegevens';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_54ca61db74af81cf576c81234e2afbe1'] = 'Om PayPal Plus-betalingen te accepteren, dient u uw API REST-inloggegevens in te vullen.';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_bf733d8a933c1601697f364223fc7ecb'] = 'Toegang';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_1d18bf3e09ec1ad0236145e6e55fe193'] = 'https://developer.paypal.com/developer/applications/';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_d87d45b4afb0f16d79ad4b3bc17f2d97'] = 'Log in of open een zakelijke rekening';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_5ba82ead337af776b86db00ba9b6d541'] = 'Maak een \'REST API app\'';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_c4159369ab0d9986c1ef1a5949a5c900'] = 'Klik onder \'Geheim\' op \'Weergeven\'';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_7f161ed5b9f8fd29729abb01773e8dbc'] = 'Kopieer en plak uw \'Klantreferentie\' en \'Geheim\' hieronder voor elke omgeving';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_2652eec977dcb2a5aea85f5bec235b05'] = 'Sandbox';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_76525f0f34b48475e5ca33f71d296f3b'] = 'Klantreferentie';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_1e6947ac7fb3a9529a9726eb692c8cc5'] = 'Geheim';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_955ad3298db330b5ee880c2c9e6f23a0'] = 'Live';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_8914753a79f56d24f12a63c4578e4880'] = 'U kunt rechtsboven overschakelen naar de liveomgeving';

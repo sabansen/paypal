@@ -176,7 +176,7 @@ $_MODULE['<{paypal}prestashop>adminpaypalcontroller_e97db78085f532d60c2156f86248
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_5ee8825eb41716424065ccd113abb596'] = 'Pour activer une solution de paiement, sélectionnez votre pays par défaut.';
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_b0fb9d7e6d4ed47cb12f3092943fafc2'] = 'Le protocole SSL doit être activé sur votre site.';
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_aaf6d0534e41ba08c928421597f9ab26'] = 'Erreur de vérification TLS.';
-$_MODULE['<{paypal}prestashop>adminpaypalcontroller_81618d71d454c0993d01b9a5329937c4'] = 'Vous avez configuré votre boutique. Vous pouvez commencer à configurer le module Braintree.';
+$_MODULE['<{paypal}prestashop>adminpaypalcontroller_ef6cad8536ea150596af086ac2adacef'] = 'Vous avez configuré votre boutique. Vous pouvez commencer à configurer le module PayPal.';
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_2c4493f4907a8c500557d79dd978f452'] = 'Erreur 401 Non autorisé. La vérification TLS ne peut pas être effectuée si vous avez activé une protection de mot de passe htaccess sur votre site.';
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_d8e95938c82a618f755c13b35d4277c4'] = 'Vous utilisez une ancienne version de cURL. Mettez à jour votre extension cURL vers la version 7.34.0 ou supérieure.';
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_38dc1dc4db247b4c01b26636e6bf9666'] = 'La version de TLS n\'est pas compatible.';
@@ -262,3 +262,16 @@ $_MODULE['<{paypal}prestashop>blockpreviewbuttoncontext_bb755380e0e58acace05c472
 $_MODULE['<{paypal}prestashop>blockpreviewbuttoncontext_b401397858880fcfe0c8da19133356cd'] = 'Produit unique sans configuration';
 $_MODULE['<{paypal}prestashop>blockpreviewbuttoncontext_468a21d1076328f1b4cd946b72e2d5cd'] = 'Page Panier';
 $_MODULE['<{paypal}prestashop>blockpreviewbuttoncontext_0fcaf0531dd6d6a53f7bde67adafd035'] = 'Page Produit';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_1624e46cbfe7dbe4a96a59090061d15b'] = 'Identifiants API';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_54ca61db74af81cf576c81234e2afbe1'] = 'Pour accepter les paiements PayPal Plus, ajoutez vos identifiants API REST.';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_bf733d8a933c1601697f364223fc7ecb'] = 'Accédez à ';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_1d18bf3e09ec1ad0236145e6e55fe193'] = 'https://developer.paypal.com/developer/applications/';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_d87d45b4afb0f16d79ad4b3bc17f2d97'] = 'Connectez-vous ou ouvrez un compte Professionnel';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_5ba82ead337af776b86db00ba9b6d541'] = 'Créer une application API REST';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_c4159369ab0d9986c1ef1a5949a5c900'] = 'Cliquez sur Afficher en dessous de Code secret :';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_7f161ed5b9f8fd29729abb01773e8dbc'] = 'Copiez/collez votre client ID et votre code secret ci-dessous pour chaque environnement.';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_2652eec977dcb2a5aea85f5bec235b05'] = 'Environnement de test';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_76525f0f34b48475e5ca33f71d296f3b'] = 'Client ID';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_1e6947ac7fb3a9529a9726eb692c8cc5'] = 'Code secret';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_955ad3298db330b5ee880c2c9e6f23a0'] = 'Production';
+$_MODULE['<{paypal}prestashop>pppcredentialsform_8914753a79f56d24f12a63c4578e4880'] = 'Vous pouvez accéder à l\'environnement "Production" en haut à droite.';
