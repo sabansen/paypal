@@ -37,8 +37,6 @@ use PaypalPPBTlib\Extensions\AbstractModuleExtension;
 use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 
-include_once(_PS_MODULE_DIR_ . 'paypal/sdk/BraintreeSiSdk.php');
-
 include_once 'classes/AbstractMethodPaypal.php';
 include_once 'classes/PaypalCapture.php';
 include_once 'classes/PaypalOrder.php';
