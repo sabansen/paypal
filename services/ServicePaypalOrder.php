@@ -47,8 +47,6 @@ class ServicePaypalOrder
             return false;
         }
 
-
-
         /* @var $psOrder \Order*/
         foreach ($psOrders as $psOrder) {
             if (empty($psOrder->getHistory(\Context::getContext()->language->id, $idStatus)) == false) {
@@ -58,12 +56,6 @@ class ServicePaypalOrder
             if (in_array($idStatus, array((int)\Configuration::get('PS_OS_REFUND'), (int)\Configuration::get('PAYPAL_OS_REFUNDED_PAYPAL')))) {
                 $paypalOrder->payment_status = 'refunded';
                 $paypalOrder->save();
-
-                $capture = $this->getCapture($paypalOrder);
-                if (\Validate::isLoadedObject($capture)) {
-                    $capture->result = 'refunded';
-                    $capture->save();
-                }
             }
 
             $psOrder->setCurrentState($idStatus);

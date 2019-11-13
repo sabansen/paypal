@@ -1420,6 +1420,8 @@ class PayPal extends \PaymentModule
                 $ex_detailed_message = $e->errorMessage();
             } catch (PayPal\Exception\PPConfigurationException $e) {
                 $ex_detailed_message = $this->l('Invalid configuration. Please check your configuration file');
+            } catch (Exception $e) {
+                $ex_detailed_message = $e->errorMessage();
             }
 
             if (isset($capture_response['success'])) {

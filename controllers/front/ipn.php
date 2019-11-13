@@ -103,7 +103,7 @@ class PaypalIpnModuleFrontController extends PaypalAbstarctModuleFrontController
 
         $paypalOrder = $this->servicePaypalOrder->getPaypalOrderByTransaction($transactionRef);
 
-        if (Validate::isLoadedObject($paypalOrder)) {
+        if (Validate::isLoadedObject($paypalOrder) == false) {
             return false;
         }
 
