@@ -225,7 +225,7 @@ $_MODULE['<{paypal}prestashop>button_braintree_8f096e6dc288af6c6cbf947540e3d9e3'
 $_MODULE['<{paypal}prestashop>button_braintree_19366aa55fb78cc02d3928ab546df32a'] = 'Twoje konto Braintree jest skonfigurowane w trybie na żywo. Możesz sprzedawać tylko na euro. Możesz dołączyć do wsparcia Braintree na 08 05 54 27 14';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_97f5cc21dbc593ca301cd92490ff8735'] = 'Uwaga: Nowa wersja modułu (v 3.14.0) wymaga, aby dodać szczegóły poświadczeń.';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_87194d3fb348a93b585147b627828132'] = 'Aby znaleźć klucze interfejsu API, należy wykonać następujące czynności:';
-$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_78b889a8fa7b7ddfb942afdd4a16c78b'] = 'Zaloguj się na konto [a @href1@] [/a]';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_78b889a8fa7b7ddfb942afdd4a16c78b'] = 'Zaloguj się na [a @href1@]konto[/a]';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_9ff77bd3d61cd4ed209293283ef922df'] = 'Kliknij na parametry (logo kółka roboczego)';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_8258080b2001c14b75014329dbb07ed4'] = 'Kliknij na API';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_ce98ec2f851e8f9d5ee87f124326a3a3'] = 'Kliknij przycisk \"Generowanie nowego klucza interfejsu API\"';
