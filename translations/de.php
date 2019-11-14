@@ -229,7 +229,7 @@ $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_8258080b2001c14b750143
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_ce98ec2f851e8f9d5ee87f124326a3a3'] = 'Klicken Sie auf den \"Neuen API-Schlüssel generieren\"';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_b322bce65e09c6719fbe8c0f0b2a30c2'] = 'Klicken Sie in der Spalte \"Privatschlüssel\" auf \"Ansicht\"';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_b019ab576a27965f2ecf7ed2129ea0a6'] = 'Kopieren Sie Ihren \"Privaten Schlüssel\", \"Öffentlicher Schlüssel\" und \"Merchant ID\" und fügen Sie sie unten ein:';
-$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_d69368e9f10df3cdfab518814ee99ccd'] = 'Um Sandbox-API-Schlüssel abzurufen, wiederholen Sie bitte die Schritte, indem Sie eine Verbindung zu [einem @href1@]Sandbox-Konto[/a] herstellen oder ein neues [a @href2@]one[/a] erstellen.';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_d69368e9f10df3cdfab518814ee99ccd'] = 'Um Sandbox-API-Schlüssel abzurufen, wiederholen Sie bitte die Schritte, indem Sie eine Verbindung zu [a @href1@]einem Sandbox-Konto[/a] herstellen oder ein neues [a @href2@]one[/a] erstellen.';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_955ad3298db330b5ee880c2c9e6f23a0'] = 'leben';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_ed6445336472aef39084720adcf903b9'] = 'Öffentlicher Schlüssel';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_6eb9040e470e8018db394832a528f56a'] = 'Privater Schlüssel';

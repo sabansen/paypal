@@ -351,13 +351,13 @@ $_MODULE['<{paypal}prestashop>button_braintree_93cba07454f06a4a960172bbd6e2a435'
 $_MODULE['<{paypal}prestashop>button_braintree_bafd7322c6e97d25b6299b5d6fe8920b'] = 'non';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_97f5cc21dbc593ca301cd92490ff8735'] = 'Remarque : la nouvelle version du module (v3.14.0) nécessite d\'ajouter vos informations d\'identification.';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_87194d3fb348a93b585147b627828132'] = 'Pour trouver vos clés API, veuillez suivre les étapes suivantes :';
-$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_78b889a8fa7b7ddfb942afdd4a16c78b'] = 'Connectez-vous à votre [un compte @href1@][/a]';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_78b889a8fa7b7ddfb942afdd4a16c78b'] = 'Connectez-vous à votre [a @href1@]un compte [/a]';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_9ff77bd3d61cd4ed209293283ef922df'] = 'Cliquez sur Paramètres (le logo de la roue de travail)';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_8258080b2001c14b75014329dbb07ed4'] = 'Cliquez sur API';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_ce98ec2f851e8f9d5ee87f124326a3a3'] = 'Cliquez sur la clé \"Generate New API Key\"';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_b322bce65e09c6719fbe8c0f0b2a30c2'] = 'Cliquez sur \"Voir\" dans la colonne \"Clé privée\"';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_b019ab576a27965f2ecf7ed2129ea0a6'] = 'Copiez votre « clé privée », « clé publique » et « ID marchand » et collez-les ci-dessous :';
-$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_d69368e9f10df3cdfab518814ee99ccd'] = 'Pour récupérer les clés API Sandbox s\'il vous plaît répéter les étapes en se connectant à [un compte @href1@]sandbox[/a] ou la création d\'un nouveau [un @href2@]un[/a]';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_d69368e9f10df3cdfab518814ee99ccd'] = 'Pour récupérer les clés API Sandbox s\'il vous plaît répéter les étapes en se connectant à [a @href1@]un compte sandbox[/a] ou la création d\'un nouveau [a @href2@]un[/a]';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_955ad3298db330b5ee880c2c9e6f23a0'] = 'vivre';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_ed6445336472aef39084720adcf903b9'] = 'Clé publique';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_6eb9040e470e8018db394832a528f56a'] = 'Clé privée';

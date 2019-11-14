@@ -225,13 +225,13 @@ $_MODULE['<{paypal}prestashop>button_braintree_8f096e6dc288af6c6cbf947540e3d9e3'
 $_MODULE['<{paypal}prestashop>button_braintree_19366aa55fb78cc02d3928ab546df32a'] = 'Sua conta Braintree está configurada no modo ao vivo. Você pode vender apenas em euros. Você pode participar do suporte braintree em 08 05 54 27 14';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_97f5cc21dbc593ca301cd92490ff8735'] = 'Nota: a nova versão do módulo (v3.14.0) requer adicionar detalhes de suas credenciais.';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_87194d3fb348a93b585147b627828132'] = 'Para encontrar suas chaves do API, siga por favor aquelas etapas:';
-$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_78b889a8fa7b7ddfb942afdd4a16c78b'] = 'Faça login em sua conta [uma @href1@][/a]';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_78b889a8fa7b7ddfb942afdd4a16c78b'] = 'Faça login em sua conta [a @href1@]uma[/a]';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_9ff77bd3d61cd4ed209293283ef922df'] = 'Clique em Parâmetros (o logotipo da roda de trabalho)';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_8258080b2001c14b75014329dbb07ed4'] = 'Clique na API';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_ce98ec2f851e8f9d5ee87f124326a3a3'] = 'Clique na \"Gerar nova chave api\"';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_b322bce65e09c6719fbe8c0f0b2a30c2'] = 'Clique em \"Ver\" na coluna \"Chave privada\"';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_b019ab576a27965f2ecf7ed2129ea0a6'] = 'Copie o seu \"Private Key\", \"Public Key\" e \"Merchant ID\" e cole-os abaixo:';
-$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_d69368e9f10df3cdfab518814ee99ccd'] = 'Para recuperar a caixa de areia API Keys, repita os passos conectando-se a [uma conta de caixa de areia @href1@][/a] ou criando um novo [um @href2@][/a]';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_d69368e9f10df3cdfab518814ee99ccd'] = 'Para recuperar a caixa de areia API Keys, repita os passos conectando-se a [a @href1@]uma conta de caixa de areia[/a] ou criando [a @href2@]um novo [/a]';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_955ad3298db330b5ee880c2c9e6f23a0'] = 'Viver';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_ed6445336472aef39084720adcf903b9'] = 'Chave pública';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_6eb9040e470e8018db394832a528f56a'] = 'Chave privada';

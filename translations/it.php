@@ -225,13 +225,13 @@ $_MODULE['<{paypal}prestashop>button_braintree_8f096e6dc288af6c6cbf947540e3d9e3'
 $_MODULE['<{paypal}prestashop>button_braintree_19366aa55fb78cc02d3928ab546df32a'] = 'Il tuo account Braintree è configurato in modalità live. Puoi vendere solo in Euro. Puoi unirti al supporto Braintree al numero 08 05 54 27 14';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_97f5cc21dbc593ca301cd92490ff8735'] = 'Nota: la nuova versione del modulo (v3.14.0) richiede di aggiungere i dettagli delle credenziali.';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_87194d3fb348a93b585147b627828132'] = 'Per trovare le chiavi API, segui questi passaggi:';
-$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_78b889a8fa7b7ddfb942afdd4a16c78b'] = 'Accedere al proprio [account @href1@][/a]';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_78b889a8fa7b7ddfb942afdd4a16c78b'] = 'Accedere al proprio [a @href1@]account[/a]';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_9ff77bd3d61cd4ed209293283ef922df'] = 'Fare clic su Parametri (logo della rotellina di lavoro)';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_8258080b2001c14b75014329dbb07ed4'] = 'Fare clic sull\'API';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_ce98ec2f851e8f9d5ee87f124326a3a3'] = 'Fare clic sul pulsante \"Genera nuova chiave API\"';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_b322bce65e09c6719fbe8c0f0b2a30c2'] = 'Fare clic su \"Visualizza\" nella colonna \"Chiave privata\"';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_b019ab576a27965f2ecf7ed2129ea0a6'] = 'Copia la \"Chiave Privata\", \"Chiave Pubblica\" e \"ID commerciante\" e incollale di seguito:';
-$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_d69368e9f10df3cdfab518814ee99ccd'] = 'Per recuperare le chiavi API sandbox, ripetere i passaggi connettendosi a [un account sandbox @href1@][/a] o creando un nuovo [@href2@]uno[/a]';
+$_MODULE['<{paypal}prestashop>sectionbraintreecredentials_d69368e9f10df3cdfab518814ee99ccd'] = 'Per recuperare le chiavi API sandbox, ripetere i passaggi connettendosi a [a @href1@]un account sandbox[/a] o creando un nuovo [a @href2@]uno[/a]';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_955ad3298db330b5ee880c2c9e6f23a0'] = 'vivere';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_ed6445336472aef39084720adcf903b9'] = 'Chiave pubblica';
 $_MODULE['<{paypal}prestashop>sectionbraintreecredentials_6eb9040e470e8018db394832a528f56a'] = 'Chiave privata';
