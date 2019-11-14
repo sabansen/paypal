@@ -877,6 +877,7 @@ class MethodEC extends AbstractMethodPaypal
             'accountConfigured' => $this->isConfigured(),
             'urlOnboarding' => $context->link->getAdminLink('AdminPayPalSetup', true, null, $urlParameters),
             'country_iso' => $countryDefault->iso_code,
+            'idShop' => Context::getContext()->shop->id,
         );
 
         if ((int)Configuration::get('PAYPAL_SANDBOX')) {
