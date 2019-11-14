@@ -37,6 +37,7 @@ const PayPalMB = {
             "rememberedCards": paymentInfo.rememberedCards,
             "onError": this.handleError,
             "merchantInstallmentSelectionOptional": paymentInfo.merchantInstallmentSelectionOptional == 1,
+            "merchantInstallmentSelection": 1
         };
 
         this.paymentId = paymentInfo.paymentId;
