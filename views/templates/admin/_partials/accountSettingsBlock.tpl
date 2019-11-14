@@ -87,6 +87,7 @@
                     <hr/>
                     <input type="hidden" id="with_card" name="with_card"/>
                     <input type="hidden" name="paypal_set_config" value="1"/>
+		            <input type="hidden" name="id_shop" value="{if isset($idShop)}{$idShop}{/if}"/>
                     <h4>{l s='API Credentials for' mod='paypal'} {$mode}</h4>
                     <p>
                         <label for="api_username">{l s='API username' mod='paypal'}</label>
