@@ -165,6 +165,7 @@ const PayPalMB = {
         form.action = action;
 
         form.appendChild(input);
+        form.style = 'display: none';
         document.body.appendChild(form);
         form.submit();
     }
