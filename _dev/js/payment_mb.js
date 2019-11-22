@@ -106,6 +106,7 @@ const PayPalMB = {
     messageListener(event) {
         try {
             let data = JSON.parse(event.data);
+
             if (data.action == "checkout" && data.result.state == "APPROVED") {
                 data['paymentId'] = PayPalMB.paymentId;
                 PayPalMB.sendData(data, ajaxPatch);
@@ -116,29 +117,65 @@ const PayPalMB = {
     },
 
     handleError(error) {
-        let message;
-        $('.paypal-loader-container').hide();
-        $('#ppplus-mb').css({
-          'height': '610px'
-        });
+        if (typeof error.cause !== 'undefined') { //iFrame error handling
 
-        for (let key in error) {
-            // skip loop if the property is from prototype
-            if (!error.hasOwnProperty(key)) {
-                continue;
+            let ppplusError = error.cause.replace (/['"]+/g,""); //log & attach this error into the order if possible
+
+            // <<Insert Code Here>>
+
+            switch (ppplusError)
+
+            {
+
+                case "INTERNAL_SERVICE_ERROR": //javascript fallthrough
+                case "SOCKET_HANG_UP": //javascript fallthrough
+                case "socket hang up": //javascript fallthrough
+                case "connect ECONNREFUSED": //javascript fallthrough
+                case "connect ETIMEDOUT": //javascript fallthrough
+                case "UNKNOWN_INTERNAL_ERROR": //javascript fallthrough
+                case "fiWalletLifecycle_unknown_error": //javascript fallthrough
+                case "Failed to decrypt term info": //javascript fallthrough
+                case "RESOURCE_NOT_FOUND": //javascript fallthrough
+                case "INTERNAL_SERVER_ERROR":
+                    alert ("Ocorreu um erro inesperado, por favor tente novamente. (" + ppplusError + ")"); //pt_BR
+                    //Generic error, inform the customer to try again; generate a new approval_url and reload the iFrame.
+                    // <<Insert Code Here>>
+                    break;
+
+                case "RISK_N_DECLINE": //javascript fallthrough
+                case "NO_VALID_FUNDING_SOURCE_OR_RISK_REFUSED": //javascript fallthrough
+                case "TRY_ANOTHER_CARD": //javascript fallthrough
+                case "NO_VALID_FUNDING_INSTRUMENT":
+                    alert ("Seu pagamento não foi aprovado. Por favor utilize outro cartão, caso o problema persista entre em contato com o PayPal (0800-047-4482). (" + ppplusError + ")"); //pt_BR
+                    //Risk denial, inform the customer to try again; generate a new approval_url and reload the iFrame.
+                    // <<Insert Code Here>>
+                    break;
+
+                case "CARD_ATTEMPT_INVALID":
+                    alert ("Ocorreu um erro inesperado, por favor tente novamente. (" + ppplusError + ")"); //pt_BR
+                    //03 maximum payment attempts with error, inform the customer to try again; generate a new approval_url and reload the iFrame.
+                    // <<Insert Code Here>>
+                    break;
+
+                case "INVALID_OR_EXPIRED_TOKEN":
+                    alert ("A sua sessão expirou, por favor tente novamente. (" + ppplusError + ")"); //pt_BR
+                    //User session is expired, inform the customer to try again; generate a new approval_url and reload the iFrame.
+                    // <<Insert Code Here>>
+                    break;
+
+                case "CHECK_ENTRY":
+                    alert ("Por favor revise os dados de Cartão de Crédito inseridos. (" + ppplusError + ")"); //pt_BR
+                    //Missing or invalid credit card information, inform your customer to check the inputs.
+                    // <<Insert Code Here>>
+                    break;
+
+                default:  //unknown error & reload payment flow
+                    alert ("Ocorreu um erro inesperado, por favor tente novamente. (" + ppplusError + ")"); //pt_BR
+                //Generic error, inform the customer to try again; generate a new approval_url and reload the iFrame.
+                // <<Insert Code Here>>
+
             }
 
-            let errorMessage = error[key];
-            switch (errorMessage) {
-                case "Invalid 'payerTaxId'.":
-                    if (typeof(INVALID_PAYER_TAX_ID) == 'undefined') {
-                        message = errorMessage;
-                    } else {
-                        message = INVALID_PAYER_TAX_ID;
-                    }
-
-                    PayPalMB.showMessage(message, '#ppplus-mb-error-message', 'danger');
-            }
         }
 
         console.log(error, typeof error);
