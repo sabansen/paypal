@@ -146,7 +146,6 @@ class MethodEC extends AbstractMethodPaypal
             Configuration::updateValue('PAYPAL_'.$mode.'_ACCESS', 1);
             Configuration::updateValue('PAYPAL_MERCHANT_ID_'.$mode, $params['merchant_id']);
             Configuration::updateValue('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT', 1);
-            Configuration::updateValue('PAYPAL_API_CARD', $params['with_card']);
             $this->checkCredentials();
             return;
         }
