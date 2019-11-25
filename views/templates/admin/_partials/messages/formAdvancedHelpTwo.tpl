@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div class="alert alert-info">
+<div class="alert alert-info advanced-help-message">
     {l s='It is also possible to customize the default status for the orders created via PayPal. You can find below the list of the different cases and corresponding order status.' mod='paypal'}
     <br>
     {l s='Ex: If the transaction is completed an order will be created on the PrestaShop. By default, the order status "Payment accepted" is applied for all completed transactions.' mod='paypal'}

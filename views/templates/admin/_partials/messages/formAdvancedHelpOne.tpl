@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div class="alert alert-info">
+<div class="alert alert-info advanced-help-message">
     {l s='You can find below the list of the order status for triggering actions on PayPal.' mod='paypal'}
     <br>
     {l s='Some manual actions trigger some events on the PayPal side.' mod='paypal'}

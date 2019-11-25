@@ -53,6 +53,18 @@ var CustomizeCheckout = {
           'paypal_vaulting',
           'paypal_merchant_installment'
       ];
+      const customOrderStatus = $('[name="paypal_customize_order_status"]');
+      const statusOptions = [
+          'paypal_os_refunded',
+          'paypal_os_canceled',
+          'paypal_os_accepted',
+          'paypal_os_capture_canceled',
+          'paypal_os_waiting_validation',
+          'paypal_os_accepted_two',
+          'paypal_os_processing',
+          'paypal_os_validation_error',
+          'paypal_os_refunded_paypal'
+      ];
 
       if (paypalEcEnabled.prop('checked') == true) {
         EcOptions.forEach(CustomizeCheckout.showConfiguration);
@@ -67,6 +79,14 @@ var CustomizeCheckout = {
       } else {
           MbCardOptions.forEach(CustomizeCheckout.hideConfiguration);
       }
+
+        if (customOrderStatus.prop('checked') == true) {
+            statusOptions.forEach(CustomizeCheckout.showConfiguration);
+            $('.advanced-help-message').show();
+        } else {
+            statusOptions.forEach(CustomizeCheckout.hideConfiguration);
+            $('.advanced-help-message').hide();
+        }
 
     },
 
