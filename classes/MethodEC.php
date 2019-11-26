@@ -311,8 +311,9 @@ class MethodEC extends AbstractMethodPaypal
                 // It's needed to take a percentage of the order amount, taking into account the others discounts
                 if ((int)$discount['reduction_percent'] > 0) {
                     $discount['value_real'] = $order_total_with_reduction * ($discount['value_real'] / $order_total);
-                    $order_total_with_reduction -= $discount['value_real'];
-                } else {
+                }
+
+                if ((int)$discount['free_shipping'] == false) {
                     $order_total_with_reduction -= $discount['value_real'];
                 }
 
