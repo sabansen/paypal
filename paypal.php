@@ -353,7 +353,7 @@ class PayPal extends \PaymentModule
             'PAYPAL_CUSTOMIZE_ORDER_STATUS' => 0,
             'PAYPAL_OS_REFUNDED' => (int)Configuration::get('PS_OS_REFUND'),
             'PAYPAL_OS_CANCELED' => (int)Configuration::get('PS_OS_CANCELED'),
-            'PAYPAL_OS_ACCEPTED_ONE' => (int)Configuration::get('PS_OS_PAYMENT'),
+            'PAYPAL_OS_ACCEPTED' => (int)Configuration::get('PS_OS_PAYMENT'),
             'PAYPAL_OS_CAPTURE_CANCELED' => (int)Configuration::get('PS_OS_CANCELED'),
             'PAYPAL_OS_ACCEPTED_TWO' => (int)Configuration::get('PS_OS_PAYMENT'),
             'PAYPAL_OS_WAITING_VALIDATION' => (int)Configuration::get('PAYPAL_OS_WAITING'),
@@ -382,6 +382,9 @@ class PayPal extends \PaymentModule
         if (!$this->installOrderState()) {
             return false;
         }
+
+        $this->moduleConfigs['PAYPAL_OS_WAITING_VALIDATION'] = (int)Configuration::get('PAYPAL_OS_WAITING');
+        $this->moduleConfigs['PAYPAL_OS_PROCESSING'] = (int)Configuration::get('PAYPAL_OS_WAITING');
 
         foreach ($this->moduleConfigs as $key => $value) {
             if (!Configuration::updateValue($key, $value)) {

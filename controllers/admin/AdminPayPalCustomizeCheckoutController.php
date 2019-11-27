@@ -410,7 +410,9 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             $this->advanceFormParametres = array_merge($this->advanceFormParametres, $methodCurrent->advancedFormParametres);
 
             foreach ($this->advanceFormParametres as $parametre) {
-                $result &= \Configuration::updateValue(\Tools::strtoupper($parametre), pSQL(\Tools::getValue($parametre), ''));
+                if (\Tools::isSubmit($parametre)) {
+                    $result &= \Configuration::updateValue(\Tools::strtoupper($parametre), pSQL(\Tools::getValue($parametre), ''));
+                }
             }
         }
 
