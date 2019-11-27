@@ -34,10 +34,8 @@ var CustomizeCheckout = {
       $(e.currentTarget).removeClass('pp-settings-link-on');
     });
 
-    if (typeof(paypalMethod) == 'string' && paypalMethod == 'MB') {
-        CustomizeCheckout.checkConfigurations();
-        $('input').change(CustomizeCheckout.checkConfigurations);
-    }
+    CustomizeCheckout.checkConfigurations();
+    $('input').change(CustomizeCheckout.checkConfigurations);
   },
 
     checkConfigurations() {
@@ -67,28 +65,33 @@ var CustomizeCheckout = {
           'paypal_os_refunded_paypal'
       ];
 
-      if (paypalEcEnabled.prop('checked') == true) {
-        EcOptions.forEach(CustomizeCheckout.showConfiguration);
-        $('.message-context').show();
-      } else {
+      if (paypalEcEnabled.length > 0 ) {
+        if (paypalEcEnabled.prop('checked') == true) {
+          EcOptions.forEach(CustomizeCheckout.showConfiguration);
+          $('.message-context').show();
+        } else {
           EcOptions.forEach(CustomizeCheckout.hideConfiguration);
           $('.message-context').hide();
-      }
-
-      if (paypalApiCard.prop('checked') == true) {
-          MbCardOptions.forEach(CustomizeCheckout.showConfiguration);
-      } else {
-          MbCardOptions.forEach(CustomizeCheckout.hideConfiguration);
-      }
-
-        if (customOrderStatus.prop('checked') == true) {
-            statusOptions.forEach(CustomizeCheckout.showConfiguration);
-            $('.advanced-help-message').show();
-        } else {
-            statusOptions.forEach(CustomizeCheckout.hideConfiguration);
-            $('.advanced-help-message').hide();
         }
+      }
 
+      if (paypalApiCard.length > 0) {
+        if (paypalApiCard.prop('checked') == true) {
+          MbCardOptions.forEach(CustomizeCheckout.showConfiguration);
+        } else {
+          MbCardOptions.forEach(CustomizeCheckout.hideConfiguration);
+        }
+      }
+
+      if (customOrderStatus.length > 0) {
+        if (customOrderStatus.prop('checked') == true) {
+          statusOptions.forEach(CustomizeCheckout.showConfiguration);
+          $('.advanced-help-message').show();
+        } else {
+          statusOptions.forEach(CustomizeCheckout.hideConfiguration);
+          $('.advanced-help-message').hide();
+        }
+      }
     },
 
     // Hide block while switch inactive
