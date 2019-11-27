@@ -10,7 +10,7 @@
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2019 PrestaShop SA
  * @license   http://addons.prestashop.com/en/content/12-terms-and-conditions-of-use
- * International Registered Trademark & Property of PrestaShop SA
+ *
  */
 
 const PayPalMB = {

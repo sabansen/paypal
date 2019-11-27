@@ -20,8 +20,8 @@
  *
  *  @author    PrestaShop SA <contact@prestashop.com>
  *  @copyright 2007-2019 PrestaShop SA
- *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ *
  */
 
 include_once _PS_MODULE_DIR_.'paypal/classes/PaypalOrder.php';
