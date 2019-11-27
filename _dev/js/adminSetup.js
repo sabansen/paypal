@@ -79,7 +79,7 @@ const SetupAdmin = {
         action: 'CheckCredentials',
       },
       success(response) {
-        $('#status-block').html(response);
+        $('#btn-check-requirements').closest('.status-block-container').html(response);
       },
     });
   },

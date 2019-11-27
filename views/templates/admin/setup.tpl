@@ -39,9 +39,11 @@
                 {$formEnvironmentSettings nofilter} {* the variable contains html code *}
             {/if}
 
-            {if isset($formStatusTop)}
-                {$formStatusTop nofilter} {* the variable contains html code *}
-            {/if}
+            <div class="status-block-container">
+                {if isset($formStatusTop)}
+                    {$formStatusTop nofilter} {* the variable contains html code *}
+                {/if}
+            </div>
         </div>
     </div>
 
@@ -55,7 +57,7 @@
                 {$formMerchantAccounts nofilter}
             {/if}
         </div>
-        <div class="col-lg-4 stretchHeightForm pp__pb-4" id="status-block">
+        <div class="col-lg-4 stretchHeightForm pp__pb-4 status-block-container">
             {if isset($formStatus)}
                 {$formStatus nofilter} {* the variable contains html code *}
             {/if}
