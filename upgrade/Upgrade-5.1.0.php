@@ -57,7 +57,14 @@ function upgrade_module_5_1_0($module)
     $return &= $installer->installObjectModel('PaypalVaulting');
 
     foreach ($configs as $config => $value) {
-        $return &= Configuration::updateValue($config, $value);
+        if (Shop::isFeatureActive()) {
+            $shops = Shop::getShops();
+            foreach ($shops as $shop) {
+                $return &= Configuration::updateValue($config, $value, false, null, (int)$shop['id_shop']);
+            }
+        } else {
+            $return &= Configuration::updateValue($config, $value);
+        }
     }
 
     return $return;
