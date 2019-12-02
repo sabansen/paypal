@@ -87,6 +87,8 @@ class PayPalBraintreeSubmitModuleFrontController extends ModuleFrontController
                     $paypal->validateOrder($this->context->cart->id, (Configuration::get('PAYPAL_CAPTURE')?Configuration::get('PAYPAL_BRAINTREE_OS_AWAITING'):Configuration::get('PS_OS_PAYMENT')), $braintree_transaction->amount, 'Braintree', $paypal->l('Payment accepted.'), $transactionDetail, $this->context->cart->id_currency, false, $this->context->customer->secure_key);
                     $order_id = Order::getOrderByCartId($this->context->cart->id);
                     $this->redirectConfirmation($paypal->id, $this->context->cart->id, $order_id);
+                } else {
+                    $this->redirectFailedPayment($paypal->l('Authentication unsuccessful for this transaction. Please try another card or payment method.'));
                 }
                 break;
             default:
