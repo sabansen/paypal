@@ -782,6 +782,19 @@ class MethodMB extends AbstractMethodPaypal
         if (Configuration::get('PAYPAL_API_INTENT') == 'authorization') {
             $inputs[] = array(
                 'type' => 'select',
+                'label' => $module->l('Payment accepted and transaction completed', get_class($this)),
+                'name' => 'paypal_os_accepted_two',
+                'hint' => $module->l('You are currently using the Authorize mode. It means that you separate the payment authorization from the capture of the authorized payment. For capturing the authorized payement you have to change the order status to "payment accepted" (or to a custom status with the same meaning). Here you can choose a custom order status for accepting the order and validating transaction in Authorize mode.', get_class($this)),
+                'desc' => $module->l('Default status : Payment accepted', get_class($this)),
+                'options' => array(
+                    'query' => $orderStatuses,
+                    'id' => 'id',
+                    'name' => 'name'
+                )
+            );
+
+            $inputs[] = array(
+                'type' => 'select',
                 'label' => $module->l('Payment authorized, waiting for validation by admin (paid via PayPal express checkout)', get_class($this)),
                 'name' => 'paypal_os_waiting_validation',
                 'hint' => $module->l('You are currently using the Authorize mode. It means that you separate the payment authorization from the capture of the authorized payment. By default the orders will be created in the "Waiting for PayPal payment" but you can customize it if needed.', get_class($this)),
@@ -793,19 +806,6 @@ class MethodMB extends AbstractMethodPaypal
                 )
             );
         }
-
-        $inputs[] = array(
-            'type' => 'select',
-            'label' => $module->l('Payment accepted and transaction completed', get_class($this)),
-            'name' => 'paypal_os_accepted_two',
-            'hint' => $module->l('You are currently using the Authorize mode. It means that you separate the payment authorization from the capture of the authorized payment. For capturing the authorized payement you have to change the order status to "payment accepted" (or to a custom status with the same meaning). Here you can choose a custom order status for accepting the order and validating transaction in Authorize mode.', get_class($this)),
-            'desc' => $module->l('Default status : Payment accepted', get_class($this)),
-            'options' => array(
-                'query' => $orderStatuses,
-                'id' => 'id',
-                'name' => 'name'
-            )
-        );
 
         $inputs[] = array(
             'type' => 'select',
