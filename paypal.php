@@ -1628,35 +1628,6 @@ class PayPal extends \PaymentModule
         return true;
     }
 
-    public function disable($force_all = false)
-    {
-        $result = true;
-        $result &= parent::disable($force_all);
-        $tabParent = \Tab::getInstanceFromClassName('AdminParentPaypalConfiguration');
-
-        if (\Validate::isLoadedObject($tabParent) == false) {
-            return $result;
-        }
-
-        $tabParent->active = false;
-        $result &= $tabParent->save();
-        return $result;
-    }
-
-    public function enable($force_all = false)
-    {
-        $result = true;
-        $result &= parent::enable($force_all);
-        $tabParent = \Tab::getInstanceFromClassName('AdminParentPaypalConfiguration');
-
-        if (\Validate::isLoadedObject($tabParent) == false) {
-            return $result;
-        }
-
-        $tabParent->active = true;
-        $result &= $tabParent->save();
-        return $result;
-    }
 
     /**
      * @return bool
