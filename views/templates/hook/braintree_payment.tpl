@@ -142,7 +142,7 @@
                         }, function (ThreeDSecureerror, threeDSecure) {
                             if (ThreeDSecureerror) {
                                 popup_message = ThreeDSecureerror.message;
-                                $('[data-bt-card-error-msg]').show().text(popup_message);
+                                console.log(popup_message);
                                 return false;
                             }
 
