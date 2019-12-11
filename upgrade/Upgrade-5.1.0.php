@@ -51,8 +51,15 @@ function upgrade_module_5_1_0($module)
         'PAYPAL_OS_VALIDATION_ERROR' => (int)Configuration::get('PS_OS_ERROR'),
         'PAYPAL_OS_REFUNDED_PAYPAL' => (int)Configuration::get('PS_OS_REFUND')
     );
+    $tab = Tab::getInstanceFromClassName('AdminParentPaypalConfiguration');
     $return = true;
     $installer = new ModuleInstaller($module);
+
+    if (Validate::isLoadedObject($tab)) {
+        $tab->active = false;
+        $return &= $tab->save();
+    }
+
     $return &= $installer->uninstallObjectModel('PaypalVaulting');
     $return &= $installer->installObjectModel('PaypalVaulting');
 
