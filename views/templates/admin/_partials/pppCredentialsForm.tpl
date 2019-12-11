@@ -39,6 +39,11 @@
 
     {if isset($sandboxMode) && $sandboxMode}
         <h4>{l s='Sandbox' mod='paypal'}</h4>
+
+        <ul>
+            <li>{l s='You can switch to "Live" environment on top right' mod='paypal'}</li>
+        </ul>
+
         <p>
             <label for="sandbox_client_id">{l s='Client ID' mod='paypal'}</label>
             <input type="text" id="sandbox_client_id" name="paypal_sandbox_clientid" value="{if isset($paypal_sandbox_clientid)}{$paypal_sandbox_clientid|escape:'htmlall':'UTF-8'}{/if}"/>
@@ -50,9 +55,7 @@
 
     {else}
         <h4>{l s='Live' mod='paypal'}</h4>
-        <ul>
-            <li>{l s='You can switch to "Live" environment on top right' mod='paypal'}</li>
-        </ul>
+
         <p>
             <label for="live_client_id">{l s='Client ID' mod='paypal'}</label>
             <input type="text" id="live_client_id" name="paypal_live_clientid" value="{if isset($paypal_live_clientid)}{$paypal_live_clientid|escape:'htmlall':'UTF-8'}{/if}"/>
