@@ -134,9 +134,8 @@ abstract class AbstractMethod
 
     /**
      * Get link to transaction
-     * @param string $id_transaction
-     * @param bool $sandbox mode (sandbox/live)
+     * @param \PaypalLog $log
      * @return string
      */
-    abstract public function getLinkToTransaction($id_transaction, $sandbox);
+    abstract public function getLinkToTransaction($log);
 }

@@ -489,14 +489,14 @@ class MethodMB extends AbstractMethodPaypal
     /**
      * @see AbstractMethodPaypal::getLinkToTransaction()
      */
-    public function getLinkToTransaction($id_transaction, $sandbox)
+    public function getLinkToTransaction($log)
     {
-        if ($sandbox) {
+        if ($log->sandbox) {
             $url = 'https://www.sandbox.paypal.com/activity/payment/';
         } else {
             $url = 'https://www.paypal.com/activity/payment/';
         }
-        return $url . $id_transaction;
+        return $url . $log->id_transaction;
     }
 
     /**

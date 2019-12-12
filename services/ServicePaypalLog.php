@@ -49,6 +49,6 @@ class ServicePaypalLog
             return '';
         }
         $method = \AbstractMethodPaypal::load($paypalOrder->method);
-        return $method->getLinkToTransaction($log->id_transaction, $log->sandbox);
+        return $method->getLinkToTransaction($log);
     }
 }
