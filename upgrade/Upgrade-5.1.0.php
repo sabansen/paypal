@@ -51,6 +51,7 @@ function upgrade_module_5_1_0($module)
         'PAYPAL_OS_VALIDATION_ERROR' => (int)Configuration::get('PS_OS_ERROR'),
         'PAYPAL_OS_REFUNDED_PAYPAL' => (int)Configuration::get('PS_OS_REFUND')
     );
+    $shops = Shop::getShops();
     $tab = Tab::getInstanceFromClassName('AdminParentPaypalConfiguration');
     $return = true;
     $installer = new ModuleInstaller($module);
@@ -65,7 +66,6 @@ function upgrade_module_5_1_0($module)
 
     foreach ($configs as $config => $value) {
         if (Shop::isFeatureActive()) {
-            $shops = Shop::getShops();
             foreach ($shops as $shop) {
                 $return &= Configuration::updateValue($config, $value, false, null, (int)$shop['id_shop']);
             }

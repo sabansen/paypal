@@ -385,13 +385,30 @@ class PayPal extends \PaymentModule
 
         $this->moduleConfigs['PAYPAL_OS_WAITING_VALIDATION'] = (int)Configuration::get('PAYPAL_OS_WAITING');
         $this->moduleConfigs['PAYPAL_OS_PROCESSING'] = (int)Configuration::get('PAYPAL_OS_WAITING');
+        $shops = Shop::getShops();
 
         foreach ($this->moduleConfigs as $key => $value) {
-            if (!Configuration::updateValue($key, $value)) {
-                return false;
+            if (Shop::isFeatureActive()) {
+                foreach ($shops as $shop) {
+                    if (!Configuration::updateValue($key, $value, false, null, (int)$shop['id_shop'])) {
+                        return false;
+                    }
+                }
+            } else {
+                if (!Configuration::updateValue($key, $value)) {
+                    return false;
+                }
             }
         }
-        Configuration::updateValue('PAYPAL_CRON_TIME', date('Y-m-d H:m:s'));
+
+        if (Shop::isFeatureActive()) {
+            $shops = Shop::getShops();
+            foreach ($shops as $shop) {
+                Configuration::updateValue('PAYPAL_CRON_TIME', date('Y-m-d H:m:s'), false, null, (int)$shop['id_shop']);
+            }
+        } else {
+            Configuration::updateValue('PAYPAL_CRON_TIME', date('Y-m-d H:m:s'));
+        }
 
         return true;
     }
@@ -441,7 +458,15 @@ class PayPal extends \PaymentModule
                 $destination = _PS_ROOT_DIR_ . '/img/os/' . (int)$order_state->id . '.gif';
                 copy($source, $destination);
             }
-            Configuration::updateValue('PAYPAL_OS_WAITING', (int)$order_state->id);
+
+            if (Shop::isFeatureActive()) {
+                $shops = Shop::getShops();
+                foreach ($shops as $shop) {
+                    Configuration::updateValue('PAYPAL_OS_WAITING', (int) $order_state->id, false, null, (int)$shop['id_shop']);
+                }
+            } else {
+                Configuration::updateValue('PAYPAL_OS_WAITING', (int) $order_state->id);
+            }
         }
 
         return true;
