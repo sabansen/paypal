@@ -330,18 +330,20 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             )
         );
 
-        $inputs[] = array(
-            'type' => 'select',
-            'label' => $this->l('Order Status for triggering the cancellation on PayPal'),
-            'name' => 'paypal_os_canceled',
-            'hint' => $this->l('You can cancel orders paid via PayPal directly via your PrestaShop BackOffice. Here you can choose the order status that triggers the PayPal voiding of an authorized transaction on PayPal. Choose the option "no actions" if you would like to change the order status without triggering the automatic cancellation on PayPal.'),
-            'desc' => $this->l(' Default status : Canceled'),
-            'options' => array(
-                'query' => $orderStatuses,
-                'id' => 'id',
-                'name' => 'name'
-            )
-        );
+        if (Configuration::get('PAYPAL_API_INTENT') == 'sale') {
+            $inputs[] = array(
+                'type' => 'select',
+                'label' => $this->l('Order Status for triggering the cancellation on PayPal'),
+                'name' => 'paypal_os_canceled',
+                'hint' => $this->l('You can cancel orders paid via PayPal directly via your PrestaShop BackOffice. Here you can choose the order status that triggers the PayPal voiding of an authorized transaction on PayPal. Choose the option "no actions" if you would like to change the order status without triggering the automatic cancellation on PayPal.'),
+                'desc' => $this->l(' Default status : Canceled'),
+                'options' => array(
+                    'query' => $orderStatuses,
+                    'id' => 'id',
+                    'name' => 'name'
+                )
+            );
+        }
 
         if ($this->method != 'PPP' && Configuration::get('PAYPAL_API_INTENT') == 'authorization') {
             $inputs[] = array(
