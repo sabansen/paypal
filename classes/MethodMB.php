@@ -241,7 +241,6 @@ class MethodMB extends AbstractMethodPaypal
         // payment - what is the payment for and who
         // is fulfilling it.
 
-
         $transaction = new Transaction();
         $transaction->setAmount($this->_amount)
             ->setItemList($this->_itemList)
@@ -334,11 +333,6 @@ class MethodMB extends AbstractMethodPaypal
             throw new Exception('Payment ID isn\'t setted');
         }
 
-        $discounts = Context::getContext()->cart->getCartRules();
-        if (count($discounts) > 0) {
-            throw new Exception('The total of the order do not match amount paid.');
-        }
-
         if (Validate::isLoadedObject($customer) && $this->getRememberedCards()) {
             $this->servicePaypalVaulting->createOrUpdatePaypalVaulting($customer->id, $this->getRememberedCards());
         }
@@ -355,6 +349,7 @@ class MethodMB extends AbstractMethodPaypal
         // when the user is redirected from paypal back to your site
         $execution = new PaymentExecution();
         $execution->setPayerId($this->getPayerId());
+
         // ### Optional Changes to Amount
         // If you wish to update the amount that you wish to charge the customer,
         // based on the shipping address or any other reason, you could
@@ -567,9 +562,27 @@ class MethodMB extends AbstractMethodPaypal
         $paypal = Module::getInstanceByName($this->name);
         $currency = $paypal->getPaymentCurrencyIso();
         $this->_getProductsList($currency);
-        //$this->_getDiscountsList($items, $total_products);
+        $this->_getDiscountsList($currency);
         $this->_getGiftWrapping($currency);
         $this->_getPaymentValues($currency);
+    }
+
+    private function _getDiscountsList($currency)
+    {
+        $totalDiscounts = Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS);
+
+        if ($totalDiscounts > 0) {
+            $module = Module::getInstanceByName($this->name);
+            $discountItem = new Item();
+            $discountItem->setName($module->l('Total discounts', get_class($this)))
+                ->setCurrency($currency)
+                ->setQuantity(1)
+                ->setSku('discounts')
+                ->setPrice(-1 * $totalDiscounts);
+
+            $this->_items[] = $discountItem;
+            $this->_itemTotalValue += (-1 * $totalDiscounts);
+        }
     }
 
     private function _getProductsList($currency)
