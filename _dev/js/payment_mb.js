@@ -216,6 +216,10 @@ $(document).ready(() => {
         if (paymentOption.attr('data-module-name') == "paypal_plus_mb") {
             PayPalMB.initCheckout();
         }
+
+        prestashop.on("updatedCart", () => {
+            PayPalMB.initCheckout();
+        });
     });
 
     // Order payment button action for paypal plus
