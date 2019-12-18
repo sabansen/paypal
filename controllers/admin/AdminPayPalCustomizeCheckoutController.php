@@ -420,7 +420,11 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
 
         if (Tools::isSubmit('behaviorForm')) {
             foreach ($this->parametres as $parametre) {
-                $result &= \Configuration::updateValue(\Tools::strtoupper($parametre), pSQL(\Tools::getValue($parametre), ''));
+                if (in_array($parametre, array('paypal_express_checkout_shortcut', 'paypal_express_checkout_shortcut_cart'))) {
+                    $result &= \Configuration::updateValue(\Tools::strtoupper($parametre), pSQL(\Tools::getValue($parametre), ''));
+                } elseif (\Tools::isSubmit($parametre)) {
+                    $result &= \Configuration::updateValue(\Tools::strtoupper($parametre), pSQL(\Tools::getValue($parametre), ''));
+                }
             }
         }
 
