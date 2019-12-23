@@ -73,11 +73,6 @@ class PaypalTest extends \TotTestCase
 
     public function testGetHooksUnregistered()
     {
-        $this->assertIsArray($this->paypal->getHooksUnregistered());
-    }
-
-    public function testGetHooksUnregistered()
-    {
-        $this->assertIsArray($this->paypal->getHooksUnregistered());
+        $this->assertInternalType('array', $this->paypal->getHooksUnregistered());
     }
 }

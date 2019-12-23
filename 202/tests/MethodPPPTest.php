@@ -85,9 +85,9 @@ class MethodPPPTest extends \TotTestCase
     /**
      * @dataProvider getDataForGetLinkToTransaction
      */
-    public function testGetLinkToTransaction($id_transaction, $sandbox)
+    public function testGetLinkToTransaction($log)
     {
-        $this->assertTrue(is_string($this->method->getLinkToTransaction($id_transaction, $sandbox)));
+        $this->assertTrue(is_string($this->method->getLinkToTransaction($log)));
     }
 
     /**
@@ -150,11 +150,9 @@ class MethodPPPTest extends \TotTestCase
     public function getDataForGetLinkToTransaction()
     {
         $data = array(
-            array(1, 1),
-            array(0, 0),
-            array('string', 1),
-            array(00, 'string'),
-            array(null, null),
+            array(new \PaypalLog(0)),
+            array(new \PaypalLog(1)),
+            array(new \PaypalLog(2))
         );
         return $data;
     }
