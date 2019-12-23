@@ -18,10 +18,11 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 202-ecommerce <tech@202-ecommerce.com>
- *  @copyright 202-ecommerce
+ *  @author 2007-2019 PayPal
+ *  @author 202 ecommerce <tech@202-ecommerce.com>
+ *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ *  
  */
 
 if (!defined('_PS_VERSION_')) {
@@ -50,13 +51,27 @@ function upgrade_module_5_1_0($module)
         'PAYPAL_OS_VALIDATION_ERROR' => (int)Configuration::get('PS_OS_ERROR'),
         'PAYPAL_OS_REFUNDED_PAYPAL' => (int)Configuration::get('PS_OS_REFUND')
     );
+    $shops = Shop::getShops();
+    $tab = Tab::getInstanceFromClassName('AdminParentPaypalConfiguration');
     $return = true;
     $installer = new ModuleInstaller($module);
+
+    if (Validate::isLoadedObject($tab)) {
+        $tab->active = false;
+        $return &= $tab->save();
+    }
+
     $return &= $installer->uninstallObjectModel('PaypalVaulting');
     $return &= $installer->installObjectModel('PaypalVaulting');
 
     foreach ($configs as $config => $value) {
-        $return &= Configuration::updateValue($config, $value);
+        if (Shop::isFeatureActive()) {
+            foreach ($shops as $shop) {
+                $return &= Configuration::updateValue($config, $value, false, null, (int)$shop['id_shop']);
+            }
+        } else {
+            $return &= Configuration::updateValue($config, $value);
+        }
     }
 
     return $return;

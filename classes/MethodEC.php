@@ -18,10 +18,10 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 202-ecommerce <tech@202-ecommerce.com>
- *  @copyright 202-ecommerce
+ *  @author    PrestaShop SA <contact@prestashop.com>
+ *  @copyright 2007-2019 PrestaShop SA
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ *
  */
 
 require_once 'AbstractMethodPaypal.php';
@@ -146,7 +146,6 @@ class MethodEC extends AbstractMethodPaypal
             Configuration::updateValue('PAYPAL_'.$mode.'_ACCESS', 1);
             Configuration::updateValue('PAYPAL_MERCHANT_ID_'.$mode, $params['merchant_id']);
             Configuration::updateValue('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT', 1);
-            Configuration::updateValue('PAYPAL_API_CARD', $params['with_card']);
             $this->checkCredentials();
             return;
         }
@@ -205,6 +204,7 @@ class MethodEC extends AbstractMethodPaypal
         $setECReqDetails->AddressOverride = 1;
         $setECReqDetails->ReqConfirmShipping = 0;
         $setECReqDetails->LandingPage = ($this->credit_card ? 'Billing' : 'Login');
+        
 
         if ($this->short_cut) {
             $setECReqDetails->ReturnURL = Context::getContext()->link->getModuleLink($this->name, 'ecScOrder', array(), true);
@@ -312,8 +312,9 @@ class MethodEC extends AbstractMethodPaypal
                 // It's needed to take a percentage of the order amount, taking into account the others discounts
                 if ((int)$discount['reduction_percent'] > 0) {
                     $discount['value_real'] = $order_total_with_reduction * ($discount['value_real'] / $order_total);
-                    $order_total_with_reduction -= $discount['value_real'];
-                } else {
+                }
+
+                if ((int)$discount['free_shipping'] == false) {
                     $order_total_with_reduction -= $discount['value_real'];
                 }
 
@@ -822,14 +823,14 @@ class MethodEC extends AbstractMethodPaypal
     /**
      * @see AbstractMethodPaypal::getLinkToTransaction()
      */
-    public function getLinkToTransaction($id_transaction, $sandbox)
+    public function getLinkToTransaction($log)
     {
-        if ($sandbox) {
+        if ($log->sandbox) {
             $url = 'https://www.sandbox.paypal.com/activity/payment/';
         } else {
             $url = 'https://www.paypal.com/activity/payment/';
         }
-        return $url . $id_transaction;
+        return $url . $log->id_transaction;
     }
 
     /**

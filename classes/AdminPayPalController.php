@@ -168,7 +168,8 @@ class AdminPayPalController extends \ModuleAdminController
         } else {
             $return['status'] = false;
             if (version_compare(curl_version()['version'], '7.34.0', '<')) {
-                $return['error_message'] = $this->module->l('You are using an old version of cURL. Please update your cURL extension to version 7.34.0 or higher.', 'AdminPayPalController');
+                $message = sprintf('You current cURL version is %s. Please contact you server for updating it to 7.34.0', curl_version()['version']);
+                $return['error_message'] = $this->module->l($message, 'AdminPayPalController');
             } else {
                 $return['error_message'] = $this->module->l('TLS version is not compatible', 'AdminPayPalController');
             }

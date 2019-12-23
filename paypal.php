@@ -18,10 +18,11 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- * @author 202-ecommerce <tech@202-ecommerce.com>
- * @copyright 202-ecommerce
+ * @author 2007-2019 PayPal
+ * @author 202 ecommerce <tech@202-ecommerce.com>
+ * @copyright PayPal
  * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ *  
  */
 
 if (!defined('_PS_VERSION_')) {
@@ -352,12 +353,12 @@ class PayPal extends \PaymentModule
             'PAYPAL_CUSTOMIZE_ORDER_STATUS' => 0,
             'PAYPAL_OS_REFUNDED' => (int)Configuration::get('PS_OS_REFUND'),
             'PAYPAL_OS_CANCELED' => (int)Configuration::get('PS_OS_CANCELED'),
-            'PAYPAL_OS_ACCEPTED_ONE' => (int)Configuration::get('PS_OS_PAYMENT'),
+            'PAYPAL_OS_ACCEPTED' => (int)Configuration::get('PS_OS_PAYMENT'),
             'PAYPAL_OS_CAPTURE_CANCELED' => (int)Configuration::get('PS_OS_CANCELED'),
             'PAYPAL_OS_ACCEPTED_TWO' => (int)Configuration::get('PS_OS_PAYMENT'),
             'PAYPAL_OS_WAITING_VALIDATION' => (int)Configuration::get('PAYPAL_OS_WAITING'),
             'PAYPAL_OS_PROCESSING' => (int)Configuration::get('PAYPAL_OS_WAITING'),
-            'PAYPAL_OS_VALIDATION_ERROR' => (int)Configuration::get('PS_OS_ERROR'),
+            'PAYPAL_OS_VALIDATION_ERROR' => (int)Configuration::get('PS_OS_CANCELED'),
             'PAYPAL_OS_REFUNDED_PAYPAL' => (int)Configuration::get('PS_OS_REFUND')
         );
     }
@@ -382,12 +383,32 @@ class PayPal extends \PaymentModule
             return false;
         }
 
+        $this->moduleConfigs['PAYPAL_OS_WAITING_VALIDATION'] = (int)Configuration::get('PAYPAL_OS_WAITING');
+        $this->moduleConfigs['PAYPAL_OS_PROCESSING'] = (int)Configuration::get('PAYPAL_OS_WAITING');
+        $shops = Shop::getShops();
+
         foreach ($this->moduleConfigs as $key => $value) {
-            if (!Configuration::updateValue($key, $value)) {
-                return false;
+            if (Shop::isFeatureActive()) {
+                foreach ($shops as $shop) {
+                    if (!Configuration::updateValue($key, $value, false, null, (int)$shop['id_shop'])) {
+                        return false;
+                    }
+                }
+            } else {
+                if (!Configuration::updateValue($key, $value)) {
+                    return false;
+                }
             }
         }
-        Configuration::updateValue('PAYPAL_CRON_TIME', date('Y-m-d H:m:s'));
+
+        if (Shop::isFeatureActive()) {
+            $shops = Shop::getShops();
+            foreach ($shops as $shop) {
+                Configuration::updateValue('PAYPAL_CRON_TIME', date('Y-m-d H:m:s'), false, null, (int)$shop['id_shop']);
+            }
+        } else {
+            Configuration::updateValue('PAYPAL_CRON_TIME', date('Y-m-d H:m:s'));
+        }
 
         return true;
     }
@@ -437,7 +458,15 @@ class PayPal extends \PaymentModule
                 $destination = _PS_ROOT_DIR_ . '/img/os/' . (int)$order_state->id . '.gif';
                 copy($source, $destination);
             }
-            Configuration::updateValue('PAYPAL_OS_WAITING', (int)$order_state->id);
+
+            if (Shop::isFeatureActive()) {
+                $shops = Shop::getShops();
+                foreach ($shops as $shop) {
+                    Configuration::updateValue('PAYPAL_OS_WAITING', (int) $order_state->id, false, null, (int)$shop['id_shop']);
+                }
+            } else {
+                Configuration::updateValue('PAYPAL_OS_WAITING', (int) $order_state->id);
+            }
         }
 
         return true;
@@ -750,8 +779,8 @@ class PayPal extends \PaymentModule
             }
         }
 
-        if ((Tools::getValue('controller') == "product" && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT'))
-            || (Tools::getValue('controller') == "cart" && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART'))) {
+        if ((Tools::getValue('controller') == "product" && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') && (!Module::isEnabled('braintreeofficial') || !Configuration::get('BRAINTREEOFFICIAL_EXPRESS_CHECKOUT_SHORTCUT')))
+            || (Tools::getValue('controller') == "cart" && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART') && (!Module::isEnabled('braintreeofficial') || !Configuration::get('BRAINTREEOFFICIAL_EXPRESS_CHECKOUT_SHORTCUT_CART')))) {
             if ((Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT') && $this->paypal_method == 'EC') ||
                 ($this->paypal_method == 'MB' && (int)Configuration::get('PAYPAL_MB_EC_ENABLED') && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT'))) {
                 $environment = (Configuration::get('PAYPAL_SANDBOX') ? 'sandbox' : 'live');
@@ -762,6 +791,7 @@ class PayPal extends \PaymentModule
                     'ec_sc_action_url' => $this->context->link->getModuleLink($this->name, 'ScInit', array('credit_card' => '0', 'getToken' => 1), true),
                 ));
             }
+
             $this->context->controller->registerJavascript($this->name . '-paypal-checkout', 'https://www.paypalobjects.com/api/checkout.min.js', array('server' => 'remote'));
             $this->context->controller->registerJavascript($this->name . '-paypal-shortcut', 'modules/' . $this->name . '/views/js/shortcut.js');
             Media::addJsDef(array(
@@ -1216,7 +1246,13 @@ class PayPal extends \PaymentModule
         $method = AbstractMethodPaypal::load($orderPayPal->method);
         $message = '';
         $ex_detailed_message = '';
-        $osCanceled = (int)Configuration::get('PAYPAL_CUSTOMIZE_ORDER_STATUS') ? (int)Configuration::get('PAYPAL_OS_CANCELED') : (int)Configuration::get('PS_OS_CANCELED');
+
+        if ((int)Configuration::get('PAYPAL_CUSTOMIZE_ORDER_STATUS')) {
+            $osCanceled = Configuration::get('PAYPAL_API_INTENT') == 'sale' ? (int)Configuration::get('PAYPAL_OS_CANCELED') : (int)Configuration::get('PAYPAL_OS_CAPTURE_CANCELED');
+        } else {
+            $osCanceled = (int)Configuration::get('PS_OS_CANCELED');
+        }
+
         $osRefunded = (int)Configuration::get('PAYPAL_CUSTOMIZE_ORDER_STATUS') ? (int)Configuration::get('PAYPAL_OS_REFUNDED') : (int)Configuration::get('PS_OS_REFUND');
         $osPaymentAccepted = (int)Configuration::get('PAYPAL_CUSTOMIZE_ORDER_STATUS') ? (int)Configuration::get('PAYPAL_OS_ACCEPTED') : (int)Configuration::get('PS_OS_PAYMENT');
 
@@ -1795,36 +1831,6 @@ class PayPal extends \PaymentModule
         }
 
         return true;
-    }
-
-    public function disable($force_all = false)
-    {
-        $result = true;
-        $result &= parent::disable($force_all);
-        $tabParent = \Tab::getInstanceFromClassName('AdminParentPaypalConfiguration');
-
-        if (\Validate::isLoadedObject($tabParent) == false) {
-            return $result;
-        }
-
-        $tabParent->active = false;
-        $result &= $tabParent->save();
-        return $result;
-    }
-
-    public function enable($force_all = false)
-    {
-        $result = true;
-        $result &= parent::enable($force_all);
-        $tabParent = \Tab::getInstanceFromClassName('AdminParentPaypalConfiguration');
-
-        if (\Validate::isLoadedObject($tabParent) == false) {
-            return $result;
-        }
-
-        $tabParent->active = true;
-        $result &= $tabParent->save();
-        return $result;
     }
 
     /**

@@ -20,8 +20,8 @@
  *
  *  @author    PrestaShop SA <contact@prestashop.com>
  *  @copyright 2007-2019 PrestaShop SA
- *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ *  
  */
 
 require_once 'AbstractMethodPaypal.php';
@@ -241,7 +241,6 @@ class MethodMB extends AbstractMethodPaypal
         // payment - what is the payment for and who
         // is fulfilling it.
 
-
         $transaction = new Transaction();
         $transaction->setAmount($this->_amount)
             ->setItemList($this->_itemList)
@@ -334,11 +333,6 @@ class MethodMB extends AbstractMethodPaypal
             throw new Exception('Payment ID isn\'t setted');
         }
 
-        $discounts = Context::getContext()->cart->getCartRules();
-        if (count($discounts) > 0) {
-            throw new Exception('The total of the order do not match amount paid.');
-        }
-
         if (Validate::isLoadedObject($customer) && $this->getRememberedCards()) {
             $this->servicePaypalVaulting->createOrUpdatePaypalVaulting($customer->id, $this->getRememberedCards());
         }
@@ -355,6 +349,7 @@ class MethodMB extends AbstractMethodPaypal
         // when the user is redirected from paypal back to your site
         $execution = new PaymentExecution();
         $execution->setPayerId($this->getPayerId());
+
         // ### Optional Changes to Amount
         // If you wish to update the amount that you wish to charge the customer,
         // based on the shipping address or any other reason, you could
@@ -489,14 +484,14 @@ class MethodMB extends AbstractMethodPaypal
     /**
      * @see AbstractMethodPaypal::getLinkToTransaction()
      */
-    public function getLinkToTransaction($id_transaction, $sandbox)
+    public function getLinkToTransaction($log)
     {
-        if ($sandbox) {
+        if ($log->sandbox) {
             $url = 'https://www.sandbox.paypal.com/activity/payment/';
         } else {
             $url = 'https://www.paypal.com/activity/payment/';
         }
-        return $url . $id_transaction;
+        return $url . $log->id_transaction;
     }
 
     /**
@@ -567,9 +562,27 @@ class MethodMB extends AbstractMethodPaypal
         $paypal = Module::getInstanceByName($this->name);
         $currency = $paypal->getPaymentCurrencyIso();
         $this->_getProductsList($currency);
-        //$this->_getDiscountsList($items, $total_products);
+        $this->_getDiscountsList($currency);
         $this->_getGiftWrapping($currency);
         $this->_getPaymentValues($currency);
+    }
+
+    private function _getDiscountsList($currency)
+    {
+        $totalDiscounts = Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS);
+
+        if ($totalDiscounts > 0) {
+            $module = Module::getInstanceByName($this->name);
+            $discountItem = new Item();
+            $discountItem->setName($module->l('Total discounts', get_class($this)))
+                ->setCurrency($currency)
+                ->setQuantity(1)
+                ->setSku('discounts')
+                ->setPrice(-1 * $totalDiscounts);
+
+            $this->_items[] = $discountItem;
+            $this->_itemTotalValue += (-1 * $totalDiscounts);
+        }
     }
 
     private function _getProductsList($currency)
@@ -779,6 +792,19 @@ class MethodMB extends AbstractMethodPaypal
         $module = Module::getInstanceByName($this->name);
         $orderStatuses = $module->getOrderStatuses();
 
+        $inputs[] = array(
+            'type' => 'select',
+            'label' => $module->l('Payment accepted and transaction completed', get_class($this)),
+            'name' => 'paypal_os_accepted_two',
+            'hint' => $module->l('You are currently using the Authorize mode. It means that you separate the payment authorization from the capture of the authorized payment. For capturing the authorized payement you have to change the order status to "payment accepted" (or to a custom status with the same meaning). Here you can choose a custom order status for accepting the order and validating transaction in Authorize mode.', get_class($this)),
+            'desc' => $module->l('Default status : Payment accepted', get_class($this)),
+            'options' => array(
+                'query' => $orderStatuses,
+                'id' => 'id',
+                'name' => 'name'
+            )
+        );
+
         if (Configuration::get('PAYPAL_API_INTENT') == 'authorization') {
             $inputs[] = array(
                 'type' => 'select',
@@ -793,19 +819,6 @@ class MethodMB extends AbstractMethodPaypal
                 )
             );
         }
-
-        $inputs[] = array(
-            'type' => 'select',
-            'label' => $module->l('Payment accepted and transaction completed', get_class($this)),
-            'name' => 'paypal_os_accepted_two',
-            'hint' => $module->l('You are currently using the Authorize mode. It means that you separate the payment authorization from the capture of the authorized payment. For capturing the authorized payement you have to change the order status to "payment accepted" (or to a custom status with the same meaning). Here you can choose a custom order status for accepting the order and validating transaction in Authorize mode.', get_class($this)),
-            'desc' => $module->l('Default status : Payment accepted', get_class($this)),
-            'options' => array(
-                'query' => $orderStatuses,
-                'id' => 'id',
-                'name' => 'name'
-            )
-        );
 
         $inputs[] = array(
             'type' => 'select',

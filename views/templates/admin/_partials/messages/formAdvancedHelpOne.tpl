@@ -17,13 +17,14 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author 202-ecommerce <tech@202-ecommerce.com>
-*  @copyright 202-ecommerce
+*  @author 2007-2019 PayPal
+ *  @author 202 ecommerce <tech@202-ecommerce.com>
+*  @copyright PayPal
 *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+*
 *}
 
-<div class="alert alert-info">
+<div class="alert alert-info advanced-help-message">
     {l s='You can find below the list of the order status for triggering actions on PayPal.' mod='paypal'}
     <br>
     {l s='Some manual actions trigger some events on the PayPal side.' mod='paypal'}
