@@ -76,7 +76,11 @@ class PaypalEcValidationModuleFrontController extends PaypalAbstarctModuleFrontC
         Context::getContext()->cookie->__unset('paypal_ecs_email');
 
         if (!empty($this->errors)) {
-            $this->redirectUrl = Context::getContext()->link->getModuleLink($this->name, 'error', $this->errors);
+            if ($this->errors['error_code'] == 10486) {
+                $this->redirectUrl = $method_ec->redirectToAPI('SetExpressCheckout');
+            } else {
+                $this->redirectUrl = Context::getContext()->link->getModuleLink($this->name, 'error', $this->errors);
+            }
         }
     }
 }
