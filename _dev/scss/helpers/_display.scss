@@ -22,6 +22,18 @@
 
 	&__position-relative {
 		position: relative;
+  }
+
+  &__position-absolute {
+		position: relative;
+	}
+
+	&__flex_direction_column {
+		flex-direction: column !important;
+	}
+
+	&__justify-content-between {
+		justify-content: space-between !important;
 	}
 
 	&__flex_direction_column {

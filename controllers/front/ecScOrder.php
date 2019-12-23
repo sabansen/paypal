@@ -18,10 +18,11 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 202-ecommerce <tech@202-ecommerce.com>
- *  @copyright 202-ecommerce
+ *  @author 2007-2019 PayPal
+ *  @author 202 ecommerce <tech@202-ecommerce.com>
+ *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ *  
  */
 
 include_once _PS_MODULE_DIR_.'paypal/classes/AbstractMethodPaypal.php';
@@ -150,7 +151,7 @@ class PaypalEcScOrderModuleFrontController extends PaypalAbstarctModuleFrontCont
             $orderAddress = new Address();
             $nameArray = explode(" ", $ship_addr->Name);
             $orderAddress->firstname = $nameArray[0];
-            $orderAddress->lastname = $nameArray[1];
+            $orderAddress->lastname = isset($nameArray[1]) ? $nameArray[1] : '';
             $orderAddress->address1 = $ship_addr->Street1;
             if (isset($ship_addr->Street2)) {
                 $orderAddress->address2 = $ship_addr->Street2;

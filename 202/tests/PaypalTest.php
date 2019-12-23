@@ -18,7 +18,7 @@
  * ...........................................................................
  *
  * @author    202-ecommerce <tech@202-ecommerce.com>
- * @copyright 202-ecommerce
+ * @copyright PayPal
  * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
@@ -69,5 +69,15 @@ class PaypalTest extends \TotTestCase
     public function testShowWarningForUserBraintree()
     {
         $this->assertTrue(is_bool($this->paypal->showWarningForUserBraintree()));
+    }
+
+    public function testGetHooksUnregistered()
+    {
+        $this->assertIsArray($this->paypal->getHooksUnregistered());
+    }
+
+    public function testGetHooksUnregistered()
+    {
+        $this->assertIsArray($this->paypal->getHooksUnregistered());
     }
 }

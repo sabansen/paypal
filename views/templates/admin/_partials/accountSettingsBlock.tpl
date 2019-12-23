@@ -17,20 +17,24 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author 202-ecommerce <tech@202-ecommerce.com>
-*  @copyright 202-ecommerce
+*  @author 2007-2019 PayPal
+ *  @author 202 ecommerce <tech@202-ecommerce.com>
+*  @copyright PayPal
 *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
+*
 *}
 
 <div>
-    <p class="h3">
-        {l s='PayPal Account' mod='paypal'}
-    </p>
 
-    <p>
-        {l s='In order to activate the module, you must connect your existing PayPal account or create a new one.' mod='paypal'}
-    </p>
+    {if isset($method) && in_array($method, array('EC', 'PPP'))}
+        <p class="h3">
+            {l s='PayPal Account' mod='paypal'}
+        </p>
+
+        <p>
+            {l s='In order to activate the module, you must connect your existing PayPal account or create a new one.' mod='paypal'}
+        </p>
+    {/if}
 
     {if isset($accountConfigured) && $accountConfigured}
         {if isset($method) && $method == 'EC'}
@@ -43,16 +47,21 @@
                     {$paypal_api_user_name|regex_replace:'/_api[\d]*\./':'@'}
                 {/if}
             </strong>
-
-            <span class="btn btn-default pp__ml-4" id="logoutAccount">
-				{l s='Logout' mod='paypal'}
-            </span>
+        {elseif isset($method) && $method == 'MB'}
+            {include './mbCredentialsForm.tpl'}
         {else}
             {include './pppCredentialsForm.tpl'}
         {/if}
 
+        {if isset($method) && $method == 'EC'}
+            <span class="btn btn-default pp__ml-4" id="logoutAccount">
+				{l s='Logout' mod='paypal'}
+            </span>
+        {/if}
     {else}
-        {if isset($country_iso) && in_array($country_iso, ['BR', 'IN', 'MX', 'JP'])}
+        {if isset($method) && $method == 'MB'}
+            {include './mbCredentialsForm.tpl'}
+        {elseif isset($country_iso) && in_array($country_iso, ['IN', 'JP'])}
             <span class="btn btn-default" data-toggle="modal" data-target="#credentialBlockEC">
                 {l s='Connect or create PayPal account' mod='paypal'}
             </span>
@@ -68,7 +77,7 @@
     {/if}
 </div>
 
-{if isset($country_iso) && in_array($country_iso, ['BR', 'IN', 'MX', 'JP'])}
+{if isset($country_iso) && in_array($country_iso, ['IN', 'JP'])}
     <div class="modal fade" id="credentialBlockEC" role="dialog" aria-labelledby="credentialBlockEC" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
