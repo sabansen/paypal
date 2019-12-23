@@ -148,10 +148,13 @@ class PaypalEcScOrderModuleFrontController extends PaypalAbstarctModuleFrontCont
             }
         }
         if (!$address_exist) {
-            $orderAddress = new Address();
             $nameArray = explode(" ", $ship_addr->Name);
-            $orderAddress->firstname = $nameArray[0];
-            $orderAddress->lastname = isset($nameArray[1]) ? $nameArray[1] : '';
+            $firstName = implode(' ', array_slice($nameArray, 0, count($nameArray) - 1));
+            $lastName = $nameArray[count($nameArray) - 1];
+
+            $orderAddress = new Address();
+            $orderAddress->firstname = $firstName;
+            $orderAddress->lastname = $lastName;
             $orderAddress->address1 = $ship_addr->Street1;
             if (isset($ship_addr->Street2)) {
                 $orderAddress->address2 = $ship_addr->Street2;

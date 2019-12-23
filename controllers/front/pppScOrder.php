@@ -131,10 +131,13 @@ class PaypalPppScOrderModuleFrontController extends PaypalAbstarctModuleFrontCon
             }
         }
         if (!$address_exist) {
+            $nameArray = explode(" ", $ship_addr->recipient_name);
+            $firstName = implode(' ', array_slice($nameArray, 0, count($nameArray) - 1));
+            $lastName = $nameArray[count($nameArray) - 1];
+
             $orderAddress = new Address();
-            $pos_separator = strpos($ship_addr->recipient_name, ' ');
-            $orderAddress->firstname = Tools::substr($ship_addr->recipient_name, 0, $pos_separator);
-            $orderAddress->lastname = Tools::substr($ship_addr->recipient_name, $pos_separator+1);
+            $orderAddress->firstname = $firstName;
+            $orderAddress->lastname = $lastName;
             $orderAddress->address1 = $ship_addr->line1;
             if (isset($ship_addr->line2)) {
                 $orderAddress->address2 = $ship_addr->line2;
