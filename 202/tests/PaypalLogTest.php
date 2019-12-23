@@ -44,15 +44,6 @@ class PaypalLogTest extends \TotTestCase
         $this->assertTrue(is_string($payPalLog->getLinkToTransaction()));
     }
 
-    /**
-     * @dataProvider getDataForGetDateTransaction
-     */
-    public function testGetDateTransaction($idPayPalLog)
-    {
-        $payPalLog = new \PaypalLog($idPayPalLog);
-        $this->assertTrue(is_string($payPalLog->getDateTransaction()));
-    }
-
     public function getDataForGetLinkToTransaction()
     {
         $data = array(
@@ -62,12 +53,6 @@ class PaypalLogTest extends \TotTestCase
             array(00),
             array(null),
         );
-        return $data;
-    }
-
-    public function getDataForGetDateTransaction()
-    {
-        $data = $this->getDataForGetLinkToTransaction();
         return $data;
     }
 }
