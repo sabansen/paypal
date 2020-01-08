@@ -58,7 +58,7 @@ class PrestaBraintree
             
             return $clientToken;
         } catch (Exception $e) {
-            PrestaShopLogger::addLog($e->getCode().'=>'.$e->getMessage());
+            $this->addLog($e->getCode().'; '.$e->getMessage());
             return false;
         }
     }
@@ -210,7 +210,7 @@ class PrestaBraintree
 
             return $result->status;
         } catch (Exception $e) {
-            PrestaShopLogger::addLog($e->getCode().'=>'.$e->getMessage());
+            $this->addLog($e->getCode().'; '.$e->getMessage());
             return false;
         }
     }
@@ -234,7 +234,7 @@ class PrestaBraintree
                 return false;
             }
         } catch (Exception $e) {
-            PrestaShopLogger::addLog($e->getCode().'=>'.$e->getMessage());
+            $this->addLog($e->getCode().'; '.$e->getMessage());
             return false;
         }
     }
@@ -260,7 +260,7 @@ class PrestaBraintree
                 }
             }
         } catch (Exception $e) {
-            PrestaShopLogger::addLog($e->getCode().'=>'.$e->getMessage());
+            $this->addLog($e->getCode().'; '.$e->getMessage());
             return false;
         }
         return false;
@@ -275,7 +275,7 @@ class PrestaBraintree
                 return true;
             }
         } catch (Exception $e) {
-            PrestaShopLogger::addLog($e->getCode().'=>'.$e->getMessage());
+            $this->addLog($e->getCode().'; '.$e->getMessage());
             return false;
         }
     }
@@ -345,6 +345,15 @@ class PrestaBraintree
             return true;
         } else {
             return false;
+        }
+    }
+
+    public function addLog($message)
+    {
+        if (version_compare(_PS_VERSION_, '1.6', '<')) {
+            Logger::addLog($message);
+        } else {
+            PrestaShopLogger::addLog($message);
         }
     }
 }
