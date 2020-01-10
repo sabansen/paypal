@@ -49,9 +49,13 @@ class PaypalPppScOrderModuleFrontController extends PaypalAbstarctModuleFrontCon
         $method = AbstractMethodPaypal::load('PPP');
         $paypal = Module::getInstanceByName($this->name);
         try {
+            $this->redirectUrl = $this->context->link->getPageLink('order', null, null, array('step'=>2));
             $info = Payment::get($this->values['paymentId'], $method->_getCredentialsInfo());
             $this->prepareOrder($info);
-            $this->redirectUrl = $this->context->link->getPageLink('order', null, null, array('step'=>2));
+
+            if (!empty($this->errors)) {
+                return;
+            }
         } catch (PayPal\Exception\PayPalConnectionException $e) {
             $decoded_message = Tools::jsonDecode($e->getData());
             $this->errors['error_code'] = $e->getCode();
@@ -172,10 +176,10 @@ class PaypalPppScOrderModuleFrontController extends PaypalAbstarctModuleFrontCon
                     'address2' => $orderAddress->address2,
                     'id_state' => $orderAddress->id_state
                 );
-                session_start();
-                $_SESSION['notifications'] = Tools::jsonEncode(array('error' => $validationMessage));
-                $url = Context::getContext()->link->getPageLink('order') . '&' . http_build_query($var);
-                Tools::redirect($url);
+
+                $this->errors[] = $validationMessage;
+                $this->redirectUrl = Context::getContext()->link->getPageLink('order') . '&' . http_build_query($var);
+                return;
             }
 
             $orderAddress->save();
