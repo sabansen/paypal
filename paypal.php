@@ -159,6 +159,7 @@ class PayPal extends PaymentModule
             || !$this->registerHook('backOfficeHeader')
             || !$this->registerHook('displayPDFInvoice')
             || !$this->registerHook('actionBeforeCartUpdateQty')
+            || !$this->registerHook('actionOrderSlipAdd')
             || !$this->registerHook('PDFInvoice')) {
             return false;
         }
@@ -1412,6 +1413,12 @@ class PayPal extends PaymentModule
 
             return (isset($output) ? $output : null).$this->fetchTemplate('/views/templates/admin/header.tpl');
         }
+
+        if (Tools::getValue('controller') == "AdminOrders" && Tools::getValue('id_order')) {
+            Media::addJsDefL('chb_braintree_refund', $this->l('Refund PayPal'));
+            $this->context->controller->addJS(_PS_MODULE_DIR_ . $this->name . '/views/js/bo_order.js');
+        }
+
         return null;
     }
 
@@ -1994,44 +2001,108 @@ class PayPal extends PaymentModule
         return $new_message->add();
     }
 
+    public function hookActionOrderSlipAdd($params)
+    {
+        if (Tools::getValue('generateDiscountRefund') == 'on') {
+            $order = $params['order'];
+            $paypalOrder = PayPalOrder::getOrderById((int) $order->id);
+            $total_paid = floatval($paypalOrder['total_paid']);
+            $amount = floatval(Tools::getValue('partialRefundShippingCost', ''));
+
+            foreach ($params['productList'] as $product) {
+                $amount += $product['amount'];
+            }
+
+            $total_paid -= $amount;
+            $dataUpdate = array(
+                'total_paid' => $total_paid
+            );
+
+            Db::getInstance()->update('paypal_order', $dataUpdate, 'id_order=' . $order->id);
+        }
+
+        if (Tools::isSubmit('doPartialRefundPayPal')) {
+            $order = $params['order'];
+            $paypalOrder = PayPalOrder::getOrderById((int) $order->id);
+
+            if (!$this->isPayPalAPIAvailable() || !$paypalOrder) {
+                return false;
+            }
+
+            $amount = floatval(Tools::getValue('partialRefundShippingCost', ''));
+
+            foreach ($params['productList'] as $product) {
+                $amount += $product['amount'];
+            }
+
+            $response = $this->_makeRefund($paypalOrder['id_transaction'], $order->id, $amount);
+            $message = $this->l('Refund operation result:')." \r\n";
+
+            foreach ($response as $key => $value) {
+                if (is_object($value) || is_array($value)) {
+                    $message .= $key.': '.Tools::jsonEncode($value)." \r\n";
+                } else {
+                    $message .= $key.': '.$value." \r\n";
+                }
+            }
+
+            if ((array_key_exists('ACK', $response) && $response['ACK'] == 'Success' &&
+                    $response['REFUNDTRANSACTIONID'] != '') || (isset($response->state) &&
+                    $response->state == 'completed') ||
+                ((Configuration::get('PAYPAL_PAYMENT_METHOD') || Configuration::get('PAYPAL_BRAINTREE_ENABLED')) && $response)) {
+                if (Configuration::get('PAYPAL_BRAINTREE_ENABLED') && !is_array($response)) {
+                    $message .= $this->l('Braintree refund successful!');
+                } else {
+                    $message .= $this->l('PayPal refund successful!');
+                }
+
+                $total_paid = $total_paid = floatval($paypalOrder['total_paid']);
+                $total_paid -= $amount;
+                $dataUpdate = array(
+                    'payment_status' => 'Refunded',
+                    'total_paid' => $total_paid
+                );
+                $res = Db::getInstance()->update('paypal_order', $dataUpdate, 'id_order=' . $order->id);
+
+                if (!$res) {
+                    die(Tools::displayError('Error when updating PayPal database'));
+                }
+            } else {
+                $message .= $this->l('Transaction error!');
+            }
+
+            $this->_addNewPrivateMessage((int) $order->id, $message);
+        }
+    }
+
     private function _doTotalRefund($id_order)
     {
         $paypal_order = PayPalOrder::getOrderById((int) $id_order);
+
         if (!$this->isPayPalAPIAvailable() || !$paypal_order) {
             return false;
         }
 
         $order = new Order((int) $id_order);
+
         if (!Validate::isLoadedObject($order)) {
             return false;
         }
 
-        $products = $order->getProducts();
         $currency = new Currency((int) $order->id_currency);
+
         if (!Validate::isLoadedObject($currency)) {
             $this->_errors[] = $this->l('Not a valid currency');
-        }
-
-        if (count($this->_errors)) {
             return false;
         }
 
         $decimals = (is_array($currency) ? (int) $currency['decimals'] : (int) $currency->decimals) * _PS_PRICE_DISPLAY_PRECISION_;
 
-        // Amount for refund
-        $amt = 0.00;
-
-        foreach ($products as $product) {
-            $amt += (float) ($product['product_price_wt']) * ($product['product_quantity'] - $product['product_quantity_refunded']);
-        }
-
-        $amt += (float) ($order->total_shipping) + (float) ($order->total_wrapping) - (float) ($order->total_discounts);
-
         // check if total or partial
-        if (Tools::ps_round($order->total_paid_real, $decimals) == Tools::ps_round($amt, $decimals)) {
-            $response = $this->_makeRefund($paypal_order['id_transaction'], $id_order);
+        if (Tools::ps_round($order->total_paid_real, $decimals) == Tools::ps_round($paypal_order['total_paid'], $decimals)) {
+            $response = $this->_makeRefund($paypal_order['id_transaction'], $order->id);
         } else {
-            $response = $this->_makeRefund($paypal_order['id_transaction'], $id_order, (float) ($amt));
+            $response = $this->_makeRefund($paypal_order['id_transaction'], $order->id, (float) ($paypal_order['total_paid']));
         }
 
         $message = $this->l('Refund operation result:')." \r\n";
