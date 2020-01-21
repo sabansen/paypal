@@ -17,7 +17,7 @@ On PrestaShop 1.6 :
 
 #### Product page on PrestaShop Addons:
 
-https://addons.prestashop.com/en/payment-card-wallet/1748-paypal-braintree-official.html
+https://addons.prestashop.com/en/payment-card-wallet/1748-paypal-official.html
 
 ## Module version guide
 
@@ -100,8 +100,8 @@ That's it: you have contributed to this open-source project! Congratulations!
 [3]: https://help.github.com/articles/using-pull-requests
 [4]: https://www.paypal-notice.com/en/TLS-1.2-and-HTTP1.1-Upgrade/
 [5]: https://www.paypal-notice.com/en/SSL-Certificate-Upgrade-Microsite/
-[6]: https://addons.prestashop.com/documentation/ee767c22c12e349aab3767a6cf32f389644d5964
+[6]: https://help.202-ecommerce.com/wp-content/uploads/2019/12/User-guide-PayPal-PrestaShop-module-51.pdf
 [paypal-3.12]: https://github.com/202-ecommerce/paypal/tree/release/3.14.0
 [paypal-4]: https://github.com/202-ecommerce/paypal/tree/master
-[addons]: https://addons.prestashop.com/en/payment-card-wallet/1748-paypal-braintree-official.html
+[addons]: https://addons.prestashop.com/en/payment-card-wallet/1748-paypal-official.html
 [composer-doc]: https://getcomposer.org/doc/04-schema.md
