@@ -1,4 +1,4 @@
-# PayPal et Braintree Officiel
+# PayPal Officiel
 
 ## About
 
@@ -7,8 +7,7 @@ Let customer pay with one of this payment methods :
 On PrestaShop 1.7 : 
 - PayPal Express Checkout
 - PayPal Express Checkout Cards
-- Braintree cards and PayPal
-- PayPal Plus
+- PayPal Plus Germany, Mexique and Brazil
 
 On PrestaShop 1.6 : 
 - PayPal Express Checkout
@@ -24,8 +23,8 @@ https://addons.prestashop.com/en/payment-card-wallet/1748-paypal-braintree-offic
 
 | PrestaShop version | Module version     |  Repo                | Doc                |  PHP Version |
 |---------|------------|---------------------|---------------------|-------------|
-| 1.5.x - 1.6.x     | 3.12.x        |  [release/3.12.1][paypal-3.12] | |   5.3 or greater    |
-| 1.7.x    | 4.x        |  [master][paypal-4] | [module documentation][6]|   5.4 or greater    |
+| 1.5.x - 1.6.x     | 3.14.x        |  [release/3.14.0][paypal-3.12] | |   5.3 or greater    |
+| 1.7.x    | 5.x        |  [master][paypal-4] | [module documentation][6]|   5.4 or greater    |
 
 ## Requirements
 
@@ -102,7 +101,7 @@ That's it: you have contributed to this open-source project! Congratulations!
 [4]: https://www.paypal-notice.com/en/TLS-1.2-and-HTTP1.1-Upgrade/
 [5]: https://www.paypal-notice.com/en/SSL-Certificate-Upgrade-Microsite/
 [6]: https://addons.prestashop.com/documentation/ee767c22c12e349aab3767a6cf32f389644d5964
-[paypal-3.12]: https://github.com/202-ecommerce/paypal/tree/release/3.12.1
+[paypal-3.12]: https://github.com/202-ecommerce/paypal/tree/release/3.14.0
 [paypal-4]: https://github.com/202-ecommerce/paypal/tree/master
 [addons]: https://addons.prestashop.com/en/payment-card-wallet/1748-paypal-braintree-official.html
 [composer-doc]: https://getcomposer.org/doc/04-schema.md
