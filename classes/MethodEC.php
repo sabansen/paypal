@@ -204,7 +204,7 @@ class MethodEC extends AbstractMethodPaypal
         $setECReqDetails->AddressOverride = 1;
         $setECReqDetails->ReqConfirmShipping = 0;
         $setECReqDetails->LandingPage = ($this->credit_card ? 'Billing' : 'Login');
-        
+
 
         if ($this->short_cut) {
             $setECReqDetails->ReturnURL = Context::getContext()->link->getModuleLink($this->name, 'ecScOrder', array(), true);
@@ -558,7 +558,7 @@ class MethodEC extends AbstractMethodPaypal
     {
         if ((int)Configuration::get('PAYPAL_CUSTOMIZE_ORDER_STATUS')) {
             if (Configuration::get('PAYPAL_API_INTENT') == "sale") {
-                $orderStatus = (int)Configuration::get('PAYPAL_OS_WAITING_VALIDATION');
+                $orderStatus = (int)Configuration::get('PS_OS_PAYMENT');
             } else {
                 $orderStatus = (int)Configuration::get('PAYPAL_OS_WAITING');
             }
