@@ -558,9 +558,9 @@ class MethodEC extends AbstractMethodPaypal
     {
         if ((int)Configuration::get('PAYPAL_CUSTOMIZE_ORDER_STATUS')) {
             if (Configuration::get('PAYPAL_API_INTENT') == "sale") {
-                $orderStatus = (int)Configuration::get('PS_OS_PAYMENT');
+                $orderStatus = (int)Configuration::get('PAYPAL_OS_ACCEPTED_TWO');
             } else {
-                $orderStatus = (int)Configuration::get('PAYPAL_OS_WAITING');
+                $orderStatus = (int)Configuration::get('PAYPAL_OS_WAITING_VALIDATION');
             }
         } else {
             if (Configuration::get('PAYPAL_API_INTENT') == "sale") {
