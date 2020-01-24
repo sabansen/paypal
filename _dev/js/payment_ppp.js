@@ -34,17 +34,18 @@ $(document).ready( () => {
       "showPuiOnSandbox": showPui
     });
   }
+
+  // Order payment button action for paypal plus
+  $('#payment-confirmation button').on('click', (e) => {
+    let selectedOption = $('input[name=payment-option]:checked').attr('id');
+    if ($(`#${selectedOption}-additional-information .payment_module`).hasClass('paypal-plus')) {
+      e.preventDefault();
+      e.stopPropagation();
+      doPatchPPP();
+    }
+  });
 });
 
-// Order payment button action for paypal plus
-$('#payment-confirmation button').on('click', (e) => {
-  let selectedOption = $('input[name=payment-option]:checked').attr('id');
-  if ($(`#${selectedOption}-additional-information .payment_module`).hasClass('paypal-plus')) {
-    e.preventDefault();
-    e.stopPropagation();
-    doPatchPPP();
-  }
-});
 
 // Show popup and call doCheckout() function from API
 const doPatchPPP = () => {

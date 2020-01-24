@@ -66,6 +66,10 @@ class PaypalScInitModuleFrontController extends PaypalAbstarctModuleFrontControl
             $this->prepareProduct();
         }
 
+        if (Validate::isLoadedObject($this->context->cart) == false) {
+            return false;
+        }
+
         try {
             $this->method->setParameters($this->values);
             $response = $this->method->init();

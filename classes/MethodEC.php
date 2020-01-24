@@ -533,8 +533,12 @@ class MethodEC extends AbstractMethodPaypal
         $exec_payment = $paypalService->DoExpressCheckoutPayment($DoECReq);
 
         if (isset($exec_payment->Errors)) {
+            if ($exec_payment->Errors[0]->ErrorCode == 10486) {
+                $this->token = $this->payment_token;
+            }
             throw new PaypalException($exec_payment->Errors[0]->ErrorCode, $exec_payment->Errors[0]->ShortMessage, $exec_payment->Errors[0]->LongMessage);
         }
+
         $this->setDetailsTransaction($exec_payment->DoExpressCheckoutPaymentResponseDetails);
 
         $currency = $context->currency;
