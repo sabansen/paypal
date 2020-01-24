@@ -126,7 +126,7 @@ class PaypalExpressCheckout extends Paypal
         if (in_array($iso, $currency_wt_decimal)) {
             $this->decimals = (int)0;
         } elseif (Configuration::hasKey('PS_PRICE_DISPLAY_PRECISION')) {
-            $this->decimals = (int)Configuration::hasKey('PS_PRICE_DISPLAY_PRECISION');
+            $this->decimals = (int)Configuration::get('PS_PRICE_DISPLAY_PRECISION');
         } else {
             $this->decimals = (int)2;
         }
