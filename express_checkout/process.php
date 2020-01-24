@@ -123,8 +123,10 @@ class PaypalExpressCheckout extends Paypal
         }
 
         $currency_wt_decimal = array('HUF', 'JPY', 'TWD');
-        if (in_array($iso, $currency_wt_decimal) || (Configuration::hasKey('PS_PRICE_DISPLAY_PRECISION') && (int)Configuration::get('PS_PRICE_DISPLAY_PRECISION') == 0)) {
+        if (in_array($iso, $currency_wt_decimal)) {
             $this->decimals = (int)0;
+        } elseif (Configuration::hasKey('PS_PRICE_DISPLAY_PRECISION')) {
+            $this->decimals = (int)Configuration::hasKey('PS_PRICE_DISPLAY_PRECISION');
         } else {
             $this->decimals = (int)2;
         }
