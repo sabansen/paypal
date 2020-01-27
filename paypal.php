@@ -1415,11 +1415,13 @@ class PayPal extends PaymentModule
         }
 
         if (Tools::getValue('controller') == "AdminOrders" && Tools::getValue('id_order')) {
-            Media::addJsDefL('chb_braintree_refund', $this->l('Refund PayPal'));
+            $this->context->smarty->assign('chb_braintree_refund', $this->l('Refund PayPal'));
             $this->context->controller->addJS(_PS_MODULE_DIR_ . $this->name . '/views/js/bo_order.js');
-        }
 
-        return null;
+            return $this->display(__FILE__, 'views/templates/hook/bo_header.tpl');
+        } else {
+            return null;
+        }
     }
 
     public function renderExpressCheckoutButton($type)
