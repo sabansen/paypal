@@ -21,7 +21,7 @@
  *  @author    PrestaShop SA <contact@prestashop.com>
  *  @copyright 2007-2019 PrestaShop SA
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *  
+ *
  */
 
 require_once 'AbstractMethodPaypal.php';
@@ -186,6 +186,10 @@ class MethodMB extends AbstractMethodPaypal
      */
     public function createWebExperience()
     {
+        $mode = Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
+        if (!Configuration::get('PAYPAL_MB_' . $mode . '_CLIENTID') && !Configuration::get('PAYPAL_MB_' . $mode . '_SECRET')) {
+            return false;
+        }
         // Parameters for input fields customization.
         $inputFields = new \PayPal\Api\InputFields();
         // Enables the buyer to enter a note to the merchant on the PayPal page during checkout.

@@ -12,6 +12,7 @@ $_MODULE['<{paypal}prestashop>paypal_731754f15074410d6a376c1be5be4f20'] = 'Pagar
 $_MODULE['<{paypal}prestashop>paypal_e02a9cef1018f4c3ff5345af151c0bdf'] = 'Pagar con PayPal Express Checkout';
 $_MODULE['<{paypal}prestashop>paypal_553d54e0a3c3e862b45617752052368b'] = 'Pagar con PayPal Plus';
 $_MODULE['<{paypal}prestashop>paypal_8f5d16bffc9dc4d54c301c82782916b1'] = 'Acceso directo para pagar con PayPal Plus';
+$_MODULE['<{paypal}prestashop>paypal_112cee51bc7d0712033e013bf5154d97'] = 'Pago con tarjeta de crédito o débito';
 $_MODULE['<{paypal}prestashop>paypal_a1547872d7311425dfeefcd1983c5add'] = 'Vas a pagar con tu cuenta PayPal ';
 $_MODULE['<{paypal}prestashop>paypal_907bfea30d3ce7ffec31c04a4b0110c0'] = 'No hemos podido verificar si el pago se completó correctamente. Comprueba si has recibido algún tipo de confirmación en la cuenta por parte de PayPal.';
 $_MODULE['<{paypal}prestashop>paypal_a94e9e59a8274948ecadafc8180dbadf'] = 'Error de validación de pedido: ';

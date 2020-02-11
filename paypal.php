@@ -22,7 +22,7 @@
  * @author 202 ecommerce <tech@202-ecommerce.com>
  * @copyright PayPal
  * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *  
+ *
  */
 
 if (!defined('_PS_VERSION_')) {
@@ -619,13 +619,16 @@ class PayPal extends \PaymentModule
 
                 break;
             case 'MB':
-                if ($method->isConfigured() && in_array($this->context->currency->iso_code, $this->currencyMB)) {
+                if (in_array($this->context->currency->iso_code, $this->currencyMB)) {
                     if ((int)Configuration::get('PAYPAL_MB_EC_ENABLED')) {
-                        $paymentOptionsEc = $this->renderEcPaymentOptions($params);
-                        $payments_options = array_merge($payments_options, $paymentOptionsEc);
+                        $methodEC = AbstractMethodPaypal::load('EC');
+                        if ($methodEC->isConfigured()) {
+                            $paymentOptionsEc = $this->renderEcPaymentOptions($params);
+                            $payments_options = array_merge($payments_options, $paymentOptionsEc);
+                        }
                     }
 
-                    if ((int)Configuration::get('PAYPAL_API_CARD')) {
+                    if ($method->isConfigured() && (int)Configuration::get('PAYPAL_API_CARD')) {
                         $payment_option = new PaymentOption();
                         $action_text = $this->l('Pay with credit or debit card');
                         $payment_option->setCallToActionText($action_text);
