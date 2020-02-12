@@ -302,34 +302,45 @@ class MethodEC extends AbstractMethodPaypal
         return $price;
     }
 
-
-
     private function _getDiscountsList($currency)
     {
-        $discounts = Context::getContext()->cart->getCartRules();
-        $order_total = Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
-        $order_total_with_reduction = $order_total;
-        if (count($discounts) > 0) {
-            foreach ($discounts as $discount) {
-                if (isset($discount['description']) && !empty($discount['description'])) {
-                    $discount['description'] = Tools::substr(strip_tags($discount['description']), 0, 50).'...';
-                }
-                // It's needed to take a percentage of the order amount, taking into account the others discounts
-                if ((int)$discount['reduction_percent'] > 0) {
-                    $discount['value_real'] = $order_total_with_reduction * ($discount['value_real'] / $order_total);
-                }
+        $discounts = Context::getContext()->cart->getCartRules(CartRule::FILTER_ACTION_SHIPPING);
+        if (count($discounts)) {
+            $totalDiscounts = Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS);
+            $totalDiscounts = -1 * $this->formatPrice($totalDiscounts);
 
-                if ((int)$discount['free_shipping'] == false) {
-                    $order_total_with_reduction -= $discount['value_real'];
-                }
+            $itemDetails = new PaymentDetailsItemType();
+            $itemDetails->Name = 'Total discounts';
+            $itemDetails->Amount = new BasicAmountType($currency, $totalDiscounts);
+            $itemDetails->Quantity = 1;
+            $this->_paymentDetails->PaymentDetailsItem[] = $itemDetails;
+            $this->_itemTotalValue += $totalDiscounts;
+        } else {
+            $discounts = Context::getContext()->cart->getCartRules();
+            $order_total = Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
+            $order_total_with_reduction = $order_total;
+            if (count($discounts) > 0) {
+                foreach ($discounts as $discount) {
+                    if (isset($discount['description']) && !empty($discount['description'])) {
+                        $discount['description'] = Tools::substr(strip_tags($discount['description']), 0, 50).'...';
+                    }
+                    // It's needed to take a percentage of the order amount, taking into account the others discounts
+                    if ((int)$discount['reduction_percent'] > 0) {
+                        $discount['value_real'] = $order_total_with_reduction * ($discount['value_real'] / $order_total);
+                    }
 
-                $discount['value_real'] = -1 * $this->formatPrice($discount['value_real']);
-                $itemDetails = new PaymentDetailsItemType();
-                $itemDetails->Name = $discount['name'];
-                $itemDetails->Amount = new BasicAmountType($currency, $discount['value_real']);
-                $itemDetails->Quantity = 1;
-                $this->_paymentDetails->PaymentDetailsItem[] = $itemDetails;
-                $this->_itemTotalValue += $discount['value_real'];
+                    if ((int)$discount['free_shipping'] == false) {
+                        $order_total_with_reduction -= $discount['value_real'];
+                    }
+
+                    $discount['value_real'] = -1 * $this->formatPrice($discount['value_real']);
+                    $itemDetails = new PaymentDetailsItemType();
+                    $itemDetails->Name = $discount['name'];
+                    $itemDetails->Amount = new BasicAmountType($currency, $discount['value_real']);
+                    $itemDetails->Quantity = 1;
+                    $this->_paymentDetails->PaymentDetailsItem[] = $itemDetails;
+                    $this->_itemTotalValue += $discount['value_real'];
+                }
             }
         }
     }
