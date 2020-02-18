@@ -22,7 +22,7 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *  
+ *
  */
 
 include_once _PS_MODULE_DIR_.'paypal/classes/AbstractMethodPaypal.php';
@@ -210,8 +210,12 @@ class PaypalEcScOrderModuleFrontController extends PaypalAbstarctModuleFrontCont
         $this->context->cart->id_address_delivery = $id_address;
         $this->context->cart->id_address_invoice = $id_address;
 
-        $addressValidator = new AddressValidator();
-        $invalidAddressIds = $addressValidator->validateCartAddresses($this->context->cart);
+        $invalidAddressIds = [];
+
+        if(version_compare(_PS_VERSION_, '1.7.3.0', '>=')) {
+            $addressValidator = new AddressValidator();
+            $invalidAddressIds = $addressValidator->validateCartAddresses($this->context->cart);
+        }
 
         if (empty($invalidAddressIds) == false) {
             $vars = array(

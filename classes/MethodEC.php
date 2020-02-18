@@ -193,7 +193,11 @@ class MethodEC extends AbstractMethodPaypal
             $this->_paymentDetails->ShipToAddress = $address;
         }
 
-        /** The total cost of the transaction to the buyer. If shipping cost and tax charges are known, include them in this value. If not, this value should be the current subtotal of the order. If the transaction includes one or more one-time purchases, this field must be equal to the sum of the purchases. If the transaction does not include a one-time purchase such as when you set up a billing agreement for a recurring payment, set this field to 0.*/
+        /** The total cost of the transaction to the buyer. If shipping cost and tax charges are known, include them in this value.
+         * If not, this value should be the current subtotal of the order. If the transaction includes one or more one-time purchases,
+         * this field must be equal to the sum of the purchases.
+         * If the transaction does not include a one-time purchase such as when you set up a billing agreement for a recurring payment, set this field to 0.
+         */
         $this->_getPaymentDetails();
         $this->_paymentDetails->PaymentAction = Tools::ucfirst(Configuration::get('PAYPAL_API_INTENT'));
         $setECReqDetails = new SetExpressCheckoutRequestDetailsType();
@@ -204,7 +208,7 @@ class MethodEC extends AbstractMethodPaypal
         $setECReqDetails->AddressOverride = 1;
         $setECReqDetails->ReqConfirmShipping = 0;
         $setECReqDetails->LandingPage = ($this->credit_card ? 'Billing' : 'Login');
-        
+
 
         if ($this->short_cut) {
             $setECReqDetails->ReturnURL = Context::getContext()->link->getModuleLink($this->name, 'ecScOrder', array(), true);
@@ -225,6 +229,7 @@ class MethodEC extends AbstractMethodPaypal
 
         $setECReq = new SetExpressCheckoutReq();
         $setECReq->SetExpressCheckoutRequest = $setECReqType;
+
         /*
          * 	 ## Creating service wrapper object
         Creating service wrapper object to make API call and loading
@@ -272,7 +277,7 @@ class MethodEC extends AbstractMethodPaypal
             $itemDetails->Name = $product['name'];
             $itemDetails->Amount = $itemAmount;
             $itemDetails->Quantity = $product['quantity'];
-            $itemDetails->Tax = new BasicAmountType($currency, $this->formatPrice($product['product_tax']));
+            $itemDetails->Tax = new BasicAmountType($currency, number_format($product['product_tax'], Paypal::getDecimal(), ".", ''));
             $this->_paymentDetails->PaymentDetailsItem[] = $itemDetails;
             $this->_itemTotalValue += $this->formatPrice($product['price']) * $product['quantity'];
             $this->_taxTotalValue += $product['product_tax'] * $product['quantity'];
@@ -297,34 +302,45 @@ class MethodEC extends AbstractMethodPaypal
         return $price;
     }
 
-
-
     private function _getDiscountsList($currency)
     {
-        $discounts = Context::getContext()->cart->getCartRules();
-        $order_total = Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
-        $order_total_with_reduction = $order_total;
-        if (count($discounts) > 0) {
-            foreach ($discounts as $discount) {
-                if (isset($discount['description']) && !empty($discount['description'])) {
-                    $discount['description'] = Tools::substr(strip_tags($discount['description']), 0, 50).'...';
-                }
-                // It's needed to take a percentage of the order amount, taking into account the others discounts
-                if ((int)$discount['reduction_percent'] > 0) {
-                    $discount['value_real'] = $order_total_with_reduction * ($discount['value_real'] / $order_total);
-                }
+        $discounts = Context::getContext()->cart->getCartRules(CartRule::FILTER_ACTION_SHIPPING);
+        if (count($discounts)) {
+            $totalDiscounts = Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS);
+            $totalDiscounts = -1 * $this->formatPrice($totalDiscounts);
 
-                if ((int)$discount['free_shipping'] == false) {
-                    $order_total_with_reduction -= $discount['value_real'];
-                }
+            $itemDetails = new PaymentDetailsItemType();
+            $itemDetails->Name = 'Total discounts';
+            $itemDetails->Amount = new BasicAmountType($currency, $totalDiscounts);
+            $itemDetails->Quantity = 1;
+            $this->_paymentDetails->PaymentDetailsItem[] = $itemDetails;
+            $this->_itemTotalValue += $totalDiscounts;
+        } else {
+            $discounts = Context::getContext()->cart->getCartRules();
+            $order_total = Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
+            $order_total_with_reduction = $order_total;
+            if (count($discounts) > 0) {
+                foreach ($discounts as $discount) {
+                    if (isset($discount['description']) && !empty($discount['description'])) {
+                        $discount['description'] = Tools::substr(strip_tags($discount['description']), 0, 50).'...';
+                    }
+                    // It's needed to take a percentage of the order amount, taking into account the others discounts
+                    if ((int)$discount['reduction_percent'] > 0) {
+                        $discount['value_real'] = $order_total_with_reduction * ($discount['value_real'] / $order_total);
+                    }
 
-                $discount['value_real'] = -1 * $this->formatPrice($discount['value_real']);
-                $itemDetails = new PaymentDetailsItemType();
-                $itemDetails->Name = $discount['name'];
-                $itemDetails->Amount = new BasicAmountType($currency, $discount['value_real']);
-                $itemDetails->Quantity = 1;
-                $this->_paymentDetails->PaymentDetailsItem[] = $itemDetails;
-                $this->_itemTotalValue += $discount['value_real'];
+                    if ((int)$discount['free_shipping'] == false) {
+                        $order_total_with_reduction -= $discount['value_real'];
+                    }
+
+                    $discount['value_real'] = -1 * $this->formatPrice($discount['value_real']);
+                    $itemDetails = new PaymentDetailsItemType();
+                    $itemDetails->Name = $discount['name'];
+                    $itemDetails->Amount = new BasicAmountType($currency, $discount['value_real']);
+                    $itemDetails->Quantity = 1;
+                    $this->_paymentDetails->PaymentDetailsItem[] = $itemDetails;
+                    $this->_itemTotalValue += $discount['value_real'];
+                }
             }
         }
     }
@@ -558,9 +574,9 @@ class MethodEC extends AbstractMethodPaypal
     {
         if ((int)Configuration::get('PAYPAL_CUSTOMIZE_ORDER_STATUS')) {
             if (Configuration::get('PAYPAL_API_INTENT') == "sale") {
-                $orderStatus = (int)Configuration::get('PAYPAL_OS_WAITING_VALIDATION');
+                $orderStatus = (int)Configuration::get('PAYPAL_OS_ACCEPTED_TWO');
             } else {
-                $orderStatus = (int)Configuration::get('PAYPAL_OS_WAITING');
+                $orderStatus = (int)Configuration::get('PAYPAL_OS_WAITING_VALIDATION');
             }
         } else {
             if (Configuration::get('PAYPAL_API_INTENT') == "sale") {
