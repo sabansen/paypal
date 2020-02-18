@@ -210,6 +210,8 @@ class PaypalEcScOrderModuleFrontController extends PaypalAbstarctModuleFrontCont
         $this->context->cart->id_address_delivery = $id_address;
         $this->context->cart->id_address_invoice = $id_address;
 
+        $invalidAddressIds = [];
+
         if(version_compare(_PS_VERSION_, '1.7.3.0', '>=')) {
             $addressValidator = new AddressValidator();
             $invalidAddressIds = $addressValidator->validateCartAddresses($this->context->cart);
