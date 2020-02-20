@@ -21,6 +21,7 @@ $(document).ready( () => {
 
 window.ECInContext = () => {
     // Init Express checkout method
+    paypal.checkout.closeFlow();
     paypal.checkout.initXO();
     $.support.cors = true;
     $.ajax({
