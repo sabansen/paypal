@@ -345,7 +345,7 @@
 					</div>
 
 					<div>
-						<p>{l s='Use the PayPal Login functionnality' mod='paypal'}{if $default_lang_iso == 'fr'}{l s='(*see the ' mod='paypal'} <a href="http://altfarm.mediaplex.com/ad/ck/3484-197941-8030-96"> {l s='integration guide' mod='paypal'} </a> {l s='and follow the steps' mod='paypal'}){else}{l s='(*see the ' mod='paypal'} <a href="http://altfarm.mediaplex.com/ad/ck/3484-197941-8030-170"> {l s='integration guide' mod='paypal'} </a> {l s='and follow the steps' mod='paypal'}){/if}</p>
+						<p>{l s='Use the PayPal Login functionnality' mod='paypal'}</p>
 						<p class="description">
 							{l s='This function allows to your clients to connect with their PayPal credentials to shorten the check out' mod='paypal'}
 						</p>
