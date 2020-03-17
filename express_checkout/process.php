@@ -200,7 +200,7 @@ class PaypalExpressCheckout extends Paypal
             $parsed_data['query'] = '/'.(isset($parsed_data['query']) ? $parsed_data['query'] : null);
         }
 
-        $cancel_url = implode($parsed_data);
+        $cancel_url = Tools::secureReferrer(implode($parsed_data));
 
         if (!empty($cancel_url)) {
             $fields['CANCELURL'] = $cancel_url;
