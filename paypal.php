@@ -346,7 +346,7 @@ class PayPal extends \PaymentModule
             'PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART' => 1,
             'PAYPAL_CRON_TIME' => '',
             'PAYPAL_BY_BRAINTREE' => 0,
-            'PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT' => 0,
+            'PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT' => 1,
             'PAYPAL_VAULTING' => 0,
             'PAYPAL_REQUIREMENTS' => 0,
             'PAYPAL_MB_EC_ENABLED' => 1,
