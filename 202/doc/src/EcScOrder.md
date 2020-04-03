@@ -8,7 +8,7 @@ category: Front controllers
 PaypalEcScOrderModuleFrontController
 
 This controller is used like handler. PayPal does the redirection to this controller when
-the customer confirms the payment at the checkout flow of the paypal that is opened when
+the customer confirms the payment at the checkout flow of the PayPal that is opened when
 the customer press the button 'Express checkout' on the page of the product/cart
 
 ####  init()

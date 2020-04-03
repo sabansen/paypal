@@ -7,7 +7,7 @@ category: Front controllers
 
 PaypalScInitModuleFrontController
 
-This controller serves for handling ajax requests
+This controller serves for handling Ajax requests
 
 ####  init()
 This method call the `parent::init()` and set the variables that are necessary for correct 
