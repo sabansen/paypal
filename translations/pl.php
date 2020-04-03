@@ -162,7 +162,7 @@ $_MODULE['<{paypal}prestashop>statusblock_b0fb9d7e6d4ed47cb12f3092943fafc2'] = '
 $_MODULE['<{paypal}prestashop>statusblock_ba54b8645ec3d87e95b4da1b5baad66f'] = 'Na Twoim serwerze musi by_ w__czone rozszerzenie PHP cURL';
 $_MODULE['<{paypal}prestashop>statusblock_5914be43ea057f2fd9fa49180f5db5bf'] = 'Musisz powi_za_ konto PayPal';
 $_MODULE['<{paypal}prestashop>helperoptioninfo_36c23650a89439d28101b389567fe2f5'] = 'Les logs avec ID de commande ne seront pas effacés.';
-$_MODULE['<{paypal}prestashop>headerlogo_2b01e7c182040ea95514ee1854afc8fd'] = 'Uaktywnij modu_ PayPal, aby zacz__ oferowa_ sprzeda_ ponad 250 milionom klientów systemu PayPal na _wiecie';
+$_MODULE['<{paypal}prestashop>headerlogo_e269d95cbf9105896810d64a7307acdd'] = 'Uaktywnij modu_ PayPal, aby zacz__ oferowa_ sprzeda_ ponad 300 milionom klientów systemu PayPal na _wiecie';
 $_MODULE['<{paypal}prestashop>headerlogo_536b624906878dc3954749a6cef3b0fa'] = 'Uaktywnij w 2 prostych krokach';
 $_MODULE['<{paypal}prestashop>headerlogo_c3d2b0bfba763295a377b71aae0841f1'] = 'Uaktywnij w trzech prostych krokach';
 $_MODULE['<{paypal}prestashop>headerlogo_1193eddeac9b924352d0914cf8361758'] = 'Powi__ istniej_ce konto PayPal lub utwórz nowe';
@@ -315,7 +315,7 @@ $_MODULE['<{paypal}prestashop>blockpreviewbuttoncontext_3aebc542a79474bc605a817e
 $_MODULE['<{paypal}prestashop>block_info_0f1f01f9c2def9ea0e53bd7cc51934cb'] = 'W przypadku wystąpienia problemów z zaokrąglaniem kwot zamówień, zmień tryb zaokrąglania PrestaShop w: [a @href1@]Preferencje > Ogólne[/a] na:';
 $_MODULE['<{paypal}prestashop>block_info_e287d4ed564774c343fdaf3bd1494ad6'] = 'Tryb zaokrąglania: „Zaokrąglaj w kierunku od zera, powyżej cyfry 5 (zalecane)”';
 $_MODULE['<{paypal}prestashop>block_info_27a3066cd34cd1e683f1c2d04483163a'] = 'Typ zaokrąglania: „Zaokrąglaj dla każdego przedmiotu”';
-$_MODULE['<{paypal}prestashop>headerlogo_2b01e7c182040ea95514ee1854afc8fd'] = 'Uaktywnij moduł PayPal, aby zacząć oferować sprzedaż ponad 250 milionom klientów systemu PayPal na świecie';
+$_MODULE['<{paypal}prestashop>headerlogo_e269d95cbf9105896810d64a7307acdd'] = 'Uaktywnij moduł PayPal, aby zacząć oferować sprzedaż ponad 300 milionom klientów systemu PayPal na świecie';
 $_MODULE['<{paypal}prestashop>headerlogo_c3d2b0bfba763295a377b71aae0841f1'] = 'Uaktywnij w trzech prostych krokach';
 $_MODULE['<{paypal}prestashop>headerlogo_1193eddeac9b924352d0914cf8361758'] = 'Powiąż istniejące konto PayPal lub utwórz nowe';
 $_MODULE['<{paypal}prestashop>headerlogo_dfe4283340c6369e764585c747cbd74a'] = 'Dostosuj ustawienia płatności, aby błyskawicznie pobierać płatności (Sprzedaż) lub po potwierdzeniu zamówienia (Autoryzacja)';

@@ -231,7 +231,7 @@ $_MODULE['<{paypal}prestashop>blockpreviewbuttoncontext_3aebc542a79474bc605a817e
 $_MODULE['<{paypal}prestashop>block_info_0f1f01f9c2def9ea0e53bd7cc51934cb'] = 'Se tiver problemas de arredondamento nos seus pedidos, altere o modo de arredondamento PrestaShop em: [a @href1@]Preferências > Geral[/a] e, em seguida, altere para:';
 $_MODULE['<{paypal}prestashop>block_info_e287d4ed564774c343fdaf3bd1494ad6'] = 'Modo de arredondamento: Arredondar por excesso (recomendado)';
 $_MODULE['<{paypal}prestashop>block_info_27a3066cd34cd1e683f1c2d04483163a'] = 'Tipo de arredondamento: Arredondar em cada artigo';
-$_MODULE['<{paypal}prestashop>headerlogo_2b01e7c182040ea95514ee1854afc8fd'] = 'Ativar módulo PayPal para começar a vender a mais de 250 milhões de clientes do PayPal em todo o mundo';
+$_MODULE['<{paypal}prestashop>headerlogo_e269d95cbf9105896810d64a7307acdd'] = 'Ativar módulo PayPal para começar a vender a mais de 300 milhões de clientes do PayPal em todo o mundo';
 $_MODULE['<{paypal}prestashop>headerlogo_c3d2b0bfba763295a377b71aae0841f1'] = 'Ativar em 3 passos simples';
 $_MODULE['<{paypal}prestashop>headerlogo_536b624906878dc3954749a6cef3b0fa'] = 'Ativar em 2 passos simples';
 $_MODULE['<{paypal}prestashop>headerlogo_1193eddeac9b924352d0914cf8361758'] = 'Ligar à sua conta PayPal existente (abaixo) ou criar nova conta';
