@@ -64,6 +64,8 @@ class PayPal extends \PaymentModule
     public $countriesApiCartUnavailable = array("FR", "GB", "IT", "ES", "DE");
     public $currencyMB = array('USD', 'MXN', 'EUR', 'BRL');
     public $paypal_method;
+    public $psCheckoutCountry = ['FR', 'ES', 'IT', 'GB', 'PL', 'BE', 'NL', 'LU', 'US'];
+
     /** @var array matrix of state iso codes between paypal and prestashop */
     public static $state_iso_code_matrix = array(
         'MX' => array(
@@ -359,7 +361,8 @@ class PayPal extends \PaymentModule
             'PAYPAL_OS_WAITING_VALIDATION' => (int)Configuration::get('PAYPAL_OS_WAITING'),
             'PAYPAL_OS_PROCESSING' => (int)Configuration::get('PAYPAL_OS_WAITING'),
             'PAYPAL_OS_VALIDATION_ERROR' => (int)Configuration::get('PS_OS_CANCELED'),
-            'PAYPAL_OS_REFUNDED_PAYPAL' => (int)Configuration::get('PS_OS_REFUND')
+            'PAYPAL_OS_REFUNDED_PAYPAL' => (int)Configuration::get('PS_OS_REFUND'),
+            'PAYPAL_NOT_SHOW_PS_CHECKOUT' => 0
         );
     }
 

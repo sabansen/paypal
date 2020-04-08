@@ -22,10 +22,12 @@
  * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @version   develop
  */
- 
+
 namespace PaypalAddons\classes;
 
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AdminPayPalController extends \ModuleAdminController
 {
@@ -64,9 +66,12 @@ class AdminPayPalController extends \ModuleAdminController
         }
 
         $showWarningForUserBraintree = $this->module->showWarningForUserBraintree();
+        $countryDefault = new \Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
+        $showPsCheckoutInfo = in_array($countryDefault->iso_code, $this->module->psCheckoutCountry) && (int)\Configuration::get('PAYPAL_NOT_SHOW_PS_CHECKOUT') == 0;
         $this->context->smarty->assign('showWarningForUserBraintree', $showWarningForUserBraintree);
         $this->context->smarty->assign('methodType', $this->method);
         $this->context->smarty->assign('moduleDir', _MODULE_DIR_);
+        $this->context->smarty->assign('showPsCheckoutInfo', $showPsCheckoutInfo);
     }
 
     public function renderForm($fields_form = null)
@@ -234,5 +239,52 @@ class AdminPayPalController extends \ModuleAdminController
 
         $this->context->smarty->assign('hooks', $hooks);
         return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/messages/unregisteredHooksMessage.tpl');
+    }
+
+    public function displayAjaxHandlePsCheckoutAction()
+    {
+        $action = \Tools::getValue('actionHandled');
+        $response = array();
+
+        switch ($action) {
+            case 'close':
+                \Configuration::updateValue('PAYPAL_NOT_SHOW_PS_CHECKOUT', 1);
+                break;
+            case 'install':
+                if (is_dir(_PS_MODULE_DIR_ . 'ps_checkout') == false) {
+                    $response = array(
+                        'redirect' => true,
+                        'url' => 'https://addons.prestashop.com/en/payment-card-wallet/46347-prestashop-checkout-built-with-paypal.html'
+                    );
+                } else {
+                    if ($this->installPsCheckout()) {
+                        $response = array(
+                            'redirect' => true,
+                            'url' => $this->context->link->getAdminLink('AdminModules', true, [], ['configure' => 'ps_checkout'])
+                        );
+                    } else {
+                        $response = array(
+                            'redirect' => false,
+                            'url' => 'someUrl'
+                        );
+                    }
+                }
+                break;
+        }
+
+        $jsonResponse = new JsonResponse($response);
+        return $jsonResponse->send();
+    }
+
+    public function installPsCheckout()
+    {
+        $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
+        $moduleManager = $moduleManagerBuilder->build();
+
+        if ($moduleManager->isInstalled('ps_checkout') == true) {
+            return true;
+        }
+
+        return $moduleManager->install('ps_checkout');
     }
 }

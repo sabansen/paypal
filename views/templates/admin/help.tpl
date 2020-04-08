@@ -99,6 +99,30 @@
                 </a>
             </p>
         </li>
+
+      {if $showPsCheckout}
+        <li>
+          <p class="h4">
+              {l s='Do you want to accept more types of payments?' mod='paypal'}
+          </p>
+
+          <p>
+          <div>
+              {l s='This module allows your customers to pay with their PayPal account.' mod='paypal'}
+          </div>
+
+          <div>
+              {l s='If you wish to accept credit cards and other payment methods in addition to PayPal, we recommend the PrestaShop Checkout module.' mod='paypal'}
+          </div>
+          </p>
+
+          <p>
+          <span class="btn btn-default install-ps-checkout" data-action="install">
+              {$psCheckoutBtnText|escape:'htmlall':'utf-8'}
+          </span>
+          </p>
+        </li>
+      {/if}
     </ul>
 </div>
 

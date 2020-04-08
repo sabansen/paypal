@@ -24,6 +24,13 @@
 *
 *}
 
+{if $showPsCheckoutInfo}
+  <div class="alert alert-info ps-checkout-info">
+    <button type="button" class="close" data-dismiss="alert" data-action="close">×</button>
+      {{l s='This module allows your customers to pay with their PayPal account. If you wish to accept credit cards and other payment methods in addition to PayPal, we recommend the [a @href1@]PrestaShop Checkout[/a] module.' mod='paypal'}|paypalreplace:['@href1@' => {'#'}, '@target@' => {'data-action="install"'}]}
+  </div>
+{/if}
+
 {include './_partials/headerLogo.tpl'}
 
 <div>

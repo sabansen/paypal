@@ -11,9 +11,9 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  * @copyright PayPal
  * @license   http://addons.prestashop.com/en/content/12-terms-and-conditions-of-use
- * 
+ *
  */
-
+import { SetupAdmin } from './adminSetup.js';
 
 var HelpAdmin = {
   init() {
@@ -22,6 +22,11 @@ var HelpAdmin = {
     $('#ckeck_requirements').click(() => {
       HelpAdmin.checkCredentials();
     });
+
+    // Handle click on "Install Prestashop Checkout" button
+    $('.install-ps-checkout').click(() => {
+      SetupAdmin.psCheckoutHandleAction('install');
+    })
   },
 
   checkCredentials() {
