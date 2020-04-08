@@ -114,6 +114,7 @@ class ProcessLoggerObjectModel extends ObjectModel
                 'validate' => 'isDate',
             ),
         ),
+        'collation' => 'utf8_general_ci'
     );
 
     public function getLinkToTransaction()

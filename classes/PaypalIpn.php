@@ -53,7 +53,8 @@ class PaypalIpn extends ObjectModel
             'status' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
             'response' => array('type' => self::TYPE_HTML, 'validate' => 'isString'),
             'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
-        )
+        ),
+        'collation' => 'utf8_general_ci'
     );
 }
 

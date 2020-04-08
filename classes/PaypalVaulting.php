@@ -61,7 +61,8 @@ class PaypalVaulting extends ObjectModel
             'sandbox' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
             'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
-        )
+        ),
+        'collation' => 'utf8_general_ci'
     );
 
 
