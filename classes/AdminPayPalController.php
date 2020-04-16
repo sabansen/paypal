@@ -159,7 +159,7 @@ class AdminPayPalController extends \ModuleAdminController
             curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
             curl_setopt($curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2);
             $response = curl_exec($curl);
-            if ($response != 'ok') {
+            if (trim($response) != 'ok') {
                 $return['status'] = false;
                 $curl_info = curl_getinfo($curl);
                 if ($curl_info['http_code'] == 401) {

@@ -18,7 +18,7 @@
  * ...........................................................................
  *
  * @author    202-ecommerce <tech@202-ecommerce.com>
- * @copyright PayPal
+ * @copyright 202-ecommerce
  * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @version   develop
  */
@@ -38,7 +38,7 @@ class ObjectModelDefinition
      * Defaults.
      */
     const CHARSET   = 'utf8';
-    const COLLATION = 'DEFAULT';
+    const COLLATION = 'utf8_general_ci';
     const ENGINE    = _MYSQL_ENGINE_;
     const DB_PREFIX = _DB_PREFIX_;
     /**
