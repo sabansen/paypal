@@ -51,6 +51,24 @@
 		</div>
 	{/if}
 
+	{if $PayPal_payment_method == $PayPal_HSS}
+		<div class="alert alert-info">
+			<p>
+				{l s='HSS is not supported by PayPal anymore (but for the moment the payments by PayPal work correctly)' mod='paypal'}
+			</p>
+
+			<ul>
+				<li>
+					{l s='what to do ? (confiture PayPal standard integration or install PS Checkout)' mod='paypal'}
+				</li>
+
+				<li>
+					{l s='how to cancel the HSS subscription? (URL or other instructions to provide)' mod='paypal'}
+				</li>
+			</ul>
+		</div>
+	{/if}
+
 </div>
 
 
@@ -117,7 +135,7 @@
 				<span class="paypal-section">1</span> <h3 class="inline">{l s='Select your solution' mod='paypal'}</h3>
 
 
-				{if (in_array($PayPal_WPS, $PayPal_allowed_methods) || in_array($PayPal_HSS, $PayPal_allowed_methods))}
+				{if (in_array($PayPal_WPS, $PayPal_allowed_methods))}
 
 					<div class="paypal-clear"></div>
 					<div class="form-block">
@@ -131,16 +149,8 @@
 							</label>
 						{/if}
                                                 <div class="paypal-clear"></div>
-						{if (in_array($PayPal_HSS, $PayPal_allowed_methods))}
-							{* WEBSITE PAYMENT PRO *}
-							<br />
-							<label for="paypal_payment_wpp">
-								<input type="radio" name="paypal_payment_method" id="paypal_payment_wpp" value='{$PayPal_HSS|escape:'htmlall':'UTF-8'}' {if $PayPal_payment_method == $PayPal_HSS}checked="checked"{/if} />
-								{l s='Choose' mod='paypal'} {l s='Website Payments Pro' mod='paypal'}<br />
-								<span class="description">{l s='A professional platform to accept payments through credit cards and PayPal account, covered by seller protection.' mod='paypal'}<br />{l s='Customized payments pages. Monthly subscription of 25€.' mod='paypal'}</span>
-								<p class="toolbox">{l s='Click on the SAVE button only when PayPal has approved your subscription for this product. This process can take up to 3-5 days.' mod='paypal'}</p>
-							</label>
-						{/if}
+						
+
                         <div class="paypal-clear"></div>
                         {if (in_array($PayPal_PPP, $PayPal_allowed_methods))}
 							{* WEBSITE PAYMENT PLUS *}
@@ -203,7 +213,7 @@
 				<div id="signup">
 					{* Use cases 1 - 3 *}
 					<a href="{l s='https://altfarm.mediaplex.com/ad/ck/3484-148727-12439-23?ID=2' mod='paypal'}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u1">{l s='Sign Up' mod='paypal'}</a>
-					<a href="{l s='https://altfarm.mediaplex.com/ad/ck/3484-148727-12439-23?ID=4' mod='paypal'}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u2">{l s='Subscribe' mod='paypal'}</a>
+
 					<a href="{l s='https://altfarm.mediaplex.com/ad/ck/3484-148727-12439-23?ID=3' mod='paypal'}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u3">{l s='Sign Up' mod='paypal'}</a>
 
 					{* Use cases 4 - 6 *}
@@ -213,7 +223,7 @@
 
 					{* Use cases 1 - 3 *}
 					<span class="paypal-signup-content" id="paypal-signup-content-u1">{l s='Once your account is created, come back to this page in order to complete step 3.' mod='paypal'}</span>
-					<span class="paypal-signup-content" id="paypal-signup-content-u2">{l s='Click on the SAVE button only when PayPal has approved your subscription for this product, otherwise you won\'t be able to process payment. This process can take up to 3-5 days.' mod='paypal'}</span>
+
 					<span class="paypal-signup-content" id="paypal-signup-content-u3">{l s='Once your account is created, come back to this page in order to complete step 3.' mod='paypal'}</span>
 
 					{* Use cases 4 - 6 *}
@@ -285,16 +295,6 @@
 						<div class="paypal-clear"></div>
 					</div>
 
-					<div id="integral-credentials" class="paypal-hide">
-						<h4>{l s='Indicate the email you used when you signed up for a PayPal Business account' mod='paypal'}</h4>
-
-						<br />
-
-						<dl>
-							<dt><label for="api_business_account">{l s='API business e-mail' mod='paypal'} : </label></dt>
-							<dd><input type='text' name="api_business_account" id="api_business_account" value="{$PayPal_api_business_account|escape:'html':'UTF-8'}" autocomplete="off" /></dd>
-						</dl>
-					</div>
 
 					<div class="paypal-clear"></div>
 
@@ -303,24 +303,6 @@
 					<p><span class="paypal-bold">2.</span> {l s='Link your PayPal account to a bank account or a credit card : log into your PayPal account and go to "My business setup"' mod='paypal'}</p>
 
 					<h4>{l s='Configuration options' mod='paypal'}</h4>
-					<div id="integral_evolution_solution" class="paypal-hide">
-						<p class="description">
-							{l s='Choose the solution you want to use' mod='paypal'}
-						</p>
-						<input type="radio" name="integral_evolution_solution" id="integral_evolution_solution_iframe" value="1" {if $PayPal_integral_evolution_solution == 1}checked="checked"{/if} /> <label for="integral_evolution_solution_iframe">{l s='Iframe' mod='paypal'}</label><br />
-						<input type="radio" name="integral_evolution_solution" id="integral_evolution_solution_no_iframe" value="0" {if $PayPal_integral_evolution_solution == 0}checked="checked"{/if} /> <label for="integral_evolution_solution_no_iframe">{l s='Full page redirect' mod='paypal'}</label><br/>
-						<div id="integral_evolution_template">
-							<p class="description">
-							{l s='Choose your template' mod='paypal'}
-							</p>
-							<img src="../modules/paypal/views/img/template.png" alt=""><br/>
-							<input type="radio" name="integral_evolution_template" id="integral_evolution_template_A" value="A" {if $PayPal_integral_evolution_template == "A"}checked="checked"{/if}  style="margin-left:60px"/> <label for="integral_evolution_template">A</label> &nbsp;&nbsp;&nbsp;&nbsp;
-							&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="integral_evolution_template" id="integral_evolution_template_B" value="B" {if $PayPal_integral_evolution_template == "B"}checked="checked"{/if} style="margin-left:80px"/> <label for="integral_evolution_template">B</label>&nbsp;&nbsp;&nbsp;&nbsp;
-							&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="integral_evolution_template" id="integral_evolution_template_C" value="C" {if $PayPal_integral_evolution_template == "C"}checked="checked"{/if} style="margin-left:70px" /> <label for="integral_evolution_template">C</label>&nbsp;&nbsp;&nbsp;&nbsp;
-						</div>
-
-
-					</div>
 
 					<div id="express_checkout_shortcut" class="paypal-hide">
 						<p>{l s='Use express checkout shortcut' mod='paypal'}</p>

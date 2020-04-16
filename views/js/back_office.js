@@ -80,40 +80,6 @@ $(document).ready(function () {
                         $('#express_checkout_shortcut').slideDown();
                         $('#in_context_checkout').slideDown();
                         break;
-                    case PayPal_HSS:
-                        $('#signup').slideDown();
-                        $('#paypalplus-credentials').slideUp();
-                        $('#paypal-signup-button-u2').show();
-                        $('#paypal-signup-content-u2').show();
-                        $('#standard-credentials').slideUp();
-                        $('#account').removeClass('paypal-disabled');
-                        $('#standard-credentials').slideUp();
-                        $('#express_checkout_shortcut').slideUp();
-                        $('#integral-credentials').slideDown();
-                        $('#integral_evolution_solution').slideDown();
-                        $('label[for="paypal_payment_wpp"] .toolbox').slideDown();
-                        $('#in_context_checkout').slideUp();
-                        switch (integral_evolution_solution)
-                        {
-                            case "1": //Iframe
-                                $('#integral_evolution_template').slideUp();
-                                break;
-                            case "0": //Redirection
-                                $('#integral_evolution_template').slideDown();
-                                break;
-                        }
-                        break;
-                    case PayPal_ECS:
-                        $('.toolbox').slideUp();
-                        $('#paypalplus-credentials').slideUp();
-                        $('#integral-credentials').slideUp();
-                        $('#standard-credentials').slideDown();
-                        $('#paypal-signup-button-u3').show();
-                        $('#paypal-signup-content-u3').show();
-                        $('#integral_evolution_solution').slideUp();
-                        $('#express_checkout_shortcut').slideDown();
-                        $('#in_context_checkout').slideDown();
-                        break;
                     case PayPal_PPP:
                         $('#standard-credentials').slideUp();
                         $('#integral-credentials').slideUp();
@@ -152,39 +118,6 @@ $(document).ready(function () {
                         $('#express_checkout_shortcut').slideDown();
                         $('#in_context_checkout').slideDown();
                         break;
-                    case PayPal_HSS:
-                        $('#signup').slideDown();
-                        $('#paypalplus-credentials').slideUp();
-                        $('#paypal-signup-button-u5').show();
-                        $('#paypal-signup-content-u5').show();
-                        $('#account').removeClass('paypal-disabled');
-                        $('#standard-credentials').slideUp();
-                        $('#express_checkout_shortcut').slideUp();
-                        $('#integral-credentials').slideDown();
-                        $('#integral_evolution_solution').slideDown();
-                        $('label[for="paypal_payment_wpp"] .toolbox').slideDown();
-                        $('#in_context_checkout').slideUp();
-                        switch (integral_evolution_solution)
-                        {
-                            case "1": //Iframe
-                                $('#integral_evolution_template').slideUp();
-                                break;
-                            case "0": //Redirection
-                                $('#integral_evolution_template').slideDown();
-                                break;
-                        }
-                        break;
-                    case PayPal_ECS:
-                        $('#signup').slideUp();
-                        $('#paypalplus-credentials').slideUp();
-                        $('#integral-credentials').slideUp();
-                        $('#standard-credentials').slideDown();
-                        $('#paypal-signup-button-u6').show();
-                        $('#integral_evolution_solution').slideUp();
-                        $('#express_checkout_shortcut').slideDown();
-                        $('#in_context_checkout').slideDown();
-                        break;
-
                     case PayPal_PPP:
                         $('#standard-credentials').slideUp();
                         $('#integral-credentials').slideUp();
