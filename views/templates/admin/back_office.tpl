@@ -42,6 +42,15 @@
 			</a>
 		</p>
 	</div>
+
+	{if $PayPal_payment_method == $PayPal_ECS}
+		<div class="alert alert-info">
+			<p>
+				{l s='The PayPal Integral payment experience offers today the same conversion, security and simplicity benefits as Option +. So we have merge these options within the module.' mod='paypal'}
+			</p>
+		</div>
+	{/if}
+
 </div>
 
 
@@ -146,17 +155,6 @@
 					</div>
 				{/if}
 				<div class="paypal-clear"></div>
-				{if (in_array($PayPal_ECS, $PayPal_allowed_methods))}
-				<h4 class="inline">{l s='Need PayPal in addition to your existing card processor ?' mod='paypal'}</h4> <img src="{$PayPal_logo.LocalPayPalMarkSmall|escape:'htmlall':'UTF-8'}" />
-				<div class="form-block">
-					{* EXPRESS CHECKOUT SOLUTION *}
-					<label for="paypal_payment_ecs">
-						<input type="radio" name="paypal_payment_method" id="paypal_payment_ecs" value='{$PayPal_ECS|escape:'htmlall':'UTF-8'}' {if $PayPal_payment_method == $PayPal_ECS}checked="checked"{/if} />
-						{l s='Choose' mod='paypal'} {l s='Express Checkout' mod='paypal'}<br />
-						<span class="description">{l s='Boost your online sales by 30%*.' mod='paypal'}</span>
-					</label>
-				</div>
-				{/if}
 
                 {if (in_array($PayPal_PVZ, $PayPal_allowed_methods))}
                     {if version_compare($smarty.const.PHP_VERSION, '5.4.0', '<')}

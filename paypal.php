@@ -676,9 +676,9 @@ class PayPal extends PaymentModule
         $this->context->smarty->assign(array(
             'PayPal_WPS' => (int) WPS,
             'PayPal_HSS' => (int) HSS,
-            'PayPal_ECS' => (int) ECS,
             'PayPal_PPP' => (int) PPP,
             'PayPal_PVZ' => (int) PVZ,
+            'PayPal_ECS' => (int) ECS,
             'PP_errors' => $this->_errors,
             'PayPal_logo' => $this->paypal_logos->getLogos(),
             'PayPal_allowed_methods' => $this->getPaymentMethods(),
