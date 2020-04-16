@@ -101,17 +101,15 @@
 			{* SELECT YOUR SOLUTION *}
 			<div class="box">
 
-				<div class="box right half" id="paypal-call-button">
+				<div class="right half" id="paypal-call-button">
 					<div id="paypal-call" class="box right"><span style="font-weight: bold">{l s='Need help ?' mod='paypal'}</span> <a target="_blank" href="https://www.paypal.com/webapps/mpp/contact-us">{l s='Contact us' mod='paypal'}</a></div>
-					<div id="paypal-call-foonote" class="box right paypal-clear">{l s=' ' mod='paypal'}</div>
 				</div>
 
-				<span class="paypal-section">1</span> <h3 class="inline">{l s='Select your solution' mod='paypal'}</h3> <a href="{l s='https://altfarm.mediaplex.com/ad/ck/3484-148727-12439-23?ID=1' mod='paypal'}" target="_blank">{l s='Learn more' mod='paypal'}</a>
+				<span class="paypal-section">1</span> <h3 class="inline">{l s='Select your solution' mod='paypal'}</h3>
 
-				<br /><br /><br />
 
 				{if (in_array($PayPal_WPS, $PayPal_allowed_methods) || in_array($PayPal_HSS, $PayPal_allowed_methods))}
-					<h4 class="inline">{l s='Need PayPal to process all your card payments ?' mod='paypal'}</h4> <img src="{$PayPal_logo.BackOfficeCards|escape:'htmlall':'UTF-8'}" height="22px"/>
+
 					<div class="paypal-clear"></div>
 					<div class="form-block">
 						{if (in_array($PayPal_WPS, $PayPal_allowed_methods))}
