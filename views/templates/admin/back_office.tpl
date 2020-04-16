@@ -66,7 +66,7 @@
 
 	<div class="box half right">
 		<ul class="tick">
-            <li><span class="paypal-bold">{l s='Get more buyers' mod='paypal'}</span><br />{l s='100 million-plus PayPal accounts worldwide' mod='paypal'}</li>
+            <li><span class="paypal-bold">{l s='Get more buyers' mod='paypal'}</span><br />{l s='300 million-plus PayPal accounts worldwide' mod='paypal'}</li>
             <li><span class="paypal-bold">{l s='Access international buyers' mod='paypal'}</span><br />{l s='190 countries, 25 currencies' mod='paypal'}</li>
             <li><span class="paypal-bold">{l s='Reassure your buyers' mod='paypal'}</span><br />{l s='Buyers don\'t need to share their private data' mod='paypal'}</li>
             <li><span class="paypal-bold">{l s='Accept all major payment method' mod='paypal'}</span></li>
