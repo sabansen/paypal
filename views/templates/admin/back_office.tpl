@@ -67,6 +67,14 @@
 				</li>
 			</ul>
 		</div>
+
+		{if $PayPal_WPS_is_configured}
+			<div class = "alert alert-info">
+				<p>
+					{l s='You have already configured the PayPal Standard payment solution. In order to enable it please verify if all the settings are correct and save them again.' mod='paypal'}
+				</p>
+			</div>
+		{/if}
 	{/if}
 
 </div>
@@ -149,7 +157,7 @@
 							</label>
 						{/if}
                                                 <div class="paypal-clear"></div>
-						
+
 
                         <div class="paypal-clear"></div>
                         {if (in_array($PayPal_PPP, $PayPal_allowed_methods))}

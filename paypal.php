@@ -624,6 +624,13 @@ class PayPal extends PaymentModule
         return $iso2to3[$iso2];
     }
 
+    protected function wpsIsConfigured()
+    {
+        return Configuration::get('PAYPAL_API_USER') &&
+            Configuration::get('PAYPAL_API_PASSWORD') &&
+            Configuration::get('PAYPAL_API_SIGNATURE');
+    }
+
     public function getContent()
     {
         if (Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE') && Tools::usingSecureMode() == false) {
@@ -680,6 +687,7 @@ class PayPal extends PaymentModule
             'PayPal_PVZ' => (int) PVZ,
             'PayPal_ECS' => (int) ECS,
             'PP_errors' => $this->_errors,
+            'PayPal_WPS_is_configured' => $this->wpsIsConfigured(),
             'PayPal_logo' => $this->paypal_logos->getLogos(),
             'PayPal_allowed_methods' => $this->getPaymentMethods(),
             'PayPal_country' => Country::getNameById((int) $english_language_id, (int) $this->default_country),
