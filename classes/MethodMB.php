@@ -257,7 +257,7 @@ class MethodMB extends AbstractMethodPaypal
         // payment approval/ cancellation.
 
         $redirectUrls = new RedirectUrls();
-        $return_url = Context::getContext()->link->getModuleLink($this->name, 'pppValidation', array(), true);
+        $return_url = Context::getContext()->link->getModuleLink($this->name, 'mbValidation', array(), true);
         $redirectUrls->setReturnUrl($return_url)
             ->setCancelUrl(Context::getContext()->link->getPageLink('order', true));
 

@@ -26,30 +26,37 @@
 
 require_once 'AbstractMethodPaypal.php';
 
-use PayPal\CoreComponentTypes\BasicAmountType;
-use PayPal\EBLBaseComponents\DoExpressCheckoutPaymentRequestDetailsType;
-use PayPal\EBLBaseComponents\AddressType;
-use PayPal\EBLBaseComponents\BillingAgreementDetailsType;
-use PayPal\EBLBaseComponents\PaymentDetailsItemType;
-use PayPal\EBLBaseComponents\PaymentDetailsType;
-use PayPal\EBLBaseComponents\SetExpressCheckoutRequestDetailsType;
-use PayPal\PayPalAPI\SetExpressCheckoutReq;
-use PayPal\PayPalAPI\SetExpressCheckoutRequestType;
-use PayPal\PayPalAPI\DoExpressCheckoutPaymentReq;
-use PayPal\PayPalAPI\DoExpressCheckoutPaymentRequestType;
-use PayPal\PayPalAPI\RefundTransactionReq;
-use PayPal\PayPalAPI\RefundTransactionRequestType;
-use PayPal\PayPalAPI\DoCaptureReq;
-use PayPal\PayPalAPI\DoCaptureRequestType;
-use PayPal\PayPalAPI\DoVoidReq;
-use PayPal\PayPalAPI\DoVoidRequestType;
-use PayPal\PayPalAPI\GetExpressCheckoutDetailsRequestType;
-use PayPal\PayPalAPI\GetExpressCheckoutDetailsReq;
-use PayPal\Service\PayPalAPIInterfaceServiceService;
+use PayPal\Auth\OAuthTokenCredential;
+use PayPal\Rest\ApiContext;
+use PayPal\Api\Amount;
+use PayPal\Api\Details;
+use PayPal\Api\Item;
+use PayPal\Api\ItemList;
+use PayPal\Api\Payer;
+use PayPal\Api\PayerInfo;
+use PayPal\Api\Payment;
+use PayPal\Api\RedirectUrls;
+use PayPal\Api\Transaction;
+use PayPal\Api\Patch;
+use PayPal\Api\PatchRequest;
+use PayPal\Api\PaymentExecution;
+use PayPal\Api\Refund;
+use PayPal\Api\RefundRequest;
+use PayPal\Api\Sale;
+use PaypalAddons\classes\API\Builder\AmountBuilder;
+use PaypalAddons\classes\API\Builder\ItemListBuilder;
+use PaypalAddons\classes\API\Builder\PayerBuilder;
+use PaypalAddons\classes\API\Builder\PayerInfoBuilder;
+use PaypalAddons\classes\API\Builder\PaymentBuilder;
+use PaypalAddons\classes\API\Builder\PaymentBuilderEC;
+use PaypalAddons\classes\API\Builder\RedirectUrlsBuilder;
+use PaypalAddons\classes\API\Builder\ShippingAddressBuilder;
+use PaypalAddons\classes\API\Builder\TransactionBuilder;
+use PaypalAddons\classes\API\Builder\WebProfileBuilder;
+use PaypalAddons\classes\API\PaypalApiManager;
 use PaypalAddons\classes\PaypalException;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
-use PayPal\PayPalAPI\GetBalanceReq;
-use PayPal\PayPalAPI\GetBalanceRequestType;
+
 
 /**
  * Class MethodEC.
@@ -91,6 +98,17 @@ class MethodEC extends AbstractMethodPaypal
         'paypal_os_waiting_validation'
     );
 
+    /** payment Object IDl*/
+    protected $paymentId;
+
+    /** @var PaypalApiManager*/
+    protected $paypalApiManager;
+
+    public function __construct()
+    {
+        $this->paypalApiManager = new PaypalApiManager(Context::getContext(), $this);
+    }
+
     /**
      * @param $values array replace for tools::getValues()
      */
@@ -101,6 +119,39 @@ class MethodEC extends AbstractMethodPaypal
                 $this->$key = $value;
             }
         }
+    }
+
+    public function setPaymentId($payemtId)
+    {
+        $this->paymentId = $payemtId;
+        return $this;
+    }
+
+    public function getPaymentId()
+    {
+        return $this->paymentId;
+    }
+
+    public function setPayerId($payerId)
+    {
+        $this->payerId = $payerId;
+        return $this;
+    }
+
+    public function getPayerId()
+    {
+        return $this->payerId;
+    }
+
+    public function setShortCut($shortCut)
+    {
+        $this->short_cut = $shortCut;
+        return $this;
+    }
+
+    public function getShortCut()
+    {
+        return $this->short_cut;
     }
 
     /**
@@ -118,13 +169,9 @@ class MethodEC extends AbstractMethodPaypal
             $mode = (int)$sandbox ? 'SANDBOX' : 'LIVE';
         }
 
-        Configuration::updateValue('PAYPAL_USERNAME_'.$mode, '');
-        Configuration::updateValue('PAYPAL_PSWD_'.$mode, '');
-        Configuration::updateValue('PAYPAL_SIGNATURE_'.$mode, '');
-        Configuration::updateValue('PAYPAL_'.$mode.'_ACCESS', 0);
-        Configuration::updateValue('PAYPAL_MERCHANT_ID_'.$mode, '');
-        Configuration::updateValue('PAYPAL_API_CARD', 0);
-        Configuration::updateValue('PAYPAL_CONNECTION_EC_CONFIGURED', 0);
+        Configuration::updateValue('PAYPAL_EC_CLIENTID_' . $mode, '');
+        Configuration::updateValue('PAYPAL_EC_SECRET_' . $mode, '');
+        Configuration::updateValue('PAYPAL_EC_EXPERIENCE', '');
     }
 
     /**
@@ -132,46 +179,17 @@ class MethodEC extends AbstractMethodPaypal
      */
     public function setConfig($params)
     {
-        $mode = Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
-        $paypal = Module::getInstanceByName($this->name);
+        $mode = Configuration::get('PAYPAL_SANDBOX');
 
-        if (isset($params['api_username']) &&
-            isset($params['api_password']) &&
-            isset($params['api_signature']) &&
-            (isset($params['id_shop']) == false || $params['id_shop'] == Context::getContext()->shop->id)) {
-            Configuration::updateValue('PAYPAL_EXPRESS_CHECKOUT', 1);
-            Configuration::updateValue('PAYPAL_USERNAME_'.$mode, $params['api_username']);
-            Configuration::updateValue('PAYPAL_PSWD_'.$mode, $params['api_password']);
-            Configuration::updateValue('PAYPAL_SIGNATURE_'.$mode, $params['api_signature']);
-            Configuration::updateValue('PAYPAL_'.$mode.'_ACCESS', 1);
-            Configuration::updateValue('PAYPAL_MERCHANT_ID_'.$mode, $params['merchant_id']);
-            Configuration::updateValue('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT', 1);
-            $this->checkCredentials();
-            return;
+        if (Configuration::get('PAYPAL_SANDBOX')) {
+            Configuration::updateValue('PAYPAL_EC_CLIENTID_SANDBOX', Tools::getValue('paypal_ec_clientid'));
+            Configuration::updateValue('PAYPAL_EC_SECRET_SANDBOX', Tools::getValue('paypal_ec_secret'));
+        } else {
+            Configuration::updateValue('PAYPAL_EC_CLIENTID_LIVE', Tools::getValue('paypal_ec_clientid'));
+            Configuration::updateValue('PAYPAL_EC_SECRET_LIVE', Tools::getValue('paypal_ec_secret'));
         }
 
-
-        $country_default = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
-
-        if (!in_array($country_default, $paypal->countriesApiCartUnavailable)) {
-            if (Tools::isSubmit('paypal_config')) {
-                Configuration::updateValue('PAYPAL_API_CARD', $params['paypal_card']);
-            }
-        }
-
-        if (Tools::isSubmit('save_rounding_settings')) {
-            Configuration::updateValue('PAYPAL_SANDBOX', 0);
-            Configuration::updateValue('PS_ROUND_TYPE', Order::ROUND_ITEM);
-            Tools::redirect($paypal->module_link);
-        }
-
-        if (isset($params['method'])) {
-            Configuration::updateValue('PAYPAL_API_CARD', $params['with_card']);
-            if ((isset($params['modify']) && $params['modify']) || $this->isConfigured()) {
-                $response = $paypal->getPartnerInfo();
-                Tools::redirectLink($response);
-            }
-        }
+        $this->checkCredentials($mode);
     }
 
     /**
@@ -180,72 +198,58 @@ class MethodEC extends AbstractMethodPaypal
      */
     public function init()
     {
-        // details about payment
         if ($this->isConfigured() == false) {
-            throw new PaypalException(0, 'Invalid configuration', 'Invalid configuration. Please check your configuration');
-        }
-        $this->_paymentDetails = new PaymentDetailsType();
-        $this->_paymentDetails->ButtonSource = 'PrestaShop_Cart_'.(getenv('PLATEFORM') == 'PSREADY' ? 'Ready_':'').'EC';
-
-        // shipping address
-        if (!$this->short_cut && !Context::getContext()->cart->isVirtualCart()) {
-            $address = $this->_getShippingAddress();
-            $this->_paymentDetails->ShipToAddress = $address;
+            return '';
         }
 
-        /** The total cost of the transaction to the buyer. If shipping cost and tax charges are known, include them in this value.
-         * If not, this value should be the current subtotal of the order. If the transaction includes one or more one-time purchases,
-         * this field must be equal to the sum of the purchases.
-         * If the transaction does not include a one-time purchase such as when you set up a billing agreement for a recurring payment, set this field to 0.
-         */
-        $this->_getPaymentDetails();
-        $this->_paymentDetails->PaymentAction = Tools::ucfirst(Configuration::get('PAYPAL_API_INTENT'));
-        $setECReqDetails = new SetExpressCheckoutRequestDetailsType();
-        $setECReqDetails->PaymentDetails[0] = $this->_paymentDetails;
-        $setECReqDetails->CancelURL = Context::getContext()->link->getPageLink('order', true);
-        $setECReqDetails->ReturnURL = Context::getContext()->link->getModuleLink($this->name, 'ecValidation', array(), true);
-        $setECReqDetails->NoShipping = 1;
-        $setECReqDetails->AddressOverride = 1;
-        $setECReqDetails->ReqConfirmShipping = 0;
-        $setECReqDetails->LandingPage = ($this->credit_card ? 'Billing' : 'Login');
+        /** @var $payment Payment*/
+        $payment = $this->paypalApiManager->get($this->getBuilderClass('payment'))->build();
+        $payment->create($this->_getCredentialsInfo());
 
+        // ### Get redirect url
+        // The API response provides the url that you must redirect
+        // the buyer to. Retrieve the url from the $payment->getApprovalLink() method
+        $this->setPaymentId($payment->id);
+        return $payment->getApprovalLink();
+    }
 
-        if ($this->short_cut) {
-            $setECReqDetails->ReturnURL = Context::getContext()->link->getModuleLink($this->name, 'ecScOrder', array(), true);
-            $setECReqDetails->NoShipping = 2;
+    /**
+     * @param String $key
+     * @return String
+     */
+    public function getBuilderClass($key)
+    {
+        switch ($key) {
+            case 'payment':
+                $builder = PaymentBuilderEC::class;
+                break;
+            case 'itemList':
+                $builder = ItemListBuilder::class;
+                break;
+            case 'amount':
+                $builder = AmountBuilder::class;
+                break;
+            case 'redirectUrls':
+                $builder = RedirectUrlsBuilder::class;
+                break;
+            case 'payer':
+                $builder = PayerBuilder::class;
+                break;
+            case 'payerInfo':
+                $builder = PayerInfoBuilder::class;
+                break;
+            case 'shippingAddress':
+                $builder = ShippingAddressBuilder::class;
+                break;
+            case 'transaction':
+                $builder = TransactionBuilder::class;
+                break;
+            case 'webProfile':
+                $builder = WebProfileBuilder::class;
+                break;
         }
 
-        if (Configuration::get('PAYPAL_CONFIG_BRAND')) {
-            $setECReqDetails->BrandName = Configuration::get('PAYPAL_CONFIG_BRAND');
-        }
-        if (file_exists(Configuration::get('PAYPAL_CONFIG_LOGO'))) {
-            $setECReqDetails->cppheaderimage = Context::getContext()->link->getBaseLink(Context::getContext()->shop->id, true).'modules/paypal/views/img/p_logo_'.Context::getContext()->shop->id.'.png';
-        }
-
-        // Advanced options
-        $setECReqDetails->AllowNote = 0;
-        $setECReqType = new SetExpressCheckoutRequestType();
-        $setECReqType->SetExpressCheckoutRequestDetails = $setECReqDetails;
-
-        $setECReq = new SetExpressCheckoutReq();
-        $setECReq->SetExpressCheckoutRequest = $setECReqType;
-
-        /*
-         * 	 ## Creating service wrapper object
-        Creating service wrapper object to make API call and loading
-        Configuration::getAcctAndConfig() returns array that contains credential and config parameters
-        */
-        $paypalService = new PayPalAPIInterfaceServiceService($this->_getCredentialsInfo());
-        /* wrap API method calls on the service object with a try catch */
-
-        $payment = $paypalService->SetExpressCheckout($setECReq);
-
-        //You are not signed up to accept payment for digitally delivered goods.
-        if (isset($payment->Errors)) {
-            throw new PaypalException($payment->Errors[0]->ErrorCode, $payment->Errors[0]->ShortMessage, $payment->Errors[0]->LongMessage);
-        }
-        $this->token = $payment->Token;
-        return $this->redirectToAPI('setExpressCheckout');
+        return $builder;
     }
 
     /**
@@ -465,25 +469,35 @@ class MethodEC extends AbstractMethodPaypal
         if ($mode_order === null) {
             $mode_order = (int) Configuration::get('PAYPAL_SANDBOX');
         }
-        $params = array();
         switch ($mode_order) {
             case 0:
-                $params['acct1.UserName'] = Configuration::get('PAYPAL_USERNAME_LIVE');
-                $params['acct1.Password'] = Configuration::get('PAYPAL_PSWD_LIVE');
-                $params['acct1.Signature'] = Configuration::get('PAYPAL_SIGNATURE_LIVE');
-                $params['mode'] = $mode_order ? 'sandbox' : 'live';
-                $params['log.LogEnabled'] = false;
+                $apiContext = new ApiContext(
+                    new OAuthTokenCredential(
+                        Configuration::get('PAYPAL_EC_CLIENTID_LIVE'),
+                        Configuration::get('PAYPAL_EC_SECRET_LIVE')
+                    )
+                );
                 break;
             case 1:
-                $params['acct1.UserName'] = Configuration::get('PAYPAL_USERNAME_SANDBOX');
-                $params['acct1.Password'] = Configuration::get('PAYPAL_PSWD_SANDBOX');
-                $params['acct1.Signature'] = Configuration::get('PAYPAL_SIGNATURE_SANDBOX');
-                $params['mode'] = $mode_order ? 'sandbox' : 'live';
-                $params['log.LogEnabled'] = false;
+                $apiContext = new ApiContext(
+                    new OAuthTokenCredential(
+                        Configuration::get('PAYPAL_EC_CLIENTID_SANDBOX'),
+                        Configuration::get('PAYPAL_EC_SECRET_SANDBOX')
+                    )
+                );
                 break;
         }
-        $params['http.headers.PayPal-Partner-Attribution-Id'] = getenv('PLATEFORM') == 'PSREAD' ? 'PrestaShop_Cart_Ready_EC' : 'PrestaShop_Cart_EC';
-        return $params;
+
+        $apiContext->setConfig(
+            array(
+                'mode' => $mode_order ? 'sandbox' : 'live',
+                'log.LogEnabled' => false,
+                'cache.enabled' => true,
+            )
+        );
+
+        $apiContext->addRequestHeader('PayPal-Partner-Attribution-Id', (getenv('PLATEFORM') == 'PSREAD') ? 'PrestaShop_Cart_Ready_EC' : 'PrestaShop_Cart_EC');
+        return $apiContext;
     }
 
     /**
@@ -520,51 +534,45 @@ class MethodEC extends AbstractMethodPaypal
             throw new Exception('Customer is not loaded object');
         }
 
-        $this->_paymentDetails = new PaymentDetailsType();
-        $this->_paymentDetails->ButtonSource = 'PrestaShop_Cart_'.(getenv('PLATEFORM') == 'PSREADY' ? 'Ready_':'').'EC';
-        $this->_paymentDetails->Custom = $this->getCustomFieldInformation($cart);
-
-        if (!Context::getContext()->cart->isVirtualCart()) {
-            $address = $this->_getShippingAddress();
-            $this->_paymentDetails->ShipToAddress = $address;
+        if ($this->getPayerId() == false) {
+            throw new Exception('Payer ID isn\'t setted');
         }
 
-        $this->_getPaymentDetails();
-
-        $DoECRequestDetails = new DoExpressCheckoutPaymentRequestDetailsType();
-        $DoECRequestDetails->PayerID = $this->short_cut ? $context->cookie->paypal_ecs_payerid : $this->payerId;
-        $DoECRequestDetails->Token = $this->short_cut ? $context->cookie->paypal_ecs : $this->payment_token;
-        $DoECRequestDetails->ButtonSource = 'PrestaShop_Cart_'.(getenv('PLATEFORM') == 'PSREADY' ? 'Ready_':'').'EC';
-        $DoECRequestDetails->PaymentAction = Tools::ucfirst(Configuration::get('PAYPAL_API_INTENT'));
-        $DoECRequestDetails->PaymentDetails[0] = $this->_paymentDetails;
-
-        $DoECRequest = new DoExpressCheckoutPaymentRequestType();
-        $DoECRequest->DoExpressCheckoutPaymentRequestDetails = $DoECRequestDetails;
-
-        $DoECReq = new DoExpressCheckoutPaymentReq();
-        $DoECReq->DoExpressCheckoutPaymentRequest = $DoECRequest;
-
-        $paypalService = new PayPalAPIInterfaceServiceService($this->_getCredentialsInfo());
-
-        $exec_payment = $paypalService->DoExpressCheckoutPayment($DoECReq);
-
-        if (isset($exec_payment->Errors)) {
-            if ($exec_payment->Errors[0]->ErrorCode == 10486) {
-                $this->token = $this->payment_token;
-            }
-            throw new PaypalException($exec_payment->Errors[0]->ErrorCode, $exec_payment->Errors[0]->ShortMessage, $exec_payment->Errors[0]->LongMessage);
+        if ($this->getPaymentId() == false) {
+            throw new Exception('Payment ID isn\'t setted');
         }
 
-        $this->setDetailsTransaction($exec_payment->DoExpressCheckoutPaymentResponseDetails);
+        // Get the payment Object by passing paymentId
+        // payment id was previously stored in session in
+        // CreatePaymentUsingPayPal.php
+        $payment = Payment::get($this->getPaymentId(), $this->_getCredentialsInfo());
 
+        // ### Payment Execute
+        // PaymentExecution object includes information necessary
+        // to execute a PayPal account payment.
+        // The payer_id is added to the request query parameters
+        // when the user is redirected from paypal back to your site
+        $execution = new PaymentExecution();
+        $execution->setPayerId($this->getPayerId());
+
+        // ### Optional Changes to Amount
+        // If you wish to update the amount that you wish to charge the customer,
+        // based on the shipping address or any other reason, you could
+        // do that by passing the transaction object with just `amount` field in it.
+        $exec_payment = $payment->execute($execution, $this->_getCredentialsInfo());
+        $this->setDetailsTransaction($exec_payment);
         $currency = $context->currency;
-        $payment_info = $exec_payment->DoExpressCheckoutPaymentResponseDetails->PaymentInfo[0];
-
-        $total = $payment_info->GrossAmount->value;
+        $total = (float)$exec_payment->transactions[0]->amount->total;
         $paypal = Module::getInstanceByName($this->name);
         $order_state = $this->getOrderStatus();
-
-        $paypal->validateOrder($cart->id, $order_state, $total, $this->getPaymentMethod(), null, $this->getDetailsTransaction(), (int)$currency->id, false, $customer->secure_key);
+        $paypal->validateOrder($cart->id,
+            $order_state, $total,
+            $this->getPaymentMethod(),
+            null,
+            $this->getDetailsTransaction(),
+            (int)$currency->id,
+            false,
+            $customer->secure_key);
     }
 
     /**
@@ -591,16 +599,17 @@ class MethodEC extends AbstractMethodPaypal
 
     public function setDetailsTransaction($transaction)
     {
-        $payment_info = $transaction->PaymentInfo[0];
+        $payment_info = $transaction->transactions[0];
         $this->transaction_detail = array(
             'method' => 'EC',
-            'currency' => $payment_info->GrossAmount->currencyID,
-            'transaction_id' => pSQL($payment_info->TransactionID),
-            'payment_status' => $payment_info->PaymentStatus,
-            'payment_method' => $payment_info->PaymentType,
-            'id_payment' => pSQL($transaction->Token),
-            'capture' =>$payment_info->PaymentStatus == "Pending" && $payment_info->PendingReason == "authorization" ? true : false,
-            'date_transaction' => $this->getDateTransaction()
+            'currency' => $payment_info->amount->currency,
+            'transaction_id' => pSQL($payment_info->related_resources[0]->sale->id),
+            'payment_status' => $transaction->state,
+            'payment_method' => $transaction->payer->payment_method,
+            'id_payment' => pSQL($transaction->id),
+            'capture' => false,
+            'payment_tool' => isset($transaction->payment_instruction)?$transaction->payment_instruction->instruction_type:'',
+            'date_transaction' => $this->getDateTransaction($transaction)
         );
     }
 
@@ -858,35 +867,49 @@ class MethodEC extends AbstractMethodPaypal
      */
     public function isConfigured($mode = null)
     {
-        return (int)Configuration::get('PAYPAL_CONNECTION_EC_CONFIGURED') === 1;
+        return (bool)Configuration::get('PAYPAL_EC_EXPERIENCE');
     }
 
     public function checkCredentials($mode = null)
     {
-        $paypalService = new PayPalAPIInterfaceServiceService($this->_getCredentialsInfo($mode));
-        $getBalanceReq = new GetBalanceReq();
-        $getBalanceReq->GetBalanceRequest = new GetBalanceRequestType();
-        $module = Module::getInstanceByName('paypal');
-
-        try {
-            $response = $paypalService->GetBalance($getBalanceReq);
-        } catch (Exception $e) {
-            $this->errors[] = $module->l('An error occurred while creating your web experience. Check your credentials.',  get_class($this));
-            Configuration::updateValue('PAYPAL_CONNECTION_EC_CONFIGURED', 0);
-            return;
-        }
-
-        if ($response->Ack == 'Success') {
-            Configuration::updateValue('PAYPAL_CONNECTION_EC_CONFIGURED', 1);
+        $experience_web = $this->createWebExperience();
+        if ($experience_web) {
+            Configuration::updateValue('PAYPAL_EC_EXPERIENCE', $experience_web->id);
         } else {
-            $this->errors[] = $module->l('An error occurred while creating your web experience. Check your credentials.', get_class($this));
-            Configuration::updateValue('PAYPAL_CONNECTION_EC_CONFIGURED', 0);
+            Configuration::updateValue('PAYPAL_EC_EXPERIENCE', '');
         }
+    }
+
+    /**
+     * Customize payment experience
+     * @return bool|\PayPal\Api\CreateProfileResponse
+     */
+    public function createWebExperience()
+    {
+        $mode = Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
+
+        if (!Configuration::get('PAYPAL_EC_CLIENTID_' . $mode) || !Configuration::get('PAYPAL_EC_SECRET_' . $mode)) {
+            return false;
+        }
+
+        $webProfile = $this->paypalApiManager->get('webProfile')->build();
+
+        // For Sample Purposes Only.
+        try {
+            // Use this call to create a profile.
+            $createProfileResponse = $webProfile->create($this->_getCredentialsInfo());
+        } catch (Exception $ex) {
+            $module = Module::getInstanceByName('paypal');
+            $this->errors[] = $module->l('An error occurred while creating your web experience. Check your credentials.', get_class($this));
+            return false;
+        }
+
+        return $createProfileResponse;
     }
 
     public function getTplVars()
     {
-        $urlParameters = array(
+        /*$urlParameters = array(
             'paypal_set_config' => 1,
             'method' => 'EC',
             'with_card' => 0,
@@ -915,7 +938,21 @@ class MethodEC extends AbstractMethodPaypal
             $tpl_vars['mode'] = 'LIVE';
         }
 
-        return $tpl_vars;
+        return $tpl_vars;*/
+
+        $tplVars = array();
+
+        if ((int)Configuration::get('PAYPAL_SANDBOX')) {
+            $tplVars['paypal_ec_clientid'] = Configuration::get('PAYPAL_EC_CLIENTID_SANDBOX');
+            $tplVars['paypal_ec_secret'] = Configuration::get('PAYPAL_EC_SECRET_SANDBOX');
+        } else {
+            $tplVars['paypal_ec_clientid'] = Configuration::get('PAYPAL_EC_CLIENTID_LIVE');
+            $tplVars['paypal_ec_secret'] = Configuration::get('PAYPAL_EC_SECRET_LIVE');
+        }
+
+        $tplVars['accountConfigured'] = $this->isConfigured();
+
+        return $tplVars;
     }
 
     public function getAdvancedFormInputs()
@@ -953,5 +990,14 @@ class MethodEC extends AbstractMethodPaypal
         }
 
         return $inputs;
+    }
+
+    public function getPaymentReturnUrl()
+    {
+        if ($this->short_cut) {
+            return Context::getContext()->link->getModuleLink($this->name, 'ecScOrder', array(), true);
+        } else {
+            return Context::getContext()->link->getModuleLink($this->name, 'ecValidation', array(), true);
+        }
     }
 }

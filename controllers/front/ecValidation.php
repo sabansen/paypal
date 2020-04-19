@@ -36,9 +36,6 @@ class PaypalEcValidationModuleFrontController extends PaypalAbstarctModuleFrontC
     public function init()
     {
         parent::init();
-        $this->values['short_cut'] = Tools::getvalue('short_cut');
-        $this->values['payerId'] = Tools::getvalue('PayerID');
-        $this->values['payment_token'] = Tools::getvalue('token');
     }
     /**
      * @see FrontController::postProcess()
@@ -46,9 +43,11 @@ class PaypalEcValidationModuleFrontController extends PaypalAbstarctModuleFrontC
     public function postProcess()
     {
         $method_ec = AbstractMethodPaypal::load('EC');
+        $method_ec->setPayerId(Tools::getValue('PayerID'))
+            ->setPaymentId(Tools::getValue('paymentId'))
+            ->setShortCut(Tools::getValue('short_cut'));
         $paypal = Module::getInstanceByName($this->name);
         try {
-            $method_ec->setParameters($this->values);
             $method_ec->validation();
             $cart = Context::getContext()->cart;
             $customer = new Customer($cart->id_customer);
