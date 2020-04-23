@@ -53,6 +53,7 @@ use PaypalAddons\classes\API\Builder\ShippingAddressBuilder;
 use PaypalAddons\classes\API\Builder\TransactionBuilder;
 use PaypalAddons\classes\API\Builder\WebProfileBuilder;
 use PaypalAddons\classes\API\PaypalApiManager;
+use PaypalAddons\classes\API\PaypalOrderRefund;
 use PaypalAddons\classes\PaypalException;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 
@@ -684,44 +685,9 @@ class MethodEC extends AbstractMethodPaypal
      */
     public function refund($paypal_order)
     {
-        $id_paypal_order = $paypal_order->id;
-        $capture = PaypalCapture::loadByOrderPayPalId($id_paypal_order);
-
-        $id_transaction = Validate::isLoadedObject($capture) ? $capture->id_capture : $paypal_order->id_transaction;
-
-        $refundTransactionReqType = new RefundTransactionRequestType();
-        $refundTransactionReqType->TransactionID = $id_transaction;
-        $refundTransactionReqType->RefundType = 'Full';
-        $refundTransactionReq = new RefundTransactionReq();
-        $refundTransactionReq->RefundTransactionRequest = $refundTransactionReqType;
-
-        $paypalService = new PayPalAPIInterfaceServiceService($this->_getCredentialsInfo($paypal_order->sandbox));
-        $response = $paypalService->RefundTransaction($refundTransactionReq);
-
-        if ($response instanceof PayPal\PayPalAPI\RefundTransactionResponseType) {
-            if (isset($response->Errors)) {
-                $result = array(
-                    'status' => $response->Ack,
-                    'error_code' => $response->Errors[0]->ErrorCode,
-                    'error_message' => $response->Errors[0]->LongMessage,
-                );
-                if (Validate::isLoadedObject($capture) && $response->Errors[0]->ErrorCode == "10009") {
-                    $result['already_refunded'] = true;
-                }
-            } else {
-                $result =  array(
-                    'success' => true,
-                    'refund_id' => $response->RefundTransactionID,
-                    'status' => $response->Ack,
-                    'total_amount' => $response->TotalRefundedAmount->value,
-                    'net_amount' => $response->NetRefundAmount->value,
-                    'currency' => $response->TotalRefundedAmount->currencyID,
-                    'date_transaction' => $this->getDateTransaction()
-                );
-            }
-        }
-
-        return $result;
+        $paypalRefund = new PaypalOrderRefund($paypal_order);
+        $response = $paypalRefund->execute();
+        return $response;
     }
 
     /**

@@ -1383,54 +1383,31 @@ class PayPal extends \PaymentModule
                 Tools::redirect($_SERVER['HTTP_REFERER'] . '&not_payed_capture=1');
             }
 
-            try {
-                $refund_response = $method->refund($orderPayPal);
-            } catch (PayPal\Exception\PPConnectionException $e) {
-                $ex_detailed_message = $this->l('Error connecting to ') . $e->getUrl();
-            } catch (PayPal\Exception\PPMissingCredentialException $e) {
-                $ex_detailed_message = $e->errorMessage();
-            } catch (PayPal\Exception\PPConfigurationException $e) {
-                $ex_detailed_message = $this->l('Invalid configuration. Please check your configuration file');
-            } catch (PayPal\Exception\PayPalConnectionException $e) {
-                $decoded_message = Tools::jsonDecode($e->getData());
-                $ex_detailed_message = $decoded_message->message;
-            } catch (PayPal\Exception\PayPalInvalidCredentialException $e) {
-                $ex_detailed_message = $e->errorMessage();
-            } catch (PayPal\Exception\PayPalMissingCredentialException $e) {
-                $ex_detailed_message = $this->l('Invalid configuration. Please check your configuration file');
-            } catch (Exception $e) {
-                $ex_detailed_message = $e->errorMessage();
-            }
+            /** @var \PaypalAddons\classes\API\Response\PaypalOrderRefundResponse*/
+            $refundResponse = $method->refund($orderPayPal);
 
-            if (isset($refund_response) && isset($refund_response['success']) && $refund_response['success']) {
+            if ($refundResponse->isSuccess()) {
                 $capture->result = 'refunded';
                 $orderPayPal->payment_status = 'refunded';
-                foreach ($refund_response as $key => $msg) {
-                    $message .= $key . " : " . $msg . ";\r";
-                }
+                $capture->save();
+                $orderPayPal->save();
+
                 ProcessLoggerHandler::openLogger();
                 ProcessLoggerHandler::logInfo(
-                    $message,
-                    isset($refund_response['refund_id']) ? $refund_response['refund_id'] : null,
+                    $refundResponse->getMessage(),
+                    $refundResponse->getRefundId(),
                     $orderPayPal->id_order,
                     $orderPayPal->id_cart,
                     $this->context->shop->id,
                     $orderPayPal->payment_tool,
                     $orderPayPal->sandbox,
-                    $refund_response['date_transaction']
+                    $refundResponse->getDateTransaction()
                 );
                 ProcessLoggerHandler::closeLogger();
-            }
-
-            if (isset($refund_response) && isset($refund_response['success']) && $refund_response['success']) {
-                $capture->save();
-                $orderPayPal->save();
-            }
-
-            if ($ex_detailed_message) {
+            } else {
                 ProcessLoggerHandler::openLogger();
                 ProcessLoggerHandler::logError(
-                    $ex_detailed_message,
+                    $refundResponse->getError()->getMessage(),
                     null,
                     $orderPayPal->id_order,
                     $orderPayPal->id_cart,
@@ -1439,24 +1416,6 @@ class PayPal extends \PaymentModule
                     $orderPayPal->sandbox
                 );
                 ProcessLoggerHandler::closeLogger();
-            }
-
-            if (isset($refund_response) && !isset($refund_response['already_refunded']) && !isset($refund_response['success'])) {
-                foreach ($refund_response as $key => $msg) {
-                    $message .= $key . " : " . $msg . ";\r";
-                }
-                ProcessLoggerHandler::openLogger();
-                ProcessLoggerHandler::logError(
-                    $message,
-                    null,
-                    $orderPayPal->id_order,
-                    $orderPayPal->id_cart,
-                    $this->context->shop->id,
-                    $orderPayPal->payment_tool,
-                    $orderPayPal->sandbox
-                );
-                ProcessLoggerHandler::closeLogger();
-                Tools::redirect($_SERVER['HTTP_REFERER'] . '&error_refund=1');
             }
         }
 
