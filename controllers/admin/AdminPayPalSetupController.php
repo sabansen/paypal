@@ -161,7 +161,7 @@ class AdminPayPalSetupController extends AdminPayPalController
                         'name' => $this->l('Sale')
                     ),
                     array(
-                        'id' => 'authorization',
+                        'id' => 'authorize',
                         'name' => $this->l('Authorize')
                     )
                 ),

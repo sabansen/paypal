@@ -57,7 +57,7 @@ class ItemListBuilder extends BuilderAbstract
      */
     protected function getDiscountItmes($currency)
     {
-        $totalDiscounts = $this->context->cart->getOrderTotal(true, \Cart::ONLY_DISCOUNTS);
+        $totalDiscounts = $this->context->cart->getOrderTotal(false, \Cart::ONLY_DISCOUNTS);
         $items = [];
         if ($totalDiscounts > 0) {
             $discountItem = new Item();

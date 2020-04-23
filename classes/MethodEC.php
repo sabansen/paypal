@@ -48,7 +48,6 @@ use PaypalAddons\classes\API\Builder\ItemListBuilder;
 use PaypalAddons\classes\API\Builder\PayerBuilder;
 use PaypalAddons\classes\API\Builder\PayerInfoBuilder;
 use PaypalAddons\classes\API\Builder\PaymentBuilder;
-use PaypalAddons\classes\API\Builder\PaymentBuilderEC;
 use PaypalAddons\classes\API\Builder\RedirectUrlsBuilder;
 use PaypalAddons\classes\API\Builder\ShippingAddressBuilder;
 use PaypalAddons\classes\API\Builder\TransactionBuilder;
@@ -90,6 +89,8 @@ class MethodEC extends AbstractMethodPaypal
     private $payerId;
 
     protected $payment_method = 'PayPal';
+
+    protected $transaction_detail;
 
     public $errors = array();
 
@@ -221,7 +222,7 @@ class MethodEC extends AbstractMethodPaypal
     {
         switch ($key) {
             case 'payment':
-                $builder = PaymentBuilderEC::class;
+                $builder = PaymentBuilder::class;
                 break;
             case 'itemList':
                 $builder = ItemListBuilder::class;
@@ -600,17 +601,25 @@ class MethodEC extends AbstractMethodPaypal
     public function setDetailsTransaction($transaction)
     {
         $payment_info = $transaction->transactions[0];
-        $this->transaction_detail = array(
+        $transaction_detail = array(
             'method' => 'EC',
             'currency' => $payment_info->amount->currency,
-            'transaction_id' => pSQL($payment_info->related_resources[0]->sale->id),
             'payment_status' => $transaction->state,
             'payment_method' => $transaction->payer->payment_method,
             'id_payment' => pSQL($transaction->id),
-            'capture' => false,
             'payment_tool' => isset($transaction->payment_instruction)?$transaction->payment_instruction->instruction_type:'',
             'date_transaction' => $this->getDateTransaction($transaction)
         );
+
+        if ($transaction->intent == 'authorize') {
+            $transaction_detail['capture'] = true;
+            $transaction_detail['transaction_id'] = pSQL($payment_info->related_resources[0]->authorization->id);
+        } else {
+            $transaction_detail['capture'] = false;
+            $transaction_detail['transaction_id'] = pSQL($payment_info->related_resources[0]->sale->id);
+        }
+
+        $this->transaction_detail = $transaction_detail;
     }
 
     public function getDateTransaction()
@@ -892,7 +901,7 @@ class MethodEC extends AbstractMethodPaypal
             return false;
         }
 
-        $webProfile = $this->paypalApiManager->get('webProfile')->build();
+        $webProfile = $this->paypalApiManager->get($this->getBuilderClass('webProfile'))->build();
 
         // For Sample Purposes Only.
         try {
@@ -999,5 +1008,15 @@ class MethodEC extends AbstractMethodPaypal
         } else {
             return Context::getContext()->link->getModuleLink($this->name, 'ecValidation', array(), true);
         }
+    }
+
+    public function getExperienceProfileId()
+    {
+        return Configuration::get('PAYPAL_EC_EXPERIENCE');
+    }
+
+    public function getIntent()
+    {
+        return Configuration::get('PAYPAL_API_INTENT');
     }
 }

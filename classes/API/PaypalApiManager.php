@@ -10,7 +10,6 @@ use PaypalAddons\classes\API\Builder\ItemListBuilder;
 use PaypalAddons\classes\API\Builder\PayerBuilder;
 use PaypalAddons\classes\API\Builder\PayerInfoBuilder;
 use PaypalAddons\classes\API\Builder\PaymentBuilder;
-use PaypalAddons\classes\API\Builder\PaymentBuilderEC;
 use PaypalAddons\classes\API\Builder\RedirectUrlsBuilder;
 use PaypalAddons\classes\API\Builder\ShippingAddressBuilder;
 use PaypalAddons\classes\API\Builder\TransactionBuilder;

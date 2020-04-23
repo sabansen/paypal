@@ -32,10 +32,11 @@ class PaymentBuilder extends BuilderAbstract
     public function build()
     {
         $payment = new Payment();
-        $payment->setIntent('sale')
+        $payment->setIntent($this->method->getIntent())
             ->setPayer($this->getPayer())
             ->setTransactions([$this->getTransaction()])
-            ->setRedirectUrls($this->getRedirectUrls());
+            ->setRedirectUrls($this->getRedirectUrls())
+            ->setExperienceProfileId($this->method->getExperienceProfileId());
 
         return $payment;
     }
