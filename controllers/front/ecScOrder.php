@@ -25,8 +25,9 @@
  *
  */
 
-include_once _PS_MODULE_DIR_.'paypal/classes/AbstractMethodPaypal.php';
 include_once _PS_MODULE_DIR_.'paypal/controllers/front/abstract.php';
+
+use PaypalAddons\classes\AbstractMethodPaypal;
 
 /**
  * Update PrestaShop Order after return from PayPal

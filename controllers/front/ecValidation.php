@@ -25,8 +25,9 @@
  *
  */
 
-include_once _PS_MODULE_DIR_.'paypal/classes/AbstractMethodPaypal.php';
 include_once _PS_MODULE_DIR_.'paypal/controllers/front/abstract.php';
+
+use PaypalAddons\classes\AbstractMethodPaypal;
 
 /**
  * Validate EC payment
@@ -44,7 +45,7 @@ class PaypalEcValidationModuleFrontController extends PaypalAbstarctModuleFrontC
     {
         $method_ec = AbstractMethodPaypal::load('EC');
         $method_ec->setPayerId(Tools::getValue('PayerID'))
-            ->setPaymentId(Tools::getValue('paymentId'))
+            ->setPaymentId(Tools::getValue('token'))
             ->setShortCut(Tools::getValue('short_cut'));
         $paypal = Module::getInstanceByName($this->name);
         try {

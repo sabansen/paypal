@@ -27,6 +27,7 @@ include_once(_PS_MODULE_DIR_.'paypal/vendor/autoload.php');
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use PaypalAddons\classes\AdminPayPalController;
+use PaypalAddons\classes\AbstractMethodPaypal;
 
 class AdminPayPalSetupController extends AdminPayPalController
 {
@@ -298,7 +299,7 @@ class AdminPayPalSetupController extends AdminPayPalController
             'redirectUrl' => ''
         );
         if (Tools::getValue('token') == Tools::getAdminTokenLite($this->controller_name)) {
-            $method = \AbstractMethodPaypal::load($this->method);
+            $method = AbstractMethodPaypal::load($this->method);
             $method->logOut();
             $content['status'] = true;
             $content['redirectUrl'] = $this->context->link->getAdminLink($this->controller_name);

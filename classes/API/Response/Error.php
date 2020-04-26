@@ -4,7 +4,7 @@
 namespace PaypalAddons\classes\API\Response;
 
 
-class Error implements ErrorInterface
+class Error
 {
     protected $errorCode;
 

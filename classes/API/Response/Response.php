@@ -4,12 +4,12 @@
 namespace PaypalAddons\classes\API\Response;
 
 
-class Response implements ResponseInterface
+class Response
 {
     /** @var $success bool*/
     protected $success;
 
-    /** @var $error ErrorInterface*/
+    /** @var $error Error*/
     protected $error;
 
     protected $data;
@@ -45,7 +45,7 @@ class Response implements ResponseInterface
         return $this;
     }
 
-    public function setError(ErrorInterface $error)
+    public function setError(Error $error)
     {
         $this->error = $error;
         return $this;

@@ -24,7 +24,6 @@
  *
  */
 
-require_once 'AbstractMethodPaypal.php';
 
 use PayPal\Auth\OAuthTokenCredential;
 use PayPal\Rest\ApiContext;
@@ -46,6 +45,7 @@ use PayPal\Api\Sale;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use PaypalAddons\services\ServicePaypalVaulting;
 use \PayPal\Api\ShippingAddress;
+use PaypalAddons\classes\AbstractMethodPaypal;
 
 /**
  * Class MethodPPP

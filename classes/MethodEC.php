@@ -24,7 +24,6 @@
  *
  */
 
-require_once 'AbstractMethodPaypal.php';
 
 use PayPal\Auth\OAuthTokenCredential;
 use PayPal\Rest\ApiContext;
@@ -43,6 +42,7 @@ use PayPal\Api\PaymentExecution;
 use PayPal\Api\Refund;
 use PayPal\Api\RefundRequest;
 use PayPal\Api\Sale;
+use PaypalAddons\classes\API\Action\PaypalOrderRefund;
 use PaypalAddons\classes\API\Builder\AmountBuilder;
 use PaypalAddons\classes\API\Builder\ItemListBuilder;
 use PaypalAddons\classes\API\Builder\PayerBuilder;
@@ -53,8 +53,10 @@ use PaypalAddons\classes\API\Builder\ShippingAddressBuilder;
 use PaypalAddons\classes\API\Builder\TransactionBuilder;
 use PaypalAddons\classes\API\Builder\WebProfileBuilder;
 use PaypalAddons\classes\API\PaypalApiManager;
-use PaypalAddons\classes\API\PaypalOrderRefund;
+use PaypalAddons\classes\API\PaypalApiSdkBuilerFactory;
+use PaypalAddons\classes\API\PaypalClient;
 use PaypalAddons\classes\PaypalException;
+use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 
 
@@ -67,15 +69,6 @@ class MethodEC extends AbstractMethodPaypal
 {
     /** @var string token. for in-context */
     public $token;
-
-    /** @var object PaymentDetailsType */
-    private $_paymentDetails;
-
-    /** @var float total item amount HT */
-    private $_itemTotalValue = 0;
-
-    /** @var float total cart taxes */
-    private $_taxTotalValue = 0;
 
     /** @var boolean pay with card without pp account */
     public $credit_card;
@@ -103,12 +96,20 @@ class MethodEC extends AbstractMethodPaypal
     /** payment Object IDl*/
     protected $paymentId;
 
-    /** @var PaypalApiManager*/
+    /** @var bool*/
+    protected $isSandbox;
+
+    /** @var string*/
+    protected $clientId;
+
+    /** @var string*/
+    protected $secret;
+
     protected $paypalApiManager;
 
     public function __construct()
     {
-        $this->paypalApiManager = new PaypalApiManager(Context::getContext(), $this);
+        $this->paypalApiManager = new PaypalApiManager($this);
     }
 
     /**
@@ -173,7 +174,7 @@ class MethodEC extends AbstractMethodPaypal
 
         Configuration::updateValue('PAYPAL_EC_CLIENTID_' . $mode, '');
         Configuration::updateValue('PAYPAL_EC_SECRET_' . $mode, '');
-        Configuration::updateValue('PAYPAL_EC_EXPERIENCE', '');
+        Configuration::updateValue('PAYPAL_CONNECTION_EC_CONFIGURED', 0);
     }
 
     /**
@@ -204,90 +205,16 @@ class MethodEC extends AbstractMethodPaypal
             return '';
         }
 
-        /** @var $payment Payment*/
-        $payment = $this->paypalApiManager->get($this->getBuilderClass('payment'))->build();
-        $payment->create($this->_getCredentialsInfo());
+        /** @var $payment \PaypalAddons\classes\API\Response\ResponseOrderCreate*/
+        $response = $this->paypalApiManager->getOrderRequest()->execute();
 
-        // ### Get redirect url
-        // The API response provides the url that you must redirect
-        // the buyer to. Retrieve the url from the $payment->getApprovalLink() method
-        $this->setPaymentId($payment->id);
-        return $payment->getApprovalLink();
-    }
-
-    /**
-     * @param String $key
-     * @return String
-     */
-    public function getBuilderClass($key)
-    {
-        switch ($key) {
-            case 'payment':
-                $builder = PaymentBuilder::class;
-                break;
-            case 'itemList':
-                $builder = ItemListBuilder::class;
-                break;
-            case 'amount':
-                $builder = AmountBuilder::class;
-                break;
-            case 'redirectUrls':
-                $builder = RedirectUrlsBuilder::class;
-                break;
-            case 'payer':
-                $builder = PayerBuilder::class;
-                break;
-            case 'payerInfo':
-                $builder = PayerInfoBuilder::class;
-                break;
-            case 'shippingAddress':
-                $builder = ShippingAddressBuilder::class;
-                break;
-            case 'transaction':
-                $builder = TransactionBuilder::class;
-                break;
-            case 'webProfile':
-                $builder = WebProfileBuilder::class;
-                break;
+        if ($response->isSuccess() == false) {
+            throw new Exception($response->getError()->getMessage());
         }
 
-        return $builder;
-    }
+        $this->setPaymentId($response->getPaymentId());
 
-    /**
-     * Collect items information
-     */
-    private function _getPaymentDetails()
-    {
-        $paypal = Module::getInstanceByName($this->name);
-        $currency = $paypal->getPaymentCurrencyIso();
-        $this->_getProductsList($currency);
-        $this->_getDiscountsList($currency);
-        $this->_getGiftWrapping($currency);
-        $this->_getPaymentValues($currency);
-    }
-
-    /**
-     * @param $currency string
-     */
-    private function _getProductsList($currency)
-    {
-        $products = Context::getContext()->cart->getProducts();
-        foreach ($products as $product) {
-            $itemDetails = new PaymentDetailsItemType();
-            $product['product_tax'] = $this->formatPrice($product['price_wt']) - $this->formatPrice($product['price']);
-            $itemAmount = new BasicAmountType($currency, $this->formatPrice($product['price']));
-            if (isset($product['attributes']) && (empty($product['attributes']) === false)) {
-                $product['name'] .= ' - '.$product['attributes'];
-            }
-            $itemDetails->Name = $product['name'];
-            $itemDetails->Amount = $itemAmount;
-            $itemDetails->Quantity = $product['quantity'];
-            $itemDetails->Tax = new BasicAmountType($currency, number_format($product['product_tax'], Paypal::getDecimal(), ".", ''));
-            $this->_paymentDetails->PaymentDetailsItem[] = $itemDetails;
-            $this->_itemTotalValue += $this->formatPrice($product['price']) * $product['quantity'];
-            $this->_taxTotalValue += $product['product_tax'] * $product['quantity'];
-        }
+        return $response->getApproveLink();
     }
 
     /**
@@ -306,129 +233,6 @@ class MethodEC extends AbstractMethodPaypal
         }
         $price = number_format($price, Paypal::getDecimal(), ".", '');
         return $price;
-    }
-
-    private function _getDiscountsList($currency)
-    {
-        $discounts = Context::getContext()->cart->getCartRules(CartRule::FILTER_ACTION_SHIPPING);
-        if (count($discounts)) {
-            $totalDiscounts = Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS);
-            $totalDiscounts = -1 * $this->formatPrice($totalDiscounts);
-
-            $itemDetails = new PaymentDetailsItemType();
-            $itemDetails->Name = 'Total discounts';
-            $itemDetails->Amount = new BasicAmountType($currency, $totalDiscounts);
-            $itemDetails->Quantity = 1;
-            $this->_paymentDetails->PaymentDetailsItem[] = $itemDetails;
-            $this->_itemTotalValue += $totalDiscounts;
-        } else {
-            $discounts = Context::getContext()->cart->getCartRules();
-            $order_total = Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
-            $order_total_with_reduction = $order_total;
-            if (count($discounts) > 0) {
-                foreach ($discounts as $discount) {
-                    if (isset($discount['description']) && !empty($discount['description'])) {
-                        $discount['description'] = Tools::substr(strip_tags($discount['description']), 0, 50).'...';
-                    }
-                    // It's needed to take a percentage of the order amount, taking into account the others discounts
-                    if ((int)$discount['reduction_percent'] > 0) {
-                        $discount['value_real'] = $order_total_with_reduction * ($discount['value_real'] / $order_total);
-                    }
-
-                    if ((int)$discount['free_shipping'] == false) {
-                        $order_total_with_reduction -= $discount['value_real'];
-                    }
-
-                    $discount['value_real'] = -1 * $this->formatPrice($discount['value_real']);
-                    $itemDetails = new PaymentDetailsItemType();
-                    $itemDetails->Name = $discount['name'];
-                    $itemDetails->Amount = new BasicAmountType($currency, $discount['value_real']);
-                    $itemDetails->Quantity = 1;
-                    $this->_paymentDetails->PaymentDetailsItem[] = $itemDetails;
-                    $this->_itemTotalValue += $discount['value_real'];
-                }
-            }
-        }
-    }
-
-    private function _getGiftWrapping($currency)
-    {
-        $wrapping_price = Context::getContext()->cart->gift ? Context::getContext()->cart->getGiftWrappingPrice() : 0;
-        if ($wrapping_price > 0) {
-            $wrapping_price = $this->formatPrice($wrapping_price);
-            $itemDetails = new PaymentDetailsItemType();
-            $itemDetails->Name = 'Gift wrapping';
-            $itemDetails->Amount = new BasicAmountType($currency, $wrapping_price);
-            $itemDetails->Quantity = 1;
-            $this->_paymentDetails->PaymentDetailsItem[] = $itemDetails;
-            $this->_itemTotalValue += $wrapping_price;
-        }
-    }
-
-    /**
-     * Set total payment values
-     * @param $currency
-     */
-    private function _getPaymentValues($currency)
-    {
-        $context = Context::getContext();
-        $cart = $context->cart;
-        $shipping_cost_wt = $cart->getTotalShippingCost();
-        $shipping = $this->formatPrice($shipping_cost_wt);
-        $total = $this->formatPrice($cart->getOrderTotal(true, Cart::BOTH));
-        $summary = $cart->getSummaryDetails();
-        $subtotal = $this->formatPrice($summary['total_products']);
-        $total_tax = number_format($this->_taxTotalValue, Paypal::getDecimal(), ".", '');
-        // total shipping amount
-        $shippingTotal = new BasicAmountType($currency, $shipping);
-        //total handling amount if any
-        $handlingTotal = new BasicAmountType($currency, number_format(0, Paypal::getDecimal(), ".", ''));
-        //total insurance amount if any
-        $insuranceTotal = new BasicAmountType($currency, number_format(0, Paypal::getDecimal(), ".", ''));
-
-        if ($subtotal != $this->_itemTotalValue) {
-            $subtotal = $this->_itemTotalValue;
-        }
-        //total
-        $total_cart = $shippingTotal->value + $handlingTotal->value +
-            $insuranceTotal->value +
-            $this->_itemTotalValue + $this->_taxTotalValue;
-
-        if ($total != $total_cart) {
-            $total = $total_cart;
-        }
-
-        $this->_paymentDetails->ItemTotal = new BasicAmountType($currency, $subtotal);
-        $this->_paymentDetails->TaxTotal = new BasicAmountType($currency, $total_tax);
-        $this->_paymentDetails->OrderTotal = new BasicAmountType($currency, $total);
-
-        $this->_paymentDetails->HandlingTotal = $handlingTotal;
-        $this->_paymentDetails->InsuranceTotal = $insuranceTotal;
-        $this->_paymentDetails->ShippingTotal = $shippingTotal;
-    }
-
-    private function _getShippingAddress()
-    {
-        $context = Context::getContext();
-        $cart = $context->cart;
-        $customer = $context->customer;
-        $id_address = (int) $cart->id_address_delivery;
-        if (($id_address == 0) && ($customer)) {
-            $id_address = Address::getFirstCustomerAddressId($customer->id);
-        }
-        $address = new Address($id_address);
-        $country = new Country((int) $address->id_country);
-        $ship_addr_state = PayPal::getPaypalStateCode($address);
-
-        $address_pp = new AddressType();
-        $address_pp->CityName = $address->city;
-        $address_pp->Name = $address->firstname.' '.$address->lastname;
-        $address_pp->Street1 = $address->address1;
-        $address_pp->StateOrProvince = $ship_addr_state;
-        $address_pp->PostalCode = $address->postcode;
-        $address_pp->Country = $country->iso_code;
-        $address_pp->Phone = (empty($address->phone)) ? $address->phone_mobile : $address->phone;
-        return $address_pp;
     }
 
     /**
@@ -544,31 +348,25 @@ class MethodEC extends AbstractMethodPaypal
             throw new Exception('Payment ID isn\'t setted');
         }
 
-        // Get the payment Object by passing paymentId
-        // payment id was previously stored in session in
-        // CreatePaymentUsingPayPal.php
-        $payment = Payment::get($this->getPaymentId(), $this->_getCredentialsInfo());
+        if ($this->getIntent() == 'CAPTURE') {
+            $response = $this->paypalApiManager->getOrderCaptureRequest($this->getPaymentId())->execute();
+        } else {
+            $response = $this->paypalApiManager->getOrderAuthorizeRequest($this->getPaymentId())->execute();
+        }
 
-        // ### Payment Execute
-        // PaymentExecution object includes information necessary
-        // to execute a PayPal account payment.
-        // The payer_id is added to the request query parameters
-        // when the user is redirected from paypal back to your site
-        $execution = new PaymentExecution();
-        $execution->setPayerId($this->getPayerId());
+        if ($response->isSuccess() == false) {
+            throw new Exception($response->getError()->getMessage());
+        }
 
-        // ### Optional Changes to Amount
-        // If you wish to update the amount that you wish to charge the customer,
-        // based on the shipping address or any other reason, you could
-        // do that by passing the transaction object with just `amount` field in it.
-        $exec_payment = $payment->execute($execution, $this->_getCredentialsInfo());
-        $this->setDetailsTransaction($exec_payment);
+
+        $this->setDetailsTransaction($response);
         $currency = $context->currency;
-        $total = (float)$exec_payment->transactions[0]->amount->total;
+        $total = $response->getTotalPaid();
         $paypal = Module::getInstanceByName($this->name);
         $order_state = $this->getOrderStatus();
         $paypal->validateOrder($cart->id,
-            $order_state, $total,
+            $order_state,
+            $total,
             $this->getPaymentMethod(),
             null,
             $this->getDetailsTransaction(),
@@ -599,26 +397,20 @@ class MethodEC extends AbstractMethodPaypal
         return $orderStatus;
     }
 
-    public function setDetailsTransaction($transaction)
+    public function setDetailsTransaction($data)
     {
-        $payment_info = $transaction->transactions[0];
+        /** @var $data \PaypalAddons\classes\API\Response\ResponseOrderCapture*/
         $transaction_detail = array(
-            'method' => 'EC',
-            'currency' => $payment_info->amount->currency,
-            'payment_status' => $transaction->state,
-            'payment_method' => $transaction->payer->payment_method,
-            'id_payment' => pSQL($transaction->id),
-            'payment_tool' => isset($transaction->payment_instruction)?$transaction->payment_instruction->instruction_type:'',
-            'date_transaction' => $this->getDateTransaction($transaction)
+            'method' => $data->getMethod(),
+            'currency' => $data->getCurrency(),
+            'payment_status' => $data->getStatus(),
+            'payment_method' => $data->getPaymentMethod(),
+            'id_payment' => pSQL($data->getPaymentId()),
+            'payment_tool' => $data->getPaymentTool(),
+            'date_transaction' => $data->getDateTransaction()->format('Y-m-d H:i:s'),
+            'transaction_id' => $data->getTransactionId(),
+            'capture' => $data->isCapture()
         );
-
-        if ($transaction->intent == 'authorize') {
-            $transaction_detail['capture'] = true;
-            $transaction_detail['transaction_id'] = pSQL($payment_info->related_resources[0]->authorization->id);
-        } else {
-            $transaction_detail['capture'] = false;
-            $transaction_detail['transaction_id'] = pSQL($payment_info->related_resources[0]->sale->id);
-        }
 
         $this->transaction_detail = $transaction_detail;
     }
@@ -683,10 +475,9 @@ class MethodEC extends AbstractMethodPaypal
     /**
      * @see AbstractMethodPaypal::refund()
      */
-    public function refund($paypal_order)
+    public function refund($paypalOrder)
     {
-        $paypalRefund = new PaypalOrderRefund($paypal_order);
-        $response = $paypalRefund->execute();
+        $response = $this->paypalApiManager->getOrderRefundRequest($paypalOrder)->execute();
         return $response;
     }
 
@@ -695,51 +486,18 @@ class MethodEC extends AbstractMethodPaypal
      */
     public function partialRefund($params)
     {
-        $paypal_order = PaypalOrder::loadByOrderId($params['order']->id);
-        $id_paypal_order = $paypal_order->id;
-        $capture = PaypalCapture::loadByOrderPayPalId($id_paypal_order);
-        $id_transaction = Validate::isLoadedObject($capture) ? $capture->id_capture : $paypal_order->id_transaction;
-        $currency = $paypal_order->currency;
+        $paypalOrder = PaypalOrder::loadByOrderId($params['order']->id);
         $amount = 0;
+
         foreach ($params['productList'] as $product) {
             $amount += $product['amount'];
         }
+
         if (Tools::getValue('partialRefundShippingCost')) {
             $amount += Tools::getValue('partialRefundShippingCost');
         }
-        $refundTransactionReqType = new RefundTransactionRequestType();
-        $refundTransactionReqType->TransactionID = $id_transaction;
-        $refundTransactionReqType->RefundType = 'Partial';
-        $refundTransactionReqType->Amount =  new BasicAmountType($currency, number_format($amount, Paypal::getDecimal(), ".", ''));
-        $refundTransactionReq = new RefundTransactionReq();
-        $refundTransactionReq->RefundTransactionRequest = $refundTransactionReqType;
 
-        $paypalService = new PayPalAPIInterfaceServiceService($this->_getCredentialsInfo($paypal_order->sandbox));
-        $response = $paypalService->RefundTransaction($refundTransactionReq);
-
-        if ($response instanceof PayPal\PayPalAPI\RefundTransactionResponseType) {
-            if (isset($response->Errors)) {
-                $result = array(
-                    'status' => $response->Ack,
-                    'error_code' => $response->Errors[0]->ErrorCode,
-                    'error_message' => $response->Errors[0]->LongMessage,
-                );
-                if (Validate::isLoadedObject($capture) && $response->Errors[0]->ErrorCode == "10009") {
-                    $result['already_refunded'] = true;
-                }
-            } else {
-                $result =  array(
-                    'success' => true,
-                    'refund_id' => $response->RefundTransactionID,
-                    'status' => $response->Ack,
-                    'total_amount' => $response->TotalRefundedAmount->value,
-                    'net_amount' => $response->NetRefundAmount->value,
-                    'currency' => $response->TotalRefundedAmount->currencyID,
-                );
-            }
-        }
-
-        return $result;
+        return $response = $this->paypalApiManager->getOrderPartialRefundRequest($paypalOrder, $amount)->execute();
     }
 
     /**
@@ -808,23 +566,6 @@ class MethodEC extends AbstractMethodPaypal
     }
 
     /**
-     * @return \PayPal\PayPalAPI\GetExpressCheckoutDetailsResponseType
-     * @throws Exception
-     */
-    public function getInfo()
-    {
-        $getExpressCheckoutDetailsRequest = new GetExpressCheckoutDetailsRequestType($this->payment_token);
-        $getExpressCheckoutReq = new GetExpressCheckoutDetailsReq();
-        $getExpressCheckoutReq->GetExpressCheckoutDetailsRequest = $getExpressCheckoutDetailsRequest;
-        $paypalService = new PayPalAPIInterfaceServiceService($this->_getCredentialsInfo());
-        $response = $paypalService->GetExpressCheckoutDetails($getExpressCheckoutReq);
-        if (isset($response->Errors)) {
-            throw new PaypalException($response->Errors[0]->ErrorCode, $response->Errors[0]->ShortMessage, $response->Errors[0]->LongMessage);
-        }
-        return $response;
-    }
-
-    /**
      * @see AbstractMethodPaypal::getLinkToTransaction()
      */
     public function getLinkToTransaction($log)
@@ -842,79 +583,26 @@ class MethodEC extends AbstractMethodPaypal
      */
     public function isConfigured($mode = null)
     {
-        return (bool)Configuration::get('PAYPAL_EC_EXPERIENCE');
+        return (bool)Configuration::get('PAYPAL_CONNECTION_EC_CONFIGURED');
     }
 
     public function checkCredentials($mode = null)
     {
-        $experience_web = $this->createWebExperience();
-        if ($experience_web) {
-            Configuration::updateValue('PAYPAL_EC_EXPERIENCE', $experience_web->id);
+        $response = $this->paypalApiManager->getAccessTokenRequest()->execute();
+
+        if ($response->isSuccess()) {
+            Configuration::updateValue('PAYPAL_CONNECTION_EC_CONFIGURED', 1);
         } else {
-            Configuration::updateValue('PAYPAL_EC_EXPERIENCE', '');
+            Configuration::updateValue('PAYPAL_CONNECTION_EC_CONFIGURED', 0);
+
+            if ($response->getError()) {
+                $this->errors[] = $response->getError()->getMessage();
+            }
         }
-    }
-
-    /**
-     * Customize payment experience
-     * @return bool|\PayPal\Api\CreateProfileResponse
-     */
-    public function createWebExperience()
-    {
-        $mode = Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
-
-        if (!Configuration::get('PAYPAL_EC_CLIENTID_' . $mode) || !Configuration::get('PAYPAL_EC_SECRET_' . $mode)) {
-            return false;
-        }
-
-        $webProfile = $this->paypalApiManager->get($this->getBuilderClass('webProfile'))->build();
-
-        // For Sample Purposes Only.
-        try {
-            // Use this call to create a profile.
-            $createProfileResponse = $webProfile->create($this->_getCredentialsInfo());
-        } catch (Exception $ex) {
-            $module = Module::getInstanceByName('paypal');
-            $this->errors[] = $module->l('An error occurred while creating your web experience. Check your credentials.', get_class($this));
-            return false;
-        }
-
-        return $createProfileResponse;
     }
 
     public function getTplVars()
     {
-        /*$urlParameters = array(
-            'paypal_set_config' => 1,
-            'method' => 'EC',
-            'with_card' => 0,
-            'modify' => 1
-        );
-        $context = Context::getContext();
-        $countryDefault = new \Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $context->language->id);
-        $tpl_vars = array(
-            'accountConfigured' => $this->isConfigured(),
-            'urlOnboarding' => $context->link->getAdminLink('AdminPayPalSetup', true, null, $urlParameters),
-            'country_iso' => $countryDefault->iso_code,
-            'idShop' => Context::getContext()->shop->id,
-        );
-
-        if ((int)Configuration::get('PAYPAL_SANDBOX')) {
-            $tpl_vars['paypal_api_user_name'] = Configuration::get('PAYPAL_USERNAME_SANDBOX');
-            $tpl_vars['paypal_pswd'] = Configuration::get('PAYPAL_PSWD_SANDBOX');
-            $tpl_vars['paypal_signature'] = Configuration::get('PAYPAL_SIGNATURE_SANDBOX');
-            $tpl_vars['paypal_merchant_id'] = Configuration::get('PAYPAL_MERCHANT_ID_SANDBOX');
-            $tpl_vars['mode'] = 'SANDBOX';
-        } else {
-            $tpl_vars['paypal_api_user_name'] = Configuration::get('PAYPAL_USERNAME_LIVE');
-            $tpl_vars['paypal_pswd'] = Configuration::get('PAYPAL_PSWD_LIVE');
-            $tpl_vars['paypal_signature'] = Configuration::get('PAYPAL_SIGNATURE_LIVE');
-            $tpl_vars['paypal_merchant_id'] = Configuration::get('PAYPAL_MERCHANT_ID_LIVE');
-            $tpl_vars['mode'] = 'LIVE';
-        }
-
-        return $tpl_vars;*/
-
         $tplVars = array();
 
         if ((int)Configuration::get('PAYPAL_SANDBOX')) {
@@ -976,13 +664,65 @@ class MethodEC extends AbstractMethodPaypal
         }
     }
 
-    public function getExperienceProfileId()
-    {
-        return Configuration::get('PAYPAL_EC_EXPERIENCE');
-    }
-
     public function getIntent()
     {
-        return Configuration::get('PAYPAL_API_INTENT');
+        return Configuration::get('PAYPAL_API_INTENT') == 'sale' ? 'CAPTURE' : 'AUTHORIZE';
+    }
+
+    public function isSandbox()
+    {
+        if ($this->isSandbox !== null) {
+            return $this->isSandbox;
+        }
+
+        $this->isSandbox = (bool)Configuration::get('PAYPAL_SANDBOX');
+        return $this->isSandbox;
+    }
+
+    public function getClientId()
+    {
+        if ($this->clientId !== null) {
+            return $this->clientId;
+        }
+
+        if ($this->isSandbox()) {
+            $clientId = Configuration::get('PAYPAL_EC_CLIENTID_SANDBOX');
+        } else {
+            $clientId = Configuration::get('PAYPAL_EC_CLIENTID_LIVE');
+        }
+
+        $this->clientId = $clientId;
+        return $this->clientId;
+    }
+
+    public function getSecret()
+    {
+        if ($this->secret !== null) {
+            return $this->secret;
+        }
+
+        if ($this->isSandbox()) {
+            $secret = Configuration::get('PAYPAL_EC_SECRET_SANDBOX');
+        } else {
+            $secret = Configuration::get('PAYPAL_EC_SECRET_LIVE');
+        }
+
+        $this->secret = $secret;
+        return $this->secret;
+    }
+
+    public function getReturnUrl()
+    {
+        return Context::getContext()->link->getModuleLink($this->name, 'ecValidation', [], true);
+    }
+
+    public function getCancelUrl()
+    {
+        return Context::getContext()->link->getPageLink('order', true);
+    }
+
+    public function getPaypalPartnerId()
+    {
+        return (getenv('PLATEFORM') == 'PSREAD') ? 'PrestaShop_Cart_Ready_EC' : 'PrestaShop_Cart_EC';
     }
 }
