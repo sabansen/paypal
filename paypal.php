@@ -1225,12 +1225,12 @@ class PayPal extends \PaymentModule
     {
         /**@var $orderPayPal PaypalOrder */
         $orderPayPal = PaypalOrder::loadByOrderId($params['id_order']);
+
         if (!Validate::isLoadedObject($orderPayPal) || $orderPayPal->method == 'BT') {
             return false;
         }
+
         $method = AbstractMethodPaypal::load($orderPayPal->method);
-        $message = '';
-        $ex_detailed_message = '';
 
         if ((int)Configuration::get('PAYPAL_CUSTOMIZE_ORDER_STATUS')) {
             $osCanceled = Configuration::get('PAYPAL_API_INTENT') == 'sale' ? (int)Configuration::get('PAYPAL_OS_CANCELED') : (int)Configuration::get('PAYPAL_OS_CAPTURE_CANCELED');

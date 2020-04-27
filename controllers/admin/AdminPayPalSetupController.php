@@ -84,14 +84,6 @@ class AdminPayPalSetupController extends AdminPayPalController
             $tpl_vars['formPaymentSettings'] = $formPaymentSettings;
         }
 
-        if ($this->method == 'EC') {
-            $this->initApiUserNameForm();
-            $formApiUserName = $this->renderForm();
-            $this->clearFieldsForm();
-            $tpl_vars['formMerchantAccounts'] = $formApiUserName;
-        }
-
-
         $this->initEnvironmentSettings();
         $formEnvironmentSettings = $this->renderForm();
         $this->clearFieldsForm();
@@ -200,30 +192,6 @@ class AdminPayPalSetupController extends AdminPayPalController
 
         $values = array(
             'paypal_api_intent' => Configuration::get('PAYPAL_API_INTENT'),
-        );
-        $this->tpl_form_vars = array_merge($this->tpl_form_vars, $values);
-    }
-
-    public function initApiUserNameForm()
-    {
-        $mode = (int)Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
-        $this->fields_form[]['form'] = array(
-            'legend' => array(
-                'title' => $this->l('API user names'),
-                'icon' => 'icon-cogs',
-            ),
-            'input' => array(
-                array(
-                    'type' => 'text',
-                    'label' => $this->l('API user name'),
-                    'name' => 'paypal_api_user_name',
-                    'readonly' => true,
-                )
-            )
-        );
-
-        $values = array(
-            'paypal_api_user_name' => Configuration::get('PAYPAL_USERNAME_' . $mode),
         );
         $this->tpl_form_vars = array_merge($this->tpl_form_vars, $values);
     }

@@ -59,10 +59,6 @@
             {if isset($formPaymentSettings)}
                 {$formPaymentSettings nofilter} {* the variable contains html code *}
             {/if}
-
-            {if isset($formMerchantAccounts)}
-                {$formMerchantAccounts nofilter}
-            {/if}
         </div>
         <div class="col-lg-4 stretchHeightForm pp__pb-4 status-block-container">
             {if isset($formStatus)}
