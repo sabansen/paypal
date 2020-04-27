@@ -7,7 +7,7 @@ namespace PaypalAddons\classes\API\Response;
 class ResponseOrderRefund extends Response
 {
     /** @var string*/
-    protected $refundId;
+    protected $idTransaction;
 
     /** @var string*/
     protected $status;
@@ -21,17 +21,17 @@ class ResponseOrderRefund extends Response
     /**
      * @return string
      */
-    public function getRefundId()
+    public function getIdTransaction()
     {
-        return $this->refundId;
+        return $this->idTransaction;
     }
 
     /**
-     * @param string $refundId
+     * @param string $idTransaction
      */
-    public function setRefundId($refundId)
+    public function setIdTransaction($idTransaction)
     {
-        $this->refundId = $refundId;
+        $this->idTransaction = $idTransaction;
         return $this;
     }
 
@@ -89,7 +89,7 @@ class ResponseOrderRefund extends Response
     public function getMessage()
     {
         $message = '';
-        $message .= 'ID refund: ' . $this->getRefundId() . '; ';
+        $message .= 'Refund Transaction Id: ' . $this->getIdTransaction() . '; ';
         $message .= 'Total amount: ' . $this->getAmount() . '; ';
         $message .= 'Status: ' . $this->getStatus() . '; ';
         $message .= 'Transaction date: ' . $this->getDateTransaction() . '; ';

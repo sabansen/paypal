@@ -1246,77 +1246,50 @@ class PayPal extends \PaymentModule
                 return true;
             }
 
-            if (in_array($orderPayPal->method, array("MB", "PPP")) || $orderPayPal->payment_status == "refunded") {
-                return;
-            }
-            $paypalCapture = PaypalCapture::loadByOrderPayPalId($orderPayPal->id);
-            if ($orderPayPal->method == "EC" && $orderPayPal->payment_status != "refunded" && ((!Validate::isLoadedObject($paypalCapture))
-                    || (Validate::isLoadedObject($paypalCapture) && $paypalCapture->id_capture))) {
-                ProcessLoggerHandler::openLogger();
-                ProcessLoggerHandler::logError(
-                    $this->l('You are trying to refund an order that hasn\'t been captured yet. The order has instead been cancelled. '),
-                    null,
-                    $orderPayPal->id_order,
-                    $orderPayPal->id_cart,
-                    $this->context->shop->id,
-                    $orderPayPal->payment_tool,
-                    $orderPayPal->sandbox
-                );
-                ProcessLoggerHandler::closeLogger();
+            if (in_array($orderPayPal->method, array("MB", "PPP")) || $orderPayPal->payment_status == "refunded" || $orderPayPal->payment_status == "voided") {
                 return;
             }
 
-            try {
-                $response_void = $method->void($orderPayPal);
-            } catch (PayPal\Exception\PPConnectionException $e) {
-                $ex_detailed_message = $this->l('Error connecting to ') . $e->getUrl();
-            } catch (PayPal\Exception\PPMissingCredentialException $e) {
-                $ex_detailed_message = $e->errorMessage();
-            } catch (PayPal\Exception\PPConfigurationException $e) {
-                $ex_detailed_message = $this->l('Invalid configuration. Please check your configuration file');
+            $paypalCapture = PaypalCapture::loadByOrderPayPalId($orderPayPal->id);
+
+            /** @var $response \PaypalAddons\classes\API\Response\ResponseAuthorizationVoid*/
+            if ($orderPayPal->method == 'EC' && Validate::isLoadedObject($paypalCapture) == false) {
+                $response = $method->refund($orderPayPal);
+            } elseif ($orderPayPal->method == 'EC' &&
+                Validate::isLoadedObject($paypalCapture) &&
+                $paypalCapture->id_capture) {
+                $response = $method->refund($orderPayPal);
+            } elseif ($orderPayPal->method == 'EC' &&
+                Validate::isLoadedObject($paypalCapture) &&
+                $paypalCapture->id_capture == false) {
+                $response = $method->void($orderPayPal);
             }
-            if (isset($response_void) && isset($response_void['success']) && $response_void['success']) {
-                $paypalCapture->result = 'voided';
-                $paypalCapture->save();
+
+            if ($response->isSuccess()) {
+                if (Validate::isLoadedObject($paypalCapture)) {
+                    $paypalCapture->result = 'voided';
+                    $paypalCapture->save();
+                }
+
                 $orderPayPal->payment_status = 'voided';
                 $orderPayPal->save();
-                foreach ($response_void as $key => $msg) {
-                    $message .= $key . " : " . $msg . ";\r";
-                }
+
                 ProcessLoggerHandler::openLogger();
                 ProcessLoggerHandler::logInfo(
-                    $message,
-                    isset($response_void['transaction_id']) ? $response_void['transaction_id'] : null,
+                    $response->getMessage(),
+                    $response->getIdTransaction(),
                     $orderPayPal->id_order,
                     $orderPayPal->id_cart,
                     $this->context->shop->id,
                     $orderPayPal->payment_tool,
                     $orderPayPal->sandbox,
-                    $response_void['date_transaction']
+                    $response->getDateTransaction()
                 );
                 ProcessLoggerHandler::closeLogger();
-            } elseif (isset($response_void) && empty($response_void) == false) {
-                foreach ($response_void as $key => $msg) {
-                    $message .= $key . " : " . $msg . ";\r";
-                }
+            } else {
                 ProcessLoggerHandler::openLogger();
                 ProcessLoggerHandler::logError(
-                    $message,
-                    null,
-                    $orderPayPal->id_order,
-                    $orderPayPal->id_cart,
-                    $this->context->shop->id,
-                    null,
-                    $orderPayPal->sandbox
-                );
-                ProcessLoggerHandler::closeLogger();
-                Tools::redirect($_SERVER['HTTP_REFERER'] . '&cancel_failed=1');
-            }
-
-            if ($ex_detailed_message) {
-                ProcessLoggerHandler::openLogger();
-                ProcessLoggerHandler::logError(
-                    $ex_detailed_message,
+                    $response->getError()->getMessage(),
                     null,
                     $orderPayPal->id_order,
                     $orderPayPal->id_cart,
@@ -1325,6 +1298,7 @@ class PayPal extends \PaymentModule
                     $orderPayPal->sandbox
                 );
                 ProcessLoggerHandler::closeLogger();
+                Tools::redirect($_SERVER['HTTP_REFERER'] . '&cancel_failed=1');
             }
         }
 

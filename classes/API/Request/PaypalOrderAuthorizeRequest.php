@@ -82,7 +82,7 @@ class PaypalOrderAuthorizeRequest extends RequestAbstract
 
     protected function getCapture($exec)
     {
-        return false;
+        return true;
     }
 
     protected function getTotalPaid($exec)

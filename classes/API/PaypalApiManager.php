@@ -6,6 +6,7 @@ namespace PaypalAddons\classes\API;
 
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Request\PaypalAccessTokenRequest;
+use PaypalAddons\classes\API\Request\PaypalAuthorizationVoidRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderCaptureRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderCreateRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderAuthorizeRequest;
@@ -54,5 +55,10 @@ class PaypalApiManager
     public function getOrderPartialRefundRequest(\PaypalOrder $paypalOrder, $amount)
     {
         return new PaypalOrderPartialRefundRequest($this->client, $this->method, $paypalOrder, $amount);
+    }
+
+    public function getAuthorizationVoidRequest(\PaypalOrder $orderPayPal)
+    {
+        return new PaypalAuthorizationVoidRequest($this->client, $this->method, $orderPayPal);
     }
 }

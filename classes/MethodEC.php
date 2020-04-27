@@ -505,29 +505,7 @@ class MethodEC extends AbstractMethodPaypal
      */
     public function void($orderPayPal)
     {
-        $doVoidReqType = new DoVoidRequestType();
-        $doVoidReqType->AuthorizationID = array('authorization_id'=>$orderPayPal->id_transaction);
-        $doVoidReq = new DoVoidReq();
-        $doVoidReq->DoVoidRequest = $doVoidReqType;
-
-        $paypalService = new PayPalAPIInterfaceServiceService($this->_getCredentialsInfo($orderPayPal->sandbox));
-        $response = $paypalService->DoVoid($doVoidReq);
-
-        if ($response instanceof PayPal\PayPalAPI\DoVoidResponseType) {
-            if (isset($response->Errors)) {
-                $response =  array(
-                    'error_code' => $response->Errors[0]->ErrorCode,
-                    'error_message' => $response->Errors[0]->LongMessage,
-                );
-            } else {
-                $response =  array(
-                    'transaction_id' => $response->AuthorizationID,
-                    'status' => $response->Ack,
-                    'success' => true,
-                    'date_transaction' => $this->getDateTransaction()
-                );
-            }
-        }
+        $response = $this->paypalApiManager->getAuthorizationVoidRequest($orderPayPal)->execute();
         return $response;
     }
 
