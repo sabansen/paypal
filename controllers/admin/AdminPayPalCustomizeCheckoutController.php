@@ -25,6 +25,7 @@
 include_once(_PS_MODULE_DIR_.'paypal/vendor/autoload.php');
 
 use PaypalAddons\classes\AdminPayPalController;
+use PaypalAddons\classes\AbstractMethodPaypal;
 
 class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
 {

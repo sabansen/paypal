@@ -1185,7 +1185,7 @@ class PayPal extends \PaymentModule
                 ProcessLoggerHandler::openLogger();
                 ProcessLoggerHandler::logInfo(
                     $refundResponse->getMessage(),
-                    $refundResponse->getRefundId(),
+                    $refundResponse->getIdTransaction()(),
                     $paypalOrder->id_order,
                     $paypalOrder->id_cart,
                     $this->context->shop->id,
@@ -1338,7 +1338,7 @@ class PayPal extends \PaymentModule
                 ProcessLoggerHandler::openLogger();
                 ProcessLoggerHandler::logInfo(
                     $refundResponse->getMessage(),
-                    $refundResponse->getRefundId(),
+                    $refundResponse->getIdTransaction()(),
                     $orderPayPal->id_order,
                     $orderPayPal->id_cart,
                     $this->context->shop->id,

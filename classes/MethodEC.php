@@ -429,48 +429,6 @@ class MethodEC extends AbstractMethodPaypal
     public function confirmCapture($paypalOrder)
     {
         return $this->paypalApiManager->getCaptureAuthorizeRequest($paypalOrder)->execute();
-        /*$id_paypal_order = $paypal_order->id;
-        $currency = $paypal_order->currency;
-        $amount = $paypal_order->total_paid;
-        $doCaptureRequestType = new DoCaptureRequestType();
-        $doCaptureRequestType->AuthorizationID = $paypal_order->id_transaction;
-        $doCaptureRequestType->Amount = new BasicAmountType($currency, number_format($amount, Paypal::getDecimal(), ".", ''));
-        $doCaptureRequestType->CompleteType = 'Complete';
-        $doCaptureReq = new DoCaptureReq();
-        $doCaptureReq->DoCaptureRequest = $doCaptureRequestType;
-
-        $paypalService = new PayPalAPIInterfaceServiceService($this->_getCredentialsInfo($paypal_order->sandbox));
-        $response = $paypalService->DoCapture($doCaptureReq);
-
-        if ($response instanceof PayPal\PayPalAPI\DoCaptureResponseType) {
-            $authorization_id = $response->DoCaptureResponseDetails->AuthorizationID;
-            if (isset($response->Errors)) {
-                $result = array(
-                    'authorization_id' => $authorization_id,
-                    'status' => $response->Ack,
-                    'error_code' => $response->Errors[0]->ErrorCode,
-                    'error_message' => $response->Errors[0]->LongMessage,
-                );
-                if ($response->Errors[0]->ErrorCode == "10602") {
-                    $result['already_captured'] = true;
-                }
-            } else {
-                $payment_info = $response->DoCaptureResponseDetails->PaymentInfo;
-                PaypalCapture::updateCapture($payment_info->TransactionID, $payment_info->GrossAmount->value, $payment_info->PaymentStatus, $id_paypal_order);
-                $result =  array(
-                    'success' => true,
-                    'authorization_id' => $payment_info->TransactionID,
-                    'status' => $payment_info->PaymentStatus,
-                    'amount' => $payment_info->GrossAmount->value,
-                    'currency' => $payment_info->GrossAmount->currencyID,
-                    'parent_payment' => $payment_info->ParentTransactionID,
-                    'pending_reason' => $payment_info->PendingReason,
-                    'date_transaction' => $this->getDateTransaction()
-                );
-            }
-        }
-
-        return $result;*/
     }
 
     /**

@@ -54,7 +54,7 @@ class PaypalEcInitModuleFrontController extends PaypalAbstarctModuleFrontControl
             $this->method->setParameters($this->values);
             $url = $this->method->init();
             if ($this->values['getToken']) {
-                $this->jsonValues = array('success' => true, 'token' => $this->method->token);
+                $this->jsonValues = array('success' => true, 'token' => $this->method->getPaymentId());
             } else {
                 //$this->redirectUrl = $url.'&useraction=commit';
                 $this->redirectUrl = $url;
@@ -70,7 +70,6 @@ class PaypalEcInitModuleFrontController extends PaypalAbstarctModuleFrontControl
             $this->errors['error_msg'] = $e->getMessage();
             $this->errors['msg_long'] = $e->getMessageLong();
         } catch (Exception $e) {
-            VarDumper::dump($e); die;
             $this->errors['error_code'] = $e->getCode();
             $this->errors['error_msg'] = $e->getMessage();
         }
