@@ -426,9 +426,10 @@ class MethodEC extends AbstractMethodPaypal
     /**
      * @see AbstractMethodPaypal::confirmCapture()
      */
-    public function confirmCapture($paypal_order)
+    public function confirmCapture($paypalOrder)
     {
-        $id_paypal_order = $paypal_order->id;
+        return $this->paypalApiManager->getCaptureAuthorizeRequest($paypalOrder)->execute();
+        /*$id_paypal_order = $paypal_order->id;
         $currency = $paypal_order->currency;
         $amount = $paypal_order->total_paid;
         $doCaptureRequestType = new DoCaptureRequestType();
@@ -469,7 +470,7 @@ class MethodEC extends AbstractMethodPaypal
             }
         }
 
-        return $result;
+        return $result;*/
     }
 
     /**

@@ -7,6 +7,7 @@ namespace PaypalAddons\classes\API;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Request\PaypalAccessTokenRequest;
 use PaypalAddons\classes\API\Request\PaypalAuthorizationVoidRequest;
+use PaypalAddons\classes\API\Request\PaypalCaptureAuthorizeRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderCaptureRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderCreateRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderAuthorizeRequest;
@@ -60,5 +61,10 @@ class PaypalApiManager
     public function getAuthorizationVoidRequest(\PaypalOrder $orderPayPal)
     {
         return new PaypalAuthorizationVoidRequest($this->client, $this->method, $orderPayPal);
+    }
+
+    public function getCaptureAuthorizeRequest(\PaypalOrder $paypalOrder)
+    {
+        return new PaypalCaptureAuthorizeRequest($this->client, $this->method, $paypalOrder);
     }
 }

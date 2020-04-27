@@ -6,13 +6,13 @@ namespace PaypalAddons\classes\API\Request;
 
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Response\Error;
-use PaypalAddons\classes\API\Response\ResponseAuthorizationVoid;
+use PaypalAddons\classes\API\Response\ResponseCaptureAuthorize;
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
-use PayPalCheckoutSdk\Payments\AuthorizationsVoidRequest;
+use PayPalCheckoutSdk\Payments\AuthorizationsCaptureRequest;
 use PayPalHttp\HttpException;
 use Symfony\Component\VarDumper\VarDumper;
 
-class PaypalAuthorizationVoidRequest extends RequestAbstract
+class PaypalCaptureAuthorizeRequest extends RequestAbstract
 {
     /** @var \PaypalOrder*/
     protected $paypalOrder;
@@ -25,20 +25,22 @@ class PaypalAuthorizationVoidRequest extends RequestAbstract
 
     public function execute()
     {
-        $response = new ResponseAuthorizationVoid();
-        $authorizationVoid = new AuthorizationsVoidRequest($this->paypalOrder->id_transaction);
+        $response = new ResponseCaptureAuthorize();
+        $captureAuhorize = new AuthorizationsCaptureRequest($this->paypalOrder->id_transaction);
+        $captureAuhorize->prefer('return=representation');
 
         try {
-            $exec = $this->client->execute($authorizationVoid);
+            $exec = $this->client->execute($captureAuhorize);
 
-            if (in_array($exec->statusCode, [200, 201, 202, 204])) {
+            if (in_array($exec->statusCode, [200, 201, 202])) {
                 $response->setSuccess(true)
-                    ->setIdTransaction($this->paypalOrder->id_transaction);
+                    ->setIdTransaction($exec->result->id)
+                    ->setStatus($exec->result->status)
+                    ->setDateTransaction($this->getDateTransaction($exec));
             } else {
                 $error = new Error();
                 $resultDecoded = json_decode($exec->message);
                 $error->setMessage($resultDecoded->message);
-
                 $response->setSuccess(false)->setError($error);
             }
         } catch (HttpException $e) {
@@ -54,5 +56,11 @@ class PaypalAuthorizationVoidRequest extends RequestAbstract
         }
 
         return $response;
+    }
+
+    protected function getDateTransaction(\PayPalHttp\HttpResponse $exec)
+    {
+        $date = \DateTime::createFromFormat(\DateTime::ATOM, $exec->result->create_time);
+        return $date->format('Y-m-d H:i:s');
     }
 }

@@ -1365,63 +1365,36 @@ class PayPal extends \PaymentModule
 
         if ($params['newOrderStatus']->id == $osPaymentAccepted) {
             $capture = PaypalCapture::loadByOrderPayPalId($orderPayPal->id);
+
             if (!Validate::isLoadedObject($capture)) {
                 return false;
             }
 
-            try {
-                $capture_response = $method->confirmCapture($orderPayPal);
-            } catch (PayPal\Exception\PPConnectionException $e) {
-                $ex_detailed_message = $this->l('Error connecting to ') . $e->getUrl();
-            } catch (PayPal\Exception\PPMissingCredentialException $e) {
-                $ex_detailed_message = $e->errorMessage();
-            } catch (PayPal\Exception\PPConfigurationException $e) {
-                $ex_detailed_message = $this->l('Invalid configuration. Please check your configuration file');
-            } catch (Exception $e) {
-                $ex_detailed_message = $e->errorMessage();
-            }
+            $response = $method->confirmCapture($orderPayPal);
 
-            if (isset($capture_response['success'])) {
-                $orderPayPal->payment_status = $capture_response['status'];
+            if ($response->isSuccess()) {
+                $orderPayPal->payment_status = $response->getStatus();
+                $capture->id_capture = $response->getIdTransaction();
+                $capture->result = $response->getStatus();
                 $orderPayPal->save();
-            }
-            if ($ex_detailed_message) {
-                ProcessLoggerHandler::openLogger();
-                ProcessLoggerHandler::logError(
-                    $ex_detailed_message,
-                    null,
-                    $orderPayPal->id_order,
-                    $orderPayPal->id_cart,
-                    $this->context->shop->id,
-                    $orderPayPal->payment_tool,
-                    $orderPayPal->sandbox
-                );
-                ProcessLoggerHandler::closeLogger();
-            } elseif (isset($capture_response) && isset($capture_response['success']) && $capture_response['success']) {
-                foreach ($capture_response as $key => $msg) {
-                    $message .= $key . " : " . $msg . ";\r";
-                }
+                $capture->save();
+
                 ProcessLoggerHandler::openLogger();
                 ProcessLoggerHandler::logInfo(
-                    $message,
-                    isset($capture_response['authorization_id']) ? $capture_response['authorization_id'] : null,
+                    $response->getMessage(),
+                    $response->getIdTransaction(),
                     $orderPayPal->id_order,
                     $orderPayPal->id_cart,
                     $this->context->shop->id,
                     $orderPayPal->payment_tool,
                     $orderPayPal->sandbox,
-                    isset($capture_response['date_transaction']) ? $capture_response['date_transaction'] : null
+                    $response->getDateTransaction()
                 );
                 ProcessLoggerHandler::closeLogger();
-            }
-
-            if (!isset($capture_response['already_captured']) && !isset($capture_response['success'])) {
-                foreach ($capture_response as $key => $msg) {
-                    $message .= $key . " : " . $msg . ";\r";
-                }
+            } else {
                 ProcessLoggerHandler::openLogger();
                 ProcessLoggerHandler::logError(
-                    $message,
+                    $response->getError()->getMessage(),
                     null,
                     $orderPayPal->id_order,
                     $orderPayPal->id_cart,

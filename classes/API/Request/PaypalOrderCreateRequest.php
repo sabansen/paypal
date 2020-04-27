@@ -44,7 +44,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
         } catch (HttpException $e) {
             $error = new Error();
             $resultDecoded = json_decode($e->getMessage());
-            $error->setMessage($resultDecoded->message)->setErrorCode($e->getCode());
+            $error->setMessage($resultDecoded->details[0]->description)->setErrorCode($e->getCode());
 
             $response->setSuccess(false)
                 ->setError($error);
