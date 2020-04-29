@@ -31,14 +31,12 @@ class PaypalAccessTokenRequest extends RequestAbstract
             $error = new Error();
             $resultDecoded = json_decode($e->getMessage());
             $error->setMessage($resultDecoded->error_description)->setErrorCode($e->getCode());
-
             $response->setSuccess(false)
                 ->setError($error);
         } catch (\Exception $e) {
             $error = new Error();
             $error->setErrorCode($e->getCode())
                 ->setMessage($e->getMessage());
-
             $response->setSuccess(false)
                 ->setError($error);
         }

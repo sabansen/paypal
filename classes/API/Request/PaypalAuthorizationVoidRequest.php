@@ -50,7 +50,7 @@ class PaypalAuthorizationVoidRequest extends RequestAbstract
         } catch (\Exception $e) {
             $error = new Error();
             $error->setErrorCode($e->getCode())->setMessage($e->getMessage());
-            $response->setError($error);
+            $response->setError($error)->setSuccess(false);
         }
 
         return $response;

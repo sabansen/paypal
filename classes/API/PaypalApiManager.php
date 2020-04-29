@@ -11,7 +11,9 @@ use PaypalAddons\classes\API\Request\PaypalCaptureAuthorizeRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderCaptureRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderCreateRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderAuthorizeRequest;
+use PaypalAddons\classes\API\Request\PaypalOrderGetRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderPartialRefundRequest;
+use PaypalAddons\classes\API\Request\PaypalOrderPathRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderRefundRequest;
 
 class PaypalApiManager
@@ -66,5 +68,15 @@ class PaypalApiManager
     public function getCaptureAuthorizeRequest(\PaypalOrder $paypalOrder)
     {
         return new PaypalCaptureAuthorizeRequest($this->client, $this->method, $paypalOrder);
+    }
+
+    public function getOrderGetRequest($idPayment)
+    {
+        return new PaypalOrderGetRequest($this->client, $this->method, $idPayment);
+    }
+
+    public function geOrderPathRequest($idPayment)
+    {
+        return new PaypalOrderPathRequest($this->client, $this->method, $idPayment);
     }
 }

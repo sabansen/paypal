@@ -50,20 +50,18 @@ class PaypalOrderCaptureRequest extends RequestAbstract
                 $error = new Error();
                 $resultDecoded = json_decode($exec->message);
                 $error->setMessage($resultDecoded->message);
-
                 $response->setSuccess(false)->setError($error);
             }
         } catch (HttpException $e) {
             $error = new Error();
             $resultDecoded = json_decode($e->getMessage());
             $error->setMessage($resultDecoded->details[0]->description)->setErrorCode($e->getCode());
-
             $response->setSuccess(false)
                 ->setError($error);
         } catch (\Exception $e) {
             $error = new Error();
             $error->setErrorCode($e->getCode())->setMessage($e->getMessage());
-            $response->setError($error);
+            $response->setError($error)->setSuccess(false);
         }
 
         return $response;

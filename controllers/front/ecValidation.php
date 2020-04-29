@@ -44,11 +44,22 @@ class PaypalEcValidationModuleFrontController extends PaypalAbstarctModuleFrontC
     public function postProcess()
     {
         $method_ec = AbstractMethodPaypal::load('EC');
-        $method_ec->setPayerId(Tools::getValue('PayerID'))
-            ->setPaymentId(Tools::getValue('token'))
-            ->setShortCut(Tools::getValue('short_cut'));
         $paypal = Module::getInstanceByName($this->name);
+
         try {
+            if ((int)Tools::getValue('short_cut')) {
+                $method_ec->setPaymentId(Context::getContext()->cookie->paypal_ecs);
+                /** @var $resultPath \PaypalAddons\classes\API\Response\Response*/
+                $resultPath = $method_ec->doOrderPath();
+
+                if ($resultPath->isSuccess() == false) {
+                    throw new Exception($resultPath->getError()->getMessage());
+                }
+            } else {
+                $method_ec->setPaymentId(Tools::getValue('token'));
+            }
+
+            $method_ec->setShortCut(Tools::getValue('short_cut'));
             $method_ec->validation();
             $cart = Context::getContext()->cart;
             $customer = new Customer($cart->id_customer);
@@ -72,7 +83,6 @@ class PaypalEcValidationModuleFrontController extends PaypalAbstarctModuleFrontC
 
         //unset cookie of payment init
         Context::getContext()->cookie->__unset('paypal_ecs');
-        Context::getContext()->cookie->__unset('paypal_ecs_payerid');
         Context::getContext()->cookie->__unset('paypal_ecs_email');
 
         if (!empty($this->errors)) {

@@ -37,7 +37,6 @@ class PaypalOrderCreateRequest extends RequestAbstract
                 $error = new Error();
                 $resultDecoded = json_decode($exec->message);
                 $error->setMessage($resultDecoded->message);
-
                 $response->setSuccess(false)
                     ->setError($error);
             }
@@ -45,14 +44,12 @@ class PaypalOrderCreateRequest extends RequestAbstract
             $error = new Error();
             $resultDecoded = json_decode($e->getMessage());
             $error->setMessage($resultDecoded->details[0]->description)->setErrorCode($e->getCode());
-
             $response->setSuccess(false)
                 ->setError($error);
         } catch (\Exception $e) {
             $error = new Error();
             $error->setMessage($e->getMessage())
                 ->setErrorCode($e->getCode());
-
             $response->setSuccess(false)
                 ->setError($error);
         }
@@ -85,19 +82,27 @@ class PaypalOrderCreateRequest extends RequestAbstract
         $discountItems = $this->getDiscountItems($currency);
         $wrappingItems = $this->getWrappingItems($currency);
         $items = array_merge($productItmes, $discountItems, $wrappingItems);
+        $payer = $this->getPayer();
+        $shippingInfo = $this->getShippingInfo();
 
         $body = [
             'intent' => $this->getIntent(),
             'application_context' => $this->getApplicationContext(),
-            'payer' => $this->getPayer(),
             'purchase_units' => [
                 [
                     'amount' => $this->getAmount($currency),
                     'items' => $items,
-                    'shipping' => $this->getShippingInfo(),
                 ],
             ],
         ];
+
+        if (empty($payer) == false) {
+            $body['payer'] = $payer;
+        }
+
+        if (empty($shippingInfo) == false) {
+            $body['purchase_units'][0]['shipping'] = $shippingInfo;
+        }
 
         return $body;
     }
@@ -108,6 +113,11 @@ class PaypalOrderCreateRequest extends RequestAbstract
     protected function getPayer()
     {
         $payer = [];
+
+        if (\Validate::isLoadedObject($this->context->customer) == false) {
+            return $payer;
+        }
+
         $payer['name'] = [
             'given_name' => $this->context->customer->firstname,
             'surname' => $this->context->customer->lastname
@@ -288,6 +298,9 @@ class PaypalOrderCreateRequest extends RequestAbstract
      */
     protected function getShippingInfo()
     {
+        if ($this->context->cart->id_address_delivery == false) {
+            return [];
+        }
         $shippingInfo = [
             'address' => $this->getAddress()
         ];

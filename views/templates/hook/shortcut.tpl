@@ -43,12 +43,8 @@
         {/if}
         <input type="hidden" name="express_checkout" value="{$PayPal_payment_type|escape:'htmlall':'UTF-8'}"/>
         <input type="hidden" name="current_shop_url" data-paypal-url-page value="" />
-        {if isset($PayPal_tracking_code) && !empty($PayPal_tracking_code)}
-          <input type="hidden" name="bn" value="{$PayPal_tracking_code|escape:'htmlall':'UTF-8'}" />
-          <input type="hidden" id="in_context_checkout_enabled" value="0">
-        {/if}
         <input type="hidden" id="source_page" name="source_page" value="{$source_page}">
-        <img src="{$PayPal_img_esc|escape:'htmlall':'UTF-8'}" data-paypal-shortcut-btn alt="{l s='PayPal' mod='paypal'}" style="cursor:pointer;"/>
     </form>
+    <div paypal-button-container></div>
 </div>
 <div class="clearfix"></div>

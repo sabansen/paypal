@@ -706,6 +706,7 @@ class PayPal extends \PaymentModule
     {
         $this->context->controller->registerStylesheet($this->name . '-fo', 'modules/' . $this->name . '/views/css/paypal_fo.css');
         $resources = array();
+        $method = AbstractMethodPaypal::load($this->paypal_method);
 
         if (Tools::getValue('controller') == "order") {
             if (!$this->checkActiveModule()) {
@@ -788,7 +789,7 @@ class PayPal extends \PaymentModule
 
             if (($this->paypal_method == 'EC' && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT')) ||
                 ($this->paypal_method == 'MB' && (int)Configuration::get('PAYPAL_MB_EC_ENABLED') && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT'))) {
-                $resources[] = 'https://www.paypalobjects.com/api/checkout.min.js';
+                $resources[] = 'https://www.paypal.com/sdk/js?client-id=' . $method->getClientId();
             }
             if ($this->paypal_method == 'PPP') {
                 $resources[] = 'https://www.paypalobjects.com/webstatic/ppplus/ppplus.min.js';
@@ -811,10 +812,11 @@ class PayPal extends \PaymentModule
                 ));
             }
 
-            $this->context->controller->registerJavascript($this->name . '-paypal-checkout', 'https://www.paypalobjects.com/api/checkout.min.js', array('server' => 'remote'));
+            $this->context->controller->registerJavascript($this->name . '-paypal-checkout', 'https://www.paypal.com/sdk/js?client-id=' . $method->getClientId() . '&currency=' . $this->getPaymentCurrencyIso(), array('server' => 'remote'));
             $this->context->controller->registerJavascript($this->name . '-paypal-shortcut', 'modules/' . $this->name . '/views/js/shortcut.js');
             Media::addJsDef(array(
                 'sc_init_url' => $this->context->link->getModuleLink($this->name, 'ScInit', array(), true),
+                'scOrderUrl' => $this->context->link->getModuleLink($this->name, 'ecScOrder')
             ));
         }
 

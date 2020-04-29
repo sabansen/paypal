@@ -79,9 +79,6 @@ class MethodEC extends AbstractMethodPaypal
     /** @var string payment token returned by paypal*/
     private $payment_token;
 
-    /** @var string payment payer ID returned by paypal*/
-    private $payerId;
-
     protected $payment_method = 'PayPal';
 
     protected $transaction_detail;
@@ -133,17 +130,6 @@ class MethodEC extends AbstractMethodPaypal
     public function getPaymentId()
     {
         return $this->paymentId;
-    }
-
-    public function setPayerId($payerId)
-    {
-        $this->payerId = $payerId;
-        return $this;
-    }
-
-    public function getPayerId()
-    {
-        return $this->payerId;
     }
 
     public function setShortCut($shortCut)
@@ -215,6 +201,21 @@ class MethodEC extends AbstractMethodPaypal
         $this->setPaymentId($response->getPaymentId());
 
         return $response->getApproveLink();
+    }
+
+    public function doOrderPath()
+    {
+        if ($this->isConfigured() == false) {
+            return false;
+        }
+
+        return $this->paypalApiManager->geOrderPathRequest($this->getPaymentId())->execute();
+    }
+
+    public function getInfo()
+    {
+        $response = $this->paypalApiManager->getOrderGetRequest($this->getPaymentId())->execute();
+        return $response;
     }
 
     /**
@@ -338,10 +339,6 @@ class MethodEC extends AbstractMethodPaypal
 
         if (!Validate::isLoadedObject($customer)) {
             throw new Exception('Customer is not loaded object');
-        }
-
-        if ($this->getPayerId() == false) {
-            throw new Exception('Payer ID isn\'t setted');
         }
 
         if ($this->getPaymentId() == false) {
