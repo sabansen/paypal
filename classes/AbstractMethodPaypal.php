@@ -27,10 +27,26 @@
 
 namespace PaypalAddons\classes;
 
+use PaypalAddons\classes\API\PaypalApiManagerInterface;
+use PaypalAddons\classes\API\Response\Response;
+use PaypalAddons\classes\API\Response\ResponseOrderGet;
+use PaypalAddons\classes\API\Response\ResponseOrderRefund;
 use PaypalPPBTlib\AbstractMethod;
 
 abstract class AbstractMethodPaypal extends AbstractMethod
 {
+    /** @var bool*/
+    protected $isSandbox;
+
+    /** @var string*/
+    protected $clientId;
+
+    /** @var string*/
+    protected $secret;
+
+    /** @var PaypalApiManagerInterface*/
+    protected $paypalApiManager;
+
     public static function load($method = null)
     {
         if ($method == null) {
@@ -57,4 +73,125 @@ abstract class AbstractMethodPaypal extends AbstractMethod
             return new $method_class();
         }
     }
+
+    public function isSandbox()
+    {
+        if ($this->isSandbox !== null) {
+            return $this->isSandbox;
+        }
+
+        $this->isSandbox = (bool)\Configuration::get('PAYPAL_SANDBOX');
+        return $this->isSandbox;
+    }
+
+    public function init()
+    {
+        if ($this->isConfigured() == false) {
+            return '';
+        }
+
+        /** @var $response \PaypalAddons\classes\API\Response\ResponseOrderCreate*/
+        $response = $this->paypalApiManager->getOrderRequest()->execute();
+
+        if ($response->isSuccess() == false) {
+            throw new \Exception($response->getError()->getMessage());
+        }
+
+        $this->setPaymentId($response->getPaymentId());
+
+        return $response;
+    }
+
+    public function setDetailsTransaction($data)
+    {
+        /** @var $data \PaypalAddons\classes\API\Response\ResponseOrderCapture*/
+        $transaction_detail = array(
+            'method' => $data->getMethod(),
+            'currency' => $data->getCurrency(),
+            'payment_status' => $data->getStatus(),
+            'payment_method' => $data->getPaymentMethod(),
+            'id_payment' => pSQL($data->getPaymentId()),
+            'payment_tool' => $data->getPaymentTool(),
+            'date_transaction' => $data->getDateTransaction()->format('Y-m-d H:i:s'),
+            'transaction_id' => $data->getTransactionId(),
+            'capture' => $data->isCapture()
+        );
+
+        $this->transaction_detail = $transaction_detail;
+    }
+
+    /**
+     * @param $paypalOrder \PaypalOrder
+     * @return ResponseOrderRefund
+     */
+    public function refund($paypalOrder)
+    {
+        /** @var $response ResponseOrderRefund*/
+        $response = $this->paypalApiManager->getOrderRefundRequest($paypalOrder)->execute();
+        return $response;
+    }
+
+    /**
+     * @param $params mixed
+     * @return ResponseOrderRefund
+     */
+    public function partialRefund($params)
+    {
+        $paypalOrder = \PaypalOrder::loadByOrderId($params['order']->id);
+        $amount = 0;
+
+        foreach ($params['productList'] as $product) {
+            $amount += $product['amount'];
+        }
+
+        if (\Tools::getValue('partialRefundShippingCost')) {
+            $amount += \Tools::getValue('partialRefundShippingCost');
+        }
+
+        return $response = $this->paypalApiManager->getOrderPartialRefundRequest($paypalOrder, $amount)->execute();
+    }
+
+    /**
+     * @return Response
+     */
+    public function doOrderPatch()
+    {
+        if ($this->isConfigured() == false) {
+            return false;
+        }
+
+        return $this->paypalApiManager->geOrderPatchRequest($this->getPaymentId())->execute();
+    }
+
+
+    /**
+     * @return ResponseOrderGet
+     */
+    public function getInfo()
+    {
+        $response = $this->paypalApiManager->getOrderGetRequest($this->getPaymentId())->execute();
+        return $response;
+    }
+
+    public function getLinkToTransaction($log)
+    {
+        if ($log->sandbox) {
+            $url = 'https://www.sandbox.paypal.com/activity/payment/';
+        } else {
+            $url = 'https://www.paypal.com/activity/payment/';
+        }
+        return $url . $log->id_transaction;
+    }
+
+    abstract public function getClientId();
+
+    abstract public function getSecret();
+
+    abstract public function getReturnUrl();
+
+    abstract public function getCancelUrl();
+
+    abstract public function getPaypalPartnerId();
+
+    abstract public function getIntent();
 }

@@ -96,7 +96,7 @@ const Shortcut = {
 
     if (this.page == 'product') {
       data['idProduct'] = this.idProduct;
-      data['quantity'] = this.quantity;
+      data['quantity'] = this.productQuantity;
       data['combination'] = this.combination.join('|');
     }
 
@@ -122,7 +122,7 @@ const Shortcut = {
 
     if (this.page == 'product') {
       data['idProduct'] = this.idProduct;
-      data['quantity'] = this.quantity;
+      data['quantity'] = this.productQuantity;
       data['combination'] = this.combination.join('|');
     }
 
@@ -147,7 +147,6 @@ const Shortcut = {
 
 
 $(document).ready( () => {
-  window.Shortcut = Shortcut;
   Shortcut.init();
   Shortcut.initButton();
 });

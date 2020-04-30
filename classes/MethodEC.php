@@ -24,38 +24,7 @@
  *
  */
 
-
-use PayPal\Auth\OAuthTokenCredential;
-use PayPal\Rest\ApiContext;
-use PayPal\Api\Amount;
-use PayPal\Api\Details;
-use PayPal\Api\Item;
-use PayPal\Api\ItemList;
-use PayPal\Api\Payer;
-use PayPal\Api\PayerInfo;
-use PayPal\Api\Payment;
-use PayPal\Api\RedirectUrls;
-use PayPal\Api\Transaction;
-use PayPal\Api\Patch;
-use PayPal\Api\PatchRequest;
-use PayPal\Api\PaymentExecution;
-use PayPal\Api\Refund;
-use PayPal\Api\RefundRequest;
-use PayPal\Api\Sale;
-use PaypalAddons\classes\API\Action\PaypalOrderRefund;
-use PaypalAddons\classes\API\Builder\AmountBuilder;
-use PaypalAddons\classes\API\Builder\ItemListBuilder;
-use PaypalAddons\classes\API\Builder\PayerBuilder;
-use PaypalAddons\classes\API\Builder\PayerInfoBuilder;
-use PaypalAddons\classes\API\Builder\PaymentBuilder;
-use PaypalAddons\classes\API\Builder\RedirectUrlsBuilder;
-use PaypalAddons\classes\API\Builder\ShippingAddressBuilder;
-use PaypalAddons\classes\API\Builder\TransactionBuilder;
-use PaypalAddons\classes\API\Builder\WebProfileBuilder;
 use PaypalAddons\classes\API\PaypalApiManager;
-use PaypalAddons\classes\API\PaypalApiSdkBuilerFactory;
-use PaypalAddons\classes\API\PaypalClient;
-use PaypalAddons\classes\PaypalException;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 
@@ -67,17 +36,11 @@ use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
  */
 class MethodEC extends AbstractMethodPaypal
 {
-    /** @var string token. for in-context */
-    public $token;
-
     /** @var boolean pay with card without pp account */
     public $credit_card;
 
     /** @var boolean shortcut payment from product or cart page*/
     public $short_cut;
-
-    /** @var string payment token returned by paypal*/
-    private $payment_token;
 
     protected $payment_method = 'PayPal';
 
@@ -101,8 +64,6 @@ class MethodEC extends AbstractMethodPaypal
 
     /** @var string*/
     protected $secret;
-
-    protected $paypalApiManager;
 
     public function __construct()
     {
@@ -182,43 +143,6 @@ class MethodEC extends AbstractMethodPaypal
     }
 
     /**
-     * The SetExpressCheckout API operation initiates an Express Checkout transaction
-     * @see AbstractMethodPaypal::init()
-     */
-    public function init()
-    {
-        if ($this->isConfigured() == false) {
-            return '';
-        }
-
-        /** @var $payment \PaypalAddons\classes\API\Response\ResponseOrderCreate*/
-        $response = $this->paypalApiManager->getOrderRequest()->execute();
-
-        if ($response->isSuccess() == false) {
-            throw new Exception($response->getError()->getMessage());
-        }
-
-        $this->setPaymentId($response->getPaymentId());
-
-        return $response->getApproveLink();
-    }
-
-    public function doOrderPath()
-    {
-        if ($this->isConfigured() == false) {
-            return false;
-        }
-
-        return $this->paypalApiManager->geOrderPathRequest($this->getPaymentId())->execute();
-    }
-
-    public function getInfo()
-    {
-        $response = $this->paypalApiManager->getOrderGetRequest($this->getPaymentId())->execute();
-        return $response;
-    }
-
-    /**
      * Convert and format price
      * @param $price
      * @return float|int|string
@@ -237,25 +161,6 @@ class MethodEC extends AbstractMethodPaypal
     }
 
     /**
-     * @param string $method
-     * @return string Url
-     */
-    public function redirectToAPI($method)
-    {
-        if ($this->useMobile()) {
-            $url = '/cgi-bin/webscr?cmd=_express-checkout-mobile';
-        } else {
-            $url = '/websc&cmd=_express-checkout';
-        }
-
-        if (($method == 'SetExpressCheckout') && $this->credit_card) {
-            $url .= '&useraction=commit';
-        }
-        $paypal = Module::getInstanceByName($this->name);
-        return $paypal->getUrl().$url.'&token='.urldecode($this->token);
-    }
-
-    /**
      * @return bool
      */
     public function useMobile()
@@ -266,66 +171,6 @@ class MethodEC extends AbstractMethodPaypal
         }
 
         return false;
-    }
-
-    /**
-     * @return array Merchant Credentiales
-     */
-    public function _getCredentialsInfo($mode_order = null)
-    {
-        if ($mode_order === null) {
-            $mode_order = (int) Configuration::get('PAYPAL_SANDBOX');
-        }
-        switch ($mode_order) {
-            case 0:
-                $apiContext = new ApiContext(
-                    new OAuthTokenCredential(
-                        Configuration::get('PAYPAL_EC_CLIENTID_LIVE'),
-                        Configuration::get('PAYPAL_EC_SECRET_LIVE')
-                    )
-                );
-                break;
-            case 1:
-                $apiContext = new ApiContext(
-                    new OAuthTokenCredential(
-                        Configuration::get('PAYPAL_EC_CLIENTID_SANDBOX'),
-                        Configuration::get('PAYPAL_EC_SECRET_SANDBOX')
-                    )
-                );
-                break;
-        }
-
-        $apiContext->setConfig(
-            array(
-                'mode' => $mode_order ? 'sandbox' : 'live',
-                'log.LogEnabled' => false,
-                'cache.enabled' => true,
-            )
-        );
-
-        $apiContext->addRequestHeader('PayPal-Partner-Attribution-Id', (getenv('PLATEFORM') == 'PSREAD') ? 'PrestaShop_Cart_Ready_EC' : 'PrestaShop_Cart_EC');
-        return $apiContext;
-    }
-
-    /**
-     * @param $cart Cart
-     * @return string additional payment information
-     */
-    public function getCustomFieldInformation(Cart $cart)
-    {
-        $module = Module::getInstanceByName($this->name);
-        $return = $module->l('Cart ID: ',  get_class($this)) . $cart->id . '.';
-
-        if (Shop::isFeatureActive()) {
-            $shop = new Shop($cart->id_shop, $cart->id_lang);
-
-            if (Validate::isLoadedObject($shop)) {
-                $return .= $module->l('Shop name: ',  get_class($this)) . $shop->name;
-            }
-        }
-
-        return $return;
-
     }
 
     /**
@@ -394,24 +239,6 @@ class MethodEC extends AbstractMethodPaypal
         return $orderStatus;
     }
 
-    public function setDetailsTransaction($data)
-    {
-        /** @var $data \PaypalAddons\classes\API\Response\ResponseOrderCapture*/
-        $transaction_detail = array(
-            'method' => $data->getMethod(),
-            'currency' => $data->getCurrency(),
-            'payment_status' => $data->getStatus(),
-            'payment_method' => $data->getPaymentMethod(),
-            'id_payment' => pSQL($data->getPaymentId()),
-            'payment_tool' => $data->getPaymentTool(),
-            'date_transaction' => $data->getDateTransaction()->format('Y-m-d H:i:s'),
-            'transaction_id' => $data->getTransactionId(),
-            'capture' => $data->isCapture()
-        );
-
-        $this->transaction_detail = $transaction_detail;
-    }
-
     public function getDateTransaction()
     {
         $dateServer = new DateTime();
@@ -426,34 +253,6 @@ class MethodEC extends AbstractMethodPaypal
     public function confirmCapture($paypalOrder)
     {
         return $this->paypalApiManager->getCaptureAuthorizeRequest($paypalOrder)->execute();
-    }
-
-    /**
-     * @see AbstractMethodPaypal::refund()
-     */
-    public function refund($paypalOrder)
-    {
-        $response = $this->paypalApiManager->getOrderRefundRequest($paypalOrder)->execute();
-        return $response;
-    }
-
-    /**
-     * @see AbstractMethodPaypal::partialRefund()
-     */
-    public function partialRefund($params)
-    {
-        $paypalOrder = PaypalOrder::loadByOrderId($params['order']->id);
-        $amount = 0;
-
-        foreach ($params['productList'] as $product) {
-            $amount += $product['amount'];
-        }
-
-        if (Tools::getValue('partialRefundShippingCost')) {
-            $amount += Tools::getValue('partialRefundShippingCost');
-        }
-
-        return $response = $this->paypalApiManager->getOrderPartialRefundRequest($paypalOrder, $amount)->execute();
     }
 
     /**
@@ -500,22 +299,9 @@ class MethodEC extends AbstractMethodPaypal
     }
 
     /**
-     * @see AbstractMethodPaypal::getLinkToTransaction()
-     */
-    public function getLinkToTransaction($log)
-    {
-        if ($log->sandbox) {
-            $url = 'https://www.sandbox.paypal.com/activity/payment/';
-        } else {
-            $url = 'https://www.paypal.com/activity/payment/';
-        }
-        return $url . $log->id_transaction;
-    }
-
-    /**
      * @return bool
      */
-    public function isConfigured($mode = null)
+    public function isConfigured()
     {
         return (bool)Configuration::get('PAYPAL_CONNECTION_EC_CONFIGURED');
     }
@@ -601,16 +387,6 @@ class MethodEC extends AbstractMethodPaypal
     public function getIntent()
     {
         return Configuration::get('PAYPAL_API_INTENT') == 'sale' ? 'CAPTURE' : 'AUTHORIZE';
-    }
-
-    public function isSandbox()
-    {
-        if ($this->isSandbox !== null) {
-            return $this->isSandbox;
-        }
-
-        $this->isSandbox = (bool)Configuration::get('PAYPAL_SANDBOX');
-        return $this->isSandbox;
     }
 
     public function getClientId()

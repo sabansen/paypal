@@ -38,8 +38,7 @@ class PaypalPppValidationModuleFrontController extends PaypalAbstarctModuleFront
     {
         parent::init();
         $this->values['short_cut'] = Tools::getvalue('short_cut');
-        $this->values['paymentId'] = Tools::getvalue('paymentId');
-        $this->values['payerId'] = Tools::getvalue('PayerID');
+        $this->values['paymentId'] = Tools::getvalue('token');
     }
 
     /**
@@ -51,6 +50,16 @@ class PaypalPppValidationModuleFrontController extends PaypalAbstarctModuleFront
         $paypal = Module::getInstanceByName($this->name);
         try {
             $method_ppp->setParameters($this->values);
+
+            if ($method_ppp->getShortCut()) {
+                /** @var $resultPath \PaypalAddons\classes\API\Response\Response*/
+                $resultPath = $method_ppp->doOrderPatch();
+
+                if ($resultPath->isSuccess() == false) {
+                    throw new Exception($resultPath->getError()->getMessage());
+                }
+            }
+
             $method_ppp->validation();
             $cart = Context::getContext()->cart;
             $customer = new Customer($cart->id_customer);
@@ -71,9 +80,7 @@ class PaypalPppValidationModuleFrontController extends PaypalAbstarctModuleFront
             $this->transaction_detail = $method_ppp->getDetailsTransaction();
         }
 
-        Context::getContext()->cookie->__unset('paypal_plus_payment');
         Context::getContext()->cookie->__unset('paypal_pSc');
-        Context::getContext()->cookie->__unset('paypal_pSc_payerid');
         Context::getContext()->cookie->__unset('paypal_pSc_email');
         if (!empty($this->errors)) {
             $this->redirectUrl = Context::getContext()->link->getModuleLink($this->name, 'error', $this->errors);

@@ -125,6 +125,14 @@ class PaypalOrderCreateRequest extends RequestAbstract
         $payer['email'] = $this->context->customer->email;
         $payer['address'] = $this->getAddress();
 
+        if ($this->method instanceof \MethodMB) {
+            $taxInfo = $this->method->getPayerTaxInfo();
+
+            if (empty($taxInfo) == false) {
+                $payer['tax_info'] = $taxInfo;
+            }
+        }
+
         return $payer;
     }
 

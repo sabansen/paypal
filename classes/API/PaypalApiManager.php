@@ -13,10 +13,10 @@ use PaypalAddons\classes\API\Request\PaypalOrderCreateRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderAuthorizeRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderGetRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderPartialRefundRequest;
-use PaypalAddons\classes\API\Request\PaypalOrderPathRequest;
+use PaypalAddons\classes\API\Request\PaypalOrderPatchRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderRefundRequest;
 
-class PaypalApiManager
+class PaypalApiManager implements PaypalApiManagerInterface
 {
     /** @var AbstractMethodPaypal*/
     protected $method;
@@ -75,8 +75,8 @@ class PaypalApiManager
         return new PaypalOrderGetRequest($this->client, $this->method, $idPayment);
     }
 
-    public function geOrderPathRequest($idPayment)
+    public function geOrderPatchRequest($idPayment)
     {
-        return new PaypalOrderPathRequest($this->client, $this->method, $idPayment);
+        return new PaypalOrderPatchRequest($this->client, $this->method, $idPayment);
     }
 }

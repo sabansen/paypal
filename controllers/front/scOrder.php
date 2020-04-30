@@ -32,14 +32,25 @@ use PaypalAddons\classes\AbstractMethodPaypal;
 /**
  * Update PrestaShop Order after return from PayPal
  */
-class PaypalEcScOrderModuleFrontController extends PaypalAbstarctModuleFrontController
+class PaypalScOrderModuleFrontController extends PaypalAbstarctModuleFrontController
 {
     protected $paymentData;
+
+    /** @var AbstractMethodPaypal*/
+    protected $method;
 
     public function init()
     {
         parent::init();
         $this->setPaymentData(json_decode(Tools::getValue('paymentData')));
+
+        if ($this->module->paypal_method == 'MB') {
+            $methodType = 'EC';
+        } else {
+            $methodType = $this->module->paypal_method;
+        }
+
+        $this->method = AbstractMethodPaypal::load($methodType);
     }
 
     /**
@@ -47,13 +58,12 @@ class PaypalEcScOrderModuleFrontController extends PaypalAbstarctModuleFrontCont
      */
     public function postProcess()
     {
-        $method = AbstractMethodPaypal::load('EC');
         $paypal = Module::getInstanceByName($this->name);
 
         try {
             $this->redirectUrl = $this->context->link->getPageLink('order', null, null, array('step'=>2));
-            $method->setPaymentId($this->paymentData->orderID);
-            $info = $method->getInfo();
+            $this->method->setPaymentId($this->paymentData->orderID);
+            $info = $this->method->getInfo();
             $this->prepareOrder($info);
 
             if (!empty($this->errors)) {
@@ -84,7 +94,6 @@ class PaypalEcScOrderModuleFrontController extends PaypalAbstarctModuleFrontCont
      */
     public function prepareOrder($info)
     {
-        //\Symfony\Component\VarDumper\VarDumper::dump($info); die;
         $module = Module::getInstanceByName($this->name);
 
         if ($this->context->cookie->logged) {
@@ -114,10 +123,15 @@ class PaypalEcScOrderModuleFrontController extends PaypalAbstarctModuleFrontCont
         CartRule::autoRemoveFromCart($this->context);
         CartRule::autoAddToCart($this->context);
         // END Login
-        $this->context->cookie->__set('paypal_ecs', $this->paymentData->orderID);
-        $this->context->cookie->__set('paypal_ecs_email', $info->getClient()->getEmail());
-        /*$this->context->cookie->__set('paypal_ecs_payerid', $info->GetExpressCheckoutDetailsResponseDetails->PayerInfo->PayerID);
-        */
+        if ($this->method instanceof MethodEC) {
+            $this->context->cookie->__set('paypal_ecs', $this->paymentData->orderID);
+            $this->context->cookie->__set('paypal_ecs_email', $info->getClient()->getEmail());
+        } elseif ($this->method instanceof MethodPPP) {
+            $this->context->cookie->__set('paypal_pSc', $this->paymentData->orderID);
+            $this->context->cookie->__set('paypal_pSc_email', $info->getClient()->getEmail());
+        }
+
+
 
         $addresses = $this->context->customer->getAddresses($this->context->language->id);
         $address_exist = false;

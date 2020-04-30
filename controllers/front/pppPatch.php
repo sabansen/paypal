@@ -38,10 +38,18 @@ class PaypalPppPatchModuleFrontController extends PaypalAbstarctModuleFrontContr
     public function postProcess()
     {
         $method_ppp = AbstractMethodPaypal::load('PPP');
+        $method_ppp->setPaymentId(Tools::getValue('idPayment'));
+
         if (Context::getContext()->cookie->paypal_plus_payment) {
             try {
-                $method_ppp->doPatch();
-                $this->jsonValues = array('success' => true);
+                $resultPath = $method_ppp->doOrderPatch();
+
+                if ($resultPath->isSuccess()) {
+                    $this->jsonValues = array('success' => $resultPath->isSuccess());
+                } else {
+                    $this->errors['error_msg'] = $resultPath->getError()->getMessage();
+                    $this->jsonValues = array('success' => false, 'redirect_link' => Context::getContext()->link->getModuleLink($this->name, 'error', $this->errors));
+                }
             } catch (Exception $e) {
                 $this->errors['error_code'] = $e->getCode();
                 $this->errors['error_msg'] = $e->getMessage();

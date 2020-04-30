@@ -37,6 +37,8 @@ class PaypalEcValidationModuleFrontController extends PaypalAbstarctModuleFrontC
     public function init()
     {
         parent::init();
+        $this->values['short_cut'] = Tools::getvalue('short_cut');
+        $this->values['paymentId'] = Tools::getvalue('token');
     }
     /**
      * @see FrontController::postProcess()
@@ -47,19 +49,17 @@ class PaypalEcValidationModuleFrontController extends PaypalAbstarctModuleFrontC
         $paypal = Module::getInstanceByName($this->name);
 
         try {
-            if ((int)Tools::getValue('short_cut')) {
-                $method_ec->setPaymentId(Context::getContext()->cookie->paypal_ecs);
+            $method_ec->setParameters($this->values);
+
+            if ($method_ec->getShortCut()) {
                 /** @var $resultPath \PaypalAddons\classes\API\Response\Response*/
-                $resultPath = $method_ec->doOrderPath();
+                $resultPath = $method_ec->doOrderPatch();
 
                 if ($resultPath->isSuccess() == false) {
                     throw new Exception($resultPath->getError()->getMessage());
                 }
-            } else {
-                $method_ec->setPaymentId(Tools::getValue('token'));
             }
 
-            $method_ec->setShortCut(Tools::getValue('short_cut'));
             $method_ec->validation();
             $cart = Context::getContext()->cart;
             $customer = new Customer($cart->id_customer);

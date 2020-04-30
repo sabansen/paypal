@@ -12,7 +12,7 @@ use PayPalCheckoutSdk\Orders\OrdersPatchRequest;
 use PayPalHttp\HttpException;
 use Symfony\Component\VarDumper\VarDumper;
 
-class PaypalOrderPathRequest extends PaypalOrderCreateRequest
+class PaypalOrderPatchRequest extends PaypalOrderCreateRequest
 {
     /** @var string*/
     protected $idPayment;

@@ -11,7 +11,7 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  * @copyright PayPal
  * @license   http://addons.prestashop.com/en/content/12-terms-and-conditions-of-use
- * 
+ *
  */
 let ppp = {},
     exec_ppp_payment = true;
@@ -65,6 +65,9 @@ const doPatchPPP = () => {
       type: 'POST',
       url: ajaxPatchUrl,
       dataType: 'json',
+      data: {
+        idPayment: idPaymentPPP,
+      },
       success: (json) => {
         if (json.success) {
           ppp.doCheckout();

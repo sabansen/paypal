@@ -615,7 +615,7 @@ class PayPal extends \PaymentModule
                         $action_text = $this->l('Pay with paypal plus shortcut');
                         $payment_option->setCallToActionText($action_text);
                         $payment_option->setModuleName('paypal_plus_schortcut');
-                        $payment_option->setAction($this->context->link->getModuleLink($this->name, 'pppValidation', array('short_cut' => '1'), true));
+                        $payment_option->setAction($this->context->link->getModuleLink($this->name, 'pppValidation', array('short_cut' => '1', 'token' => $this->context->cookie->paypal_pSc), true));
                         $payments_options[] = $payment_option;
                     }
                 }
@@ -695,7 +695,7 @@ class PayPal extends \PaymentModule
             $action_text = $this->l('Pay with paypal express checkout');
             $paymentOption->setCallToActionText($action_text);
             $paymentOption->setModuleName('express_checkout_schortcut');
-            $paymentOption->setAction($this->context->link->getModuleLink($this->name, 'ecValidation', array('short_cut' => '1'), true));
+            $paymentOption->setAction($this->context->link->getModuleLink($this->name, 'ecValidation', array('short_cut' => '1', 'token' => $this->context->cookie->paypal_ecs), true));
             $paymentOptions[] = $paymentOption;
         }
 
@@ -816,7 +816,7 @@ class PayPal extends \PaymentModule
             $this->context->controller->registerJavascript($this->name . '-paypal-shortcut', 'modules/' . $this->name . '/views/js/shortcut.js');
             Media::addJsDef(array(
                 'sc_init_url' => $this->context->link->getModuleLink($this->name, 'ScInit', array(), true),
-                'scOrderUrl' => $this->context->link->getModuleLink($this->name, 'ecScOrder')
+                'scOrderUrl' => $this->context->link->getModuleLink($this->name, 'scOrder')
             ));
         }
 
@@ -1187,7 +1187,7 @@ class PayPal extends \PaymentModule
                 ProcessLoggerHandler::openLogger();
                 ProcessLoggerHandler::logInfo(
                     $refundResponse->getMessage(),
-                    $refundResponse->getIdTransaction()(),
+                    $refundResponse->getIdTransaction(),
                     $paypalOrder->id_order,
                     $paypalOrder->id_cart,
                     $this->context->shop->id,
@@ -1340,7 +1340,7 @@ class PayPal extends \PaymentModule
                 ProcessLoggerHandler::openLogger();
                 ProcessLoggerHandler::logInfo(
                     $refundResponse->getMessage(),
-                    $refundResponse->getIdTransaction()(),
+                    $refundResponse->getIdTransaction(),
                     $orderPayPal->id_order,
                     $orderPayPal->id_cart,
                     $this->context->shop->id,
