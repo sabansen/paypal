@@ -494,13 +494,10 @@ class MethodEC extends AbstractMethodPaypal
     {
         $module = Module::getInstanceByName($this->name);
         $return = $module->l('Cart ID: ',  get_class($this)) . $cart->id . '.';
+        $shop = new Shop($cart->id_shop, $cart->id_lang);
 
-        if (Shop::isFeatureActive()) {
-            $shop = new Shop($cart->id_shop, $cart->id_lang);
-
-            if (Validate::isLoadedObject($shop)) {
-                $return .= $module->l('Shop name: ',  get_class($this)) . $shop->name;
-            }
+        if (Validate::isLoadedObject($shop)) {
+            $return .= $module->l('Shop name: ',  get_class($this)) . $shop->name;
         }
 
         return $return;
