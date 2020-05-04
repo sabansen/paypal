@@ -66,8 +66,7 @@ class AdminPayPalController extends \ModuleAdminController
         }
 
         $showWarningForUserBraintree = $this->module->showWarningForUserBraintree();
-        $countryDefault = new \Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
-        $showPsCheckoutInfo = in_array($countryDefault->iso_code, $this->module->psCheckoutCountry) && (int)\Configuration::get('PAYPAL_NOT_SHOW_PS_CHECKOUT') == 0;
+        $showPsCheckoutInfo = $this->module->showPsCheckoutMessage();
         $this->context->smarty->assign('showWarningForUserBraintree', $showWarningForUserBraintree);
         $this->context->smarty->assign('methodType', $this->method);
         $this->context->smarty->assign('moduleDir', _MODULE_DIR_);
@@ -248,7 +247,7 @@ class AdminPayPalController extends \ModuleAdminController
 
         switch ($action) {
             case 'close':
-                \Configuration::updateValue('PAYPAL_NOT_SHOW_PS_CHECKOUT', 1);
+                $this->module->setPsCheckoutMessageValue(true);
                 break;
             case 'install':
                 if (is_dir(_PS_MODULE_DIR_ . 'ps_checkout') == false) {

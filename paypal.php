@@ -362,7 +362,7 @@ class PayPal extends \PaymentModule
             'PAYPAL_OS_PROCESSING' => (int)Configuration::get('PAYPAL_OS_WAITING'),
             'PAYPAL_OS_VALIDATION_ERROR' => (int)Configuration::get('PS_OS_CANCELED'),
             'PAYPAL_OS_REFUNDED_PAYPAL' => (int)Configuration::get('PS_OS_REFUND'),
-            'PAYPAL_NOT_SHOW_PS_CHECKOUT' => 0
+            'PAYPAL_NOT_SHOW_PS_CHECKOUT' => json_encode([$this->version, 0])
         );
     }
 
@@ -1916,5 +1916,42 @@ class PayPal extends \PaymentModule
         }
 
         return $orderStatuses;
+    }
+
+    public function showPsCheckoutMessage()
+    {
+        $countryDefault = new Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
+        $notShowDetails = Configuration::get('PAYPAL_NOT_SHOW_PS_CHECKOUT');
+
+        if (is_string($notShowDetails)) {
+            try {
+                $notShowDetailsArray = json_decode($notShowDetails, true);
+                $notShowPsCheckout = isset($notShowDetailsArray[$this->version]) ? (bool)$notShowDetailsArray[$this->version] : false;
+            } catch (Exception $e) {
+                $notShowPsCheckout = false;
+            }
+        } else {
+            $notShowPsCheckout = false;
+        }
+
+        return in_array($countryDefault->iso_code, $this->psCheckoutCountry) && ($notShowPsCheckout == false);
+    }
+
+    public function setPsCheckoutMessageValue($value)
+    {
+        $notShowDetails = Configuration::get('PAYPAL_NOT_SHOW_PS_CHECKOUT');
+
+        if (is_string($notShowDetails)) {
+            try {
+                $notShowDetailsArray = json_decode($notShowDetails, true);
+                $notShowDetailsArray[$this->version] = $value;
+            } catch (Exception $e) {
+                $notShowDetailsArray = [$this->version => $value];
+            }
+        } else {
+            $notShowDetailsArray = [$this->version => $value];
+        }
+
+        return Configuration::updateValue('PAYPAL_NOT_SHOW_PS_CHECKOUT', json_encode($notShowDetailsArray));
     }
 }

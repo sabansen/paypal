@@ -24,6 +24,10 @@
 *
 *}
 
+{if $showPsCheckoutInfo}
+    {include './_partials/messages/prestashopCheckoutInfo.tpl'}
+{/if}
+
 {include './_partials/headerLogo.tpl'}
 
 {if isset($formBehavior)}
