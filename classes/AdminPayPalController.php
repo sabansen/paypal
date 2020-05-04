@@ -223,7 +223,7 @@ class AdminPayPalController extends \ModuleAdminController
     public function log($message)
     {
         ProcessLoggerHandler::openLogger();
-        ProcessLoggerHandler::logError($message);
+        ProcessLoggerHandler::logError($message, null, null, null, null, null, (int)\Configuration::get('PAYPAL_SANDBOX'));
         ProcessLoggerHandler::closeLogger();
     }
 
