@@ -92,6 +92,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
                 [
                     'amount' => $this->getAmount($currency),
                     'items' => $items,
+                    'custom_id' => $this->getCustomId()
                 ],
             ],
         ];
@@ -346,5 +347,10 @@ class PaypalOrderCreateRequest extends RequestAbstract
     protected function getIntent()
     {
         return $this->method->getIntent();
+    }
+
+    protected function getCustomId()
+    {
+        return $this->method->getCustomFieldInformation($this->context->cart);
     }
 }

@@ -183,6 +183,19 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         return $url . $log->id_transaction;
     }
 
+    /**
+     * @param $cart \Cart
+     * @return string additional payment information
+     */
+    public function getCustomFieldInformation(\Cart $cart)
+    {
+        $module = \Module::getInstanceByName($this->name);
+        $return = $module->l('Cart ID: ',  get_class($this)) . $cart->id . '.';
+        $return .= $module->l('Shop name: ',  get_class($this)) . \Configuration::get('PS_SHOP_NAME', null, $cart->id_shop);
+
+        return $return;
+    }
+
     abstract public function getClientId();
 
     abstract public function getSecret();
