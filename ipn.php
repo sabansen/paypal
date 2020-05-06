@@ -77,11 +77,7 @@ class PayPalIPN extends PayPal
         $txn_id = Tools::getValue('txn_id');
 
         $id_order = (int) Order::getOrderByCartId((int) $custom['id_cart']);
-        if ($id_order) {
-            Context::getContext()->cart = new Cart((int) $id_order);
-        } elseif (isset($custom['id_cart'])) {
-            Context::getContext()->cart = new Cart((int) $custom['id_cart']);
-        }
+        Context::getContext()->cart = new Cart((int) $custom['id_cart']);
 
         $address = new Address((int) Context::getContext()->cart->id_address_invoice);
         Context::getContext()->country = new Country((int) $address->id_country);
