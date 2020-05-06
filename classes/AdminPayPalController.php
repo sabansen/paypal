@@ -71,6 +71,7 @@ class AdminPayPalController extends \ModuleAdminController
         $this->context->smarty->assign('methodType', $this->method);
         $this->context->smarty->assign('moduleDir', _MODULE_DIR_);
         $this->context->smarty->assign('showPsCheckoutInfo', $showPsCheckoutInfo);
+        $this->context->smarty->assign('showRestApiIntegrationMessage', version_compare($this->module->version, '5.2', '<'));
     }
 
     public function renderForm($fields_form = null)

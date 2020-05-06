@@ -28,6 +28,10 @@
     {include './_partials/messages/prestashopCheckoutInfo.tpl'}
 {/if}
 
+{if $showRestApiIntegrationMessage}
+    {include './_partials/messages/restApiIntegrationMessage.tpl'}
+{/if}
+
 {include './_partials/headerLogo.tpl'}
 
 <div>

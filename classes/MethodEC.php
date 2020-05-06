@@ -497,7 +497,6 @@ class MethodEC extends AbstractMethodPaypal
         $return .= $module->l('Shop name: ',  get_class($this)) . Configuration::get('PS_SHOP_NAME', null, $cart->id_shop);
 
         return $return;
-
     }
 
     /**
