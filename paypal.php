@@ -989,7 +989,8 @@ class PayPal extends \PaymentModule
         }
 
         $adminEmployee = new Employee(_PS_ADMIN_PROFILE_);
-        $orderState = new OrderState($id_order_state, $adminEmployee->id_lang);
+        $order = new Order($this->currentOrder);
+        $orderState = new OrderState($order->current_state, $adminEmployee->id_lang);
 
         ProcessLoggerHandler::openLogger();
         ProcessLoggerHandler::logInfo(

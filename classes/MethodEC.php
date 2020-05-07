@@ -269,9 +269,11 @@ class MethodEC extends AbstractMethodPaypal
         foreach ($products as $product) {
             $itemDetails = new PaymentDetailsItemType();
             $productObj = new Product((int)$product['id_product'], null, Context::getContext()->cart->id_lang);
-            $productTax = $productObj->getPrice(true) - $productObj->getPrice(false);
+            $priceIncl = $this->formatPrice($productObj->getPrice(true, $product['id_product_attribute']));
+            $priceExcl = $this->formatPrice($productObj->getPrice(false, $product['id_product_attribute']));
+            $productTax = $this->formatPrice($priceIncl - $priceExcl);
 
-            $itemAmount = new BasicAmountType($currency, $this->formatPrice($productObj->getPrice(false)));
+            $itemAmount = new BasicAmountType($currency, $priceExcl);
 
             if (isset($product['attributes']) && (empty($product['attributes']) === false)) {
                 $product['name'] .= ' - '.$product['attributes'];
@@ -280,9 +282,9 @@ class MethodEC extends AbstractMethodPaypal
             $itemDetails->Name = $product['name'];
             $itemDetails->Amount = $itemAmount;
             $itemDetails->Quantity = $product['quantity'];
-            $itemDetails->Tax = new BasicAmountType($currency, $this->formatPrice($productTax));
+            $itemDetails->Tax = new BasicAmountType($currency, $productTax);
             $this->_paymentDetails->PaymentDetailsItem[] = $itemDetails;
-            $this->_itemTotalValue += $this->formatPrice($productObj->getPrice(false)) * $product['quantity'];
+            $this->_itemTotalValue += $priceExcl * $product['quantity'];
             $this->_taxTotalValue += $productTax * $product['quantity'];
         }
     }
