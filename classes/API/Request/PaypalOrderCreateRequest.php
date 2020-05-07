@@ -79,9 +79,8 @@ class PaypalOrderCreateRequest extends RequestAbstract
     {
         $currency = $this->getCurrency();
         $productItmes = $this->getProductItems($currency);
-        $discountItems = $this->getDiscountItems($currency);
         $wrappingItems = $this->getWrappingItems($currency);
-        $items = array_merge($productItmes, $discountItems, $wrappingItems);
+        $items = array_merge($productItmes, $wrappingItems);
         $payer = $this->getPayer();
         $shippingInfo = $this->getShippingInfo();
 
@@ -156,18 +155,19 @@ class PaypalOrderCreateRequest extends RequestAbstract
         $products = $this->context->cart->getProducts();
         foreach ($products as $product) {
             $item = [];
-            $product['product_tax'] = $this->method->formatPrice($product['price_wt']) - $this->method->formatPrice($product['price']);
+            $productObj = new \Product((int)$product['id_product'], null, $this->context->cart->id_lang);
+            $productTax = $productObj->getPrice(true) - $productObj->getPrice(false);
 
-            $item['name'] = \Tools::substr($product['name'], 0, 126);
-            $item['description'] = isset($product['attributes']) ? $product['attributes'] : '';
-            $item['sku'] = $product['id_product'];
+            $item['name'] = \Tools::substr($productObj->name, 0, 126);
+            $item['description'] = isset($product['attributes']) ? $product['attributes'] : '';;
+            $item['sku'] = $productObj->id;
             $item['unit_amount'] = [
                 'currency_code' => $currency,
-                'value' => $this->method->formatPrice($product['price'])
+                'value' => $this->method->formatPrice($productObj->getPrice(false))
             ];
             $item['tax'] = [
                 'currency_code' => $currency,
-                'value' => $this->method->formatPrice($product['product_tax'])
+                'value' => $this->method->formatPrice($productTax)
             ];
             $item['quantity'] = $product['quantity'];
 
@@ -183,6 +183,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
      */
     protected function getDiscountItems($currency)
     {
+        return [];
         $items = [];
         $totalDiscountsInc = $this->context->cart->getOrderTotal(true, \Cart::ONLY_DISCOUNTS);
 
@@ -216,31 +217,33 @@ class PaypalOrderCreateRequest extends RequestAbstract
     protected function getAmount($currency)
     {
         $shippingTotal = $this->context->cart->getTotalShippingCost();
-        $subTotalExcl = $this->getOrderTotalWithoutShipping(false);
-        $subTotalIncl = $this->getOrderTotalWithoutShipping(true);
+        $subTotalExcl = $this->context->cart->getOrderTotal(false, \Cart::ONLY_PRODUCTS);
+        $subTotalIncl = $this->context->cart->getOrderTotal(true, \Cart::ONLY_PRODUCTS);
         $subTotalTax = $subTotalIncl - $subTotalExcl;
         $totalOrder = $this->context->cart->getOrderTotal(true, \Cart::BOTH);
+        $discountTotal = $this->context->cart->getOrderTotal(true, \Cart::ONLY_DISCOUNTS);
 
         $amount = array(
             'currency_code' => $currency,
             'value' => $this->method->formatPrice($totalOrder),
             'breakdown' =>
                 array(
-                    'item_total' =>
-                        array(
+                    'item_total' => array(
                             'currency_code' => $currency,
                             'value' => $this->method->formatPrice($subTotalExcl),
                         ),
-                    'shipping' =>
-                        array(
+                    'shipping' => array(
                             'currency_code' => $currency,
                             'value' => $this->method->formatPrice($shippingTotal),
                         ),
-                    'tax_total' =>
-                        array(
+                    'tax_total' => array(
                             'currency_code' => $currency,
                             'value' => $this->method->formatPrice($subTotalTax),
                         ),
+                    'discount' => array(
+                            'currency_code' => $currency,
+                            'value' => $discountTotal
+                        )
                 ),
         );
 
@@ -273,17 +276,6 @@ class PaypalOrderCreateRequest extends RequestAbstract
         }
 
         return $items;
-    }
-
-    /**
-     * Use this method because on some version of PS Cart::getOrderTotal($tax, Cart::BOTH_WITHOUT_SHIPPING) doesn't work right
-     *
-     * @param $tax bool with/without tax
-     * @return float
-     */
-    protected function getOrderTotalWithoutShipping($tax = true)
-    {
-        return $this->context->cart->getOrderTotal($tax, \Cart::ONLY_PRODUCTS) - $this->context->cart->getOrderTotal($tax, \Cart::ONLY_DISCOUNTS);
     }
 
     /**
