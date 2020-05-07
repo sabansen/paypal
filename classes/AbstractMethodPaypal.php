@@ -196,6 +196,11 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         return $return;
     }
 
+    public function getBrandName()
+    {
+        return \Configuration::get('PAYPAL_CONFIG_BRAND');
+    }
+
     abstract public function getClientId();
 
     abstract public function getSecret();

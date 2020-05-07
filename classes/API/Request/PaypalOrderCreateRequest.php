@@ -288,7 +288,8 @@ class PaypalOrderCreateRequest extends RequestAbstract
             'landing_page' => 'BILLING',
             'shipping_prefernces' => 'SET_PROVIDED_ADDRESS',
             'return_url' => $this->method->getReturnUrl(),
-            'cancel_url' => $this->method->getCancelUrl()
+            'cancel_url' => $this->method->getCancelUrl(),
+            'brand_name' => $this->getBrandName()
         ];
 
         return $applicationContext;
@@ -344,5 +345,10 @@ class PaypalOrderCreateRequest extends RequestAbstract
     protected function getCustomId()
     {
         return $this->method->getCustomFieldInformation($this->context->cart);
+    }
+
+    protected function getBrandName()
+    {
+        return $this->method->getBrandName();
     }
 }
