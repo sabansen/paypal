@@ -394,7 +394,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
     {
         $result = true;
         if (\Tools::isSubmit('saveAdvancedForm')) {
-            $methodCurrent = \AbstractMethodPaypal::load($this->method);
+            $methodCurrent = AbstractMethodPaypal::load($this->method);
             $this->advanceFormParametres = array_merge($this->advanceFormParametres, $methodCurrent->advancedFormParametres);
 
             foreach ($this->advanceFormParametres as $parametre) {
