@@ -991,7 +991,8 @@ class PayPal extends \PaymentModule
         }
 
         $adminEmployee = new Employee(_PS_ADMIN_PROFILE_);
-        $orderState = new OrderState($id_order_state, $adminEmployee->id_lang);
+        $order = new Order($this->currentOrder);
+        $orderState = new OrderState($order->current_state, $adminEmployee->id_lang);
 
         ProcessLoggerHandler::openLogger();
         ProcessLoggerHandler::logInfo(
@@ -1482,8 +1483,9 @@ class PayPal extends \PaymentModule
     {
         $paypal = Module::getInstanceByName('paypal');
         $currency_wt_decimal = array('HUF', 'JPY', 'TWD');
+
         if (in_array($paypal->getPaymentCurrencyIso(), $currency_wt_decimal) ||
-            (int)Configuration::get('PS_PRICE_DISPLAY_PRECISION') == 0) {
+            ((int)Configuration::get('_PS_PRICE_COMPUTE_PRECISION_') == 0 && version_compare(_PS_VERSION_, '1.7.7', '<'))) {
             return (int)0;
         } else {
             return (int)2;
