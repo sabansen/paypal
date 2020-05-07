@@ -156,14 +156,16 @@ class PaypalOrderCreateRequest extends RequestAbstract
         foreach ($products as $product) {
             $item = [];
             $productObj = new \Product((int)$product['id_product'], null, $this->context->cart->id_lang);
-            $productTax = $productObj->getPrice(true) - $productObj->getPrice(false);
+            $priceIncl = $productObj->getPrice(true, $product['id_product_attribute']);
+            $priceExcl = $productObj->getPrice(false, $product['id_product_attribute']);
+            $productTax = $priceIncl - $priceExcl;
 
             $item['name'] = \Tools::substr($productObj->name, 0, 126);
             $item['description'] = isset($product['attributes']) ? $product['attributes'] : '';;
             $item['sku'] = $productObj->id;
             $item['unit_amount'] = [
                 'currency_code' => $currency,
-                'value' => $this->method->formatPrice($productObj->getPrice(false))
+                'value' => $this->method->formatPrice($priceExcl)
             ];
             $item['tax'] = [
                 'currency_code' => $currency,
