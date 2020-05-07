@@ -209,7 +209,6 @@ class MethodEC extends AbstractMethodPaypal
         $setECReqDetails->ReqConfirmShipping = 0;
         $setECReqDetails->LandingPage = ($this->credit_card ? 'Billing' : 'Login');
 
-
         if ($this->short_cut) {
             $setECReqDetails->ReturnURL = Context::getContext()->link->getModuleLink($this->name, 'ecScOrder', array(), true);
             $setECReqDetails->NoShipping = 2;
@@ -269,18 +268,22 @@ class MethodEC extends AbstractMethodPaypal
         $products = Context::getContext()->cart->getProducts();
         foreach ($products as $product) {
             $itemDetails = new PaymentDetailsItemType();
-            $product['product_tax'] = $this->formatPrice($product['price_wt']) - $this->formatPrice($product['price']);
-            $itemAmount = new BasicAmountType($currency, $this->formatPrice($product['price']));
+            $productObj = new Product((int)$product['id_product'], null, Context::getContext()->cart->id_lang);
+            $productTax = $productObj->getPrice(true) - $productObj->getPrice(false);
+
+            $itemAmount = new BasicAmountType($currency, $this->formatPrice($productObj->getPrice(false)));
+
             if (isset($product['attributes']) && (empty($product['attributes']) === false)) {
                 $product['name'] .= ' - '.$product['attributes'];
             }
+
             $itemDetails->Name = $product['name'];
             $itemDetails->Amount = $itemAmount;
             $itemDetails->Quantity = $product['quantity'];
-            $itemDetails->Tax = new BasicAmountType($currency, number_format($product['product_tax'], Paypal::getDecimal(), ".", ''));
+            $itemDetails->Tax = new BasicAmountType($currency, $this->formatPrice($productTax));
             $this->_paymentDetails->PaymentDetailsItem[] = $itemDetails;
-            $this->_itemTotalValue += $this->formatPrice($product['price']) * $product['quantity'];
-            $this->_taxTotalValue += $product['product_tax'] * $product['quantity'];
+            $this->_itemTotalValue += $this->formatPrice($productObj->getPrice(false)) * $product['quantity'];
+            $this->_taxTotalValue += $productTax * $product['quantity'];
         }
     }
 
