@@ -66,23 +66,19 @@
                 {l s='Connect or create PayPal account' mod='paypal'}
             </span>
         {elseif isset($method) && $method == 'EC'}
-          <input type="hidden" name="paypal_set_config" value="1">
-          <p>
-            <label for="paypal_ec_clientid">{l s='Client ID' mod='paypal'}</label>
-            <input
-                    type="text"
-                    id="paypal_ec_clientid"
-                    name="paypal_ec_clientid"
-                    value="{if isset($paypal_ec_clientid)}{$paypal_ec_clientid|escape:'htmlall':'UTF-8'}{/if}"/>
-          </p>
-          <p>
-            <label for="paypal_ec_secret">{l s='Secret' mod='paypal'}</label>
-            <input
-                    type="text"
-                    id="paypal_ec_secret"
-                    name="paypal_ec_secret"
-                    value="{if isset($paypal_ec_secret)}{$paypal_ec_secret|escape:'htmlall':'UTF-8'}{/if}"/>
-          </p>
+      <script>
+        function onboardCallback(authToken, sharedId) {
+            Onboarding.handleResponse(authToken, sharedId);
+        }
+      </script>
+          <a href="{$urlOnboarding|addslashes}"
+             target="_blank"
+             data-paypal-button
+             data-paypal-onboard-complete="onboardCallback"
+             class="btn btn-default">
+              <i class="icon-signin"></i>
+              {l s='Connect or create PayPal account' mod='paypal'}
+          </a>
         {else}
             {include './pppCredentialsForm.tpl'}
         {/if}

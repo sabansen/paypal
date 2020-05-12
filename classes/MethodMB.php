@@ -223,16 +223,16 @@ class MethodMB extends AbstractMethodPaypal
             $tpl_vars = array(
                 'paypal_mb_sandbox_clientid' => Configuration::get('PAYPAL_MB_SANDBOX_CLIENTID'),
                 'paypal_mb_sandbox_secret' => Configuration::get('PAYPAL_MB_SANDBOX_SECRET'),
-                'paypal_ec_clientid' => Configuration::get('PAYPAL_EC_CLIENTID_SANDBOX'),
-                'paypal_ec_secret' => Configuration::get('PAYPAL_EC_SECRET_SANDBOX'),
+                'paypal_ec_clientid_sandbox' => Configuration::get('PAYPAL_EC_CLIENTID_SANDBOX'),
+                'paypal_ec_secret_sandbox' => Configuration::get('PAYPAL_EC_SECRET_SANDBOX'),
                 'mode' => 'SANDBOX'
             );
         } else {
             $tpl_vars = array(
                 'paypal_mb_live_clientid' => Configuration::get('PAYPAL_MB_LIVE_CLIENTID'),
                 'paypal_mb_live_secret' => Configuration::get('PAYPAL_MB_LIVE_SECRET'),
-                'paypal_ec_clientid' => Configuration::get('PAYPAL_EC_CLIENTID_LIVE'),
-                'paypal_ec_secret' => Configuration::get('PAYPAL_EC_SECRET_LIVE'),
+                'paypal_ec_clientid_live' => Configuration::get('PAYPAL_EC_CLIENTID_LIVE'),
+                'paypal_ec_secret_live' => Configuration::get('PAYPAL_EC_SECRET_LIVE'),
                 'mode' => 'LIVE'
             );
         }

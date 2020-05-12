@@ -25,6 +25,8 @@
 
 include_once(_PS_MODULE_DIR_.'paypal/vendor/autoload.php');
 
+use PaypalAddons\classes\API\Onboarding\PaypalGetAuthToken;
+use PaypalPPBTlib\Install\ModuleInstaller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use PaypalAddons\classes\AdminPayPalController;
 use PaypalAddons\classes\AbstractMethodPaypal;
@@ -37,8 +39,10 @@ class AdminPayPalSetupController extends AdminPayPalController
         $this->parametres = array(
             'paypal_api_intent',
             'paypal_sandbox',
-            'paypal_api_user_name_sandbox',
-            'paypal_api_user_name_live',
+            'paypal_ec_secret_sandbox',
+            'paypal_ec_secret_live',
+            'paypal_ec_clientid_sandbox',
+            'paypal_ec_clientid_live',
             'paypal_sandbox_clientid',
             'paypal_live_clientid',
             'paypal_sandbox_secret',
@@ -103,6 +107,7 @@ class AdminPayPalSetupController extends AdminPayPalController
         $this->content = $this->context->smarty->fetch($this->getTemplatePath() . 'setup.tpl');
         $this->context->smarty->assign('content', $this->content);
         $this->addJS(_PS_MODULE_DIR_ . $this->module->name . '/views/js/adminSetup.js');
+        //$this->addJS('https://www.sandbox.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js');
     }
 
     public function initAccountSettingsBlock()
@@ -296,5 +301,19 @@ class AdminPayPalSetupController extends AdminPayPalController
 
 
         return $result;
+    }
+
+    public function displayAjaxHandleOnboardingResponse()
+    {
+        $method = AbstractMethodPaypal::load('EC');
+        $authCode = Tools::getValue('authCode');
+        $sharedId = Tools::getValue('sharedId');
+        $sellerNonce = $method->getSellerNonce();
+        $paypalOnboarding = new PaypalGetAuthToken($authCode, $sharedId, $sellerNonce, $method->isSandbox());
+        $result = $paypalOnboarding->execute();
+
+        if ($result->isSuccess()) {
+            Configuration::updateValue('PAYPAL_AUTH_TOKEN', $result->getAuthToken());
+        }
     }
 }

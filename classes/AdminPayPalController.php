@@ -25,6 +25,7 @@
 
 namespace PaypalAddons\classes;
 
+use PaypalAddons\classes\API\Onboarding\PaypalGetCredentials;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -185,9 +186,8 @@ class AdminPayPalController extends \ModuleAdminController
 
     public function postProcess()
     {
-        if (\Tools::isSubmit("paypal_set_config")) {
-            $method = AbstractMethodPaypal::load('EC');
-            $method->setConfig(\Tools::getAllValues());
+        if (\Tools::isSubmit("checkCredentials")) {
+            $method = AbstractMethodPaypal::load($this->method);
             $method->checkCredentials();
             $this->errors = array_merge($this->errors, $method->errors);
         }

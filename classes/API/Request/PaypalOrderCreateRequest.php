@@ -151,14 +151,14 @@ class PaypalOrderCreateRequest extends RequestAbstract
     protected function getProductItems($currency)
     {
         $items = [];
-
         $products = $this->context->cart->getProducts();
+
         foreach ($products as $product) {
             $item = [];
             $productObj = new \Product((int)$product['id_product'], null, $this->context->cart->id_lang);
-            $priceIncl = $this->formatPrice($productObj->getPrice(true, $product['id_product_attribute']));
-            $priceExcl = $this->formatPrice($productObj->getPrice(false, $product['id_product_attribute']));
-            $productTax = $this->formatPrice($priceIncl - $priceExcl);
+            $priceIncl = $this->method->formatPrice($productObj->getPrice(true, $product['id_product_attribute']));
+            $priceExcl = $this->method->formatPrice($productObj->getPrice(false, $product['id_product_attribute']));
+            $productTax = $this->method->formatPrice($priceIncl - $priceExcl);
 
             $item['name'] = \Tools::substr($productObj->name, 0, 126);
             $item['description'] = isset($product['attributes']) ? $product['attributes'] : '';;
@@ -183,64 +183,31 @@ class PaypalOrderCreateRequest extends RequestAbstract
      * @param $currency string Iso code
      * @return array
      */
-    protected function getDiscountItems($currency)
-    {
-        return [];
-        $items = [];
-        $totalDiscountsInc = $this->context->cart->getOrderTotal(true, \Cart::ONLY_DISCOUNTS);
-
-        if ($totalDiscountsInc > 0) {
-            $item = [];
-            $totalDiscountsExcl = $this->context->cart->getOrderTotal(false, \Cart::ONLY_DISCOUNTS);
-            $totalTaxDiscounts = $totalDiscountsInc - $totalDiscountsExcl;
-
-            $item['name'] = $this->module->l('Total discount', get_class($this));
-            $item['sku'] = $this->context->cart->id;
-            $item['unit_amount'] = [
-                'currency_code' => $currency,
-                'value' => $this->method->formatPrice(-1 * $totalDiscountsExcl)
-            ];
-            $item['tax'] = [
-                'currency_code' => $currency,
-                'value' => $this->method->formatPrice(-1 * $totalTaxDiscounts)
-            ];
-            $item['quantity'] = 1;
-
-            $items[] = $item;
-        }
-
-        return $items;
-    }
-
-    /**
-     * @param $currency string Iso code
-     * @return array
-     */
     protected function getAmount($currency)
     {
-        $shippingTotal = $this->context->cart->getTotalShippingCost();
-        $subTotalExcl = $this->context->cart->getOrderTotal(false, \Cart::ONLY_PRODUCTS);
-        $subTotalIncl = $this->context->cart->getOrderTotal(true, \Cart::ONLY_PRODUCTS);
-        $subTotalTax = $subTotalIncl - $subTotalExcl;
-        $totalOrder = $this->context->cart->getOrderTotal(true, \Cart::BOTH);
-        $discountTotal = $this->context->cart->getOrderTotal(true, \Cart::ONLY_DISCOUNTS);
+        $shippingTotal = $this->method->formatPrice($this->context->cart->getTotalShippingCost());
+        $subTotalExcl = $this->method->formatPrice($this->context->cart->getOrderTotal(false, \Cart::ONLY_PRODUCTS));
+        $subTotalIncl = $this->method->formatPrice($this->context->cart->getOrderTotal(true, \Cart::ONLY_PRODUCTS));
+        $subTotalTax = $this->method->formatPrice($subTotalIncl - $subTotalExcl);
+        $totalOrder = $this->method->formatPrice($this->context->cart->getOrderTotal(true, \Cart::BOTH));
+        $discountTotal = $this->method->formatPrice($this->context->cart->getOrderTotal(true, \Cart::ONLY_DISCOUNTS));
 
         $amount = array(
             'currency_code' => $currency,
-            'value' => $this->method->formatPrice($totalOrder),
+            'value' => $totalOrder,
             'breakdown' =>
                 array(
                     'item_total' => array(
                             'currency_code' => $currency,
-                            'value' => $this->method->formatPrice($subTotalExcl),
+                            'value' => $subTotalExcl,
                         ),
                     'shipping' => array(
                             'currency_code' => $currency,
-                            'value' => $this->method->formatPrice($shippingTotal),
+                            'value' => $shippingTotal,
                         ),
                     'tax_total' => array(
                             'currency_code' => $currency,
-                            'value' => $this->method->formatPrice($subTotalTax),
+                            'value' => $subTotalTax,
                         ),
                     'discount' => array(
                             'currency_code' => $currency,

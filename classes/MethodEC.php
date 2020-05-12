@@ -129,17 +129,13 @@ class MethodEC extends AbstractMethodPaypal
      */
     public function setConfig($params)
     {
-        $mode = Configuration::get('PAYPAL_SANDBOX');
-
         if (Configuration::get('PAYPAL_SANDBOX')) {
-            Configuration::updateValue('PAYPAL_EC_CLIENTID_SANDBOX', Tools::getValue('paypal_ec_clientid'));
-            Configuration::updateValue('PAYPAL_EC_SECRET_SANDBOX', Tools::getValue('paypal_ec_secret'));
+            Configuration::updateValue('PAYPAL_EC_CLIENTID_SANDBOX', $params['clientId']);
+            Configuration::updateValue('PAYPAL_EC_SECRET_SANDBOX', $params['secret']);
         } else {
-            Configuration::updateValue('PAYPAL_EC_CLIENTID_LIVE', Tools::getValue('paypal_ec_clientid'));
-            Configuration::updateValue('PAYPAL_EC_SECRET_LIVE', Tools::getValue('paypal_ec_secret'));
+            Configuration::updateValue('PAYPAL_EC_CLIENTID_LIVE', $params['clientId']);
+            Configuration::updateValue('PAYPAL_EC_SECRET_LIVE', $params['secret']);
         }
-
-        $this->checkCredentials($mode);
     }
 
     /**
@@ -306,7 +302,7 @@ class MethodEC extends AbstractMethodPaypal
         return (bool)Configuration::get('PAYPAL_CONNECTION_EC_CONFIGURED');
     }
 
-    public function checkCredentials($mode = null)
+    public function checkCredentials()
     {
         $response = $this->paypalApiManager->getAccessTokenRequest()->execute();
 
@@ -325,17 +321,49 @@ class MethodEC extends AbstractMethodPaypal
     {
         $tplVars = array();
 
-        if ((int)Configuration::get('PAYPAL_SANDBOX')) {
-            $tplVars['paypal_ec_clientid'] = Configuration::get('PAYPAL_EC_CLIENTID_SANDBOX');
-            $tplVars['paypal_ec_secret'] = Configuration::get('PAYPAL_EC_SECRET_SANDBOX');
-        } else {
-            $tplVars['paypal_ec_clientid'] = Configuration::get('PAYPAL_EC_CLIENTID_LIVE');
-            $tplVars['paypal_ec_secret'] = Configuration::get('PAYPAL_EC_SECRET_LIVE');
-        }
-
         $tplVars['accountConfigured'] = $this->isConfigured();
+        $tplVars['urlOnboarding'] = $this->getUrlOnboarding();
 
         return $tplVars;
+    }
+
+    protected function getUrlOnboarding()
+    {
+        $urlLink = '';
+
+        if ($this->isSandbox()) {
+            $urlLink .= 'https://www.sandbox.paypal.com/bizsignup/partner/entry?';
+        } else {
+            $urlLink .= 'https://www.sandbox.paypal.com/bizsignup/partner/entry?';
+        }
+
+        $params = [
+            'partnerClientId' => $this->isSandbox() ? Paypal::PAYPAL_PARTNER_CLIENT_ID_SANDBOX : Paypal::PAYPAL_PARTNER_CLIENT_ID_LIVE,
+            'partnerId' => $this->isSandbox() ? Paypal::PAYPAL_PARTNER_ID_SANDBOX : Paypal::PAYPAL_PARTNER_ID_LIVE,
+            'integrationType' => 'FO',
+            'features' => 'PAYMENT,REFUND',
+            'returnToPartnerUrl' => Context::getContext()->link->getAdminLink('AdminPaypalGetCredentials'),
+            'displayMode' => 'minibrowser',
+            'sellerNonce' => $this->getSellerNonce(),
+        ];
+
+        return $urlLink . http_build_query($params);
+    }
+
+    /**
+     * @return string
+     */
+    public function getSellerNonce()
+    {
+        if ($this->isSandbox()) {
+            $id = Paypal::PAYPAL_PARTNER_ID_SANDBOX;
+        } else {
+            $id = Paypal::PAYPAL_PARTNER_ID_LIVE;
+        }
+
+        $employeeMail = Context::getContext()->employee->email;
+
+        return hash('sha256', $id.$employeeMail);
     }
 
     public function getAdvancedFormInputs()

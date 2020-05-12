@@ -55,6 +55,14 @@ const BT_PAYPAL_PAYMENT = 'paypal-braintree';
 
 class PayPal extends \PaymentModule
 {
+    const PAYPAL_PARTNER_CLIENT_ID_LIVE = 'ATgR8ZE5M_Jd7F_XMMQDqMfFFgr7hJHFw8yKfklWU4TwzReENgydr5I042YfS1nRTDey7C1NbuFfKo_o';
+
+    const PAYPAL_PARTNER_ID_LIVE = 'B3PVCXSW2J8JN';
+
+    const PAYPAL_PARTNER_CLIENT_ID_SANDBOX = 'AVJ8YvTxw5Clf5CyJXIX6mnSSNgpzFFRaZh0KekLIMVe2vlkrWDMgaOTbvNds1U2bXVcjX4JGaP_jDM1';
+
+    const PAYPAL_PARTNER_ID_SANDBOX = 'J7Q7R6V9MQZUG';
+
     public static $dev = true;
     public $express_checkout;
     public $message;
@@ -281,6 +289,14 @@ class PayPal extends \PaymentModule
             'parent_class_name' => 'AdminPayPalConfiguration',
             'visible' => true,
         ),
+        array(
+            'name' => array(
+                'en' => 'Get Credentials'
+            ),
+            'class_name' => 'AdminPaypalGetCredentials',
+            'parent_class_name' => 'AdminPayPalConfiguration',
+            'visible' => false,
+        )
     );
 
 
@@ -1485,7 +1501,7 @@ class PayPal extends \PaymentModule
         $currency_wt_decimal = array('HUF', 'JPY', 'TWD');
 
         if (in_array($paypal->getPaymentCurrencyIso(), $currency_wt_decimal) ||
-            ((int)Configuration::get('_PS_PRICE_COMPUTE_PRECISION_') == 0 && version_compare(_PS_VERSION_, '1.7.7', '<'))) {
+            ((int)_PS_PRICE_DISPLAY_PRECISION_ == 0 && version_compare(_PS_VERSION_, '1.7.7', '<'))) {
             return (int)0;
         } else {
             return (int)2;
