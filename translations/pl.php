@@ -388,3 +388,8 @@ $_MODULE['<{paypal}prestashop>messageforcustomerone_b3e985da8b5a176abfb74c4c1ca9
 $_MODULE['<{paypal}prestashop>messageforcustomertwo_952f622b6cbe191f3d9abb6d6f34b71d'] = '[b]Sfinalizuj płatność[/b] za pomocą konta PayPal, ';
 $_MODULE['<{paypal}prestashop>messageforcustomertwo_b3e985da8b5a176abfb74c4c1ca960f9'] = 'akceptując warunki usługi i klikając przycisk zatwierdzenia zamówienia poniżej.';
 $_MODULE['<{paypal}prestashop>messageforcustomertwo_768073dd22a31e3489fad6543b7301b1'] = 'Zwracamy uwagę, że zastosowano dodatkowe opłaty za dostawę (%1s). Aby uzyskać więcej informacji, zapoznaj się z podsumowaniem zamówienia.';
+$_MODULE['<{paypal}prestashop>adminpaypalhelpcontroller_8c2c1e868f50c5b477d3f6d985aeaa2f'] = 'Skonfiguruj PrestaShop Checkout';
+$_MODULE['<{paypal}prestashop>adminpaypalhelpcontroller_9bf2bcf8bbb1dc76aa7003ac62a3fa5b'] = 'Zainstaluj PrestaShop Checkout.';
+$_MODULE['<{paypal}prestashop>help_553637bf7bc0c5a7193297324578e474'] = 'Ten moduł umożliwia Twoim klientom płatności za pomocą konta PayPal.';
+$_MODULE['<{paypal}prestashop>help_44beb4f75b7808f19a23cbbfd15c8bdb'] = 'Jeśli poza PayPal chcesz również akceptować karty kredytowe i inne metody płatności, zalecamy moduł PrestaShop Checkout.';
+$_MODULE['<{paypal}prestashop>prestashopcheckoutinfo_65316efa7409b87099260ad5e3556708'] = 'Ten moduł umożliwia Twoim klientom płatności za pomocą konta PayPal. Jeśli poza PayPal chcesz również akceptować karty kredytowe i inne metody płatności, zalecamy moduł [a @href1@]PrestaShop Checkout[/a].';

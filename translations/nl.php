@@ -378,3 +378,8 @@ $_MODULE['<{paypal}prestashop>messageforcustomerone_b3e985da8b5a176abfb74c4c1ca9
 $_MODULE['<{paypal}prestashop>messageforcustomertwo_952f622b6cbe191f3d9abb6d6f34b71d'] = 'U moet de [b]betaling voltooien[/b] die u met uw PayPal-rekening heeft verricht ';
 $_MODULE['<{paypal}prestashop>messageforcustomertwo_b3e985da8b5a176abfb74c4c1ca960f9'] = 'door de servicevoorwaarden te accepteren en hieronder op Bestelvalidatie te klikken.';
 $_MODULE['<{paypal}prestashop>messageforcustomertwo_768073dd22a31e3489fad6543b7301b1'] = 'Houd er rekening mee dat er extra bezorgkosten (%1s) van toepassing zijn. Raadpleeg het besteloverzicht voor meer informatie.';
+$_MODULE['<{paypal}prestashop>adminpaypalhelpcontroller_8c2c1e868f50c5b477d3f6d985aeaa2f'] = 'Configureer PrestShop Checkout';
+$_MODULE['<{paypal}prestashop>adminpaypalhelpcontroller_9bf2bcf8bbb1dc76aa7003ac62a3fa5b'] = 'Installeer PrestShop Checkout';
+$_MODULE['<{paypal}prestashop>help_553637bf7bc0c5a7193297324578e474'] = 'Deze module biedt klanten de mogelijkheid te betalen met hun PayPal-account. ';
+$_MODULE['<{paypal}prestashop>help_44beb4f75b7808f19a23cbbfd15c8bdb'] = 'Als u naast PayPal ook andere betaalmethoden wenst te accepteren, adviseren wij de PrestaShop Checkout module.';
+$_MODULE['<{paypal}prestashop>prestashopcheckoutinfo_65316efa7409b87099260ad5e3556708'] = 'Deze module biedt klanten de mogelijkheid te betalen met hun PayPal-account. Als u naast PayPal ook andere betaalmethoden wenst te accepteren, adviseren wij de  [a @href1@]PrestaShop Checkout[/a] module.';
