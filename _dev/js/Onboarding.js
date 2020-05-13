@@ -38,7 +38,7 @@ export  const Onboarding = {
 
   addPaypalLib () {
     let script = document.createElement('script');
-    script.src = 'https://www.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js';
+    script.src = paypalOnboardingLib;
     document.body.appendChild(script);
   }
 };
