@@ -58,7 +58,7 @@ export  const SetupAdmin = {
       SetupAdmin.psCheckoutHandleAction(action);
     });
 
-    window.Onboarding = Onboarding;
+    window.onboardCallback = Onboarding.handleResponse;
     Onboarding.addPaypalLib();
   },
 

@@ -334,7 +334,7 @@ class MethodEC extends AbstractMethodPaypal
         if ($this->isSandbox()) {
             $urlLink .= 'https://www.sandbox.paypal.com/bizsignup/partner/entry?';
         } else {
-            $urlLink .= 'https://www.sandbox.paypal.com/bizsignup/partner/entry?';
+            $urlLink .= 'https://www.paypal.com/bizsignup/partner/entry?';
         }
 
         $params = [

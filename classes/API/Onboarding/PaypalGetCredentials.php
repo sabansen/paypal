@@ -6,6 +6,7 @@ namespace PaypalAddons\classes\API\Onboarding;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
+use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\ResponseGetCredentials;
 use Symfony\Component\VarDumper\VarDumper;
 

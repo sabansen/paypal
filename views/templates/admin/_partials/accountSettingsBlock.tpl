@@ -66,11 +66,6 @@
                 {l s='Connect or create PayPal account' mod='paypal'}
             </span>
         {elseif isset($method) && $method == 'EC'}
-      <script>
-        function onboardCallback(authToken, sharedId) {
-            Onboarding.handleResponse(authToken, sharedId);
-        }
-      </script>
           <a href="{$urlOnboarding|addslashes}"
              target="_blank"
              data-paypal-button

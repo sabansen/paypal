@@ -17,7 +17,6 @@
 
 export  const Onboarding = {
   handleResponse (authCode, sharedId) {
-    console.log('in handleResponse method');
     $.ajax({
       url: controllerUrl,
       type: 'POST',
@@ -39,7 +38,7 @@ export  const Onboarding = {
 
   addPaypalLib () {
     let script = document.createElement('script');
-    script.src = 'https://www.sandbox.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js';
+    script.src = 'https://www.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js';
     document.body.appendChild(script);
   }
 };

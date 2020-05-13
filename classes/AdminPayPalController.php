@@ -105,7 +105,7 @@ class AdminPayPalController extends \ModuleAdminController
     {
         parent::setMedia($isNewTheme);
         \Media::addJsDef(array(
-            'controllerUrl' => \AdminController::$currentIndex . '&token=' . \Tools::getAdminTokenLite($this->controller_name)
+            'controllerUrl' => \AdminController::$currentIndex . '&token=' . \Tools::getAdminTokenLite($this->controller_name),
         ));
         $this->addCSS(_PS_MODULE_DIR_ . $this->module->name . '/views/css/paypal_bo.css');
     }
