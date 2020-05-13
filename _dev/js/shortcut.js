@@ -91,8 +91,12 @@ const Shortcut = {
 
   getIdOrder() {
     let data = new Object();
+    let url = new URL(this.controller);
+    url.searchParams.append('ajax', '1');
+    url.searchParams.append('action', 'CreateOrder');
     this.updateInfo();
     data['page'] = this.page;
+
 
     if (this.page == 'product') {
       data['idProduct'] = this.idProduct;
@@ -100,7 +104,7 @@ const Shortcut = {
       data['combination'] = this.combination.join('|');
     }
 
-    return fetch(this.controller + '&ajax=1&action=CreateOrder', {
+    return fetch(url.toString(), {
       method: 'post',
       headers: {
         'content-type': 'application/json;charset=utf-8'
@@ -117,6 +121,9 @@ const Shortcut = {
 
   checkProductAvailability() {
     let data = new Object();
+    let url = new URL(this.controller);
+    url.searchParams.append('ajax', '1');
+    url.searchParams.append('action', 'CheckAvailability');
     this.updateInfo();
     data['page'] = this.page;
 
@@ -126,7 +133,7 @@ const Shortcut = {
       data['combination'] = this.combination.join('|');
     }
 
-    fetch(this.controller + '&ajax=1&action=CheckAvailability',
+    fetch(url.toString(),
       {
         method: 'post',
         headers: {
