@@ -230,7 +230,9 @@ class PayPal extends \PaymentModule
                 'nl' => 'Instellingen',
                 'it' => 'Impostazioni',
                 'es' => 'Configuración',
-                'de' => 'Einstellungen'
+                'de' => 'Einstellungen',
+                'mx' => 'Configuración',
+                'br' => 'Definições'
             ),
             'class_name' => 'AdminPayPalSetup',
             'parent_class_name' => 'AdminPayPalConfiguration',
@@ -245,7 +247,9 @@ class PayPal extends \PaymentModule
                 'pl' => 'Doświadczenie',
                 'nl' => 'Ervaring',
                 'it' => 'Percorso Cliente',
-                'es' => 'Experiencia'
+                'es' => 'Experiencia',
+                'mx' => 'Experiencia',
+                'br' => 'Experiência',
             ),
             'class_name' => 'AdminPayPalCustomizeCheckout',
             'parent_class_name' => 'AdminPayPalConfiguration',
@@ -260,7 +264,9 @@ class PayPal extends \PaymentModule
                 'nl' => 'Hulp',
                 'it' => 'Aiuto',
                 'es' => 'Ayuda',
-                'de' => 'Hilfe'
+                'de' => 'Hilfe',
+                'mx' => 'Ayuda',
+                'br' => 'Ajuda',
             ),
             'class_name' => 'AdminPayPalHelp',
             'parent_class_name' => 'AdminPayPalConfiguration',
@@ -275,7 +281,9 @@ class PayPal extends \PaymentModule
                 'pl' => 'Dzienniki',
                 'nl' => 'Logs',
                 'it' => 'Logs',
-                'es' => 'Logs'
+                'es' => 'Logs',
+                'mx' => 'Logs',
+                'br' => 'Logs',
             ),
             'class_name' => 'AdminPayPalLogs',
             'parent_class_name' => 'AdminPayPalConfiguration',
