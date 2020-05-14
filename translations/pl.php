@@ -394,3 +394,4 @@ $_MODULE['<{paypal}prestashop>help_553637bf7bc0c5a7193297324578e474'] = 'Ten mod
 $_MODULE['<{paypal}prestashop>help_44beb4f75b7808f19a23cbbfd15c8bdb'] = 'Jeśli poza PayPal chcesz również akceptować karty kredytowe i inne metody płatności, zalecamy moduł PrestaShop Checkout.';
 $_MODULE['<{paypal}prestashop>prestashopcheckoutinfo_65316efa7409b87099260ad5e3556708'] = 'Ten moduł umożliwia Twoim klientom płatności za pomocą konta PayPal. Jeśli poza PayPal chcesz również akceptować karty kredytowe i inne metody płatności, zalecamy moduł [a @href1@]PrestaShop Checkout[/a].';
 $_MODULE['<{paypal}prestashop>adminpaypalhelpcontroller_ca89e348869638cc70a085475a3be8c5'] = 'Pobierz PrestaShop Checkout';
+$_MODULE['<{paypal}prestashop>paypal_6b33c16e6353bb8c9e31464179231237'] = 'Wystąpił nieoczekiwany problem podczas zwrotu pieniędzy. Aby uzyskać więcej informacji, przejdź do zakładki PayPal w szczegółach zamówienia.';

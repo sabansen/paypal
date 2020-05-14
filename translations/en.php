@@ -364,3 +364,4 @@ $_MODULE['<{paypal}prestashop>messageforcustomerone_b3e985da8b5a176abfb74c4c1ca9
 $_MODULE['<{paypal}prestashop>messageforcustomertwo_952f622b6cbe191f3d9abb6d6f34b71d'] = 'You have to [b]finish your payment[/b] made with your PayPal account ';
 $_MODULE['<{paypal}prestashop>messageforcustomertwo_b3e985da8b5a176abfb74c4c1ca960f9'] = 'by accepting the terms of service and clicking on the order validation button below.';
 $_MODULE['<{paypal}prestashop>messageforcustomertwo_768073dd22a31e3489fad6543b7301b1'] = 'Please note that the additional delivery fees (%1s) have been applied. For more details, please check your order summary.';
+$_MODULE['<{paypal}prestashop>paypal_6b33c16e6353bb8c9e31464179231237'] = 'We encountered an unexpected problem during the refund operation. For more details please see the \"PayPal\" tab in the order details.';

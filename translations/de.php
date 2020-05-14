@@ -378,3 +378,4 @@ $_MODULE['<{paypal}prestashop>messageforcustomerone_b3e985da8b5a176abfb74c4c1ca9
 $_MODULE['<{paypal}prestashop>messageforcustomertwo_952f622b6cbe191f3d9abb6d6f34b71d'] = 'Sie müssen die mit Ihrem PayPal-Konto getätigte [b]Zahlung abschließen[/b]';
 $_MODULE['<{paypal}prestashop>messageforcustomertwo_b3e985da8b5a176abfb74c4c1ca960f9'] = 'indem Sie die Nutzungsbedingungen akzeptieren und auf den nachstehenden Button zur Bestätigung der Bestellung klicken.';
 $_MODULE['<{paypal}prestashop>messageforcustomertwo_768073dd22a31e3489fad6543b7301b1'] = 'Beachten Sie, dass die zusätzlichen Versandkosten (%1s) berücksichtigt wurden. Weitere Informationen finden Sie in der Bestellübersicht.';
+$_MODULE['<{paypal}prestashop>paypal_6b33c16e6353bb8c9e31464179231237'] = 'Bei der Rückzahlung ist ein unerwartetes Problem aufgetreten. Weitere Informationen finden Sie auf der Registerkarte \"PayPal\" in den Bestelldetails.';
