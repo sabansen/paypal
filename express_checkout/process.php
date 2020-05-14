@@ -428,19 +428,6 @@ class PaypalExpressCheckout extends Paypal
         }
     }
 
-    public function rightPaymentProcess()
-    {
-        $total = $this->getTotalPaid();
-
-        // float problem with php, have to use the string cast.
-        if ((isset($this->result['AMT']) && ((string) $this->result['AMT'] != (string) $total)) ||
-            (isset($this->result['PAYMENTINFO_0_AMT']) && ((string) $this->result['PAYMENTINFO_0_AMT'] != (string) $total))) {
-            return false;
-        }
-
-        return true;
-    }
-
     /**
      * @return mixed
      */

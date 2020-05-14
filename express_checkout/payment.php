@@ -300,11 +300,8 @@ if ($request_type && $ppec->type) {
  */
 function validateOrder($customer, $cart, $ppec)
 {
-    $amount_match = $ppec->rightPaymentProcess();
-    $order_total = (float) $cart->getOrderTotal(true, Cart::BOTH);
-
     // Payment succeed
-    if ($ppec->hasSucceedRequest() && !empty($ppec->token) && $amount_match) {
+    if ($ppec->hasSucceedRequest() && !empty($ppec->token)) {
         if ((bool) Configuration::get('PAYPAL_CAPTURE')) {
             $payment_type = (int) Configuration::get('PS_OS_PAYPAL');
             $payment_status = 'Pending_capture';
@@ -336,12 +333,6 @@ function validateOrder($customer, $cart, $ppec)
 
         $payment_status = isset($ppec->result['PAYMENTINFO_0_PAYMENTSTATUS']) ? $ppec->result['PAYMENTINFO_0_PAYMENTSTATUS'] : false;
         $payment_type = (int) Configuration::get('PS_OS_ERROR');
-
-        if ($amount_match) {
-            $message = implode('<br />', $ppec->logs).'<br />';
-        } else {
-            $message = $ppec->l('Price paid on paypal is not the same that on PrestaShop.').'<br />';
-        }
     }
 
     $transaction = PayPalOrder::getTransactionDetails($ppec, $payment_status);
