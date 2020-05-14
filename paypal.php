@@ -1091,8 +1091,7 @@ class PayPal extends \PaymentModule
         }
         if (Tools::getValue('error_refund')) {
             $paypal_msg .= $this->displayWarning(
-                '<p class="paypal-warning">' . $this->l('We encountered an unexpected problem during refund operation. For more details please see the \'PayPal\' tab in the order details.
-') . '</p>'
+                '<p class="paypal-warning">' . $this->l('We encountered an unexpected problem during refund operation. For more details please see the \'PayPal\' tab in the order details.') . '</p>'
             );
         }
         if (Tools::getValue('cancel_failed')) {
