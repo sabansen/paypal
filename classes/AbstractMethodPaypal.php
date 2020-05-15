@@ -201,6 +201,45 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         return \Configuration::get('PAYPAL_CONFIG_BRAND');
     }
 
+    protected function getUrlOnboarding()
+    {
+        $urlLink = '';
+
+        if ($this->isSandbox()) {
+            $urlLink .= 'https://www.sandbox.paypal.com/merchantsignup/partner/onboardingentry?';
+        } else {
+            $urlLink .= 'https://www.paypal.com/merchantsignup/partner/onboardingentry?';
+        }
+
+        $params = [
+            'partnerClientId' => $this->isSandbox() ? \Paypal::PAYPAL_PARTNER_CLIENT_ID_SANDBOX : \Paypal::PAYPAL_PARTNER_CLIENT_ID_LIVE,
+            'partnerId' => $this->isSandbox() ? \Paypal::PAYPAL_PARTNER_ID_SANDBOX : \Paypal::PAYPAL_PARTNER_ID_LIVE,
+            'integrationType' => 'FO',
+            'features' => 'PAYMENT,REFUND',
+            'returnToPartnerUrl' => \Context::getContext()->link->getAdminLink('AdminPaypalGetCredentials'),
+            'displayMode' => 'minibrowser',
+            'sellerNonce' => $this->getSellerNonce(),
+        ];
+
+        return $urlLink . http_build_query($params);
+    }
+
+    /**
+     * @return string
+     */
+    public function getSellerNonce()
+    {
+        if ($this->isSandbox()) {
+            $id = \Paypal::PAYPAL_PARTNER_ID_SANDBOX;
+        } else {
+            $id = \Paypal::PAYPAL_PARTNER_ID_LIVE;
+        }
+
+        $employeeMail = \Context::getContext()->employee->email;
+
+        return hash('sha256', $id.$employeeMail);
+    }
+
     abstract public function getClientId();
 
     abstract public function getSecret();

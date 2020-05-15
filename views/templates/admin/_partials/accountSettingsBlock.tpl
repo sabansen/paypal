@@ -37,7 +37,7 @@
     {/if}
 
     {if isset($accountConfigured) && $accountConfigured}
-        {if isset($method) && $method == 'EC'}
+        {if isset($method) && in_array($method, ['EC', 'PPP'])}
             <span class="pp__mr-4">
 				{l s='Connected account' mod='paypal'}
             </span>
@@ -53,7 +53,7 @@
             {include './pppCredentialsForm.tpl'}
         {/if}
 
-        {if isset($method) && $method == 'EC'}
+        {if isset($method) && in_array($method, ['EC', 'PPP'])}
             <span class="btn btn-default pp__ml-4" id="logoutAccount">
 				{l s='Logout' mod='paypal'}
             </span>
@@ -65,7 +65,7 @@
             <span class="btn btn-default" data-toggle="modal" data-target="#credentialBlockEC">
                 {l s='Connect or create PayPal account' mod='paypal'}
             </span>
-        {elseif isset($method) && $method == 'EC'}
+        {elseif isset($method) && in_array($method, ['EC', 'PPP'])}
           <a href="{$urlOnboarding|addslashes}"
              target="_blank"
              data-paypal-button
@@ -74,8 +74,6 @@
               <i class="icon-signin"></i>
               {l s='Connect or create PayPal account' mod='paypal'}
           </a>
-        {else}
-            {include './pppCredentialsForm.tpl'}
         {/if}
 
     {/if}
@@ -98,26 +96,10 @@
                         <li>{l s='Copy/paste your API credentials below for %s environment' sprintf=[$mode] mod='paypal'} </li>
                     </ul>
                     <hr/>
-                    <input type="hidden" id="with_card" name="with_card"/>
-                    <input type="hidden" name="paypal_set_config" value="1"/>
-		            <input type="hidden" name="id_shop" value="{if isset($idShop)}{$idShop}{/if}"/>
+
+		                <input type="hidden" name="id_shop" value="{if isset($idShop)}{$idShop}{/if}"/>
                     <h4>{l s='API Credentials for' mod='paypal'} {$mode}</h4>
-                    <p>
-                        <label for="api_username">{l s='API username' mod='paypal'}</label>
-                        <input type="text" id="api_username" name="api_username" value="{if isset($paypal_api_user_name)}{$paypal_api_user_name|escape:'htmlall':'UTF-8'}{/if}"/>
-                    </p>
-                    <p>
-                        <label for="api_password">{l s='API password' mod='paypal'}</label>
-                        <input type="password" id="api_password" name="api_password" value="{if isset($paypal_pswd)}{$paypal_pswd|escape:'htmlall':'UTF-8'}{/if}"/>
-                    </p>
-                    <p>
-                        <label for="api_signature">{l s='API signature' mod='paypal'}</label>
-                        <input type="text" id="api_signature" name="api_signature" value="{if isset($paypal_signature)}{$paypal_signature|escape:'htmlall':'UTF-8'}{/if}"/>
-                    </p>
-                    <p>
-                        <label for="merchant_id">{l s='Merchant ID' mod='paypal'}</label>
-                        <input type="text" id="merchant_id" name="merchant_id" value="{if isset($paypal_merchant_id)}{$paypal_merchant_id|escape:'htmlall':'UTF-8'}{/if}"/>
-                    </p>
+                    {include './ecCredentialFields.tpl'}
 
                 </div>
                 <div class="modal-footer">

@@ -97,11 +97,7 @@ class AdminPayPalSetupController extends AdminPayPalController
         $formStatus = $this->renderForm();
         $this->clearFieldsForm();
 
-        if ($this->method == 'PPP') {
-            $tpl_vars['formStatusTop'] = $formStatus;
-        } else {
-            $tpl_vars['formStatus'] = $formStatus;
-        }
+        $tpl_vars['formStatus'] = $formStatus;
 
         $this->context->smarty->assign($tpl_vars);
         $this->content = $this->context->smarty->fetch($this->getTemplatePath() . 'setup.tpl');
@@ -305,7 +301,7 @@ class AdminPayPalSetupController extends AdminPayPalController
 
     public function displayAjaxHandleOnboardingResponse()
     {
-        $method = AbstractMethodPaypal::load('EC');
+        $method = AbstractMethodPaypal::load();
         $authCode = Tools::getValue('authCode');
         $sharedId = Tools::getValue('sharedId');
         $sellerNonce = $method->getSellerNonce();

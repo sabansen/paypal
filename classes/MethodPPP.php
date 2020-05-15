@@ -98,6 +98,7 @@ class MethodPPP extends AbstractMethodPaypal
 
         Configuration::updateValue('PAYPAL_' . $mode . '_CLIENTID', '');
         Configuration::updateValue('PAYPAL_' . $mode . '_SECRET', '');
+        Configuration::updateValue('PAYPAL_CONNECTION_PPP_CONFIGURED', 0);
     }
 
     /**
@@ -105,6 +106,13 @@ class MethodPPP extends AbstractMethodPaypal
      */
     public function setConfig($params)
     {
+        if ($this->isSandbox()) {
+            Configuration::updateValue('PAYPAL_SANDBOX_CLIENTID', $params['clientId']);
+            Configuration::updateValue('PAYPAL_SANDBOX_SECRET', $params['secret']);
+        } else {
+            Configuration::updateValue('PAYPAL_LIVE_CLIENTID', $params['clientId']);
+            Configuration::updateValue('PAYPAL_LIVE_SECRET', $params['secret']);
+        }
     }
 
     public function getConfig(Paypal $paypal)
@@ -310,6 +318,19 @@ class MethodPPP extends AbstractMethodPaypal
 
     public function getTplVars()
     {
+        $tplVars = array();
+
+        $tplVars['accountConfigured'] = $this->isConfigured();
+        $tplVars['urlOnboarding'] = $this->getUrlOnboarding();
+
+        \Media::addJsDef([
+            'paypalOnboardingLib' => $this->isSandbox() ? 'https://www.sandbox.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js' : 'https://www.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js'
+        ]);
+
+        return $tplVars;
+
+
+
         $sandboxMode = (int)Configuration::get('PAYPAL_SANDBOX');
 
         if ($sandboxMode) {

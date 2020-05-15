@@ -30,6 +30,7 @@ use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use Symfony\Component\VarDumper\VarDumper;
 
 class AdminPayPalController extends \ModuleAdminController
 {

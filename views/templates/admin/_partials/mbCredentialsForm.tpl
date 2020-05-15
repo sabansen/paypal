@@ -42,44 +42,9 @@
             </ul>
             <hr/>
             <input type="hidden" id="with_card" name="with_card"/>
-          <h4>{l s='API Credentials for' mod='paypal'} {$mode}</h4>
-            {if $mode == 'SANDBOX'}
-                <p>
-                  <label for="paypal_ec_clientid">{l s='Client ID' mod='paypal'}</label>
-                  <input
-                          type="text"
-                          id="paypal_ec_clientid"
-                          name="paypal_ec_clientid_sandbox"
-                          value="{if isset($paypal_ec_clientid_sandbox)}{$paypal_ec_clientid_sandbox|escape:'htmlall':'UTF-8'}{/if}"/>
-                </p>
-                <p>
-                  <label for="paypal_ec_secret">{l s='Secret' mod='paypal'}</label>
-                  <input
-                          type="text"
-                          id="paypal_ec_secret"
-                          name="paypal_ec_secret_sandbox"
-                          value="{if isset($paypal_ec_secret_sandbox)}{$paypal_ec_secret_sandbox|escape:'htmlall':'UTF-8'}{/if}"/>
-                </p>
-              </div>
-            {else}
-                <p>
-                  <label for="paypal_ec_clientid">{l s='Client ID' mod='paypal'}</label>
-                  <input
-                          type="text"
-                          id="paypal_ec_clientid"
-                          name="paypal_ec_clientid_live"
-                          value="{if isset($paypal_ec_clientid_live)}{$paypal_ec_clientid_live|escape:'htmlall':'UTF-8'}{/if}"/>
-                </p>
-                <p>
-                  <label for="paypal_ec_secret">{l s='Secret' mod='paypal'}</label>
-                  <input
-                          type="text"
-                          id="paypal_ec_secret"
-                          name="paypal_ec_secret_live"
-                          value="{if isset($paypal_ec_secret_live)}{$paypal_ec_secret_live|escape:'htmlall':'UTF-8'}{/if}"/>
-                </p>
-              </div>
-            {/if}
+            <h4>{l s='API Credentials for' mod='paypal'} {$mode}</h4>
+            {include './ecCredentialFields.tpl'}
+        </div>
 
 
         <div class="col-md-6">

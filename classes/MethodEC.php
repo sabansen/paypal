@@ -129,7 +129,7 @@ class MethodEC extends AbstractMethodPaypal
      */
     public function setConfig($params)
     {
-        if (Configuration::get('PAYPAL_SANDBOX')) {
+        if ($this->isSandbox()) {
             Configuration::updateValue('PAYPAL_EC_CLIENTID_SANDBOX', $params['clientId']);
             Configuration::updateValue('PAYPAL_EC_SECRET_SANDBOX', $params['secret']);
         } else {
@@ -320,54 +320,21 @@ class MethodEC extends AbstractMethodPaypal
     public function getTplVars()
     {
         $tplVars = array();
+        $countryDefault = new Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), Context::getContext()->language->id);
 
         $tplVars['accountConfigured'] = $this->isConfigured();
         $tplVars['urlOnboarding'] = $this->getUrlOnboarding();
+        $tplVars['country_iso'] = $countryDefault->iso_code;
+        $tplVars['idShop'] = Context::getContext()->shop->id;
+        $tplVars['mode'] = $this->isSandbox() ? 'SANDBOX' : 'LIVE';
+        $tplVars['paypal_ec_clientid'] = $this->getClientId();
+        $tplVars['paypal_ec_secret'] = $this->getSecret();
 
         \Media::addJsDef([
             'paypalOnboardingLib' => $this->isSandbox() ? 'https://www.sandbox.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js' : 'https://www.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js'
         ]);
 
         return $tplVars;
-    }
-
-    protected function getUrlOnboarding()
-    {
-        $urlLink = '';
-
-        if ($this->isSandbox()) {
-            $urlLink .= 'https://www.sandbox.paypal.com/merchantsignup/partner/onboardingentry?';
-        } else {
-            $urlLink .= 'https://www.paypal.com/merchantsignup/partner/onboardingentry?';
-        }
-
-        $params = [
-            'partnerClientId' => $this->isSandbox() ? Paypal::PAYPAL_PARTNER_CLIENT_ID_SANDBOX : Paypal::PAYPAL_PARTNER_CLIENT_ID_LIVE,
-            'partnerId' => $this->isSandbox() ? Paypal::PAYPAL_PARTNER_ID_SANDBOX : Paypal::PAYPAL_PARTNER_ID_LIVE,
-            'integrationType' => 'FO',
-            'features' => 'PAYMENT,REFUND',
-            'returnToPartnerUrl' => Context::getContext()->link->getAdminLink('AdminPaypalGetCredentials'),
-            'displayMode' => 'minibrowser',
-            'sellerNonce' => $this->getSellerNonce(),
-        ];
-
-        return $urlLink . http_build_query($params);
-    }
-
-    /**
-     * @return string
-     */
-    public function getSellerNonce()
-    {
-        if ($this->isSandbox()) {
-            $id = Paypal::PAYPAL_PARTNER_ID_SANDBOX;
-        } else {
-            $id = Paypal::PAYPAL_PARTNER_ID_LIVE;
-        }
-
-        $employeeMail = Context::getContext()->employee->email;
-
-        return hash('sha256', $id.$employeeMail);
     }
 
     public function getAdvancedFormInputs()

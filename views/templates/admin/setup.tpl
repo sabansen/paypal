@@ -41,7 +41,7 @@
             {/if}
 
         </div>
-        <div class="col-lg-4 pp__flex pp__flex_direction_column pp__justify-content-between">
+        <div class="col-lg-4 pp__flex pp__flex_direction_column pp__justify-content-between stretchHeightForm pp__pb-4">
             {if isset($formEnvironmentSettings)}
                 {$formEnvironmentSettings nofilter} {* the variable contains html code *}
             {/if}
