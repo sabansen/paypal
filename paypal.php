@@ -45,8 +45,8 @@ include_once 'classes/PaypalLog.php';
 include_once 'classes/PaypalVaulting.php';
 include_once 'classes/PaypalIpn.php';
 
-const BT_CARD_PAYMENT = 'card-braintree';
-const BT_PAYPAL_PAYMENT = 'paypal-braintree';
+define('BT_CARD_PAYMENT', 'card-braintree');
+define('BT_PAYPAL_PAYMENT', 'paypal-braintree');
 // Method Alias :
 // EC = express checkout
 // ECS = express checkout sortcut
