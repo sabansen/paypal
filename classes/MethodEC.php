@@ -432,6 +432,6 @@ class MethodEC extends AbstractMethodPaypal
 
     public function getPaypalPartnerId()
     {
-        return (getenv('PLATEFORM') == 'PSREAD') ? 'PrestaShop_Cart_Ready_EC' : 'PrestaShop_Cart_EC';
+        return (getenv('PLATEFORM') == 'PSREAD') ? 'PrestaShop_Cart_Ready_EC' : 'PRESTASHOP_Cart_SPB';
     }
 }
