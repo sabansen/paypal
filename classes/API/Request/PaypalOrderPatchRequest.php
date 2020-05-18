@@ -58,9 +58,8 @@ class PaypalOrderPatchRequest extends PaypalOrderCreateRequest
         $body = [];
         $currency = $this->getCurrency();
         $productItmes = $this->getProductItems($currency);
-        $discountItems = $this->getDiscountItems($currency);
         $wrappingItems = $this->getWrappingItems($currency);
-        $items = array_merge($productItmes, $discountItems, $wrappingItems);
+        $items = array_merge($productItmes, $wrappingItems);
         $shippingInfo = $this->getShippingInfo();
 
         $body[] = [
