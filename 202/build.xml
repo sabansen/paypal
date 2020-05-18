@@ -26,7 +26,7 @@
         </exec>
     </target>
 
-    <target name="psvalidator" description="Send Prestashop Validator">
+    <target name="psvalidator" description="Send Prestashop Validator" failonerror="false">
         <echo>Send Prestashop Validator</echo>
         <exec executable="php" failonerror="true">
             <arg value="${env.TOTBUILDER_PATH}console"/>
