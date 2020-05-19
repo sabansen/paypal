@@ -385,3 +385,4 @@ $_MODULE['<{paypal}prestashop>help_44beb4f75b7808f19a23cbbfd15c8bdb'] = 'Als u n
 $_MODULE['<{paypal}prestashop>prestashopcheckoutinfo_65316efa7409b87099260ad5e3556708'] = 'Deze module biedt klanten de mogelijkheid te betalen met hun PayPal-account. Als u naast PayPal ook andere betaalmethoden wenst te accepteren, adviseren wij de  [a @href1@]PrestaShop Checkout[/a] module.';
 $_MODULE['<{paypal}prestashop>adminpaypalhelpcontroller_ca89e348869638cc70a085475a3be8c5'] = 'Download PrestShop Checkout';
 $_MODULE['<{paypal}prestashop>paypal_6b33c16e6353bb8c9e31464179231237'] = 'Er is een onverwacht probleem opgetreden tijdens de terugbetaling. Raadpleeg het tabblad PayPal in de bestelgegevens voor meer informatie.';
+$_MODULE['<{paypal}prestashop>paypal_6b33c16e6353bb8c9e31464179231237'] = 'Bei der Rückzahlung ist ein unerwartetes Problem aufgetreten. Weitere Informationen finden Sie auf der Registerkarte "PayPal" in den Bestelldetails.';
