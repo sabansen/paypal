@@ -664,11 +664,8 @@ class PayPal extends PaymentModule
         }
 
         // Check if all Braintree credentials are present
-        $braintree_configured = false;
         $prestaBraintree = new PrestaBraintree();
-        if ($prestaBraintree->isConfigured()) {
-            $braintree_configured = true;
-        }
+        $braintree_configured = (bool)$prestaBraintree->isConfigured();
 
         $admin_dir = explode('/', _PS_ADMIN_DIR_);
 

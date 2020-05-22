@@ -61,7 +61,39 @@
     {{l s='To retrieve sandbox API Keys please repeat the steps by connecting to [a @href1@]sandbox account[/a] or creating a new [a @href2@]one[/a]' mod='paypal'}|paypalreplace:['@href1@' => {'https://sandbox.braintreegateway.com/login'}, '@href2@' => {'https://www.braintreepayments.com/sandbox'},  '@target@' => {'target="blank"'}]}
 </p>
 
-<div>
+<div class="bootstrap paypal-mt-20">
+    <div>
+        <button class="btn btn-default" type="button" data-role-collapse data-collapsed="#apiHelpMessage">
+            {l s='Impossible to access to API via Braintree account?' mod='paypal'}
+        </button>
+
+        <div id="apiHelpMessage" class="alert alert-info paypal-mt-20" style="display: none">
+            <div>
+                <p>
+                    {{l s='If you get an error message "[b]You do not have the proper authorization for this request[/b]" when you access to your API keys via your Braintree account:' mod='paypal'}|paypalreplace}
+                </p>
+
+                <p class="paypal-mt-20">
+                    {{l s='[b]Your account was already configured:[/b]' mod='paypal'}|paypalreplace}
+                </p>
+
+                <p>
+                    {l s='- You are able to use your API keys if you stored them previously and to continue to accept payments via Braintree if your account is already correctly configurated. No actions required on your side.' mod='paypal'}
+                </p>
+
+                <p>
+                    {{l s='[b]You would like to change your account configurations but your can not get your API keys:[/b]' mod='paypal'}|paypalreplace}
+                </p>
+
+                <p>
+                    {l s='- If you have not stored your API keys somewhere on your side, you will no longer be able to use your current account API credentials as we can\'t provide them for you. If you would like to continue using your current PrestaShop Braintree module which requires API keys, you will need to apply for a Braintree Direct account by clicking the “Sign up” button at the bottom of Braintree homepage. Once you have been approved for the new account, you will be able to log in and retrieve your API keys. If you have any issues on the approval process by Braintree, please contact Braintree Support on their website.' mod='paypal'}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="paypal-mt-20">
     <div class="h3">{l s='Live' mod='paypal'}</div>
     <hr>
     <dl>

@@ -240,3 +240,7 @@ label span.description{display:block;padding-left:16px}
 #error_version_php {
     margin-left : 23px;
 }
+
+.paypal-mt-20 {
+    margin-top: 20px;
+}

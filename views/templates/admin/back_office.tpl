@@ -26,22 +26,6 @@
 *}
 
 <div class="bootstrap">
-	<div class="alert alert-info">
-		<p>
-            {l s='Note : As part of European Regulation PSD2 and related SCA (Strong Customer Authentication) planned on September 14th 2019, all transactions will have to go through SCA (3DS 2.0) with the aim to reduce friction (fewer “client challenges”) while raise conversion and protection (more liability shifts from merchant to bank).' mod='paypal'}
-		</p>
-
-		<p>
-            {l s='It is thus recommended to enable 3D Secure in order to avoid bank declines and impact to your business.' mod='paypal'}
-		</p>
-
-		<p>
-            {{l s='More info in our blog post [b]to get the last updates:[/b]' mod='paypal'}|paypalreplace}
-			<a href="https://www.braintreepayments.com/ie/features/3d-secure">
-				https://www.braintreepayments.com/ie/features/3d-secure
-			</a>
-		</p>
-	</div>
 
 	{if $PayPal_payment_method == $PayPal_ECS}
 		<div class="alert alert-info">
@@ -59,11 +43,15 @@
 
 			<ul>
 				<li>
-					{l s='what to do ? (confiture PayPal standard integration or install PS Checkout)' mod='paypal'}
+					{l s='What to do? (Recommended) Install PrestaShop Checkout. Or you can still use PayPal standard even if it’s deprecated.' mod='paypal'}
 				</li>
 
 				<li>
-					{l s='how to cancel the HSS subscription? (URL or other instructions to provide)' mod='paypal'}
+					{l s='How to cancel HSS subscription?' mod='paypal'}
+					<a href="https://www.paypal.com/us/smarthelp/article/how-do-i-cancel-a-billing-agreement,-automatic-recurring-payment-or-subscription-faq2254"
+						target="_blank">
+						https://www.paypal.com/us/smarthelp/article/how-do-i-cancel-a-billing-agreement,-automatic-recurring-payment-or-subscription-faq2254
+					</a>
 				</li>
 			</ul>
 		</div>
@@ -197,6 +185,26 @@
 							<div>
                                 {include './sectionBraintreeCredentials.tpl'}
 							</div>
+
+							<div class="bootstrap">
+								<div class="alert alert-info">
+									<p>
+										{l s='Note : As part of European Regulation PSD2 and related SCA (Strong Customer Authentication) planned on September 14th 2019, all transactions will have to go through SCA (3DS 2.0) with the aim to reduce friction (fewer “client challenges”) while raise conversion and protection (more liability shifts from merchant to bank).' mod='paypal'}
+									</p>
+
+									<p>
+										{l s='It is thus recommended to enable 3D Secure in order to avoid bank declines and impact to your business.' mod='paypal'}
+									</p>
+
+									<p>
+										{{l s='More info in our blog post [b]to get the last updates:[/b]' mod='paypal'}|paypalreplace}
+										<a href="https://www.braintreepayments.com/ie/features/3d-secure">
+											https://www.braintreepayments.com/ie/features/3d-secure
+										</a>
+									</p>
+								</div>
+							</div>
+
 
 							<div>
                                 {include './button_braintree.tpl'}
