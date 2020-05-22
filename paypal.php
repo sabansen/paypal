@@ -805,7 +805,7 @@ class PayPal extends \PaymentModule
 
             if (($this->paypal_method == 'EC' && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT')) ||
                 ($this->paypal_method == 'MB' && (int)Configuration::get('PAYPAL_MB_EC_ENABLED') && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT'))) {
-                $resources[] = 'https://www.paypal.com/sdk/js?client-id=' . $method->getClientId();
+                $resources[] = $method->getUrlJsSdkLib();
             }
             if ($this->paypal_method == 'PPP') {
                 $resources[] = 'https://www.paypalobjects.com/webstatic/ppplus/ppplus.min.js';
@@ -828,7 +828,7 @@ class PayPal extends \PaymentModule
                 ));
             }
 
-            $this->context->controller->registerJavascript($this->name . '-paypal-checkout', 'https://www.paypal.com/sdk/js?client-id=' . $method->getClientId() . '&currency=' . $this->getPaymentCurrencyIso(), array('server' => 'remote'));
+            $this->context->controller->registerJavascript($this->name . '-paypal-checkout', $method->getUrlJsSdkLib(), array('server' => 'remote'));
             $this->context->controller->registerJavascript($this->name . '-paypal-shortcut', 'modules/' . $this->name . '/views/js/shortcut.js');
             Media::addJsDef(array(
                 'sc_init_url' => $this->context->link->getModuleLink($this->name, 'ScInit', array(), true),

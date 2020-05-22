@@ -240,6 +240,22 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         return hash('sha256', $id.$employeeMail);
     }
 
+    /**
+     * @return string
+     */
+    public function getUrlJsSdkLib()
+    {
+        $paypal = \Module::getInstanceByName($this->name);
+
+        $params = [
+            'client-id' => $this->getClientId(),
+            'intent' => \Tools::strtolower($this->getIntent()),
+            'currency' => $paypal->getPaymentCurrencyIso()
+        ];
+
+        return 'https://www.paypal.com/sdk/js?' . http_build_query($params);
+    }
+
     abstract public function getClientId();
 
     abstract public function getSecret();
