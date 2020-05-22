@@ -63,6 +63,8 @@ const Shortcut = {
 
   initButton() {
     paypal.Buttons({
+      fundingSource: paypal.FUNDING.PAYPAL,
+
       createOrder: function(data, actions) {
         return Shortcut.getIdOrder();
       },
