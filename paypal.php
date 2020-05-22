@@ -89,6 +89,7 @@ class PayPal extends PaymentModule
     public $default_country;
     public $paypal_logos;
     public $module_key = '336225a5988ad434b782f2d868d7bfcd';
+    public $psCheckoutCountry = ['FR', 'ES', 'IT', 'GB', 'PL', 'BE', 'NL', 'LU', 'US'];
 
     const BACKWARD_REQUIREMENT = '0.4';
     const ONLY_PRODUCTS = 1;
@@ -184,10 +185,45 @@ class PayPal extends PaymentModule
         $paypal_tools = new PayPalTools($this->name);
         $paypal_tools->moveTopPayments(1);
         $paypal_tools->moveRightColumn(3);
+        $this->installTab();
 
         $this->runUpgrades(true);
 
         return true;
+    }
+
+    public function installTab()
+    {
+        $tab = Tab::getInstanceFromClassName('AdminPaypalAjaxHandler');
+
+        if (Validate::isLoadedObject($tab)) {
+            return true;
+        }
+
+        $tab->active = false;
+        $tab->class_name = 'AdminPaypalAjaxHandler';
+        $tab->name = array();
+
+        foreach (Language::getLanguages() as $lang) {
+            $tab->name[$lang['id_lang']] = 'Paypal Ajax Handler';
+        }
+
+        $tab->id_parent = 0;
+        $tab->module = $this->name;
+
+        return $tab->save();
+
+    }
+
+    public function uninstallTab()
+    {
+        $tab = Tab::getInstanceFromClassName('AdminPaypalAjaxHandler');
+
+        if (Validate::isLoadedObject($tab) == false) {
+            return true;
+        }
+
+        return $tab->delete();
     }
 
     public function uninstall()
@@ -195,6 +231,8 @@ class PayPal extends PaymentModule
         include_once _PS_MODULE_DIR_.$this->name.'/paypal_install.php';
         $paypal_install = new PayPalInstall();
         $paypal_install->deleteConfiguration();
+        $this->uninstallTab();
+
         return parent::uninstall();
     }
 
@@ -632,7 +670,7 @@ class PayPal extends PaymentModule
     }
 
     public function getContent()
-    {        
+    {
         if (Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE') && Tools::usingSecureMode() == false) {
             Tools::redirect('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
         }
@@ -747,9 +785,13 @@ class PayPal extends PaymentModule
             'paypal_braintree_pub_key_sandbox' => Configuration::get('PAYPAL_BRAINTREE_PUB_KEY_SANDBOX'),
             'paypal_braintree_priv_key_sandbox' => Configuration::get('PAYPAL_BRAINTREE_PRIV_KEY_SANDBOX'),
             'paypal_braintree_merchant_id_sandbox' => Configuration::get('PAYPAL_BRAINTREE_MERCHANT_ID_SANDBOX'),
-            'showWarningForBraintreeUsers' => $prestaBraintree->useToken() && Configuration::get('PAYPAL_BRAINTREE_ACCESS_TOKEN')
+            'showWarningForBraintreeUsers' => $prestaBraintree->useToken() && Configuration::get('PAYPAL_BRAINTREE_ACCESS_TOKEN'),
+            'showPsCheckoutInfo' => $this->showPsCheckoutMessage(),
         ));
 
+        MediaCore::addJsDef([
+            'ajaxHandler' => $this->context->link->getAdminLink('AdminPaypalAjaxHandler')
+        ]);
         $hss_errors = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'paypal_hss_email_error`');
         $this->context->smarty->assign(array(
             'hss_errors' => $hss_errors
@@ -2696,5 +2738,42 @@ class PayPal extends PaymentModule
             //unset cookie of payment init if it's no more same cart
             Context::getContext()->cookie->__unset('express_checkout');
         }
+    }
+
+    public function setPsCheckoutMessageValue($value)
+    {
+        $notShowDetails = Configuration::get('PAYPAL_NOT_SHOW_PS_CHECKOUT');
+
+        if (is_string($notShowDetails)) {
+            try {
+                $notShowDetailsArray = json_decode($notShowDetails, true);
+                $notShowDetailsArray[$this->version] = $value;
+            } catch (Exception $e) {
+                $notShowDetailsArray = [$this->version => $value];
+            }
+        } else {
+            $notShowDetailsArray = [$this->version => $value];
+        }
+
+        return Configuration::updateValue('PAYPAL_NOT_SHOW_PS_CHECKOUT', json_encode($notShowDetailsArray));
+    }
+
+    public function showPsCheckoutMessage()
+    {
+        $countryDefault = new Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
+        $notShowDetails = Configuration::get('PAYPAL_NOT_SHOW_PS_CHECKOUT');
+
+        if (is_string($notShowDetails)) {
+            try {
+                $notShowDetailsArray = json_decode($notShowDetails, true);
+                $notShowPsCheckout = isset($notShowDetailsArray[$this->version]) ? (bool)$notShowDetailsArray[$this->version] : false;
+            } catch (Exception $e) {
+                $notShowPsCheckout = false;
+            }
+        } else {
+            $notShowPsCheckout = false;
+        }
+
+        return in_array($countryDefault->iso_code, $this->psCheckoutCountry) && ($notShowPsCheckout == false);
     }
 }

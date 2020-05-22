@@ -41,6 +41,31 @@ $(document).ready(function () {
         $(collapsedElId).slideToggle();
     });
 
+    // Handle click on "Install Prestashop Checkout" button
+    $('.ps-checkout-info').on('click', function(e) {
+        var action = e.target.getAttribute('data-action');
+        psCheckoutHandleAction(action);
+    });
+
+    function psCheckoutHandleAction(action) {
+        if (action != null) {
+            $.ajax({
+                url: ajaxHandler,
+                type: 'POST',
+                data: {
+                    ajax: true,
+                    action: 'HandlePsCheckoutAction',
+                    actionHandled: action,
+                },
+                dataType: 'JSON',
+                success: function(response) {
+                    if (response.redirect) {
+                        window.open(response.url, '_blank');
+                    }
+                },
+            });
+        }
+    }
 
     function displayConfigurationBraintree()
     {
