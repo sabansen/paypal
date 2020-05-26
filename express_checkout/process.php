@@ -428,41 +428,6 @@ class PaypalExpressCheckout extends Paypal
         }
     }
 
-    /**
-     * @return mixed
-     */
-    public function getTotalPaid()
-    {
-        $total = 0.00;
-
-        foreach ($this->product_list as $product) {
-            $price = Tools::ps_round($product['price_wt'], $this->decimals);
-            $quantity = Tools::ps_round($product['quantity'], $this->decimals);
-            $total = Tools::ps_round($total + ($price * $quantity), $this->decimals);
-        }
-
-        if ($this->context->cart->gift == 1) {
-            $total = Tools::ps_round($total + $this->getGiftWrappingPrice(), $this->decimals);
-        }
-
-        if (version_compare(_PS_VERSION_, '1.5', '<')) {
-            $discounts = $this->context->cart->getDiscounts();
-            $shipping_cost = $this->context->cart->getOrderShippingCost();
-        } else {
-            $discounts = $this->context->cart->getCartRules();
-            $shipping_cost = $this->context->cart->getTotalShippingCost();
-        }
-
-        if (count($discounts) > 0) {
-            foreach ($discounts as $product) {
-                $price = -1 * Tools::ps_round($product['value_real'], $this->decimals);
-                $total = Tools::ps_round($total + $price, $this->decimals);
-            }
-        }
-
-        return Tools::ps_round($shipping_cost, $this->decimals) + $total;
-    }
-
     private function _storeToken()
     {
         if (is_array($this->result) && isset($this->result['TOKEN'])) {
