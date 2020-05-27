@@ -121,6 +121,10 @@
               {$psCheckoutBtnText|escape:'htmlall':'utf-8'}
           </span>
           </p>
+
+          <p>
+            <image src="{$moduleDir|addslashes}paypal/views/img/Logos.png"></image>
+          </p>
         </li>
       {/if}
     </ul>
