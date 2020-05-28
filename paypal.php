@@ -787,6 +787,7 @@ class PayPal extends PaymentModule
             'paypal_braintree_merchant_id_sandbox' => Configuration::get('PAYPAL_BRAINTREE_MERCHANT_ID_SANDBOX'),
             'showWarningForBraintreeUsers' => $prestaBraintree->useToken() && Configuration::get('PAYPAL_BRAINTREE_ACCESS_TOKEN'),
             'showPsCheckoutInfo' => $this->showPsCheckoutMessage(),
+            'moduleDir' => _MODULE_DIR_ . $this->name,
         ));
 
         MediaCore::addJsDef([

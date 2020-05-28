@@ -87,9 +87,7 @@
 	{/if}
 	{* PayPal configuration page header *}
 	<div class="box half left">
-		{if isset($PayPal_logo.LocalPayPalLogoLarge)}
-			<img src="{$PayPal_logo.LocalPayPalLogoLarge|escape:'htmlall':'UTF-8'}" alt="" style="margin-bottom: -5px" />
-		{/if}
+		<img src="{$moduleDir|addslashes}/views/img/logos/PP_Horizontal_rgb_2016.png" alt="" style="margin-bottom: -5px; max-height: 50px;" />
 		<p id="paypal-slogan"><span class="dark">{l s='Leader in' mod='paypal'}</span> <span class="light">{l s='online payments' mod='paypal'}</span></p>
 		<p>{l s='Easy, secure, fast payments for your buyers.' mod='paypal'}</p>
 	</div>
@@ -144,11 +142,25 @@
 					<div class="form-block">
 						{if (in_array($PayPal_WPS, $PayPal_allowed_methods))}
 							{* WEBSITE PAYMENT STANDARD *}
-							<label for="paypal_payment_wps">
-								<input type="radio" name="paypal_payment_method" id="paypal_payment_wps" value='{$PayPal_WPS|escape:'htmlall':'UTF-8'}' {if $PayPal_payment_method == $PayPal_WPS}checked="checked"{/if} />
-								{l s='Choose' mod='paypal'} {l s='Website Payments Standard' mod='paypal'}
-								<br />
-								<span class="description">{l s='Start accepting payments immediately.' mod='paypal'}<br />{l s='No subscription fees, pay only when you get paid.' mod='paypal'}</span>
+							<label for="paypal_payment_wps" class="flex-display">
+								<div>
+									{if (in_array($PayPal_PPP, $PayPal_allowed_methods))}
+										<input type="radio" name="paypal_payment_method" id="paypal_payment_wps" value='{$PayPal_WPS|escape:'htmlall':'UTF-8'}' {if $PayPal_payment_method == $PayPal_WPS}checked="checked"{/if} />
+									{else}
+										<input type="hidden" name="paypal_payment_method" value='{$PayPal_WPS|escape:'htmlall':'UTF-8'}'/>
+									{/if}
+								</div>
+								<div>
+									<div>
+										{l s='Website Payments Standard' mod='paypal'}
+									</div>
+									<div class="description">
+										<div>{l s='Start accepting payments immediately.' mod='paypal'}</div>
+										<div>{l s='No subscription fees, pay only when you get paid.' mod='paypal'}</div>
+									</div>
+
+
+								</div>
 							</label>
 						{/if}
                                                 <div class="paypal-clear"></div>
