@@ -45,8 +45,8 @@ include_once 'classes/PaypalLog.php';
 include_once 'classes/PaypalVaulting.php';
 include_once 'classes/PaypalIpn.php';
 
-const BT_CARD_PAYMENT = 'card-braintree';
-const BT_PAYPAL_PAYMENT = 'paypal-braintree';
+define('BT_CARD_PAYMENT', 'card-braintree');
+define('BT_PAYPAL_PAYMENT', 'paypal-braintree');
 // Method Alias :
 // EC = express checkout
 // ECS = express checkout sortcut
@@ -238,7 +238,9 @@ class PayPal extends \PaymentModule
                 'nl' => 'Instellingen',
                 'it' => 'Impostazioni',
                 'es' => 'Configuración',
-                'de' => 'Einstellungen'
+                'de' => 'Einstellungen',
+                'mx' => 'Configuración',
+                'br' => 'Definições'
             ),
             'class_name' => 'AdminPayPalSetup',
             'parent_class_name' => 'AdminPayPalConfiguration',
@@ -253,7 +255,9 @@ class PayPal extends \PaymentModule
                 'pl' => 'Doświadczenie',
                 'nl' => 'Ervaring',
                 'it' => 'Percorso Cliente',
-                'es' => 'Experiencia'
+                'es' => 'Experiencia',
+                'mx' => 'Experiencia',
+                'br' => 'Experiência',
             ),
             'class_name' => 'AdminPayPalCustomizeCheckout',
             'parent_class_name' => 'AdminPayPalConfiguration',
@@ -268,7 +272,9 @@ class PayPal extends \PaymentModule
                 'nl' => 'Hulp',
                 'it' => 'Aiuto',
                 'es' => 'Ayuda',
-                'de' => 'Hilfe'
+                'de' => 'Hilfe',
+                'mx' => 'Ayuda',
+                'br' => 'Ajuda',
             ),
             'class_name' => 'AdminPayPalHelp',
             'parent_class_name' => 'AdminPayPalConfiguration',
@@ -283,7 +289,9 @@ class PayPal extends \PaymentModule
                 'pl' => 'Dzienniki',
                 'nl' => 'Logs',
                 'it' => 'Logs',
-                'es' => 'Logs'
+                'es' => 'Logs',
+                'mx' => 'Logs',
+                'br' => 'Logs',
             ),
             'class_name' => 'AdminPayPalLogs',
             'parent_class_name' => 'AdminPayPalConfiguration',
@@ -378,7 +386,7 @@ class PayPal extends \PaymentModule
             'PAYPAL_OS_PROCESSING' => (int)Configuration::get('PAYPAL_OS_WAITING'),
             'PAYPAL_OS_VALIDATION_ERROR' => (int)Configuration::get('PS_OS_CANCELED'),
             'PAYPAL_OS_REFUNDED_PAYPAL' => (int)Configuration::get('PS_OS_REFUND'),
-            'PAYPAL_NOT_SHOW_PS_CHECKOUT' => 0
+            'PAYPAL_NOT_SHOW_PS_CHECKOUT' => json_encode([$this->version, 0])
         );
     }
 
@@ -1109,8 +1117,7 @@ class PayPal extends \PaymentModule
         }
         if (Tools::getValue('error_refund')) {
             $paypal_msg .= $this->displayWarning(
-                '<p class="paypal-warning">' . $this->l('We encountered an unexpected problem during refund operation. For more details please see the \'PayPal\' tab in the order details.
-') . '</p>'
+                '<p class="paypal-warning">' . $this->l('We encountered an unexpected problem during refund operation. For more details please see the \'PayPal\' tab in the order details.') . '</p>'
             );
         }
         if (Tools::getValue('cancel_failed')) {
@@ -1812,5 +1819,42 @@ class PayPal extends \PaymentModule
         }
 
         return $orderStatuses;
+    }
+
+    public function showPsCheckoutMessage()
+    {
+        $countryDefault = new Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
+        $notShowDetails = Configuration::get('PAYPAL_NOT_SHOW_PS_CHECKOUT');
+
+        if (is_string($notShowDetails)) {
+            try {
+                $notShowDetailsArray = json_decode($notShowDetails, true);
+                $notShowPsCheckout = isset($notShowDetailsArray[$this->version]) ? (bool)$notShowDetailsArray[$this->version] : false;
+            } catch (Exception $e) {
+                $notShowPsCheckout = false;
+            }
+        } else {
+            $notShowPsCheckout = false;
+        }
+
+        return in_array($countryDefault->iso_code, $this->psCheckoutCountry) && ($notShowPsCheckout == false);
+    }
+
+    public function setPsCheckoutMessageValue($value)
+    {
+        $notShowDetails = Configuration::get('PAYPAL_NOT_SHOW_PS_CHECKOUT');
+
+        if (is_string($notShowDetails)) {
+            try {
+                $notShowDetailsArray = json_decode($notShowDetails, true);
+                $notShowDetailsArray[$this->version] = $value;
+            } catch (Exception $e) {
+                $notShowDetailsArray = [$this->version => $value];
+            }
+        } else {
+            $notShowDetailsArray = [$this->version => $value];
+        }
+
+        return Configuration::updateValue('PAYPAL_NOT_SHOW_PS_CHECKOUT', json_encode($notShowDetailsArray));
     }
 }

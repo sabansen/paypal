@@ -69,12 +69,12 @@ class AdminPayPalController extends \ModuleAdminController
         }
 
         $showWarningForUserBraintree = $this->module->showWarningForUserBraintree();
-        $countryDefault = new \Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
-        $showPsCheckoutInfo = in_array($countryDefault->iso_code, $this->module->psCheckoutCountry) && (int)\Configuration::get('PAYPAL_NOT_SHOW_PS_CHECKOUT') == 0;
+        $showPsCheckoutInfo = $this->module->showPsCheckoutMessage();
         $this->context->smarty->assign('showWarningForUserBraintree', $showWarningForUserBraintree);
         $this->context->smarty->assign('methodType', $this->method);
         $this->context->smarty->assign('moduleDir', _MODULE_DIR_);
         $this->context->smarty->assign('showPsCheckoutInfo', $showPsCheckoutInfo);
+        $this->context->smarty->assign('showRestApiIntegrationMessage', version_compare($this->module->version, '5.2', '<'));
     }
 
     public function renderForm($fields_form = null)
@@ -154,34 +154,30 @@ class AdminPayPalController extends \ModuleAdminController
             'status' => false,
             'error_message' => ''
         );
-        if (defined('CURL_SSLVERSION_TLSv1_2')) {
-            $tls_server = $this->context->link->getModuleLink($this->module->name, 'tlscurltestserver');
-            $curl = curl_init($tls_server);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
-            curl_setopt($curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2);
-            $response = curl_exec($curl);
-            if ($response != 'ok') {
-                $return['status'] = false;
-                $curl_info = curl_getinfo($curl);
-                if ($curl_info['http_code'] == 401) {
-                    $return['error_message'] = $this->module->l('401 Unauthorized. Please note that the TLS verification can not be done if you have a htaccess password protection enabled on your website.', 'AdminPayPalController');
-                } else {
-                    $return['error_message'] = curl_error($curl);
-                }
+
+        if (defined('CURL_SSLVERSION_TLSv1_2') == false) {
+            define('CURL_SSLVERSION_TLSv1_2', 6);
+        }
+
+        $tls_server = $this->context->link->getModuleLink($this->module->name, 'tlscurltestserver');
+        $curl = curl_init($tls_server);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt($curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2);
+        $response = curl_exec($curl);
+        if (trim($response) != 'ok') {
+            $return['status'] = false;
+            $curl_info = curl_getinfo($curl);
+            if ($curl_info['http_code'] == 401) {
+                $return['error_message'] = $this->module->l('401 Unauthorized. Please note that the TLS verification can not be done if you have a htaccess password protection enabled on your website.', 'AdminPayPalController');
             } else {
-                $return['status'] = true;
+                $return['error_message'] = curl_error($curl);
             }
         } else {
-            $return['status'] = false;
-            if (version_compare(curl_version()['version'], '7.34.0', '<')) {
-                $message = sprintf('You current cURL version is %s. Please contact you server for updating it to 7.34.0', curl_version()['version']);
-                $return['error_message'] = $this->module->l($message, 'AdminPayPalController');
-            } else {
-                $return['error_message'] = $this->module->l('TLS version is not compatible', 'AdminPayPalController');
-            }
+            $return['status'] = true;
         }
+
         return $return;
     }
 
@@ -225,7 +221,7 @@ class AdminPayPalController extends \ModuleAdminController
     public function log($message)
     {
         ProcessLoggerHandler::openLogger();
-        ProcessLoggerHandler::logError($message);
+        ProcessLoggerHandler::logError($message, null, null, null, null, null, (int)\Configuration::get('PAYPAL_SANDBOX'));
         ProcessLoggerHandler::closeLogger();
     }
 
@@ -250,7 +246,7 @@ class AdminPayPalController extends \ModuleAdminController
 
         switch ($action) {
             case 'close':
-                \Configuration::updateValue('PAYPAL_NOT_SHOW_PS_CHECKOUT', 1);
+                $this->module->setPsCheckoutMessageValue(true);
                 break;
             case 'install':
                 if (is_dir(_PS_MODULE_DIR_ . 'ps_checkout') == false) {

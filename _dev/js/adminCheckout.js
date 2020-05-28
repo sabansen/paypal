@@ -11,11 +11,12 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  * @copyright PayPal
  * @license   http://addons.prestashop.com/en/content/12-terms-and-conditions-of-use
- * 
+ *
  */
 
 // Import functions for scrolling effect to necessary block on click
 import {hoverConfig, hoverTabConfig} from './functions.js';
+import { SetupAdmin } from './adminSetup.js';
 
 var CustomizeCheckout = {
   init() {
@@ -114,4 +115,10 @@ var CustomizeCheckout = {
 
 }
 
-$(document).ready(() => CustomizeCheckout.init());
+$(document).ready(() => {
+  CustomizeCheckout.init();
+  // Handle click on "Install Prestashop Checkout" button
+  $('.install-ps-checkout').click(() => {
+    SetupAdmin.psCheckoutHandleAction('install');
+  })
+});

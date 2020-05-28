@@ -45,20 +45,36 @@ class AdminPayPalHelpController extends AdminPayPalController
     public function initContent()
     {
         parent::initContent();
-        $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
-        $moduleManager = $moduleManagerBuilder->build();
-        $countryDefault = new Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
 
+        $countryDefault = new Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
         $need_rounding = (Configuration::get('PS_ROUND_TYPE') != Order::ROUND_ITEM) || (Configuration::get('PS_PRICE_ROUND_MODE') != PS_ROUND_HALF_UP);
+
         $tpl_vars = array(
             'need_rounding' => $need_rounding,
-            'psCheckoutBtnText' => $moduleManager->isInstalled('ps_checkout') ? $this->l('Configure PrestaShop Checkout') : $this->l('Install PrestaShop Checkout'),
+            'psCheckoutBtnText' => $this->getCheckoutBtnText(),
             'showPsCheckout' => in_array($countryDefault->iso_code, $this->module->psCheckoutCountry)
         );
+
         $this->context->smarty->assign($tpl_vars);
         $this->content = $this->context->smarty->fetch($this->getTemplatePath() . 'help.tpl');
         $this->context->smarty->assign('content', $this->content);
         $this->addJS(_PS_MODULE_DIR_ . $this->module->name . '/views/js/helpAdmin.js');
+    }
+
+    protected function getCheckoutBtnText()
+    {
+        $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
+        $moduleManager = $moduleManagerBuilder->build();
+
+        if ($moduleManager->isInstalled('ps_checkout')) {
+            $psCheckoutBtnText = $this->l('Configure PrestaShop Checkout');
+        } elseif (is_dir(_PS_MODULE_DIR_ . 'ps_checkout')) {
+            $psCheckoutBtnText = $this->l('Install PrestaShop Checkout');
+        } else {
+            $psCheckoutBtnText = $this->l('Download PrestaShop Checkout');
+        }
+
+        return $psCheckoutBtnText;
     }
 
     public function displayAjaxCheckCredentials()
