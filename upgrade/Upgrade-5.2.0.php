@@ -38,6 +38,8 @@ use PaypalPPBTlib\Install\ModuleInstaller;
 function upgrade_module_5_2_0($module)
 {
     $return = true;
+    $method = AbstractMethodPaypal::load();
+    $method->checkCredentials();
     $installer = new ModuleInstaller($module);
     $return &= $installer->installAdminControllers();
     return $return;
