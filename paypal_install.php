@@ -185,6 +185,7 @@ class PayPalInstall
         Configuration::deleteByName('PAYPAL_DEBUG_MODE');
         Configuration::deleteByName('PAYPAL_COUNTRY_DEFAULT');
         Configuration::deleteByName('PAYPAL_VERSION');
+        Configuration::deleteByName('PAYPAL_NOT_SHOW_PS_CHECKOUT');
 
         /* USE PAYPAL LOGIN */
         Configuration::deleteByName('PAYPAL_LOGIN');
