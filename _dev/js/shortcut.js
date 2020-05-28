@@ -65,6 +65,11 @@ const Shortcut = {
     paypal.Buttons({
       fundingSource: paypal.FUNDING.PAYPAL,
 
+      style: {
+        label: 'pay',
+        height: 35
+      },
+
       createOrder: function(data, actions) {
         return Shortcut.getIdOrder();
       },
