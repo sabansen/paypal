@@ -198,7 +198,7 @@ abstract class AbstractMethodPaypal extends AbstractMethod
 
     public function getBrandName()
     {
-        return \Configuration::get('PAYPAL_CONFIG_BRAND');
+        return empty(\Configuration::get('PAYPAL_CONFIG_BRAND')) == false ? \Configuration::get('PAYPAL_CONFIG_BRAND') : \Configuration::get('PS_SHOP_NAME');
     }
 
     protected function getUrlOnboarding()
