@@ -11,20 +11,19 @@
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  * @copyright PayPal
  * @license   http://addons.prestashop.com/en/content/12-terms-and-conditions-of-use
- * 
+ *
  */
 
 // Import functions for scrolling effect to necessary block on click
 import {hoverConfig, hoverTabConfig} from './functions.js';
 
-const SetupAdmin = {
+export  const SetupAdmin = {
   init() {
-
     // Disconnect from braintree account
     $('#logoutAccount').on('click', (event) => {
       SetupAdmin.logoutAccount();
     });
-    
+
     // Connect to braintree account
     $('#confirmCredentials').click((event) => {
       $(event.currentTarget).closest('form').submit();
@@ -50,6 +49,12 @@ const SetupAdmin = {
     // Remove effect after leaving cursor from the block
     $('.defaultForm').on('mouseleave', (e) => {
       $(e.currentTarget).removeClass('pp-settings-link-on');
+    });
+
+    // Handle click on "Install Prestashop Checkout" button
+    $('.ps-checkout-info').on('click', (e) => {
+      let action = e.target.getAttribute('data-action');
+      SetupAdmin.psCheckoutHandleAction(action);
     });
   },
 
@@ -83,6 +88,26 @@ const SetupAdmin = {
       },
     });
   },
+
+  psCheckoutHandleAction(action) {
+    if (action != null) {
+      $.ajax({
+        url: controllerUrl,
+        type: 'POST',
+        data: {
+          ajax: true,
+          action: 'HandlePsCheckoutAction',
+          actionHandled: action,
+        },
+        success(response) {
+          if (response.redirect) {
+            window.open(response.url, '_blank');
+          }
+        },
+      });
+    }
+
+  }
 
 };
 

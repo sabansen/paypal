@@ -30,7 +30,7 @@
 	</div>
 	<div class="pp__pl-5">
 		<p>
-			{l s='Activate the PayPal module to start selling to +250M PayPal customers around the globe' mod='paypal'}.
+			{l s='Activate the PayPal module to start selling to +300M PayPal customers around the globe' mod='paypal'}.
 		</p>
 		{if $page_header_toolbar_title !== 'Help' && $page_header_toolbar_title !== 'Logs'}
         	{if isset($methodType) && $methodType == 'EC'}

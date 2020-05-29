@@ -22,10 +22,12 @@
  * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @version   develop
  */
- 
+
 namespace PaypalAddons\classes;
 
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AdminPayPalController extends \ModuleAdminController
 {
@@ -64,9 +66,12 @@ class AdminPayPalController extends \ModuleAdminController
         }
 
         $showWarningForUserBraintree = $this->module->showWarningForUserBraintree();
+        $showPsCheckoutInfo = $this->module->showPsCheckoutMessage();
         $this->context->smarty->assign('showWarningForUserBraintree', $showWarningForUserBraintree);
         $this->context->smarty->assign('methodType', $this->method);
         $this->context->smarty->assign('moduleDir', _MODULE_DIR_);
+        $this->context->smarty->assign('showPsCheckoutInfo', $showPsCheckoutInfo);
+        $this->context->smarty->assign('showRestApiIntegrationMessage', version_compare($this->module->version, '5.2', '<'));
     }
 
     public function renderForm($fields_form = null)
@@ -146,34 +151,30 @@ class AdminPayPalController extends \ModuleAdminController
             'status' => false,
             'error_message' => ''
         );
-        if (defined('CURL_SSLVERSION_TLSv1_2')) {
-            $tls_server = $this->context->link->getModuleLink($this->module->name, 'tlscurltestserver');
-            $curl = curl_init($tls_server);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
-            curl_setopt($curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2);
-            $response = curl_exec($curl);
-            if ($response != 'ok') {
-                $return['status'] = false;
-                $curl_info = curl_getinfo($curl);
-                if ($curl_info['http_code'] == 401) {
-                    $return['error_message'] = $this->module->l('401 Unauthorized. Please note that the TLS verification can not be done if you have a htaccess password protection enabled on your website.', 'AdminPayPalController');
-                } else {
-                    $return['error_message'] = curl_error($curl);
-                }
+
+        if (defined('CURL_SSLVERSION_TLSv1_2') == false) {
+            define('CURL_SSLVERSION_TLSv1_2', 6);
+        }
+
+        $tls_server = $this->context->link->getModuleLink($this->module->name, 'tlscurltestserver');
+        $curl = curl_init($tls_server);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt($curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2);
+        $response = curl_exec($curl);
+        if (trim($response) != 'ok') {
+            $return['status'] = false;
+            $curl_info = curl_getinfo($curl);
+            if ($curl_info['http_code'] == 401) {
+                $return['error_message'] = $this->module->l('401 Unauthorized. Please note that the TLS verification can not be done if you have a htaccess password protection enabled on your website.', 'AdminPayPalController');
             } else {
-                $return['status'] = true;
+                $return['error_message'] = curl_error($curl);
             }
         } else {
-            $return['status'] = false;
-            if (version_compare(curl_version()['version'], '7.34.0', '<')) {
-                $message = sprintf('You current cURL version is %s. Please contact you server for updating it to 7.34.0', curl_version()['version']);
-                $return['error_message'] = $this->module->l($message, 'AdminPayPalController');
-            } else {
-                $return['error_message'] = $this->module->l('TLS version is not compatible', 'AdminPayPalController');
-            }
+            $return['status'] = true;
         }
+
         return $return;
     }
 
@@ -218,7 +219,7 @@ class AdminPayPalController extends \ModuleAdminController
     public function log($message)
     {
         ProcessLoggerHandler::openLogger();
-        ProcessLoggerHandler::logError($message);
+        ProcessLoggerHandler::logError($message, null, null, null, null, null, (int)\Configuration::get('PAYPAL_SANDBOX'));
         ProcessLoggerHandler::closeLogger();
     }
 
@@ -234,5 +235,52 @@ class AdminPayPalController extends \ModuleAdminController
 
         $this->context->smarty->assign('hooks', $hooks);
         return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/messages/unregisteredHooksMessage.tpl');
+    }
+
+    public function displayAjaxHandlePsCheckoutAction()
+    {
+        $action = \Tools::getValue('actionHandled');
+        $response = array();
+
+        switch ($action) {
+            case 'close':
+                $this->module->setPsCheckoutMessageValue(true);
+                break;
+            case 'install':
+                if (is_dir(_PS_MODULE_DIR_ . 'ps_checkout') == false) {
+                    $response = array(
+                        'redirect' => true,
+                        'url' => 'https://addons.prestashop.com/en/payment-card-wallet/46347-prestashop-checkout-built-with-paypal.html'
+                    );
+                } else {
+                    if ($this->installPsCheckout()) {
+                        $response = array(
+                            'redirect' => true,
+                            'url' => $this->context->link->getAdminLink('AdminModules', true, [], ['configure' => 'ps_checkout'])
+                        );
+                    } else {
+                        $response = array(
+                            'redirect' => false,
+                            'url' => 'someUrl'
+                        );
+                    }
+                }
+                break;
+        }
+
+        $jsonResponse = new JsonResponse($response);
+        return $jsonResponse->send();
+    }
+
+    public function installPsCheckout()
+    {
+        $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
+        $moduleManager = $moduleManagerBuilder->build();
+
+        if ($moduleManager->isInstalled('ps_checkout') == true) {
+            return true;
+        }
+
+        return $moduleManager->install('ps_checkout');
     }
 }

@@ -11,7 +11,7 @@ PaypalAbstarctModuleFrontController
 Abstarct class that must be extended by other module front controllers.
 
 ##### jsonValues
-Contain ajax response. Must be an array.
+Contain Ajax response. Must be an array.
 
 ##### redirectUrl
 Contain redirect URL.
@@ -25,4 +25,4 @@ An array of error information : error_msg, error_code, msg_long.
 
 ### run
 Overrider ModuleFrontController run function for make controllers more testable.
-Redirect or send ajax response only in run function.
+Redirect or send Ajax response only in run function.

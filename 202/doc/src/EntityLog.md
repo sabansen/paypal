@@ -5,7 +5,7 @@ category: Entities
 
 ## Definition
 
-Before all logs was savec in Prestashop Messages (SAV). In 4.5 we don't more use PS messages and create our system of logs.
+Before all logs was save in Prestashop Messages (SAVE). In 4.5 we don't more use PS messages and create our system of logs.
 Everywhere we used Messages we replace by saving the logs to our table. All front errors during the checkout must be also logged 
 (use Error controller to save the logs). 
 

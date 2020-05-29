@@ -17,16 +17,19 @@
 // init in-context
 $(document).ready( () => {
   window.paypalCheckoutReady = () => paypal.checkout.setup(merchant_id, {environment: environment});
+  enableConfirmationButton();
 });
 
 window.ECInContext = () => {
     // Init Express checkout method
+    paypal.checkout.closeFlow();
     paypal.checkout.initXO();
     $.support.cors = true;
     $.ajax({
         url: url_token,
         type: 'GET',
         success: (json) => {
+            enableConfirmationButton();
             if (json.success) {
                 var url = paypal.checkout.urlPrefix +json.token;
                 paypal.checkout.startFlow(url);
@@ -40,4 +43,11 @@ window.ECInContext = () => {
             paypal.checkout.closeFlow();
         }
     });
+}
+
+// Remove disable attribute from confirmation button if checkbox is checked
+const enableConfirmationButton = () => {
+  if ($('#conditions-to-approve').find('input[type="checkbox"]').is(':checked')) {
+    $('#payment-confirmation').find('button[type="submit"]').attr('disabled', false);
+  }
 }

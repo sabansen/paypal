@@ -113,6 +113,7 @@ const EcCheckProductAvailability = (sourcePage, qty=false, productId=false, prod
 }
 
 const ECSInContext = (sourcePage=false, combination=false, qty=false, productId=false) => {
+  paypal.checkout.closeFlow();
   paypal.checkout.initXO();
   $.support.cors = true;
   $.ajax({

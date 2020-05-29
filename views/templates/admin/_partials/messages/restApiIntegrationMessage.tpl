@@ -24,21 +24,14 @@
 *
 *}
 
-{if $showPsCheckoutInfo}
-    {include './_partials/messages/prestashopCheckoutInfo.tpl'}
-{/if}
+<div class="alert alert-info">
+    <button type="button" class="close" data-dismiss="alert">×</button>
 
-{if $showRestApiIntegrationMessage}
-    {include './_partials/messages/restApiIntegrationMessage.tpl'}
-{/if}
+    <div>
+        {l s='As we are constantly working on the security of your information, a new version of your merchant account authentication will be available starting from the v5.2.0 of PayPal Official module (v5.2.0 will be released in June 2020).' mod='paypal'}
+    </div>
 
-{include './_partials/headerLogo.tpl'}
-
-{if isset($formBehavior)}
-    {$formBehavior nofilter} {* the variable contains html code *}
-{/if}
-
-{if isset($formAdvanced)}
-    {$formAdvanced nofilter} {* the variable contains html code *}
-{/if}
-
+    <div>
+        {l s='Please pay attention that after the update of the module it will be required to reconnect your PayPal merchant account in order to continue to use PayPal payment solution.' mod='paypal'}
+    </div>
+</div>

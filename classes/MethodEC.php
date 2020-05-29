@@ -209,7 +209,6 @@ class MethodEC extends AbstractMethodPaypal
         $setECReqDetails->ReqConfirmShipping = 0;
         $setECReqDetails->LandingPage = ($this->credit_card ? 'Billing' : 'Login');
 
-
         if ($this->short_cut) {
             $setECReqDetails->ReturnURL = Context::getContext()->link->getModuleLink($this->name, 'ecScOrder', array(), true);
             $setECReqDetails->NoShipping = 2;
@@ -269,18 +268,24 @@ class MethodEC extends AbstractMethodPaypal
         $products = Context::getContext()->cart->getProducts();
         foreach ($products as $product) {
             $itemDetails = new PaymentDetailsItemType();
-            $product['product_tax'] = $this->formatPrice($product['price_wt']) - $this->formatPrice($product['price']);
-            $itemAmount = new BasicAmountType($currency, $this->formatPrice($product['price']));
+            $productObj = new Product((int)$product['id_product'], null, Context::getContext()->cart->id_lang);
+            $priceIncl = $this->formatPrice($productObj->getPrice(true, $product['id_product_attribute']));
+            $priceExcl = $this->formatPrice($productObj->getPrice(false, $product['id_product_attribute']));
+            $productTax = $this->formatPrice($priceIncl - $priceExcl);
+
+            $itemAmount = new BasicAmountType($currency, $priceExcl);
+
             if (isset($product['attributes']) && (empty($product['attributes']) === false)) {
                 $product['name'] .= ' - '.$product['attributes'];
             }
+
             $itemDetails->Name = $product['name'];
             $itemDetails->Amount = $itemAmount;
             $itemDetails->Quantity = $product['quantity'];
-            $itemDetails->Tax = new BasicAmountType($currency, number_format($product['product_tax'], Paypal::getDecimal(), ".", ''));
+            $itemDetails->Tax = new BasicAmountType($currency, $productTax);
             $this->_paymentDetails->PaymentDetailsItem[] = $itemDetails;
-            $this->_itemTotalValue += $this->formatPrice($product['price']) * $product['quantity'];
-            $this->_taxTotalValue += $product['product_tax'] * $product['quantity'];
+            $this->_itemTotalValue += $priceExcl * $product['quantity'];
+            $this->_taxTotalValue += $productTax * $product['quantity'];
         }
     }
 
@@ -320,10 +325,7 @@ class MethodEC extends AbstractMethodPaypal
             $order_total = Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
             $order_total_with_reduction = $order_total;
             if (count($discounts) > 0) {
-                foreach ($discounts as $discount) {
-                    if (isset($discount['description']) && !empty($discount['description'])) {
-                        $discount['description'] = Tools::substr(strip_tags($discount['description']), 0, 50).'...';
-                    }
+                foreach ($discounts as $discount) {                    
                     // It's needed to take a percentage of the order amount, taking into account the others discounts
                     if ((int)$discount['reduction_percent'] > 0) {
                         $discount['value_real'] = $order_total_with_reduction * ($discount['value_real'] / $order_total);
@@ -494,17 +496,9 @@ class MethodEC extends AbstractMethodPaypal
     {
         $module = Module::getInstanceByName($this->name);
         $return = $module->l('Cart ID: ',  get_class($this)) . $cart->id . '.';
-
-        if (Shop::isFeatureActive()) {
-            $shop = new Shop($cart->id_shop, $cart->id_lang);
-
-            if (Validate::isLoadedObject($shop)) {
-                $return .= $module->l('Shop name: ',  get_class($this)) . $shop->name;
-            }
-        }
+        $return .= $module->l('Shop name: ',  get_class($this)) . Configuration::get('PS_SHOP_NAME', null, $cart->id_shop);
 
         return $return;
-
     }
 
     /**

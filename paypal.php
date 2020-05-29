@@ -45,8 +45,8 @@ include_once 'classes/PaypalLog.php';
 include_once 'classes/PaypalVaulting.php';
 include_once 'classes/PaypalIpn.php';
 
-const BT_CARD_PAYMENT = 'card-braintree';
-const BT_PAYPAL_PAYMENT = 'paypal-braintree';
+define('BT_CARD_PAYMENT', 'card-braintree');
+define('BT_PAYPAL_PAYMENT', 'paypal-braintree');
 // Method Alias :
 // EC = express checkout
 // ECS = express checkout sortcut
@@ -64,6 +64,8 @@ class PayPal extends \PaymentModule
     public $countriesApiCartUnavailable = array("FR", "GB", "IT", "ES", "DE");
     public $currencyMB = array('USD', 'MXN', 'EUR', 'BRL');
     public $paypal_method;
+    public $psCheckoutCountry = ['FR', 'ES', 'IT', 'GB', 'PL', 'BE', 'NL', 'LU', 'US'];
+
     /** @var array matrix of state iso codes between paypal and prestashop */
     public static $state_iso_code_matrix = array(
         'MX' => array(
@@ -228,7 +230,9 @@ class PayPal extends \PaymentModule
                 'nl' => 'Instellingen',
                 'it' => 'Impostazioni',
                 'es' => 'Configuración',
-                'de' => 'Einstellungen'
+                'de' => 'Einstellungen',
+                'mx' => 'Configuración',
+                'br' => 'Definições'
             ),
             'class_name' => 'AdminPayPalSetup',
             'parent_class_name' => 'AdminPayPalConfiguration',
@@ -243,7 +247,9 @@ class PayPal extends \PaymentModule
                 'pl' => 'Doświadczenie',
                 'nl' => 'Ervaring',
                 'it' => 'Percorso Cliente',
-                'es' => 'Experiencia'
+                'es' => 'Experiencia',
+                'mx' => 'Experiencia',
+                'br' => 'Experiência',
             ),
             'class_name' => 'AdminPayPalCustomizeCheckout',
             'parent_class_name' => 'AdminPayPalConfiguration',
@@ -258,7 +264,9 @@ class PayPal extends \PaymentModule
                 'nl' => 'Hulp',
                 'it' => 'Aiuto',
                 'es' => 'Ayuda',
-                'de' => 'Hilfe'
+                'de' => 'Hilfe',
+                'mx' => 'Ayuda',
+                'br' => 'Ajuda',
             ),
             'class_name' => 'AdminPayPalHelp',
             'parent_class_name' => 'AdminPayPalConfiguration',
@@ -273,7 +281,9 @@ class PayPal extends \PaymentModule
                 'pl' => 'Dzienniki',
                 'nl' => 'Logs',
                 'it' => 'Logs',
-                'es' => 'Logs'
+                'es' => 'Logs',
+                'mx' => 'Logs',
+                'br' => 'Logs',
             ),
             'class_name' => 'AdminPayPalLogs',
             'parent_class_name' => 'AdminPayPalConfiguration',
@@ -346,7 +356,7 @@ class PayPal extends \PaymentModule
             'PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART' => 1,
             'PAYPAL_CRON_TIME' => '',
             'PAYPAL_BY_BRAINTREE' => 0,
-            'PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT' => 0,
+            'PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT' => 1,
             'PAYPAL_VAULTING' => 0,
             'PAYPAL_REQUIREMENTS' => 0,
             'PAYPAL_MB_EC_ENABLED' => 1,
@@ -359,7 +369,8 @@ class PayPal extends \PaymentModule
             'PAYPAL_OS_WAITING_VALIDATION' => (int)Configuration::get('PAYPAL_OS_WAITING'),
             'PAYPAL_OS_PROCESSING' => (int)Configuration::get('PAYPAL_OS_WAITING'),
             'PAYPAL_OS_VALIDATION_ERROR' => (int)Configuration::get('PS_OS_CANCELED'),
-            'PAYPAL_OS_REFUNDED_PAYPAL' => (int)Configuration::get('PS_OS_REFUND')
+            'PAYPAL_OS_REFUNDED_PAYPAL' => (int)Configuration::get('PS_OS_REFUND'),
+            'PAYPAL_NOT_SHOW_PS_CHECKOUT' => json_encode([$this->version, 0])
         );
     }
 
@@ -986,7 +997,8 @@ class PayPal extends \PaymentModule
         }
 
         $adminEmployee = new Employee(_PS_ADMIN_PROFILE_);
-        $orderState = new OrderState($id_order_state, $adminEmployee->id_lang);
+        $order = new Order($this->currentOrder);
+        $orderState = new OrderState($order->current_state, $adminEmployee->id_lang);
 
         ProcessLoggerHandler::openLogger();
         ProcessLoggerHandler::logInfo(
@@ -1087,8 +1099,7 @@ class PayPal extends \PaymentModule
         }
         if (Tools::getValue('error_refund')) {
             $paypal_msg .= $this->displayWarning(
-                '<p class="paypal-warning">' . $this->l('We encountered an unexpected problem during refund operation. For more details please see the \'PayPal\' tab in the order details.
-') . '</p>'
+                '<p class="paypal-warning">' . $this->l('We encountered an unexpected problem during refund operation. For more details please see the \'PayPal\' tab in the order details.') . '</p>'
             );
         }
         if (Tools::getValue('cancel_failed')) {
@@ -1601,8 +1612,9 @@ class PayPal extends \PaymentModule
     {
         $paypal = Module::getInstanceByName('paypal');
         $currency_wt_decimal = array('HUF', 'JPY', 'TWD');
+
         if (in_array($paypal->getPaymentCurrencyIso(), $currency_wt_decimal) ||
-            (int)Configuration::get('PS_PRICE_DISPLAY_PRECISION') == 0) {
+            ((int)Configuration::get('PS_PRICE_DISPLAY_PRECISION') == 0 && version_compare(_PS_VERSION_, '1.7.7', '<'))) {
             return (int)0;
         } else {
             return (int)2;
@@ -1913,5 +1925,42 @@ class PayPal extends \PaymentModule
         }
 
         return $orderStatuses;
+    }
+
+    public function showPsCheckoutMessage()
+    {
+        $countryDefault = new Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
+        $notShowDetails = Configuration::get('PAYPAL_NOT_SHOW_PS_CHECKOUT');
+
+        if (is_string($notShowDetails)) {
+            try {
+                $notShowDetailsArray = json_decode($notShowDetails, true);
+                $notShowPsCheckout = isset($notShowDetailsArray[$this->version]) ? (bool)$notShowDetailsArray[$this->version] : false;
+            } catch (Exception $e) {
+                $notShowPsCheckout = false;
+            }
+        } else {
+            $notShowPsCheckout = false;
+        }
+
+        return in_array($countryDefault->iso_code, $this->psCheckoutCountry) && ($notShowPsCheckout == false);
+    }
+
+    public function setPsCheckoutMessageValue($value)
+    {
+        $notShowDetails = Configuration::get('PAYPAL_NOT_SHOW_PS_CHECKOUT');
+
+        if (is_string($notShowDetails)) {
+            try {
+                $notShowDetailsArray = json_decode($notShowDetails, true);
+                $notShowDetailsArray[$this->version] = $value;
+            } catch (Exception $e) {
+                $notShowDetailsArray = [$this->version => $value];
+            }
+        } else {
+            $notShowDetailsArray = [$this->version => $value];
+        }
+
+        return Configuration::updateValue('PAYPAL_NOT_SHOW_PS_CHECKOUT', json_encode($notShowDetailsArray));
     }
 }

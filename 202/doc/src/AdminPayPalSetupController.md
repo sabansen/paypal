@@ -9,7 +9,7 @@ This controller has five sections. For displaying all sections the HelperForm is
 
 ##### Account setting
 
-This section allows to configure the connection with your paypal account.
+This section allows to configure the connection with your PayPal account.
 Method `initAccountSettingsBlock()` is responsible for displaying this section.
 
 ##### Payment settings

@@ -119,7 +119,7 @@ related to the payment method "Express checkout"
     
     - **Return Values**
     
-      `void` does unconnecting with PayPal by deleting the saved credentials       
+      `void` does disconnect with PayPal by deleting the saved credentials       
       
 - **getInstructionInfo($id_payment)**
 

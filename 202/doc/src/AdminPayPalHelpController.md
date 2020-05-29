@@ -13,7 +13,7 @@ This method is responsible for displaying of the page.
 
 #### displayAjaxCheckCredentials()
 
-This method is responsible for handling of the ajax request that is send when the customer
+This method is responsible for handling of the Ajax request that is send when the customer
 click the button "Check requirements".
 
 

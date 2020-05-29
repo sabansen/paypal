@@ -62,7 +62,8 @@ class PaypalCapture extends ObjectModel
             'result' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
             'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
             'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
-        )
+        ),
+        'collation' => 'utf8_general_ci'
     );
 
     /**
