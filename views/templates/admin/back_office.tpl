@@ -186,7 +186,6 @@
 								<input type="radio" name="paypal_payment_method" id="paypal_payment_ppp" value='{$PayPal_PPP|escape:'htmlall':'UTF-8'}' {if $PayPal_payment_method == $PayPal_PPP}checked="checked"{/if} />
 								{l s='Choose' mod='paypal'} {l s='PayPal Plus' mod='paypal'}<br />
 								<span class="description"></span>
-								<p class="toolbox"></p>
 							</label>
 						{/if}
 					</div>
