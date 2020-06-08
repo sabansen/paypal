@@ -47,6 +47,7 @@ include_once 'classes/PaypalIpn.php';
 
 define('BT_CARD_PAYMENT', 'card-braintree');
 define('BT_PAYPAL_PAYMENT', 'paypal-braintree');
+define('PAYPAL_PAYMENT_CUSTOMER_CURRENCY', -1);
 // Method Alias :
 // EC = express checkout
 // ECS = express checkout sortcut
@@ -1855,6 +1856,30 @@ class PayPal extends \PaymentModule
 				VALUES (' . (int)$this->id . ', "' . (int)$s . '", ' . (int)$id_carrier . ')')) {
                     return false;
                 }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Add radio currency restrictions for a new module.
+     *
+     * @param array $shops
+     *
+     * @return bool
+     */
+    public function addRadioCurrencyRestrictionsForModule(array $shops = array())
+    {
+        if (!$shops) {
+            $shops = Shop::getShops(true, null, true);
+        }
+
+        $query = 'INSERT INTO `' . _DB_PREFIX_ . 'module_currency` (`id_module`, `id_shop`, `id_currency`) VALUES (%d, %d, %d)';
+
+        foreach ($shops as $s) {
+            if (!Db::getInstance()->execute(sprintf($query, $this->id, $s, PAYPAL_PAYMENT_CUSTOMER_CURRENCY))) {
+                return false;
             }
         }
 
