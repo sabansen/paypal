@@ -1887,6 +1887,18 @@ class PayPal extends \PaymentModule
     }
 
     /**
+     * Add checkbox country restrictions for a new module.
+     *
+     * @param array $shops
+     *
+     * @return bool
+     */
+    public function addCheckboxCountryRestrictionsForModule(array $shops = array())
+    {
+        return Country::addModuleRestrictions($shops, array(), array(array('id_module' => (int) $this->id)));
+    }
+
+    /**
     * @return array return the unregistered hooks
      */
     public function getHooksUnregistered()
