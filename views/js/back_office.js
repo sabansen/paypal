@@ -116,8 +116,8 @@ $(document).ready(function () {
                         $('#integral_evolution_solution').slideUp();
                         $('#express_checkout_shortcut').slideUp();
                         $('#in_context_checkout').slideUp();
-                        $('#paypal-signup-button-u1').hide();
-                        $('#paypal-signup-content-u1').hide();
+                        $('#paypal-signup-button-u1').show();
+                        $('#paypal-signup-content-u1').show();
                         $('#paypalplus-credentials').slideDown();
                         break;
                     /*
