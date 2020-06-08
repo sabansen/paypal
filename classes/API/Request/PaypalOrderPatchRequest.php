@@ -68,7 +68,8 @@ class PaypalOrderPatchRequest extends PaypalOrderCreateRequest
             'value' => [
                 'amount' => $this->getAmount($currency),
                 'items' => $items,
-                'shipping' => $shippingInfo
+                'shipping' => $shippingInfo,
+                'custom_id' => $this->getCustomId()
             ]
         ];
 
