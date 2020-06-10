@@ -74,7 +74,7 @@ $_MODULE['<{paypal}prestashop>adminpaypalsetupcontroller_8af703b2bf59cc9742883ae
 $_MODULE['<{paypal}prestashop>adminpaypalsetupcontroller_f1a9672d88ab0cae23402867e2def274'] = 'Payment settings';
 $_MODULE['<{paypal}prestashop>adminpaypalsetupcontroller_93b06f54e738e1a36e44bafcb2ba9d56'] = 'Payment action';
 $_MODULE['<{paypal}prestashop>adminpaypalsetupcontroller_f2cd171bd42220283b7a595c3ff2aaaf'] = 'Sale';
-$_MODULE['<{paypal}prestashop>adminpaypalsetupcontroller_7f83df9cd29577d544efd9ff66d7118a'] = 'Authorise';
+$_MODULE['<{paypal}prestashop>adminpaypalsetupcontroller_7f83df9cd29577d544efd9ff66d7118a'] = 'Authorize';
 $_MODULE['<{paypal}prestashop>adminpaypalsetupcontroller_0071e15d717059f194433c880c273896'] = 'We recommend the Authorize configuration only in case you need to check the availability of your products before confirming the order.';
 $_MODULE['<{paypal}prestashop>adminpaypalsetupcontroller_c9cc8cce247e49bae79f15173ce97354'] = 'Save';
 $_MODULE['<{paypal}prestashop>adminpaypalsetupcontroller_b6fcd94a140815c2f61509c580ef15db'] = 'API username';
