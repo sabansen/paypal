@@ -25,7 +25,7 @@ const Shortcut = {
 
   page: null,
 
-  button: $('[paypal-button-container]'),
+  button: document.querySelector('[paypal-button-container]'),
 
   controller: sc_init_url,
 
@@ -78,7 +78,7 @@ const Shortcut = {
         Shortcut.sendData(data);
       },
 
-    }).render(this.button.selector);
+    }).render(this.button);
   },
 
   sendData(data) {
@@ -151,9 +151,9 @@ const Shortcut = {
         return res.json();
     }).then(function (json) {
       if (json.success) {
-        Shortcut.button.show();
+        Shortcut.button.style.display = 'block';
       } else {
-        Shortcut.button.hide();
+        Shortcut.button.style.display = 'none';
       }
     });
   }
