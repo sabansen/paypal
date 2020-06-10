@@ -256,15 +256,30 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         return 'https://www.paypal.com/sdk/js?' . http_build_query($params);
     }
 
+    /** @return  string*/
+    public function getLandingPage()
+    {
+        return 'LOGIN';
+    }
+
+    /** @return  string*/
     abstract public function getClientId();
 
+    /** @return  string*/
     abstract public function getSecret();
 
+    /** @return  string*/
     abstract public function getReturnUrl();
 
+    /** @return  string*/
     abstract public function getCancelUrl();
 
+    /** @return  string*/
     abstract public function getPaypalPartnerId();
 
+    /** @return  string*/
     abstract public function getIntent();
+
+    /** @return  bool*/
+    abstract public function isConfigured();
 }

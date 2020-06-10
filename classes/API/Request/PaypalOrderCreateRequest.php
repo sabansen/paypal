@@ -254,7 +254,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
     {
         $applicationContext = [
             'locale' => $this->context->language->iso_code,
-            'landing_page' => 'BILLING',
+            'landing_page' => $this->method->getLandingPage(),
             'shipping_prefernces' => 'SET_PROVIDED_ADDRESS',
             'return_url' => $this->method->getReturnUrl(),
             'cancel_url' => $this->method->getCancelUrl(),

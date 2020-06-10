@@ -434,4 +434,14 @@ class MethodEC extends AbstractMethodPaypal
     {
         return (getenv('PLATEFORM') == 'PSREAD') ? 'PrestaShop_Cart_Ready_EC' : 'PRESTASHOP_Cart_SPB';
     }
+
+    /** @return  string*/
+    public function getLandingPage()
+    {
+        if ((int)$this->credit_card) {
+            return 'BILLING';
+        }
+
+        return 'LOGIN';
+    }
 }
