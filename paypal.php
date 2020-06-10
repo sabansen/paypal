@@ -47,6 +47,7 @@ include_once 'classes/PaypalIpn.php';
 
 define('BT_CARD_PAYMENT', 'card-braintree');
 define('BT_PAYPAL_PAYMENT', 'paypal-braintree');
+define('PAYPAL_PAYMENT_CUSTOMER_CURRENCY', -1);
 // Method Alias :
 // EC = express checkout
 // ECS = express checkout sortcut
@@ -199,6 +200,7 @@ class PayPal extends \PaymentModule
         'displayAdminOrderTabOrder',
         'displayAdminOrderContentOrder',
         'displayAdminCartsView',
+        'displayAdminOrderTop'
     );
 
     /**
@@ -1089,6 +1091,21 @@ class PayPal extends \PaymentModule
 
     public function hookDisplayAdminOrder($params)
     {
+        // Since Ps 1.7.7 this hook is displayed at bottom of a page and we should use a hook DisplayAdminOrderTop
+        if (version_compare(_PS_VERSION_, '1.7.7', '>=')) {
+            return false;
+        }
+
+        return $this->getAdminOrderPageMessages($params);
+    }
+
+    public function hookDisplayAdminOrderTop($params)
+    {
+        return $this->getAdminOrderPageMessages($params);
+    }
+
+    protected function getAdminOrderPageMessages($params)
+    {
         /* @var $paypal_order PaypalOrder */
         $id_order = $params['id_order'];
         $order = new Order((int)$id_order);
@@ -1099,6 +1116,7 @@ class PayPal extends \PaymentModule
         if (!Validate::isLoadedObject($paypal_order)) {
             return false;
         }
+
         if ($paypal_order->method == 'BT' && (Module::isInstalled('braintreeofficial') == false)) {
             $tmpMessage = "<p class='paypal-warning'>";
             $tmpMessage .= $this->l('This order has been paid via Braintree payment solution provided by PayPal module prior v5.0. ') . "</br>";
@@ -1108,7 +1126,10 @@ class PayPal extends \PaymentModule
             $paypal_msg .= $this->displayWarning($tmpMessage);
         }
         if ($paypal_order->sandbox) {
-            $this->context->controller->warnings[] = $this->l('[SANDBOX] Please pay attention that payment for this order was made via PayPal Sandbox mode.');
+            $tmpMessage = "<p class='paypal-warning'>";
+            $tmpMessage .= $this->l('[SANDBOX] Please pay attention that payment for this order was made via PayPal Sandbox mode.');
+            $tmpMessage .= "</p>";
+            $paypal_msg .= $this->displayWarning($tmpMessage);
         }
         if (Tools::getValue('not_payed_capture')) {
             $paypal_msg .= $this->displayWarning(
@@ -1753,6 +1774,42 @@ class PayPal extends \PaymentModule
         }
 
         return true;
+    }
+
+    /**
+     * Add radio currency restrictions for a new module.
+     *
+     * @param array $shops
+     *
+     * @return bool
+     */
+    public function addRadioCurrencyRestrictionsForModule(array $shops = array())
+    {
+        if (!$shops) {
+            $shops = Shop::getShops(true, null, true);
+        }
+
+        $query = 'INSERT INTO `' . _DB_PREFIX_ . 'module_currency` (`id_module`, `id_shop`, `id_currency`) VALUES (%d, %d, %d)';
+
+        foreach ($shops as $s) {
+            if (!Db::getInstance()->execute(sprintf($query, $this->id, $s, PAYPAL_PAYMENT_CUSTOMER_CURRENCY))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Add checkbox country restrictions for a new module.
+     *
+     * @param array $shops
+     *
+     * @return bool
+     */
+    public function addCheckboxCountryRestrictionsForModule(array $shops = array())
+    {
+        return Country::addModuleRestrictions($shops, array(), array(array('id_module' => (int) $this->id)));
     }
 
     /**
