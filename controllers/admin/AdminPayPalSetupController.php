@@ -125,7 +125,7 @@ class AdminPayPalSetupController extends AdminPayPalController
             'id_form' => 'pp_config_account'
         );
 
-        if (in_array($this->method, array('MB', 'PPP', 'EC'))) {
+        if ($this->method == 'MB') {
             $this->fields_form['form']['form']['submit'] = array(
                 'title' => $this->l('Save'),
                 'class' => 'btn btn-default pull-right button',

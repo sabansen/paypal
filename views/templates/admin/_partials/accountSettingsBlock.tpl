@@ -37,25 +37,15 @@
     {/if}
 
     {if isset($accountConfigured) && $accountConfigured}
-        {if isset($method) && in_array($method, ['EC', 'PPP'])}
-            <span class="pp__mr-4">
-				{l s='Connected account' mod='paypal'}
-            </span>
 
-            <strong>
-                {if isset($paypal_api_user_name) && is_string($paypal_api_user_name)}
-                    {$paypal_api_user_name|regex_replace:'/_api[\d]*\./':'@'}
-                {/if}
-            </strong>
-        {elseif isset($method) && $method == 'MB'}
+        {if isset($method) && $method == 'MB'}
             {include './mbCredentialsForm.tpl'}
-        {else}
-            {include './pppCredentialsForm.tpl'}
         {/if}
 
         {if isset($method) && in_array($method, ['EC', 'PPP'])}
-            <span class="btn btn-default pp__ml-4" id="logoutAccount">
-				{l s='Logout' mod='paypal'}
+            <span class="btn btn-default" id="logoutAccount">
+              <i class="icon-signout"></i>
+				      {l s='Logout' mod='paypal'}
             </span>
         {/if}
     {else}
