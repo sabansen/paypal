@@ -192,6 +192,7 @@ class PayPal extends \PaymentModule
         'displayAdminOrderTabOrder',
         'displayAdminOrderContentOrder',
         'displayAdminCartsView',
+        'displayAdminOrderTop'
     );
 
     /**
@@ -1072,6 +1073,21 @@ class PayPal extends \PaymentModule
 
     public function hookDisplayAdminOrder($params)
     {
+        // Since Ps 1.7.7 this hook is displayed at bottom of a page and we should use a hook DisplayAdminOrderTop
+        if (version_compare(_PS_VERSION_, '1.7.7', '>=')) {
+            return false;
+        }
+
+        return $this->getAdminOrderPageMessages($params);
+    }
+
+    public function hookDisplayAdminOrderTop($params)
+    {
+        return $this->getAdminOrderPageMessages($params);
+    }
+
+    protected function getAdminOrderPageMessages($params)
+    {
         /* @var $paypal_order PaypalOrder */
         $id_order = $params['id_order'];
         $order = new Order((int)$id_order);
@@ -1082,6 +1098,7 @@ class PayPal extends \PaymentModule
         if (!Validate::isLoadedObject($paypal_order)) {
             return false;
         }
+
         if ($paypal_order->method == 'BT' && (Module::isInstalled('braintreeofficial') == false)) {
             $tmpMessage = "<p class='paypal-warning'>";
             $tmpMessage .= $this->l('This order has been paid via Braintree payment solution provided by PayPal module prior v5.0. ') . "</br>";
@@ -1091,7 +1108,10 @@ class PayPal extends \PaymentModule
             $paypal_msg .= $this->displayWarning($tmpMessage);
         }
         if ($paypal_order->sandbox) {
-            $this->context->controller->warnings[] = $this->l('[SANDBOX] Please pay attention that payment for this order was made via PayPal Sandbox mode.');
+            $tmpMessage = "<p class='paypal-warning'>";
+            $tmpMessage .= $this->l('[SANDBOX] Please pay attention that payment for this order was made via PayPal Sandbox mode.');
+            $tmpMessage .= "</p>";
+            $paypal_msg .= $this->displayWarning($tmpMessage);
         }
         if (Tools::getValue('not_payed_capture')) {
             $paypal_msg .= $this->displayWarning(
