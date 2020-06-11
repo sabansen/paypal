@@ -78,7 +78,7 @@
                     $('#confirm').attr('disabled','disabled');
 
                     $.ajax({
-                        url: '{$linkSubmitPlus|escape:'htmlall':'UTF-8'}',
+                        url: '{$linkSubmitPlus|addslashes}',
                         type: 'POST',
                         data: form.serialize() + '&ajax=true&submit=' + nameSubmit,
                         success: function (data) {
