@@ -258,12 +258,12 @@
 
 				<div id="signup">
 					{* Use cases 1 - 3 *}
-					<a href="{l s='https://altfarm.mediaplex.com/ad/ck/3484-148727-12439-23?ID=2' mod='paypal'}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u1">{l s='Sign Up' mod='paypal'}</a>
+					<a href="{l s='https://www.paypal.com/bizsignup' mod='paypal'}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u1">{l s='Sign Up' mod='paypal'}</a>
 
-					<a href="{l s='https://altfarm.mediaplex.com/ad/ck/3484-148727-12439-23?ID=3' mod='paypal'}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u3">{l s='Sign Up' mod='paypal'}</a>
+					<a href="{l s='https://www.paypal.com/bizsignup' mod='paypal'}" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u3">{l s='Sign Up' mod='paypal'}</a>
 
 					{* Use cases 4 - 6 *}
-					<a href="{l s='https://altfarm.mediaplex.com/ad/ck/3484-148727-12439-23?ID=4' mod='paypal'}#" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u5">{l s='Subscribe' mod='paypal'}</a>
+					<a href="{l s='https://www.paypal.com/bizsignup' mod='paypal'}#" target="_blank" class="paypal-button paypal-signup-button" id="paypal-signup-button-u5">{l s='Subscribe' mod='paypal'}</a>
 
 					<br /><br />
 
