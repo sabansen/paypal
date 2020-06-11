@@ -304,7 +304,7 @@ class PayPal extends \PaymentModule
                 'en' => 'Get Credentials'
             ),
             'class_name' => 'AdminPaypalGetCredentials',
-            'parent_class_name' => 'AdminPayPalConfiguration',
+            'parent_class_name' => 'AdminParentPaypalConfiguration',
             'visible' => false,
         )
     );
