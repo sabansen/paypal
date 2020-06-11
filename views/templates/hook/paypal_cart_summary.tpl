@@ -26,7 +26,7 @@
 *}
 
         <p>
-            <img src="{$logos.LocalPayPalLogoMedium|escape:'htmlall':'UTF-8'}" alt="{l s='PayPal' mod='paypal'}" class="paypal_logo" />
+            <img src="{$base_dir|addslashes}/modules/paypal/views/img/logos/GB_PayPal_logo_100x45.gif" alt="{l s='PayPal' mod='paypal'}" class="paypal_logo" />
             <br />{l s='You have chosen to pay with PayPal.' mod='paypal'}
             <br/><br />
         {l s='Here is a short summary of your order:' mod='paypal'}
