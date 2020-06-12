@@ -37,7 +37,7 @@
 			{/if}
 
 					<img
-							src="{$logos.LocalPayPalLogoMedium|escape:'htmlall':'UTF-8'}"
+							src="/modules/paypal/views/img/logos/FR_pp_cc_mark_74x46.jpg"
 							alt="{l s='Pay with your card or your PayPal account' mod='paypal'}" />
 
                     {if isset($braintreeToken)}
