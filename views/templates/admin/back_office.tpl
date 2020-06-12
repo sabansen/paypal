@@ -148,19 +148,13 @@
 							{* WEBSITE PAYMENT STANDARD *}
 							<label for="paypal_payment_wps" class="flex-display">
 								<div>
-									{if (in_array($PayPal_PPP, $PayPal_allowed_methods))}
-										<input
-												type="radio"
-												name="paypal_payment_method"
-												id="paypal_payment_wps"
-												value='{$PayPal_WPS|escape:'htmlall':'UTF-8'}'
-												{if in_array($PayPal_payment_method, [$PayPal_WPS, $PayPal_HSS])}checked="checked"{/if} />
-									{else}
-										<input
-												type="hidden"
-												name="paypal_payment_method"
-												value='{$PayPal_WPS|escape:'htmlall':'UTF-8'}'/>
-									{/if}
+                                    <input
+                                            type="radio"
+                                            name="paypal_payment_method"
+                                            id="paypal_payment_wps"
+                                            value='{$PayPal_WPS|escape:'htmlall':'UTF-8'}'
+                                            {if (in_array($PayPal_PPP, $PayPal_allowed_methods) == false)}style="display: none"{/if}
+                                            {if in_array($PayPal_payment_method, [$PayPal_WPS, $PayPal_HSS])}checked="checked"{/if} />
 								</div>
 								<div>
 									<div>
