@@ -154,7 +154,7 @@
                                             id="paypal_payment_wps"
                                             value='{$PayPal_WPS|escape:'htmlall':'UTF-8'}'
                                             {if (in_array($PayPal_PPP, $PayPal_allowed_methods) == false)}style="display: none"{/if}
-                                            {if in_array($PayPal_payment_method, [$PayPal_WPS, $PayPal_HSS])}checked="checked"{/if} />
+                                            {if in_array($PayPal_payment_method, [$PayPal_WPS, $PayPal_HSS, $PayPal_ECS])}checked="checked"{/if} />
 								</div>
 								<div>
 									<div>
