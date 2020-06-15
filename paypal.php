@@ -1172,6 +1172,14 @@ class PayPal extends \PaymentModule
                 '<a target="_blank" href="' . $preferences . '">' . $this->l('Read more.') . '</a></p>');
         }
 
+        if (isset($_SESSION['paypal_transaction_already_refunded']) && $_SESSION['paypal_transaction_already_refunded']) {
+            $tmpMessage = '<p class="paypal-warning">';
+            $tmpMessage .= $this->l('The order status was changed but this transaction has already been fully refunded.');
+            $tmpMessage .= '</p>';
+            $paypal_msg .= $this->displayWarning($tmpMessage);
+        }
+
+
         return $paypal_msg . $this->display(__FILE__, 'views/templates/hook/paypal_order.tpl');
     }
 
@@ -1395,18 +1403,23 @@ class PayPal extends \PaymentModule
                 );
                 ProcessLoggerHandler::closeLogger();
             } else {
-                ProcessLoggerHandler::openLogger();
-                ProcessLoggerHandler::logError(
-                    $refundResponse->getError()->getMessage(),
-                    null,
-                    $orderPayPal->id_order,
-                    $orderPayPal->id_cart,
-                    $this->context->shop->id,
-                    $orderPayPal->payment_tool,
-                    $orderPayPal->sandbox
-                );
-                ProcessLoggerHandler::closeLogger();
-                Tools::redirect($_SERVER['HTTP_REFERER'] . '&error_refund=1');
+                if ($refundResponse->isAlreadyRefunded()) {
+                    session_start();
+                    $_SESSION['paypal_transaction_already_refunded'] = true;
+                } else {
+                    ProcessLoggerHandler::openLogger();
+                    ProcessLoggerHandler::logError(
+                        $refundResponse->getError()->getMessage(),
+                        null,
+                        $orderPayPal->id_order,
+                        $orderPayPal->id_cart,
+                        $this->context->shop->id,
+                        $orderPayPal->payment_tool,
+                        $orderPayPal->sandbox
+                    );
+                    ProcessLoggerHandler::closeLogger();
+                    Tools::redirect($_SERVER['HTTP_REFERER'] . '&error_refund=1');
+                }
             }
         }
 

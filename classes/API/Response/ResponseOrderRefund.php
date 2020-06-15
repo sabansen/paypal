@@ -18,6 +18,9 @@ class ResponseOrderRefund extends Response
     /** @var string*/
     protected $dateTransaction;
 
+    /** @var bool*/
+    protected $alreadyRefunded;
+
     /**
      * @return string
      */
@@ -96,4 +99,24 @@ class ResponseOrderRefund extends Response
 
         return $message;
     }
+
+    /**
+     * @return bool
+     */
+    public function isAlreadyRefunded()
+    {
+        return (bool) $this->alreadyRefunded;
+    }
+
+    /**
+     * @param bool $alreadyRefunded
+     * @return ResponseOrderRefund
+     */
+    public function setAlreadyRefunded($alreadyRefunded)
+    {
+        $this->alreadyRefunded = (bool) $alreadyRefunded;
+        return $this;
+    }
+
+
 }

@@ -53,6 +53,10 @@ class PaypalOrderRefundRequest extends RequestAbstract
             $error->setMessage($resultDecoded->details[0]->description)->setErrorCode($e->getCode());
             $response->setSuccess(false)
                 ->setError($error);
+
+            if ($resultDecoded->details[0]->issue == 'CAPTURE_FULLY_REFUNDED') {
+                $response->setAlreadyRefunded(true);
+            }
         } catch (\Exception $e) {
             $error = new Error();
             $error->setErrorCode($e->getCode())->setMessage($e->getMessage());
