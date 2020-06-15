@@ -266,11 +266,12 @@ class MethodEC extends AbstractMethodPaypal
     private function _getProductsList($currency)
     {
         $products = Context::getContext()->cart->getProducts();
+
         foreach ($products as $product) {
             $itemDetails = new PaymentDetailsItemType();
             $productObj = new Product((int)$product['id_product'], null, Context::getContext()->cart->id_lang);
-            $priceIncl = $this->formatPrice($productObj->getPrice(true, $product['id_product_attribute']));
-            $priceExcl = $this->formatPrice($productObj->getPrice(false, $product['id_product_attribute']));
+            $priceIncl = $this->formatPrice($productObj->getPrice(true, $product['id_product_attribute'], 6, null, false, true, $product['quantity']));
+            $priceExcl = $this->formatPrice($productObj->getPrice(false, $product['id_product_attribute'], 6, null, false, true, $product['quantity']));
             $productTax = $this->formatPrice($priceIncl - $priceExcl);
 
             $itemAmount = new BasicAmountType($currency, $priceExcl);
