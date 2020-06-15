@@ -325,14 +325,10 @@ class MethodEC extends AbstractMethodPaypal
             $order_total = Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
             $order_total_with_reduction = $order_total;
             if (count($discounts) > 0) {
-                foreach ($discounts as $discount) {                    
+                foreach ($discounts as $discount) {
                     // It's needed to take a percentage of the order amount, taking into account the others discounts
                     if ((int)$discount['reduction_percent'] > 0) {
                         $discount['value_real'] = $order_total_with_reduction * ($discount['value_real'] / $order_total);
-                    }
-
-                    if ((int)$discount['free_shipping'] == false) {
-                        $order_total_with_reduction -= $discount['value_real'];
                     }
 
                     if ($discount['value_real'] == 0 && $discount['reduction_amount'] > 0) {
@@ -340,7 +336,11 @@ class MethodEC extends AbstractMethodPaypal
                     } else {
                         $discount['value_real'] = -1 * $this->formatPrice($discount['value_real']);
                     }
-                    
+
+                    if ((int)$discount['free_shipping'] == false) {
+                        $order_total_with_reduction += $discount['value_real'];
+                    }
+
                     $itemDetails = new PaymentDetailsItemType();
                     $itemDetails->Name = $discount['name'];
                     $itemDetails->Amount = new BasicAmountType($currency, $discount['value_real']);
