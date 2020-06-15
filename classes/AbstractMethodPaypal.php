@@ -32,6 +32,7 @@ use PaypalAddons\classes\API\Response\Response;
 use PaypalAddons\classes\API\Response\ResponseOrderGet;
 use PaypalAddons\classes\API\Response\ResponseOrderRefund;
 use PaypalPPBTlib\AbstractMethod;
+use Symfony\Component\VarDumper\VarDumper;
 
 abstract class AbstractMethodPaypal extends AbstractMethod
 {
@@ -250,7 +251,8 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         $params = [
             'client-id' => $this->getClientId(),
             'intent' => \Tools::strtolower($this->getIntent()),
-            'currency' => $paypal->getPaymentCurrencyIso()
+            'currency' => $paypal->getPaymentCurrencyIso(),
+            'locale' => str_replace('-', '_', \Context::getContext()->language->locale)
         ];
 
         return 'https://www.paypal.com/sdk/js?' . http_build_query($params);

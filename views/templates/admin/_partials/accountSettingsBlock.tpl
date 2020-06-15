@@ -29,6 +29,7 @@
     {if isset($method) && in_array($method, array('EC', 'PPP'))}
         <p class="h3">
             {l s='PayPal Account' mod='paypal'}
+            {if isset($accountConfigured) && $accountConfigured}{l s='connected' mod='paypal'}{/if}
         </p>
 
         <p>
