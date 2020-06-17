@@ -76,6 +76,14 @@ class ProcessLoggerExtension extends AbstractModuleExtension
         if ($order->module != 'paypal') {
             return;
         }
+        if (isset($params['class_logger']) && is_subclass_of($params['class_logger'], ProcessLoggerObjectModel::class)) {
+            $class_logger = $params['class_logger'];
+        } else {
+            $class_logger = ProcessLoggerObjectModel::class;
+        }
+        $collectionLogs = new \PrestaShopCollection($class_logger);
+        $collectionLogs->where('id_cart', '=', $params['order']->id_cart);
+        \Context::getContext()->smarty->assign('logs', $collectionLogs->getResults());
         return \Context::getContext()->smarty->fetch(_PS_MODULE_DIR_ . 'paypal/views/templates/hook/displayAdminOrderTabOrder.tpl');
     }
 
