@@ -192,7 +192,9 @@ class PayPal extends \PaymentModule
         'displayAdminOrderTabOrder',
         'displayAdminOrderContentOrder',
         'displayAdminCartsView',
-        'displayAdminOrderTop'
+        'displayAdminOrderTop',
+        'displayAdminOrderTabLink',
+        'displayAdminOrderTabContent'
     );
 
     /**
@@ -1705,11 +1707,28 @@ class PayPal extends \PaymentModule
 
     public function hookDisplayAdminOrderTabOrder($params)
     {
+        $params['class_logger'] = 'PaypalLog';
         if ($result = $this->handleExtensionsHook(__FUNCTION__, $params)) {
             if (!is_null($result)) {
                 return $result;
             }
         }
+    }
+
+    public function hookDisplayAdminOrderTabLink($params)
+    {
+        $order = new Order((int)$params['id_order']);
+        $params['order'] = $order;
+        $return = $this->hookDisplayAdminOrderTabOrder($params);
+
+        return $return;
+    }
+
+    public function hookDisplayAdminOrderTabContent($params)
+    {
+        $order = new Order((int)$params['id_order']);
+        $params['order'] = $order;
+        return $this->hookDisplayAdminOrderContentOrder($params);
     }
 
     public function hookDisplayAdminOrderContentOrder($params)

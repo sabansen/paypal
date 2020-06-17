@@ -36,5 +36,11 @@ if (!defined('_PS_VERSION_')) {
 function upgrade_module_5_1_4($module)
 {
     // Since Ps 1.7.7 we use a hook DisplayAdminOrderTop
-    return $module->registerHook('displayAdminOrderTop');
+    $return = $module->registerHook('displayAdminOrderTop');
+
+    // Since Ps 1.7.7 we must use the hooks displayAdminOrderTabLink and displayAdminOrderTabContent
+    $return &= $module->registerHook('displayAdminOrderTabLink');
+    $return &= $module->registerHook('displayAdminOrderTabContent');
+
+    return $return;
 }
