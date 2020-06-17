@@ -52,6 +52,7 @@ class PaypalEcInitModuleFrontController extends PaypalAbstarctModuleFrontControl
         try {
             $this->method->setParameters($this->values);
             $url = $this->method->init()->getApproveLink();
+
             if ($this->values['getToken']) {
                 $this->jsonValues = array('success' => true, 'token' => $this->method->getPaymentId());
             } else {

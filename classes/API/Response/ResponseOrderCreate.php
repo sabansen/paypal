@@ -43,7 +43,7 @@ class ResponseOrderCreate extends Response
      */
     public function getApproveLink()
     {
-        return $this->approveLink;
+        return (string) $this->approveLink;
     }
 
     /**
@@ -60,7 +60,7 @@ class ResponseOrderCreate extends Response
      */
     public function getPaymentId()
     {
-        return $this->paymentId;
+        return (string) $this->paymentId;
     }
 
     /**
@@ -77,7 +77,7 @@ class ResponseOrderCreate extends Response
      */
     public function getStatusCode()
     {
-        return $this->statusCode;
+        return (int) $this->statusCode;
     }
 
     /**

@@ -26,6 +26,8 @@
 
 namespace PayPalTest;
 
+use PaypalAddons\classes\API\Response\ResponseOrderCreate;
+
 require_once dirname(__FILE__) . '/TotTestCase.php';
 require_once _PS_MODULE_DIR_.'paypal/vendor/autoload.php';
 require_once _PS_MODULE_DIR_.'paypal/controllers/front/ecInit.php';
@@ -55,7 +57,10 @@ class EcInitTest extends \TotTestCase
         $ecInit->setMethod($methodMock);
         $ecInit->postProcess();
         $this->assertNotEmpty($ecInit->errors);
-        $this->assertContains('controller=error', $ecInit->redirectUrl);
+        $this->assertEquals(
+            \Context::getContext()->link->getModuleLink($ecInit->name, 'error', $ecInit->errors),
+            $ecInit->redirectUrl
+        );
     }
 
     public function testPostProcessFailureJson()
@@ -81,7 +86,7 @@ class EcInitTest extends \TotTestCase
             ->setMethods(array('init'))
             ->getMock();
 
-        $methodMock->method('init')->willReturn($methodMock->redirectToAPI('setExpressCheckout'));
+        $methodMock->method('init')->willReturn(new ResponseOrderCreate());
 
         $ecInit = new \PaypalEcInitModuleFrontController();
         $ecInit->values = array('getToken' => false);
@@ -97,7 +102,7 @@ class EcInitTest extends \TotTestCase
             ->setMethods(array('init'))
             ->getMock();
 
-        $methodMock->token = 'testToken';
+        $methodMock->method('init')->willReturn(new ResponseOrderCreate());
 
         $ecInit = new \PaypalEcInitModuleFrontController();
         $ecInit->values = array('getToken' => true);
