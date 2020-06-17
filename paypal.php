@@ -1155,6 +1155,7 @@ class PayPal extends \PaymentModule
         }
 
         if (isset($_SESSION['paypal_transaction_already_refunded']) && $_SESSION['paypal_transaction_already_refunded']) {
+            unset($_SESSION['paypal_transaction_already_refunded']);
             $tmpMessage = '<p class="paypal-warning">';
             $tmpMessage .= $this->l('The order status was changed but this transaction has already been fully refunded.');
             $tmpMessage .= '</p>';
