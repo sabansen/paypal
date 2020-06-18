@@ -1497,7 +1497,10 @@ class PayPal extends \PaymentModule
                 ProcessLoggerHandler::closeLogger();
                 Tools::redirect($_SERVER['HTTP_REFERER'] . '&error_refund=1');
             } elseif (isset($refund_response['already_refunded']) && $refund_response['already_refunded']) {
-                session_start();
+                if (session_status() == PHP_SESSION_NONE) {
+                    session_start();
+                }
+
                 $_SESSION['paypal_transaction_already_refunded'] = true;
             }
         }
