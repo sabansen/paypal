@@ -1405,7 +1405,10 @@ class PayPal extends \PaymentModule
                 ProcessLoggerHandler::closeLogger();
             } else {
                 if ($refundResponse->isAlreadyRefunded()) {
-                    session_start();
+                    if (session_status() == PHP_SESSION_NONE) {
+                        session_start();
+                    }
+
                     $_SESSION['paypal_transaction_already_refunded'] = true;
                 } else {
                     ProcessLoggerHandler::openLogger();
