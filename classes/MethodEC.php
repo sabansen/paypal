@@ -266,11 +266,12 @@ class MethodEC extends AbstractMethodPaypal
     private function _getProductsList($currency)
     {
         $products = Context::getContext()->cart->getProducts();
+
         foreach ($products as $product) {
             $itemDetails = new PaymentDetailsItemType();
             $productObj = new Product((int)$product['id_product'], null, Context::getContext()->cart->id_lang);
-            $priceIncl = $this->formatPrice($productObj->getPrice(true, $product['id_product_attribute']));
-            $priceExcl = $this->formatPrice($productObj->getPrice(false, $product['id_product_attribute']));
+            $priceIncl = $this->formatPrice($productObj->getPrice(true, $product['id_product_attribute'], 6, null, false, true, $product['quantity']));
+            $priceExcl = $this->formatPrice($productObj->getPrice(false, $product['id_product_attribute'], 6, null, false, true, $product['quantity']));
             $productTax = $this->formatPrice($priceIncl - $priceExcl);
 
             $itemAmount = new BasicAmountType($currency, $priceExcl);
@@ -325,17 +326,22 @@ class MethodEC extends AbstractMethodPaypal
             $order_total = Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
             $order_total_with_reduction = $order_total;
             if (count($discounts) > 0) {
-                foreach ($discounts as $discount) {                    
+                foreach ($discounts as $discount) {
                     // It's needed to take a percentage of the order amount, taking into account the others discounts
                     if ((int)$discount['reduction_percent'] > 0) {
                         $discount['value_real'] = $order_total_with_reduction * ($discount['value_real'] / $order_total);
                     }
 
-                    if ((int)$discount['free_shipping'] == false) {
-                        $order_total_with_reduction -= $discount['value_real'];
+                    if ($discount['value_real'] == 0 && $discount['reduction_amount'] > 0) {
+                        $discount['value_real'] = -1 * $this->formatPrice($discount['reduction_amount']);
+                    } else {
+                        $discount['value_real'] = -1 * $this->formatPrice($discount['value_real']);
                     }
 
-                    $discount['value_real'] = -1 * $this->formatPrice($discount['value_real']);
+                    if ((int)$discount['free_shipping'] == false) {
+                        $order_total_with_reduction += $discount['value_real'];
+                    }
+
                     $itemDetails = new PaymentDetailsItemType();
                     $itemDetails->Name = $discount['name'];
                     $itemDetails->Amount = new BasicAmountType($currency, $discount['value_real']);
@@ -681,7 +687,7 @@ class MethodEC extends AbstractMethodPaypal
                     'error_code' => $response->Errors[0]->ErrorCode,
                     'error_message' => $response->Errors[0]->LongMessage,
                 );
-                if (Validate::isLoadedObject($capture) && $response->Errors[0]->ErrorCode == "10009") {
+                if ($response->Errors[0]->ErrorCode == "10009") {
                     $result['already_refunded'] = true;
                 }
             } else {
