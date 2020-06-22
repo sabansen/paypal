@@ -178,14 +178,15 @@ class PaypalOrderCreateRequest extends RequestAbstract
 
         foreach ($products as $product) {
             $item = [];
-            $productObj = new \Product((int)$product['id_product'], null, $this->context->cart->id_lang);
-            $priceIncl = $this->method->formatPrice($productObj->getPrice(true, $product['id_product_attribute'], 6, null, false, true, $product['quantity']));
-            $priceExcl = $this->method->formatPrice($productObj->getPrice(false, $product['id_product_attribute'], 6, null, false, true, $product['quantity']));
-            $productTax = $this->method->formatPrice($priceIncl - $priceExcl);
+            $priceExcl = $this->method->formatPrice($product['price']);
+            $productTax = $this->method->formatPrice($product['price_wt']) - $this->method->formatPrice($product['price']);
 
-            $item['name'] = \Tools::substr($productObj->name, 0, 126);
-            $item['description'] = isset($product['attributes']) ? $product['attributes'] : '';;
-            $item['sku'] = $productObj->id;
+            if (isset($product['attributes']) && (empty($product['attributes']) === false)) {
+                $product['name'] .= ' - '.$product['attributes'];
+            }
+
+            $item['name'] = \Tools::substr($product['name'], 0, 126);
+            $item['sku'] = $product['id_product'];
             $item['unit_amount'] = [
                 'currency_code' => $currency,
                 'value' => $priceExcl
