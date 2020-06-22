@@ -253,7 +253,8 @@ class MethodPPP extends AbstractMethodPaypal
         ));
         if ($page_source == 'product') {
             $context->smarty->assign(array(
-                'es_cs_product_attribute' => Tools::getValue('id_product_attribute')
+                'es_cs_product_attribute' => Tools::getValue('id_product_attribute'),
+                'paypalIdProduct' => Tools::getValue('id_product')
             ));
         }
         $context->smarty->assign('source_page', $page_source);
