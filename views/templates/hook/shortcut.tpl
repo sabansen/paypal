@@ -31,11 +31,7 @@
                   type="hidden"
                   name="id_product"
                   data-paypal-id-product
-                  {if isset($smarty.get.id_product)}
-                    value="{$smarty.get.id_product|intval}"
-                  {elseif isset($product)}
-                    value="{$product->id}"
-                  {/if}
+                  value="{$paypalIdProduct|escape:'htmlall':'UTF-8'}"
           />
           <input type="hidden" name="quantity" data-paypal-qty value=""/>
           <input type="hidden" name="combination" data-paypal-combination value="" />
