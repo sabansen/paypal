@@ -26,8 +26,12 @@
 
 namespace PayPalTest;
 
-use \PayPal\PayPalAPI\GetExpressCheckoutDetailsResponseType;
-use PaypalAddons\classes\PaypalException;
+use PaypalAddons\classes\API\PaypalApiManager;
+use PaypalAddons\classes\API\Request\PaypalAccessTokenRequest;
+use PaypalAddons\classes\API\Response\Error;
+use PaypalAddons\classes\API\Response\PaypalResponseAccessToken;
+use \Context;
+use \Currency;
 
 require_once dirname(__FILE__) . '/TotTestCase.php';
 require_once _PS_MODULE_DIR_.'paypal/vendor/autoload.php';
@@ -46,31 +50,13 @@ class MethodECTest extends \TotTestCase
     }
 
     /**
-     * @dataProvider getDataForGetCredentialsInfo
-     */
-    public function testGetCredentialsInfo($mode)
-    {
-        $keys = array(
-            'acct1.UserName',
-            'acct1.Password',
-            'acct1.Signature',
-            'acct1.Signature',
-            'mode',
-            'log.LogEnabled'
-        );
-        $credentialInfo = $this->method->_getCredentialsInfo($mode);
-        $this->assertTrue(is_array($credentialInfo));
-
-        foreach ($keys as $key) {
-            $this->assertArrayHasKey($key, $credentialInfo);
-        }
-    }
-
-    /**
      * @dataProvider getDataForFormatPrice
      */
     public function testFormatPrice($price)
     {
+        $context = Context::getContext();
+        $context->currency = new Currency(1);
+        Context::setInstanceForTesting($context);
         $priceFormated = $this->method->formatPrice($price);
         $this->assertTrue(is_string($priceFormated));
     }
@@ -80,48 +66,9 @@ class MethodECTest extends \TotTestCase
         $this->assertTrue(is_string($this->method->getDateTransaction()));
     }
 
-    public function testGetInfo()
-    {
-        try {
-            $info = $this->method->getInfo();
-            $this->assertInstanceOf(GetExpressCheckoutDetailsResponseType::class, $info);
-        } catch (\Exception $e) {
-            $this->assertInstanceOf(PaypalException::class, $e, $e->getMessage(), $e->getMessage());
-        }
-    }
-
-    /**
-     * @dataProvider getDataForGetLinkToTransaction
-     */
-    public function testGetLinkToTransaction($log)
-    {
-        $this->assertTrue(is_string($this->method->getLinkToTransaction($log)));
-    }
-
-    public function testInit()
-    {
-        try {
-            $urlAPI = $this->method->init();
-            $this->assertTrue(is_string($urlAPI));
-        } catch (\Exception $e) {
-            $this->assertInstanceOf(PaypalException::class, $e, $e->getMessage());
-        }
-    }
-
-    /**
-     * @dataProvider getDataForGetCredentialsInfo
-     */
     public function testIsConfigured()
     {
         $this->assertTrue(is_bool($this->method->isConfigured()));
-    }
-
-    /**
-     * @dataProvider getDataForRedirectToAPI
-     */
-    public function testRedirectToAPI($method)
-    {
-        $this->assertTrue(is_string($this->method->redirectToAPI($method)));
     }
 
     /**
@@ -138,41 +85,35 @@ class MethodECTest extends \TotTestCase
         $this->assertTrue(is_bool($this->method->useMobile()));
     }
 
-    public function getDataForGetCredentialsInfo()
+    /**
+     * @dataProvider getDataForCheckCredentials
+     */
+    public function testCheckCredentials($response, $result)
     {
-        $data = array(
-            array(1),
-            array(0),
-            array('string'),
-            array(00),
-            array(null),
-        );
-        return $data;
+        $apiManagerMock = $this->getMockBuilder(PaypalApiManager::class)
+            ->setMethods(array('getAccessTokenRequest'))
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $requestMock = $this->getMockBuilder(PaypalAccessTokenRequest::class)
+            ->setMethods(array('execute'))
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $requestMock->method('execute')->willReturn($response);
+
+        $apiManagerMock->method('getAccessTokenRequest')->willReturn($requestMock);
+
+        $reflection = new \ReflectionClass($this->method);
+        $reflectionProperty = $reflection->getProperty('paypalApiManager');
+        $reflectionProperty->setAccessible(true);
+        $reflectionProperty->setValue($this->method, $apiManagerMock);
+
+        $this->method->checkCredentials();
+        $this->assertTrue($this->method->isConfigured() == $result);
     }
 
     public function getDataForFormatPrice()
-    {
-        $data = array(
-            array(1),
-            array(023),
-            array('123'),
-            array(00),
-            array(null),
-        );
-        return $data;
-    }
-
-    public function getDataForGetLinkToTransaction()
-    {
-        $data = array(
-            array(new \PaypalLog(0)),
-            array(new \PaypalLog(1)),
-            array(new \PaypalLog(2))
-        );
-        return $data;
-    }
-
-    public function getDataForRedirectToAPI()
     {
         $data = array(
             array(1),
@@ -198,4 +139,20 @@ class MethodECTest extends \TotTestCase
         return $data;
     }
 
+    public function getDataForCheckCredentials()
+    {
+        $responseSuccess = new PaypalResponseAccessToken();
+        $responseFailed = new PaypalResponseAccessToken();
+        $error = new Error();
+        $responseFailed->setSuccess(false)->setError($error->setMessage('error message'));
+        $responseSuccess->setSuccess(true);
+
+
+        $data = array(
+            array($responseSuccess, true),
+            array($responseFailed, false)
+        );
+
+        return $data;
+    }
 }
