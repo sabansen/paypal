@@ -512,6 +512,8 @@ class PaypalExpressCheckout extends Paypal
             $url = '/websc&cmd=_express-checkout';
         }
 
+        $url .= '&useraction=commit';
+
         if (($this->method == 'SetExpressCheckout') && (Configuration::get('PAYPAL_COUNTRY_DEFAULT') == 1) && ($this->type == 'payment_cart')) {
             $url .= '&useraction=commit';
         }
