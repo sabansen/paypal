@@ -193,10 +193,10 @@ class PaypalExpressCheckout extends Paypal
         $parsed_data['scheme'] .= '://';
 
         if (isset($parsed_data['path'])) {
-            $parsed_data['path'] .= '?paypal_ec_canceled=1&';
+            $parsed_data['path'] .= '?step=3&';
             $parsed_data['query'] = isset($parsed_data['query']) ? $parsed_data['query'] : null;
         } else {
-            $parsed_data['path'] = '?paypal_ec_canceled=1&';
+            $parsed_data['path'] = '?step=3&';
             $parsed_data['query'] = '/'.(isset($parsed_data['query']) ? $parsed_data['query'] : null);
         }
 
