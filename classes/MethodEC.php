@@ -84,24 +84,27 @@ class MethodEC extends AbstractMethodPaypal
 
     public function setPaymentId($payemtId)
     {
-        $this->paymentId = $payemtId;
+        if (is_string($payemtId)) {
+            $this->paymentId = $payemtId;
+        }
+
         return $this;
     }
 
     public function getPaymentId()
     {
-        return $this->paymentId;
+        return (string) $this->paymentId;
     }
 
     public function setShortCut($shortCut)
     {
-        $this->short_cut = $shortCut;
+        $this->short_cut = (bool) $shortCut;
         return $this;
     }
 
     public function getShortCut()
     {
-        return $this->short_cut;
+        return (bool) $this->short_cut;
     }
 
     /**
@@ -167,50 +170,6 @@ class MethodEC extends AbstractMethodPaypal
         }
 
         return false;
-    }
-
-    /**
-     * @see AbstractMethodPaypal::validation()
-     */
-    public function validation()
-    {
-        $context = Context::getContext();
-        $cart = $context->cart;
-        $customer = new Customer($cart->id_customer);
-
-        if (!Validate::isLoadedObject($customer)) {
-            throw new Exception('Customer is not loaded object');
-        }
-
-        if ($this->getPaymentId() == false) {
-            throw new Exception('Payment ID isn\'t setted');
-        }
-
-        if ($this->getIntent() == 'CAPTURE') {
-            $response = $this->paypalApiManager->getOrderCaptureRequest($this->getPaymentId())->execute();
-        } else {
-            $response = $this->paypalApiManager->getOrderAuthorizeRequest($this->getPaymentId())->execute();
-        }
-
-        if ($response->isSuccess() == false) {
-            throw new Exception($response->getError()->getMessage());
-        }
-
-
-        $this->setDetailsTransaction($response);
-        $currency = $context->currency;
-        $total = $response->getTotalPaid();
-        $paypal = Module::getInstanceByName($this->name);
-        $order_state = $this->getOrderStatus();
-        $paypal->validateOrder($cart->id,
-            $order_state,
-            $total,
-            $this->getPaymentMethod(),
-            null,
-            $this->getDetailsTransaction(),
-            (int)$currency->id,
-            false,
-            $customer->secure_key);
     }
 
     /**
@@ -375,15 +334,6 @@ class MethodEC extends AbstractMethodPaypal
         return $inputs;
     }
 
-    public function getPaymentReturnUrl()
-    {
-        if ($this->short_cut) {
-            return Context::getContext()->link->getModuleLink($this->name, 'ecScOrder', array(), true);
-        } else {
-            return Context::getContext()->link->getModuleLink($this->name, 'ecValidation', array(), true);
-        }
-    }
-
     public function getIntent()
     {
         return Configuration::get('PAYPAL_API_INTENT') == 'sale' ? 'CAPTURE' : 'AUTHORIZE';
@@ -408,7 +358,7 @@ class MethodEC extends AbstractMethodPaypal
     public function getSecret()
     {
         if ($this->secret !== null) {
-            return $this->secret;
+            return (string) $this->secret;
         }
 
         if ($this->isSandbox()) {
@@ -418,7 +368,7 @@ class MethodEC extends AbstractMethodPaypal
         }
 
         $this->secret = $secret;
-        return $this->secret;
+        return (string) $this->secret;
     }
 
     public function getReturnUrl()

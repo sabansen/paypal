@@ -139,46 +139,6 @@ class MethodPPP extends AbstractMethodPaypal
         return $price;
     }
 
-    /**
-     * @see AbstractMethodPaypal::validation()
-     */
-    public function validation()
-    {
-        $context = Context::getContext();
-        $cart = $context->cart;
-        $customer = new Customer($cart->id_customer);
-
-        if (!Validate::isLoadedObject($customer)) {
-            throw new Exception('Customer is not loaded object');
-        }
-
-        if ($this->getPaymentId() == false) {
-            throw new Exception('Payment ID isn\'t setted');
-        }
-
-        $response = $this->paypalApiManager->getOrderCaptureRequest($this->getPaymentId())->execute();
-
-        if ($response->isSuccess() == false) {
-            throw new Exception($response->getError()->getMessage());
-        }
-
-
-        $this->setDetailsTransaction($response);
-        $currency = $context->currency;
-        $total = $response->getTotalPaid();
-        $paypal = Module::getInstanceByName($this->name);
-        $order_state = $this->getOrderStatus();
-        $paypal->validateOrder($cart->id,
-            $order_state,
-            $total,
-            $this->getPaymentMethod(),
-            null,
-            $this->getDetailsTransaction(),
-            (int)$currency->id,
-            false,
-            $customer->secure_key);
-    }
-
     public function getOrderStatus()
     {
         if ((int)Configuration::get('PAYPAL_CUSTOMIZE_ORDER_STATUS')) {

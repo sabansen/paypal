@@ -113,6 +113,90 @@ class MethodECTest extends \TotTestCase
         $this->assertTrue($this->method->isConfigured() == $result);
     }
 
+    public function testGetAdvancedFormInputs()
+    {
+        $this->assertTrue(is_array($this->method->getAdvancedFormInputs()));
+    }
+
+    public function testGetCancelUrl()
+    {
+        $this->assertTrue(is_string($this->method->getCancelUrl()));
+    }
+
+    public function testGetClientId()
+    {
+        $this->assertTrue(is_string($this->method->getClientId()));
+    }
+
+    public function testGetIntent()
+    {
+        $this->assertTrue(is_string($this->method->getIntent()));
+    }
+
+    public function testGetLandingPage()
+    {
+        $this->assertTrue(is_string($this->method->getLandingPage()));
+    }
+
+    public function testGetOrderStatus()
+    {
+        $this->assertTrue(is_int($this->method->getOrderStatus()));
+    }
+
+    public function testGetPaymentId()
+    {
+        $this->assertTrue(is_string($this->method->getPaymentId()));
+    }
+
+    public function testGetPaypalPartnerId()
+    {
+        $this->assertTrue(is_string($this->method->getPaypalPartnerId()));
+    }
+
+    public function testGetReturnUrl()
+    {
+        $this->assertTrue(is_string($this->method->getReturnUrl()));
+    }
+
+    public function testGetSecret()
+    {
+        $this->assertTrue(is_string($this->method->getSecret()));
+    }
+
+    public function testGetShortCut()
+    {
+        $this->assertTrue(is_bool($this->method->getShortCut()));
+    }
+
+    public function testGetTplVars()
+    {
+        $this->assertTrue(is_array($this->method->getTplVars()));
+    }
+
+    public function testLogOut()
+    {
+        $this->method->logOut();
+        $this->assertFalse($this->method->isConfigured());
+    }
+
+    /**
+     * @dataProvider getDataForSetPaymentId
+     */
+    public function testSetPaymentId($paymentId)
+    {
+        $this->method->setPaymentId($paymentId);
+        $this->assertTrue(is_string($this->method->getPaymentId()));
+    }
+
+    /**
+     * @dataProvider getDataForSetPaymentId
+     */
+    public function testSetShortCut($shortCut)
+    {
+        $this->method->setShortCut($shortCut);
+        $this->assertTrue(is_bool($this->method->getShortCut()));
+    }
+
     public function getDataForFormatPrice()
     {
         $data = array(
@@ -154,5 +238,17 @@ class MethodECTest extends \TotTestCase
         );
 
         return $data;
+    }
+
+    public function getDataForSetPaymentId()
+    {
+        return [
+            'integer' => [1],
+            'null' => [null],
+            'bool' => [false],
+            'array' => [['value']],
+            'object' => [new \stdClass()],
+            'string' => [1],
+        ];
     }
 }
