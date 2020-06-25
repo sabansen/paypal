@@ -52,7 +52,7 @@ class MethodPPP extends AbstractMethodPaypal
      */
     public function getPaymentId()
     {
-        return $this->paymentId;
+        return (string) $this->paymentId;
     }
 
     /**
@@ -60,7 +60,10 @@ class MethodPPP extends AbstractMethodPaypal
      */
     public function setPaymentId($paymentId)
     {
-        $this->paymentId = $paymentId;
+        if (is_string($paymentId)) {
+            $this->paymentId = $paymentId;
+        }
+
         return $this;
     }
 
@@ -117,14 +120,6 @@ class MethodPPP extends AbstractMethodPaypal
     public function getConfig(Paypal $paypal)
     {
     }
-
-    /**
-     * @see AbstractMethodPaypal::init()
-     */
-    /*public function init()
-    {
-        //Todo
-    }*/
 
     public function formatPrice($price)
     {
@@ -227,22 +222,6 @@ class MethodPPP extends AbstractMethodPaypal
     public function isConfigured()
     {
         return (bool)Configuration::get('PAYPAL_CONNECTION_PPP_CONFIGURED');
-    }
-
-    /**
-     * @return bool
-     */
-    public function credentialsSetted($mode = null)
-    {
-        if ($mode == null) {
-            $mode = (int) Configuration::get('PAYPAL_SANDBOX');
-        }
-
-        if ($mode) {
-            return (bool)Configuration::get('PAYPAL_SANDBOX_CLIENTID') && (bool)Configuration::get('PAYPAL_SANDBOX_SECRET');
-        } else {
-            return (bool)Configuration::get('PAYPAL_LIVE_CLIENTID') && (bool)Configuration::get('PAYPAL_LIVE_SECRET');
-        }
     }
 
     /**
@@ -403,12 +382,12 @@ class MethodPPP extends AbstractMethodPaypal
 
     public function getShortCut()
     {
-        return $this->short_cut;
+        return (bool) $this->short_cut;
     }
 
     public function setShortCut($shortCut)
     {
-        $this->short_cut = $shortCut;
+        $this->short_cut = (bool) $shortCut;
         return $this;
     }
 }

@@ -82,10 +82,10 @@ class MethodEC extends AbstractMethodPaypal
         }
     }
 
-    public function setPaymentId($payemtId)
+    public function setPaymentId($paymentId)
     {
-        if (is_string($payemtId)) {
-            $this->paymentId = $payemtId;
+        if (is_string($paymentId)) {
+            $this->paymentId = $paymentId;
         }
 
         return $this;
