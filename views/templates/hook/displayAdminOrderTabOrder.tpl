@@ -25,8 +25,8 @@
 *}
 
 
-<li>
-    <a href="#paypal">
+<li class="nav-item">
+    <a href="#paypal" class="nav-link" data-toggle="tab" role="tab">
         {l s='PayPal' mod='paypal'}
         <span class="badge">{if isset($logs)}{$logs|@count}{else}0{/if}</span>
     </a>
