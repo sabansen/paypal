@@ -186,7 +186,7 @@ class MethodMB extends AbstractMethodPaypal
      */
     public function isConfigured($mode = null)
     {
-        return (int)Configuration::get('PAYPAL_CONNECTION_MB_CONFIGURED');
+        return (bool)Configuration::get('PAYPAL_CONNECTION_MB_CONFIGURED');
     }
 
     public function getTplVars()
@@ -323,24 +323,32 @@ class MethodMB extends AbstractMethodPaypal
         return $paymentInfo;
     }
 
-    public function setPaymentId($payemtId)
+    public function setPaymentId($paymentId)
     {
-        $this->paymentId = $payemtId;
+        if (is_string($paymentId)) {
+            $this->paymentId = $paymentId;
+        }
+
+        return $this;
     }
 
     public function getPaymentId()
     {
-        return $this->paymentId;
+        return (string) $this->paymentId;
     }
 
     public function setPayerId($payerId)
     {
-        $this->payerId = $payerId;
+        if (is_string($payerId)) {
+            $this->payerId = $payerId;
+        }
+
+        return $this;
     }
 
     public function getPayerId()
     {
-        return $this->payerId;
+        return (string) $this->payerId;
     }
 
     public function setRememberedCards($rememberedCards)
