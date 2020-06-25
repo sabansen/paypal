@@ -31,7 +31,11 @@
     <ul>
       <li class="h4">{l s='Round mode: "Round up away from zero, when it is half way there (recommended) "' mod='paypal'}</li>
       <li class="h4">{l s='Round type: "Round on each item"' mod='paypal'}</li>
-      <li class="h4">{l s='Number of decimals' d='Admin.Shopparameters.Feature'}: "2"</li>
+
+      {if version_compare($psVersion, '1.7.7', '<')}
+        <li class="h4">{l s='Number of decimals' d='Admin.Shopparameters.Feature'}: "2"</li>
+      {/if}
+
     </ul>
   </div>
 </div>
