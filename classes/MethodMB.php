@@ -353,12 +353,16 @@ class MethodMB extends AbstractMethodPaypal
 
     public function setRememberedCards($rememberedCards)
     {
-        $this->rememeberedCards = $rememberedCards;
+        if (is_string($rememberedCards)) {
+            $this->rememeberedCards = $rememberedCards;
+        }
+
+        return $this;
     }
 
     public function getRememberedCards()
     {
-        return $this->rememeberedCards;
+        return (string) $this->rememeberedCards;
     }
 
     /**
