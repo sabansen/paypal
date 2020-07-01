@@ -28,6 +28,10 @@
 <li class="nav-item">
     <a href="#paypal" class="nav-link" data-toggle="tab" role="tab">
         {l s='PayPal' mod='paypal'}
-        <span class="badge">{if isset($logs)}{$logs|@count}{else}0{/if}</span>
+        {if version_compare($psVersion, '1.7.7', '>=')}
+            ({if isset($logs)}{$logs|@count}{else}0{/if})
+        {else}
+          <span class="badge">{if isset($logs)}{$logs|@count}{else}0{/if}</span>
+        {/if}
     </a>
 </li>
