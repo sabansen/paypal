@@ -42,5 +42,7 @@ function upgrade_module_5_2_0($module)
     $method->checkCredentials();
     $installer = new ModuleInstaller($module);
     $return &= $installer->installAdminControllers();
+    $return &= $installer->registerHooks();
+
     return $return;
 }
