@@ -79,13 +79,11 @@
                     <h4>{l s='API Credentials' mod='paypal'}</h4>
                     <p>{l s='In order to accept PayPal Plus payments, please fill in your API REST credentials.' mod='paypal'}</p>
                     <ul>
-                        <li>{l s='Access' mod='paypal'}
-                            <a target="_blank" href="https://www.{if $mode == 'SANDBOX'}sandbox.{/if}paypal.com/">https://www.{if $mode == 'SANDBOX'}sandbox.{/if}paypal.com/</a>
-                        </li>
-                        <li>{l s='Log in or Create a business account' mod='paypal'}</li>
-                        <li>{l s='Access to' mod='paypal'} <a target="_blank" href="https://www.{if $mode == 'SANDBOX'}sandbox.{/if}paypal.com/businessprofile/mytools/apiaccess/firstparty/signature">{l s='API NVP/SOAP integration' mod='paypal'}</a></li>
-                        <li>{l s='Click « Show » on the right of credentials' mod='paypal'}</li>
-                        <li>{l s='Copy/paste your API credentials below for %s environment' sprintf=[$mode] mod='paypal'} </li>
+                      <li>{l s='Access' mod='paypal'} <a target="_blank" href="https://developer.paypal.com/developer/applications/">{l s='https://developer.paypal.com/developer/applications/' mod='paypal'}</a></li>
+                      <li>{l s='Log in or Create a business account' mod='paypal'}</li>
+                      <li>{l s='Create a « REST API apps »' mod='paypal'}</li>
+                      <li>{l s='Click « Show » below « Secret: »' mod='paypal'}</li>
+                      <li>{l s='Copy/paste your « Client ID » and « Secret » below for each environment' mod='paypal'}</li>
                     </ul>
                     <hr/>
 
