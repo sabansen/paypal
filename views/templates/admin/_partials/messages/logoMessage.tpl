@@ -25,6 +25,6 @@
 *}
 
 <div class="alert alert-info">
-    {{l s='If you are using PayPal Checkout redirect you can customize your shop logo. The logo can be changed via your business profile [a @href1@]settings[/a].' mod='paypal'}|paypalreplace:['@href1@' => {'https://www.paypal.com/businessprofile/settings/info/edit'}, '@target@' => {'target="_blank"'}]}
+    {{l s='If you are using PayPal Checkout redirect you can customize your shop logo. The logo can be changed via your business profile [a @href1@]settings[/a].' mod='paypal'}|paypalreplace:['@href1@' => {$settingLink}, '@target@' => {'target="_blank"'}]}
 </div>
 

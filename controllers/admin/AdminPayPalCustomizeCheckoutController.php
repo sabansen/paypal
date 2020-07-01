@@ -442,6 +442,12 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
 
     protected function getLogoMessage()
     {
+        if ((bool)Configuration::get('PAYPAL_SANDBOX')) {
+            $settingLink = 'https://www.sandbox.paypal.com/businessprofile/settings/info/edit';
+        } else {
+            $settingLink = 'https://www.paypal.com/businessprofile/settings/info/edit';
+        }
+        $this->context->smarty->assign('settingLink', $settingLink);
         return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/messages/logoMessage.tpl');
     }
 }
