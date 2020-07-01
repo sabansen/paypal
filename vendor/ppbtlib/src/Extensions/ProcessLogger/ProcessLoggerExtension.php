@@ -84,6 +84,7 @@ class ProcessLoggerExtension extends AbstractModuleExtension
         $collectionLogs = new \PrestaShopCollection($class_logger);
         $collectionLogs->where('id_cart', '=', $params['order']->id_cart);
         \Context::getContext()->smarty->assign('logs', $collectionLogs->getResults());
+        \Context::getContext()->smarty->assign('psVersion', _PS_VERSION_);
         return \Context::getContext()->smarty->fetch(_PS_MODULE_DIR_ . 'paypal/views/templates/hook/displayAdminOrderTabOrder.tpl');
     }
 
