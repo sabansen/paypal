@@ -186,6 +186,12 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
         );
 
         $this->fields_form['form']['form']['input'][] = array(
+            'type' => 'html',
+            'name' => '',
+            'html_content' => $this->getLogoMessage()
+        );
+
+        $this->fields_form['form']['form']['input'][] = array(
             'type' => 'text',
             'label' => $this->l('Brand name shown on top left during PayPal checkout'),
             'name' => 'paypal_config_brand',
@@ -432,5 +438,10 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
         }
 
         return in_array($currency->iso_code, $this->module->currencyMB) == false;
+    }
+
+    protected function getLogoMessage()
+    {
+        return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/messages/logoMessage.tpl');
     }
 }
