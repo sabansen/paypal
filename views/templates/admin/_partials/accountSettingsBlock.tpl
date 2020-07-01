@@ -32,10 +32,12 @@
             {l s='PayPal Account' mod='paypal'}
             {if isset($accountConfigured) && $accountConfigured}{l s='connected' mod='paypal'}{/if}
         </p>
+        {if isset($accountConfigured) == false || $accountConfigured == false}
+          <p>
+              {l s='In order to activate the module, you must connect your existing PayPal account or create a new one.' mod='paypal'}
+          </p>
+        {/if}
 
-        <p>
-            {l s='In order to activate the module, you must connect your existing PayPal account or create a new one.' mod='paypal'}
-        </p>
     {/if}
 
     {if isset($accountConfigured) && $accountConfigured}
@@ -45,7 +47,7 @@
         {/if}
 
         {if isset($method) && in_array($method, ['EC', 'PPP'])}
-            <span class="btn btn-default" id="logoutAccount">
+            <span class="btn btn-default pp__mt-5" id="logoutAccount">
               <i class="icon-signout"></i>
 				      {l s='Logout' mod='paypal'}
             </span>
