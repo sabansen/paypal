@@ -201,7 +201,8 @@ class PayPal extends \PaymentModule
         'displayAdminCartsView',
         'displayAdminOrderTop',
         'displayAdminOrderTabLink',
-        'displayAdminOrderTabContent'
+        'displayAdminOrderTabContent',
+        'displayOrderPreview'
     );
 
     /**
@@ -901,6 +902,15 @@ class PayPal extends \PaymentModule
         return $this->context->smarty->fetch('module:paypal/views/templates/hook/order_confirmation.tpl');
     }
 
+    public function hookDisplayOrderPreview($params)
+    {
+        $params['class_logger'] = 'PaypalLog';
+        if ($result = $this->handleExtensionsHook(__FUNCTION__, $params)) {
+            if (!is_null($result)) {
+                return $result;
+            }
+        }
+    }
 
     public function hookDisplayReassurance()
     {
