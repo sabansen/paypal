@@ -1543,8 +1543,13 @@ class PayPal extends \PaymentModule
         $paypal = Module::getInstanceByName('paypal');
         $currency_wt_decimal = array('HUF', 'JPY', 'TWD');
 
-        if (in_array($paypal->getPaymentCurrencyIso(), $currency_wt_decimal) ||
-            ((int)_PS_PRICE_DISPLAY_PRECISION_ == 0 && version_compare(_PS_VERSION_, '1.7.7', '<'))) {
+        if (version_compare(_PS_VERSION_, '1.7.7', '<')) {
+            $precision = _PS_PRICE_DISPLAY_PRECISION_;
+        } else {
+            $precision = Context::getContext()->getComputingPrecision();
+        }
+
+        if (in_array($paypal->getPaymentCurrencyIso(), $currency_wt_decimal) || ($precision == 0)) {
             return (int)0;
         } else {
             return (int)2;
