@@ -179,7 +179,8 @@ class PaypalOrderCreateRequest extends RequestAbstract
         foreach ($products as $product) {
             $item = [];
             $priceExcl = $this->method->formatPrice($product['price']);
-            $productTax = $this->method->formatPrice($product['price_wt'] - $product['price']);
+            $priceIncl = $this->method->formatPrice($product['price_wt']);
+            $productTax = $this->method->formatPrice($priceIncl - $priceExcl);
 
             if (isset($product['attributes']) && (empty($product['attributes']) === false)) {
                 $product['name'] .= ' - '.$product['attributes'];
