@@ -69,7 +69,6 @@ class PayPal extends \PaymentModule
     public $amount_paid_paypal;
     public $module_link;
     public $errors;
-    public $countriesApiCartUnavailable = array("FR", "GB", "IT", "ES", "DE");
     public $currencyMB = array('USD', 'MXN', 'EUR', 'BRL');
     public $paypal_method;
     public $psCheckoutCountry = ['FR', 'ES', 'IT', 'GB', 'PL', 'BE', 'NL', 'LU', 'US'];
@@ -609,17 +608,6 @@ class PayPal extends \PaymentModule
                 if ($method->isConfigured()) {
                     $paymentOptionsEc = $this->renderEcPaymentOptions($params);
                     $payments_options = array_merge($payments_options, $paymentOptionsEc);
-
-                    if (Configuration::get('PAYPAL_API_CARD') && (in_array($isoCountryDefault, $this->countriesApiCartUnavailable) == false)) {
-                        $payment_option = new PaymentOption();
-                        $action_text = $this->l('Pay with debit or credit card');
-                        $payment_option->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/logo_card.png'));
-                        $payment_option->setCallToActionText($action_text);
-                        $payment_option->setModuleName($this->name);
-                        $payment_option->setAction($this->context->link->getModuleLink($this->name, 'ecInit', array('credit_card' => '1'), true));
-                        $payment_option->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_infos_card.tpl'));
-                        $payments_options[] = $payment_option;
-                    }
                 }
                 break;
             case 'PPP':
