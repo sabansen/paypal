@@ -126,7 +126,9 @@ class AdminPayPalSetupController extends AdminPayPalController
             'id_form' => 'pp_config_account'
         );
 
-        if ($this->method == 'MB') {
+        $countryDefault = new Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
+
+        if ($this->method == 'MB' || in_array($countryDefault->iso_code, array('IN', 'JP'))) {
             $this->fields_form['form']['form']['submit'] = array(
                 'title' => $this->l('Save'),
                 'class' => 'btn btn-default pull-right button',
