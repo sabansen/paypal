@@ -26,7 +26,7 @@
 
 <div>
 
-    {if isset($method) && in_array($method, array('EC', 'PPP')) && (in_array($country_iso, ['IN', 'JP']) == false)}
+    {if isset($method) && in_array($method, array('EC', 'PPP')) && (isset($country_iso) && in_array($country_iso, ['IN', 'JP']) == false)}
         <p class="h3">
             {if isset($accountConfigured) && $accountConfigured}<i class="icon-check text-success"></i>{/if}
             {l s='PayPal Account' mod='paypal'}
@@ -66,7 +66,7 @@
           </div>
         {/if}
 
-        {if isset($method) && in_array($method, ['EC', 'PPP']) && (in_array($country_iso, ['IN', 'JP']) == false)}
+        {if isset($method) && in_array($method, ['EC', 'PPP']) && (isset($country_iso) && in_array($country_iso, ['IN', 'JP']) == false)}
             <span class="btn btn-default pp__mt-5" id="logoutAccount">
               <i class="icon-signout"></i>
 				      {l s='Logout' mod='paypal'}
