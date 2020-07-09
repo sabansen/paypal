@@ -59,7 +59,6 @@
                 <directory>./build/prestashop/modules/paypal/202</directory>
                 <directory>./build/prestashop/modules/paypal/vendor</directory>
                 <directory>./build/prestashop/modules/paypal/smarty</directory>
-                <directory>./build/prestashop/modules/paypal/classes/API</directory>
                 <directory suffix="index.php">./build/prestashop/modules/paypal/</directory>
                 <directory suffix="index.php">./build/prestashop/modules/paypal/*/</directory>
                 <directory suffix="index.php">./build/prestashop/modules/paypal/*/*/</directory>
