@@ -58,7 +58,8 @@ class PaypalScInitModuleFrontController extends PaypalAbstarctModuleFrontControl
 
     public function displayAjaxCheckAvailability()
     {
-        $request = json_decode(file_get_contents('php://input'));
+        $request = $this->getRequest();
+
         switch ($request->page) {
             case 'cart':
                 if ($this->context->cart->checkQuantities() && $this->context->cart->hasProducts()) {
@@ -124,7 +125,7 @@ class PaypalScInitModuleFrontController extends PaypalAbstarctModuleFrontControl
 
     public function displayAjaxCreateOrder()
     {
-        $request = json_decode(file_get_contents('php://input'));
+        $request = $this->getRequest();
 
         if ($request->page == 'product') {
             $this->values['quantity'] = $request->quantity;
@@ -136,5 +137,10 @@ class PaypalScInitModuleFrontController extends PaypalAbstarctModuleFrontControl
 
         $this->method->init();
         $this->jsonValues = ['success' => true, 'idOrder' => $this->method->getPaymentId()];
+    }
+
+    public function getRequest()
+    {
+        return json_decode(file_get_contents('php://input'));
     }
 }

@@ -26,6 +26,8 @@
 
 namespace PayPalTest;
 
+use PaypalAddons\classes\API\Response\ResponseOrderCreate;
+
 require_once dirname(__FILE__) . '/TotTestCase.php';
 require_once _PS_MODULE_DIR_.'paypal/vendor/autoload.php';
 require_once _PS_MODULE_DIR_.'paypal/controllers/front/ScInit.php';
@@ -44,6 +46,9 @@ class ScInitTest extends \TotTestCase
     public function testCheckAvailability($values, $methodsCart, $return)
     {
         $cartMock = $this->createMock(\Cart::class);
+        $scInitMock = $this->getMockBuilder(\PaypalScInitModuleFrontController::class)
+            ->setMethods(['getRequest'])
+            ->getMock();
 
         if (empty($methodsCart) == false) {
             foreach ($methodsCart as $methodCart) {
@@ -54,103 +59,48 @@ class ScInitTest extends \TotTestCase
         $contextTest = \Context::getContext();
         $contextTest->cart = $cartMock;
         \Context::setInstanceForTesting($contextTest);
-        $scInit = new \PaypalScInitModuleFrontController();
-        $scInit->values = $values;
-        $scInit->checkAvailability();
-        $this->assertEquals($return, $scInit->jsonValues['success']);
+
+        $scInitMock->method('getRequest')->willReturn(json_decode(json_encode($values)));
+        $scInitMock->displayAjaxCheckAvailability();
+        $this->assertEquals($return, $scInitMock->jsonValues['success']);
     }
 
     /**
      * @dataProvider providerSuccessProductRedirect
      */
-    public function testSuccessProductRedirect($values)
+    public function testCreateOrder($values)
     {
         $methodMock = $this->getMockBuilder(\MethodEC::class)
-            ->setMethods(array('init'))
+            ->setMethods(array('init', 'getPaymentId'))
             ->getMock();
-        $methodMock->method('init')->willReturn($methodMock->redirectToAPI('setExpressCheckout'));
+        $methodMock->method('getPaymentId')->willReturn('paymentID');
 
         $scInitMock = $this->getMockBuilder(\PaypalScInitModuleFrontController::class)
-            ->setMethods(array('prepareProduct'))
+            ->setMethods(array('getRequest'))
             ->getMock();
 
-        $scInitMock->values = $values;
+        $scInitMock->method('getRequest')->willReturn(json_decode(json_encode($values)));
+
+        \Context::getContext()->customer = new \Customer(1);
+        $cart = new \Cart();
+        $cart->id_currency = 1;
+        $cart->add();
+        $cart->updateQty(1, 1);
+        \Context::getContext()->cart = $cart;
+
         $scInitMock->setMethod($methodMock);
-        $scInitMock->postProcess();
+        $scInitMock->displayAjaxCreateOrder();
+
         $this->assertEmpty($scInitMock->errors);
-        $this->assertTrue(is_string($scInitMock->redirectUrl));
-    }
-
-    /**
-     * @dataProvider providerSuccessProductJson
-     */
-    public function testSuccessProductJson($values)
-    {
-        $methodMock = $this->getMockBuilder(\MethodEC::class)
-            ->setMethods(array('init'))
-            ->getMock();
-        $methodMock->token = 'testToken';
-
-        $scInitMock = $this->getMockBuilder(\PaypalScInitModuleFrontController::class)
-            ->setMethods(array('prepareProduct'))
-            ->getMock();
-
-        $scInitMock->values = $values;
-        $scInitMock->setMethod($methodMock);
-        $scInitMock->postProcess();
-        $this->assertEmpty($scInitMock->errors);
-        $this->assertTrue($scInitMock->jsonValues['success']);
-        $this->assertArrayHasKey('token', $scInitMock->jsonValues);
-    }
-
-    /**
-     * @dataProvider providerFailureCartRedirect
-     */
-    public function testFailureCartRedirect($values)
-    {
-        $methodMock = $this->getMockBuilder(\MethodEC::class)
-        ->setMethods(array('init'))
-        ->getMock();
-        $methodMock->method('init')->willThrowException(new \Exception('test exception'));
-
-        $scInitMock = $this->getMockBuilder(\PaypalScInitModuleFrontController::class)
-            ->setMethods(array('prepareProduct'))
-            ->getMock();
-
-        $scInitMock->values = $values;
-        $scInitMock->setMethod($methodMock);
-        $scInitMock->postProcess();
-        $this->assertNotEmpty($scInitMock->errors);
-        $this->assertContains('controller=error', $scInitMock->redirectUrl);
-    }
-
-    /**
-     * @dataProvider providerFailureCartJson
-     */
-    public function testFailureCartJson($values)
-    {
-        $methodMock = $this->getMockBuilder(\MethodEC::class)
-            ->setMethods(array('init'))
-            ->getMock();
-        $methodMock->method('init')->willThrowException(new \Exception('test exception'));
-
-        $scInitMock = $this->getMockBuilder(\PaypalScInitModuleFrontController::class)
-            ->setMethods(array('prepareProduct'))
-            ->getMock();
-
-        $scInitMock->values = $values;
-        $scInitMock->setMethod($methodMock);
-        $scInitMock->postProcess();
-        $this->assertNotEmpty($scInitMock->errors);
-        $this->assertFalse($scInitMock->jsonValues['success']);
-        $this->assertArrayHasKey('redirect_link', $scInitMock->jsonValues);
+        $this->assertTrue(is_string($scInitMock->jsonValues['idOrder']));
+        $this->assertTrue(true == $scInitMock->jsonValues['success']);
     }
 
     public function providerCheckAvailability()
     {
         $dataProvider = array(
             'cart_1' => array(
-                array('source_page' => 'cart'),
+                array('page' => 'cart'),
                 array(
                     array('methodName' => 'checkQuantities', 'methodReturn' => false),
                     array('methodName' => 'hasProducts', 'methodReturn' => false),
@@ -158,7 +108,7 @@ class ScInitTest extends \TotTestCase
                 false
             ),
             'cart_2' => array(
-                array('source_page' => 'cart'),
+                array('page' => 'cart'),
                 array(
                     array('methodName' => 'checkQuantities', 'methodReturn' => true),
                     array('methodName' => 'hasProducts', 'methodReturn' => false),
@@ -166,7 +116,7 @@ class ScInitTest extends \TotTestCase
                 false
             ),
             'cart_3' => array(
-                array('source_page' => 'cart'),
+                array('page' => 'cart'),
                 array(
                     array('methodName' => 'checkQuantities', 'methodReturn' => false),
                     array('methodName' => 'hasProducts', 'methodReturn' => true),
@@ -174,7 +124,7 @@ class ScInitTest extends \TotTestCase
                 false
             ),
             'cart_4' => array(
-                array('source_page' => 'cart'),
+                array('page' => 'cart'),
                 array(
                     array('methodName' => 'checkQuantities', 'methodReturn' => true),
                     array('methodName' => 'hasProducts', 'methodReturn' => true),
@@ -182,12 +132,12 @@ class ScInitTest extends \TotTestCase
                 true
             ),
             'product_1' => array(
-                array('source_page' => 'product', 'id_product' => 1, 'id_product_attribute' => 0, 'quantity' => 999999999, 'product_attribute' => 0),
+                array('page' => 'product', 'idProduct' => 1, 'id_product_attribute' => 0, 'quantity' => 999999999, 'product_attribute' => 0, 'combination' => '1:1'),
                 array(),
                 false
             ),
             'product_2' => array(
-                array('source_page' => 'product', 'id_product' => 1, 'id_product_attribute' => 0, 'quantity' => 1, 'product_attribute' => 0),
+                array('page' => 'product', 'idProduct' => 1, 'id_product_attribute' => 0, 'quantity' => 1, 'product_attribute' => 0, 'combination' => '1:1'),
                 array(),
                 true
             ),
@@ -200,10 +150,10 @@ class ScInitTest extends \TotTestCase
     {
         $data = array(
             'source_cart' => array(
-                array('checkAvailability' => false, 'source_page' => 'cart', 'getToken' => false)
+                array('page' => 'product', 'idProduct' => 1, 'quantity' => 1, 'combination' => '1:1'),
             ),
             'source_product' => array(
-                array('checkAvailability' => false, 'source_page' => 'product', 'getToken' => false)
+                array('page' => 'product', 'idProduct' => 1, 'quantity' => 1, 'combination' => null)
             )
         );
 
