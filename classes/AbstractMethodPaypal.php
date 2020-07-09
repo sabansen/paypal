@@ -52,6 +52,10 @@ abstract class AbstractMethodPaypal extends AbstractMethod
     /** @var PaypalApiManagerInterface*/
     protected $paypalApiManager;
 
+    /**
+     * @param string $method
+     * @return AbstractMethodPaypal
+     */
     public static function load($method = null)
     {
         if ($method == null) {

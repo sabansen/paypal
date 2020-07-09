@@ -132,6 +132,7 @@ class AdminPayPalSetupController extends AdminPayPalController
             $this->fields_form['form']['form']['submit'] = array(
                 'title' => $this->l('Save'),
                 'class' => 'btn btn-default pull-right button',
+                'name' => 'saveMbCredentialsForm'
             );
         }
     }
@@ -294,8 +295,18 @@ class AdminPayPalSetupController extends AdminPayPalController
 
         $method = AbstractMethodPaypal::load($this->method);
         $method->checkCredentials();
+
         if (Tools::isSubmit('paypal_sandbox') == false) {
             $this->errors = array_merge($this->errors, $method->errors);
+        }
+
+        // We need use some functionality of EC method, so need also to configure MethodEC
+        if(Tools::isSubmit('saveMbCredentialsForm')) {
+            $methodEC = AbstractMethodPaypal::load('EC');
+            $methodEC->setConfig(array(
+                'clientId' => $method->getClientId(),
+                'secret' => $method->getSecret()
+            ));
         }
 
 
