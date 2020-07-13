@@ -32,6 +32,8 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
 {
     protected $advanceFormParametres = array();
 
+    protected $headerToolBar = true;
+
     public function __construct()
     {
         parent::__construct();
