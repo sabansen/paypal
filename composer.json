@@ -15,10 +15,6 @@
         ]
     },
     "require": {
-      "paypal/sdk-core-php": "~3.4",
-      "paypal/merchant-sdk-php": "~3.12",
-      "paypal/permissions-sdk-php": "~3.9",
-      "paypal/rest-api-sdk-php": "1.*",
       "paypal/paypal-checkout-sdk": " 1.*",
       "guzzlehttp/guzzle": "6.*"
     }
