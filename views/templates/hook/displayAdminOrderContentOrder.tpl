@@ -25,5 +25,6 @@
 *}
 
 <div class="tab-pane" id="paypal">
+    <h4 class="visible-print">{l s='PayPal' mod='paypal'}</h4>
     {include file='./tableLogs.tpl'}
 </div>
