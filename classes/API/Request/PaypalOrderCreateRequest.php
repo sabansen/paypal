@@ -211,11 +211,17 @@ class PaypalOrderCreateRequest extends RequestAbstract
     protected function getAmount($currency)
     {
         $shippingTotal = $this->method->formatPrice($this->context->cart->getTotalShippingCost());
-        $subTotalExcl = $this->method->formatPrice($this->context->cart->getOrderTotal(false, \Cart::ONLY_PRODUCTS));
-        $subTotalIncl = $this->method->formatPrice($this->context->cart->getOrderTotal(true, \Cart::ONLY_PRODUCTS));
+        $productTotalExcl = $this->method->formatPrice($this->context->cart->getOrderTotal(false, \Cart::ONLY_PRODUCTS));
+        $productTotalIncl = $this->method->formatPrice($this->context->cart->getOrderTotal(true, \Cart::ONLY_PRODUCTS));
+        $wrappingIncl = $this->method->formatPrice($this->context->cart->getOrderTotal(true, \Cart::ONLY_WRAPPING));
+        $wrappingExcl = $this->method->formatPrice($this->context->cart->getOrderTotal(false, \Cart::ONLY_WRAPPING));
+        $subTotalIncl = $this->method->formatPrice($productTotalIncl + $wrappingIncl);
+        $subTotalExcl = $this->method->formatPrice($productTotalExcl + $wrappingExcl);
         $subTotalTax = $this->method->formatPrice($subTotalIncl - $subTotalExcl);
         $totalOrder = $this->method->formatPrice($this->context->cart->getOrderTotal(true, \Cart::BOTH));
-        $discountTotal = $this->method->formatPrice($this->context->cart->getOrderTotal(true, \Cart::ONLY_DISCOUNTS));
+
+        // Some version of Prestashop calcul wrong a total discount if 2 "free shipping" discount are added
+        $discountTotal = $this->method->formatPrice($subTotalIncl + $shippingTotal - $totalOrder);
 
         $amount = array(
             'currency_code' => $currency,
