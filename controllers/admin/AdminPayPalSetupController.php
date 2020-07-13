@@ -31,6 +31,8 @@ use PaypalAddons\classes\AdminPayPalController;
 
 class AdminPayPalSetupController extends AdminPayPalController
 {
+    protected $headerToolBar = true;
+
     public function __construct()
     {
         parent::__construct();
