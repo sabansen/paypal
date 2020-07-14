@@ -150,7 +150,19 @@ class AdminPayPalSetupController extends AdminPayPalController
 
     public function initPaymentSettingsBlock()
     {
-        $inputGroup = array(
+        $inputGroup = array();
+
+        if ($this->isPaymentModeSetted() == false) {
+            $inputGroup[] = array(
+                'type' => 'html',
+                'html_content' => $this->module->displayWarning($this->l('An error occurred while saving "Payment action" configuration. Please save this configuration again for avoiding any payment errors.')),
+                'name' => '',
+                'col' => 12,
+                'label' => '',
+            );
+        }
+
+        $paymentModeInput = array(
             'type' => 'select',
             'name' => 'paypal_api_intent',
             'options' => array(
@@ -170,25 +182,26 @@ class AdminPayPalSetupController extends AdminPayPalController
         );
 
         if ($this->method == 'MB') {
-            $inputGroup['label'] = $this->l('Payment action (for PayPal Express Checkout only)');
-            $inputGroup['hint'] = $this->l('You can change the payment action only for PayPal Express Checkout payments. If you are using PayPal Plus the "Sale" action is the only possible action.');
+            $paymentModeInput['label'] = $this->l('Payment action (for PayPal Express Checkout only)');
+            $paymentModeInput['hint'] = $this->l('You can change the payment action only for PayPal Express Checkout payments. If you are using PayPal Plus the "Sale" action is the only possible action.');
         } else {
-            $inputGroup['label'] = $this->l('Payment action');
+            $paymentModeInput['label'] = $this->l('Payment action');
         }
+
+        $inputGroup[] = $paymentModeInput;
+        $inputGroup[] = array(
+            'type' => 'html',
+            'name' => '',
+            'html_content' => $this->module->displayInformation($this->l('We recommend Authorize process only for lean manufacturers and craft products sellers.'))
+        );
+
 
         $this->fields_form['form']['form'] = array(
             'legend' => array(
                 'title' => $this->l('Payment settings'),
                 'icon' => 'icon-cogs',
             ),
-            'input' => array(
-                $inputGroup,
-                array(
-                    'type' => 'html',
-                    'name' => '',
-                    'html_content' => $this->module->displayInformation($this->l('We recommend Authorize process only for lean manufacturers and craft products sellers.'))
-                )
-            ),
+            'input' => $inputGroup,
             'submit' => array(
                 'title' => $this->l('Save'),
                 'class' => 'btn btn-default pull-right button',
@@ -326,5 +339,10 @@ class AdminPayPalSetupController extends AdminPayPalController
         if ($result->isSuccess()) {
             Configuration::updateValue('PAYPAL_AUTH_TOKEN', $result->getAuthToken());
         }
+    }
+
+    protected function isPaymentModeSetted()
+    {
+        return in_array(Configuration::get('PAYPAL_API_INTENT'), array('sale', 'authorize'));
     }
 }
