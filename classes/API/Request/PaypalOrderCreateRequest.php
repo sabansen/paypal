@@ -289,7 +289,8 @@ class PaypalOrderCreateRequest extends RequestAbstract
             'shipping_prefernces' => 'SET_PROVIDED_ADDRESS',
             'return_url' => $this->method->getReturnUrl(),
             'cancel_url' => $this->method->getCancelUrl(),
-            'brand_name' => $this->getBrandName()
+            'brand_name' => $this->getBrandName(),
+            'user_action' => 'PAY_NOW'
         ];
 
         return $applicationContext;
