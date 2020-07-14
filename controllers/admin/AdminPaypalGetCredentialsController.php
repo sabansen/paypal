@@ -28,7 +28,6 @@ use PaypalAddons\classes\API\Onboarding\PaypalGetCredentials;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 
-include_once(_PS_MODULE_DIR_.'paypal/vendor/autoload.php');
 
 class AdminPaypalGetCredentialsController extends ModuleAdminController
 {

@@ -38,12 +38,6 @@ use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use PaypalAddons\classes\AbstractMethodPaypal;
 
-include_once 'classes/PaypalCapture.php';
-include_once 'classes/PaypalOrder.php';
-include_once 'classes/PaypalLog.php';
-include_once 'classes/PaypalVaulting.php';
-include_once 'classes/PaypalIpn.php';
-
 define('BT_CARD_PAYMENT', 'card-braintree');
 define('BT_PAYPAL_PAYMENT', 'paypal-braintree');
 define('PAYPAL_PAYMENT_CUSTOMER_CURRENCY', -1);

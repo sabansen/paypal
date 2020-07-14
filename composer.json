@@ -7,7 +7,15 @@
         "psr-4": {
             "PaypalPPBTlib\\": "vendor/ppbtlib/src/",
             "PaypalAddons\\": "."
-        }
+        },
+        "classmap": [
+          "classes/PaypalCapture.php",
+          "classes/PaypalOrder.php",
+          "classes/PaypalLog.php",
+          "classes/PaypalVaulting.php",
+          "classes/PaypalIpn.php",
+          "controllers/front/abstract.php"
+        ]
     },
     "scripts": {
         "pre-autoload-dump": [
