@@ -185,7 +185,6 @@ class PayPal extends \PaymentModule
         'actionBeforeCartUpdateQty',
         'displayReassurance',
         'displayInvoiceLegalFreeText',
-        'actionAdminControllerSetMedia',
         'displayShoppingCartFooter',
         'actionOrderSlipAdd',
         'displayAdminOrderTabOrder',
@@ -1060,18 +1059,6 @@ class PayPal extends \PaymentModule
         }
     }
 
-    public function hookActionAdminControllerSetMedia()
-    {
-        if (Tools::getValue('controller') == "AdminOrders" && Tools::getValue('id_order')) {
-            $paypal_order = PaypalOrder::loadByOrderId(Tools::getValue('id_order'));
-            if (Validate::isLoadedObject($paypal_order)) {
-                Media::addJsDefL('chb_paypal_refund', $this->l('Refund on PayPal'));
-                $this->context->controller->addJS($this->_path . '/views/js/bo_order.js');
-            }
-        }
-    }
-
-
     public function hookDisplayAdminOrder($params)
     {
         // Since Ps 1.7.7 this hook is displayed at bottom of a page and we should use a hook DisplayAdminOrderTop
@@ -1079,12 +1066,24 @@ class PayPal extends \PaymentModule
             return false;
         }
 
-        return $this->getAdminOrderPageMessages($params);
+        $return = $this->getAdminOrderPageMessages($params);
+        $return .= $this->getPartialRefund();
+
+        return $return;
+    }
+
+    protected function getPartialRefund()
+    {
+        $this->context->smarty->assign('chb_paypal_refund', $this->l('Refund on PayPal'));
+        return $this->context->smarty->fetch('module:paypal/views/templates/hook/partialRefund.tpl');
     }
 
     public function hookDisplayAdminOrderTop($params)
     {
-        return $this->getAdminOrderPageMessages($params);
+        $return = $this->getAdminOrderPageMessages($params);
+        $return .= $this->getPartialRefund();
+
+        return $return;
     }
 
     protected function getAdminOrderPageMessages($params)
