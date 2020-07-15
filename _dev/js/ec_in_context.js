@@ -40,7 +40,7 @@ window.ECInContext = () => {
         success: (json) => {
             enableConfirmationButton();
             if (json.success) {
-                var url = paypal.checkout.urlPrefix +json.token;
+                var url = paypal.checkout.urlPrefix +json.token + "&useraction=commit";
                 paypal.checkout.startFlow(url);
             } else {
                 paypal.checkout.closeFlow();

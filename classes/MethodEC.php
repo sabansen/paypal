@@ -443,9 +443,7 @@ class MethodEC extends AbstractMethodPaypal
             $url = '/websc&cmd=_express-checkout';
         }
 
-        if (($method == 'SetExpressCheckout') && $this->credit_card) {
-            $url .= '&useraction=commit';
-        }
+        $url .= '&useraction=commit';
         $paypal = Module::getInstanceByName($this->name);
         return $paypal->getUrl().$url.'&token='.urldecode($this->token);
     }
