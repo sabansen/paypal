@@ -78,7 +78,7 @@ class AdminPayPalController extends \ModuleAdminController
         $this->context->smarty->assign('moduleDir', _MODULE_DIR_);
         $this->context->smarty->assign('showPsCheckoutInfo', $showPsCheckoutInfo);
         $this->context->smarty->assign('headerToolBar', $this->headerToolBar);
-        $this->context->smarty->assign('showRestApiIntegrationMessage', version_compare($this->module->version, '5.2', '<'));
+        $this->context->smarty->assign('showRestApiIntegrationMessage', $this->isShowRestApiIntegrationMessage());
         $this->context->smarty->assign('psVersion', _PS_VERSION_);
     }
 
@@ -289,5 +289,29 @@ class AdminPayPalController extends \ModuleAdminController
         }
 
         return $moduleManager->install('ps_checkout');
+    }
+
+    protected function isShowRestApiIntegrationMessage()
+    {
+        $return = false;
+
+        if ($this->method == 'EC' &&
+            \Configuration::get('PAYPAL_PREVIOUS_VERSION') &&
+            version_compare('5.2.0', \Configuration::get('PAYPAL_PREVIOUS_VERSION'), '>')) {
+            $return = true;
+        }
+
+        if ($this->method == 'MB' &&
+            \Configuration::get('PAYPAL_PREVIOUS_VERSION') &&
+            version_compare('5.2.0', \Configuration::get('PAYPAL_PREVIOUS_VERSION'), '>')) {
+            $mode = \Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
+            $ecMerchantId = \Configuration::get('PAYPAL_MERCHANT_ID_' . $mode, '');
+
+            if (empty($ecMerchantId) == false) {
+                $return = true;
+            }
+        }
+
+        return $return;
     }
 }

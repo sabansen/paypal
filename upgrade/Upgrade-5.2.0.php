@@ -44,5 +44,7 @@ function upgrade_module_5_2_0($module)
     $return &= $installer->installAdminControllers();
     $return &= $installer->registerHooks();
 
+    Configuration::updateValue('PAYPAL_PREVIOUS_VERSION', '5.1.5');
+
     return $return;
 }
