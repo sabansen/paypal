@@ -225,7 +225,7 @@ $_MODULE['<{paypal}prestashop>accountsettingsblock_7f14d6041f61f946ecda3a1748b8a
 $_MODULE['<{paypal}prestashop>accountsettingsblock_0323de4f66a1700e2173e9bcdce02715'] = 'Terminar sessão';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_1a62e25acfc39191546704505349bb49'] = 'Ligar ou criar conta PayPal';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_1624e46cbfe7dbe4a96a59090061d15b'] = 'Credenciais de API';
-$_MODULE['<{paypal}prestashop>accountsettingsblock_54ca61db74af81cf576c81234e2afbe1'] = 'Para aceitar pagamentos com PayPal Plus, preencha as suas credenciais de API REST.';
+$_MODULE['<{paypal}prestashop>accountsettingsblock_2ff3bbcde155ca17950f1ea14810471d'] = 'Para aceitar pagamentos com PayPal, preencha as suas credenciais de API REST.';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_bf733d8a933c1601697f364223fc7ecb'] = 'Acesso';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_d87d45b4afb0f16d79ad4b3bc17f2d97'] = 'Se logue ou cria uma conta do tipo Empresa';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_d49ed9a8b28392dd31d03a6921c1bf83'] = 'Acesso para';

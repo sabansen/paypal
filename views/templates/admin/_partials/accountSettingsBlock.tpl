@@ -51,7 +51,7 @@
         {if isset($country_iso) && in_array($country_iso, ['IN', 'JP'])}
           <div class="modal-body">
             <h4>{l s='API Credentials' mod='paypal'}</h4>
-            <p>{l s='In order to accept PayPal Plus payments, please fill in your API REST credentials.' mod='paypal'}</p>
+            <p>{l s='In order to accept PayPal payments, please fill in your API REST credentials.' mod='paypal'}</p>
             <ul>
               <li>{l s='Access' mod='paypal'} <a target="_blank" href="https://developer.paypal.com/developer/applications/">{l s='https://developer.paypal.com/developer/applications/' mod='paypal'}</a></li>
               <li>{l s='Log in or Create a business account' mod='paypal'}</li>
@@ -82,7 +82,7 @@
         {elseif isset($country_iso) && in_array($country_iso, ['IN', 'JP'])}
           <div class="modal-body">
             <h4>{l s='API Credentials' mod='paypal'}</h4>
-            <p>{l s='In order to accept PayPal Plus payments, please fill in your API REST credentials.' mod='paypal'}</p>
+            <p>{l s='In order to accept PayPal payments, please fill in your API REST credentials.' mod='paypal'}</p>
             <ul>
               <li>{l s='Access' mod='paypal'} <a target="_blank" href="https://developer.paypal.com/developer/applications/">{l s='https://developer.paypal.com/developer/applications/' mod='paypal'}</a></li>
               <li>{l s='Log in or Create a business account' mod='paypal'}</li>

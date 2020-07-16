@@ -282,7 +282,7 @@ $_MODULE['<{paypal}prestashop>adminprocessloggercontroller_dcc459e0cef1e36a18a35
 $_MODULE['<{paypal}prestashop>adminprocessloggercontroller_729a51874fe901b092899e9e8b31c97a'] = 'Na pewno?';
 $_MODULE['<{paypal}prestashop>adminprocessloggercontroller_cb0f7aca75a7aeac5a132fd7e0cb37ef'] = 'Wszystkie dzienniki zostały usunięte';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_1624e46cbfe7dbe4a96a59090061d15b'] = 'Dane uwierzytelniające API';
-$_MODULE['<{paypal}prestashop>accountsettingsblock_54ca61db74af81cf576c81234e2afbe1'] = 'Aby akceptować płatności PayPal Plus, podaj dane uwierzytelniające interfejsu API REST.';
+$_MODULE['<{paypal}prestashop>accountsettingsblock_2ff3bbcde155ca17950f1ea14810471d'] = 'Aby akceptować płatności PayPal, podaj dane uwierzytelniające interfejsu API REST.';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_bf733d8a933c1601697f364223fc7ecb'] = 'Dostęp';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_1d18bf3e09ec1ad0236145e6e55fe193'] = 'https://developer.paypal.com/developer/applications/';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_d87d45b4afb0f16d79ad4b3bc17f2d97'] = 'Zaloguj się lub załóż konto firmowe';
