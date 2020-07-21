@@ -30,7 +30,6 @@ use PaypalAddons\services\ServicePaypalIpn;
 
 require_once dirname(__FILE__) . '/TotTestCase.php';
 require_once _PS_MODULE_DIR_.'paypal/vendor/autoload.php';
-require_once _PS_MODULE_DIR_.'paypal/classes/PaypalLog.php';
 
 class ServicePaypalIpnTest extends \TotTestCase
 {

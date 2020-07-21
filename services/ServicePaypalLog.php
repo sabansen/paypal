@@ -42,12 +42,19 @@ class ServicePaypalLog
         if ($log->id_transaction == false || $log->id_order == false) {
             return '';
         }
+
         /** @var $paypalOrder \PaypalOrder object*/
-        $paypalOrder = \PaypalOrder::loadByOrderId($log->id_order);
+        $paypalOrder = $this->getPaypalOrderByLog($log);
+
         if (\Validate::isLoadedObject($paypalOrder) == false || $paypalOrder->method == 'BT') {
             return '';
         }
         $method = AbstractMethodPaypal::load($paypalOrder->method);
         return $method->getLinkToTransaction($log);
+    }
+
+    public function getPaypalOrderByLog($log)
+    {
+        return \PaypalOrder::loadByOrderId($log->id_order);
     }
 }
