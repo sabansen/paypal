@@ -1264,7 +1264,7 @@ class PayPal extends PaymentModule
         return $this->fetchTemplate('express_checkout_shortcut_button.tpl');
     }
 
-    public function hookPaymentReturn()
+    public function hookPaymentReturn($params)
     {
         if (!$this->active) {
             return null;
