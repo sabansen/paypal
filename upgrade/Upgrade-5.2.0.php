@@ -38,13 +38,12 @@ use PaypalAddons\classes\AbstractMethodPaypal;
 function upgrade_module_5_2_0($module)
 {
     $return = true;
-    $method = AbstractMethodPaypal::load();
-    $method->checkCredentials();
     $installer = new ModuleInstaller($module);
     $return &= $installer->installAdminControllers();
     $return &= $installer->registerHooks();
 
     Configuration::updateValue('PAYPAL_PREVIOUS_VERSION', '5.1.5');
+    Configuration::updateValue('PAYPAL_NEED_CHECK_CREDENTIALS', 1);
 
     return $return;
 }

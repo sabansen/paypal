@@ -80,6 +80,12 @@ class AdminPayPalController extends \ModuleAdminController
         $this->context->smarty->assign('headerToolBar', $this->headerToolBar);
         $this->context->smarty->assign('showRestApiIntegrationMessage', $this->isShowRestApiIntegrationMessage());
         $this->context->smarty->assign('psVersion', _PS_VERSION_);
+
+        if ((int)\Configuration::get('PAYPAL_NEED_CHECK_CREDENTIALS')) {
+            $method = AbstractMethodPaypal::load();
+            $method->checkCredentials();
+            \Configuration::updateValue('PAYPAL_NEED_CHECK_CREDENTIALS', 0);
+        }
     }
 
     public function renderForm($fields_form = null)
