@@ -248,3 +248,12 @@ label span.description{display:block;}
 .flex-display {
     display: flex !important;
 }
+
+.bold {
+    font-weight: bold;
+}
+
+.size-l {
+    font-size: 16px;
+}
+

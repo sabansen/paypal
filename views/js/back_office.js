@@ -93,10 +93,11 @@ $(document).ready(function () {
 
         switch (paypal_business) {
             case '0':
-                $('#signup').slideDown();
-                $('#account').removeClass('paypal-disabled');
-                $('#credentials').addClass('paypal-disabled');
                 $('input[type="submit"]').attr('disabled', 'disabled');
+
+                PaypalSectionManager.hideConfigurationSection();
+                PaypalSectionManager.hideTlsCheckSection();
+                PaypalSectionManager.showOpenAccountSection();
 
                 switch (paypal_payment_method) {
                     case PayPal_WPS:
@@ -120,26 +121,17 @@ $(document).ready(function () {
                         $('#paypal-signup-content-u1').show();
                         $('#paypalplus-credentials').slideDown();
                         break;
-                    /*
-                    case PayPal_PVZ:
-                        $('#paypal-signup-button-u3').show();
-                        $('#paypal-signup-content-u3').show();
-                        $('#braintree').show();
-                        $('#braintree-credentials').slideDown();
-                        $('#paypal_3D_secure').slideDown();
-                        break;
-                    */
                 }
                 break;
             case '1':
-                $('#configuration').slideDown();
-                $('#account').addClass('paypal-disabled');
-                $('#credentials').removeClass('paypal-disabled');
                 $('input[type="submit"]').removeAttr('disabled');
+
+                PaypalSectionManager.showConfigurationSection();
+                PaypalSectionManager.showTlsCheckSection();
+                PaypalSectionManager.hideOpenAccountSection();
 
                 switch (paypal_payment_method) {
                     case PayPal_WPS:
-                        $('#signup').slideUp();
                         $('#paypalplus-credentials').slideUp();
                         $('#integral-credentials').slideUp();
                         $('#standard-credentials').slideDown();
@@ -374,3 +366,46 @@ $(document).ready(function () {
     });
 
 });
+
+var PaypalSectionManager = {
+
+    hide: function(selector) {
+        var elems = document.querySelectorAll(selector);
+
+        elems.forEach(function(elem) {
+            elem.style.display = 'none';
+        });
+    },
+
+    show: function (selector) {
+        var elems = document.querySelectorAll(selector);
+
+        elems.forEach(function(elem) {
+            elem.style.display = 'block';
+        });
+    },
+    
+    hideOpenAccountSection: function () {
+        this.hide('[data-open-account-section]');
+    },
+    
+    showOpenAccountSection: function () {
+        this.show('[data-open-account-section]');
+    },
+    
+    hideTlsCheckSection: function () {
+        this.hide('[data-tls-check-section]');
+    },
+    
+    showTlsCheckSection: function () {
+        this.show('[data-tls-check-section]');
+    },
+
+    hideConfigurationSection: function () {
+        this.hide('[data-configuration-section]');
+    },
+
+    showConfigurationSection: function () {
+        this.show('[data-configuration-section]');
+    }
+};
