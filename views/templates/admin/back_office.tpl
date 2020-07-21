@@ -151,9 +151,9 @@
 					<br /><br />
 
 					{* Use cases 1 - 3 *}
-					<span class="paypal-signup-content" id="paypal-signup-content-u1">{l s='Once your account is created, come back to this page in order to complete step 3.' mod='paypal'}</span>
+					<span class="paypal-signup-content" id="paypal-signup-content-u1">{l s='Once your account is created, come back to this page in order to complete the setup of the module.' mod='paypal'}</span>
 
-					<span class="paypal-signup-content" id="paypal-signup-content-u3">{l s='Once your account is created, come back to this page in order to complete step 3.' mod='paypal'}</span>
+					<span class="paypal-signup-content" id="paypal-signup-content-u3">{l s='Once your account is created, come back to this page in order to complete the setup of the module.' mod='paypal'}</span>
 
 					{* Use cases 4 - 6 *}
 					<span class="paypal-signup-content" id="paypal-signup-content-u5">{l s='Click on the SAVE button only when PayPal has approved your subscription for this product, otherwise you won\'t be able to process payment. This process can take up to 3-5 days.' mod='paypal'}<br/>
@@ -364,6 +364,8 @@
 					<div class="clear"></div>
 
 				</div>
+
+				<br><br>
 
 				{* Start Braintree section*}
 
