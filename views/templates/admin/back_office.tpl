@@ -465,7 +465,6 @@
 
 			{* TEST FOR CURL*}
 			<div data-tls-check-section>
-				<span class="paypal-section">3</span>
 				<h3 class="inline">{l s='Test TLS & curl' mod='paypal'}</h3>
 				<br /><br />
 				<input type="hidden" id="security_token" value="{$smarty.get.token}" >
