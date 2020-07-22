@@ -171,14 +171,7 @@ $(document).ready(function () {
         var paypal_business = $('input[name="business"]:checked').val();
         var paypal_payment_method = $('input[name="paypal_payment_method"]:checked').val();
 
-        if(paypal_payment_method == PayPal_PVZ)
-        {
-            // c'est quoi cette fonction !!!
-        }
-        else if (paypal_payment_method != PayPal_HSS &&
-                ($('input[name="api_username"]').val().length > 0 ||
-                        $('input[name="api_password"]').val().length > 0 ||
-                        $('input[name="api_signature"]').val().length > 0)) {
+        if (paypal_payment_method != PayPal_HSS) {
 
             if (paypal_payment_method == PayPal_PPP) {
                 $('#paypalplus-credentials').slideDown();
