@@ -1,5 +1,5 @@
 {*
-* 2007-2019 PrestaShop
+* 2007-2020 PayPal
 *
 * NOTICE OF LICENSE
 *
@@ -17,7 +17,7 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author 2007-2019 PayPal
+*  @author 2007-2020 PayPal
  *  @author 202 ecommerce <tech@202-ecommerce.com>
 *  @copyright PayPal
 *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
@@ -31,11 +31,7 @@
                   type="hidden"
                   name="id_product"
                   data-paypal-id-product
-                  {if isset($smarty.get.id_product)}
-                    value="{$smarty.get.id_product|intval}"
-                  {elseif isset($product)}
-                    value="{$product->id}"
-                  {/if}
+                  value="{$paypalIdProduct|escape:'htmlall':'UTF-8'}"
           />
           <input type="hidden" name="quantity" data-paypal-qty value=""/>
           <input type="hidden" name="combination" data-paypal-combination value="" />

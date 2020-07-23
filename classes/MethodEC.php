@@ -1,27 +1,27 @@
 <?php
 /**
- * 2007-2019 PrestaShop
+ * 2007-2020 PayPal
  *
- * NOTICE OF LICENSE
+ *  NOTICE OF LICENSE
  *
- * This source file is subject to the Academic Free License (AFL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/afl-3.0.php
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
+ *  This source file is subject to the Academic Free License (AFL 3.0)
+ *  that is bundled with this package in the file LICENSE.txt.
+ *  It is also available through the world-wide-web at this URL:
+ *  http://opensource.org/licenses/afl-3.0.php
+ *  If you did not receive a copy of the license and are unable to
+ *  obtain it through the world-wide-web, please send an email
+ *  to license@prestashop.com so we can send you a copy immediately.
  *
- * DISCLAIMER
+ *  DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ *  Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ *  versions in the future. If you wish to customize PrestaShop for your
+ *  needs please refer to http://www.prestashop.com for more information.
  *
- *  @author    PrestaShop SA <contact@prestashop.com>
- *  @copyright 2007-2019 PrestaShop SA
+ *  @author 2007-2020 PayPal
+ *  @author 202 ecommerce <tech@202-ecommerce.com>
+ *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
  */
 
 require_once 'AbstractMethodPaypal.php';
@@ -269,10 +269,8 @@ class MethodEC extends AbstractMethodPaypal
 
         foreach ($products as $product) {
             $itemDetails = new PaymentDetailsItemType();
-            $productObj = new Product((int)$product['id_product'], null, Context::getContext()->cart->id_lang);
-            $priceIncl = $this->formatPrice($productObj->getPrice(true, $product['id_product_attribute'], 6, null, false, true, $product['quantity']));
-            $priceExcl = $this->formatPrice($productObj->getPrice(false, $product['id_product_attribute'], 6, null, false, true, $product['quantity']));
-            $productTax = $this->formatPrice($priceIncl - $priceExcl);
+            $priceExcl = $this->formatPrice($product['price']);
+            $productTax = $this->formatPrice($product['price_wt']) - $this->formatPrice($product['price']);
 
             $itemAmount = new BasicAmountType($currency, $priceExcl);
 
@@ -445,9 +443,7 @@ class MethodEC extends AbstractMethodPaypal
             $url = '/websc&cmd=_express-checkout';
         }
 
-        if (($method == 'SetExpressCheckout') && $this->credit_card) {
-            $url .= '&useraction=commit';
-        }
+        $url .= '&useraction=commit';
         $paypal = Module::getInstanceByName($this->name);
         return $paypal->getUrl().$url.'&token='.urldecode($this->token);
     }
@@ -816,7 +812,8 @@ class MethodEC extends AbstractMethodPaypal
         ));
         if ($page_source == 'product') {
             $context->smarty->assign(array(
-                'es_cs_product_attribute' => Tools::getValue('id_product_attribute')
+                'es_cs_product_attribute' => Tools::getValue('id_product_attribute'),
+                'paypalIdProduct' => Tools::getValue('id_product')
             ));
         }
         $context->smarty->assign('source_page', $page_source);

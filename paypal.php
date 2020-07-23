@@ -1,28 +1,27 @@
 <?php
 /**
- * 2007-2019 PrestaShop
+ * 2007-2020 PayPal
  *
- * NOTICE OF LICENSE
+ *  NOTICE OF LICENSE
  *
- * This source file is subject to the Academic Free License (AFL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/afl-3.0.php
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
+ *  This source file is subject to the Academic Free License (AFL 3.0)
+ *  that is bundled with this package in the file LICENSE.txt.
+ *  It is also available through the world-wide-web at this URL:
+ *  http://opensource.org/licenses/afl-3.0.php
+ *  If you did not receive a copy of the license and are unable to
+ *  obtain it through the world-wide-web, please send an email
+ *  to license@prestashop.com so we can send you a copy immediately.
  *
- * DISCLAIMER
+ *  DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ *  Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ *  versions in the future. If you wish to customize PrestaShop for your
+ *  needs please refer to http://www.prestashop.com for more information.
  *
- * @author 2007-2019 PayPal
- * @author 202 ecommerce <tech@202-ecommerce.com>
- * @copyright PayPal
- * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- *
+ *  @author 2007-2020 PayPal
+ *  @author 202 ecommerce <tech@202-ecommerce.com>
+ *  @copyright PayPal
+ *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
 if (!defined('_PS_VERSION_')) {
@@ -186,7 +185,6 @@ class PayPal extends \PaymentModule
         'actionBeforeCartUpdateQty',
         'displayReassurance',
         'displayInvoiceLegalFreeText',
-        'actionAdminControllerSetMedia',
         'displayShoppingCartFooter',
         'actionOrderSlipAdd',
         'displayAdminOrderTabOrder',
@@ -1061,18 +1059,6 @@ class PayPal extends \PaymentModule
         }
     }
 
-    public function hookActionAdminControllerSetMedia()
-    {
-        if (Tools::getValue('controller') == "AdminOrders" && Tools::getValue('id_order')) {
-            $paypal_order = PaypalOrder::loadByOrderId(Tools::getValue('id_order'));
-            if (Validate::isLoadedObject($paypal_order)) {
-                Media::addJsDefL('chb_paypal_refund', $this->l('Refund on PayPal'));
-                $this->context->controller->addJS($this->_path . '/views/js/bo_order.js');
-            }
-        }
-    }
-
-
     public function hookDisplayAdminOrder($params)
     {
         // Since Ps 1.7.7 this hook is displayed at bottom of a page and we should use a hook DisplayAdminOrderTop
@@ -1080,12 +1066,24 @@ class PayPal extends \PaymentModule
             return false;
         }
 
-        return $this->getAdminOrderPageMessages($params);
+        $return = $this->getAdminOrderPageMessages($params);
+        $return .= $this->getPartialRefund();
+
+        return $return;
+    }
+
+    protected function getPartialRefund()
+    {
+        $this->context->smarty->assign('chb_paypal_refund', $this->l('Refund on PayPal'));
+        return $this->context->smarty->fetch('module:paypal/views/templates/hook/partialRefund.tpl');
     }
 
     public function hookDisplayAdminOrderTop($params)
     {
-        return $this->getAdminOrderPageMessages($params);
+        $return = $this->getAdminOrderPageMessages($params);
+        $return .= $this->getPartialRefund();
+
+        return $return;
     }
 
     protected function getAdminOrderPageMessages($params)

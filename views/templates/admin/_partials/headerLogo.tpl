@@ -1,5 +1,5 @@
 {*
-* 2007-2019 PrestaShop
+* 2007-2020 PayPal
 *
 * NOTICE OF LICENSE
 *
@@ -17,7 +17,7 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author 2007-2019 PayPal
+*  @author 2007-2020 PayPal
  *  @author 202 ecommerce <tech@202-ecommerce.com>
 *  @copyright PayPal
 *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
@@ -32,7 +32,7 @@
 		<p>
 			{l s='Activate the PayPal module to start selling to +300M PayPal customers around the globe' mod='paypal'}.
 		</p>
-		{if $page_header_toolbar_title !== 'Help' && $page_header_toolbar_title !== 'Logs'}
+		{if isset($headerToolBar) && $headerToolBar}
         	{if isset($methodType) && $methodType == 'EC'}
 				<p>{l s='Activate in three easy steps' mod='paypal'}: </p>
 			{else}
