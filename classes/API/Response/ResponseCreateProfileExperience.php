@@ -24,44 +24,34 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
-namespace PaypalAddons\classes\API\Request;
+namespace PaypalAddons\classes\API\Response;
 
-use PaypalAddons\classes\AbstractMethodPaypal;
-use PayPalCheckoutSdk\Core\PayPalHttpClient;
 
-abstract class RequestAbstract implements RequestInteface
+class ResponseCreateProfileExperience extends Response
 {
-    /** PayPalHttpClient*/
-    protected $client;
+    /** @var string*/
+    protected $idProfileExperience;
 
-    /** @var \Context*/
-    protected $context;
-
-    /** @var AbstractMethodPaypal*/
-    protected $method;
-
-    /** @var \Module*/
-    protected $module;
-
-    public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method)
+    /**
+     * @return string
+     */
+    public function getIdProfileExperience()
     {
-        $this->client = $client;
-        $this->method = $method;
-        $this->context = \Context::getContext();
-        $this->module = \Module::getInstanceByName($method->name);
+        return (string) $this->idProfileExperience;
     }
 
     /**
-     * @return array
+     * @param string $idProdileExperience
+     * @return ResponseCreateProfileExperience
      */
-    protected function getHeaders()
+    public function setIdProfileExperience($idProfileExperience)
     {
-        $headers = [
-            'PayPal-Partner-Attribution-Id' => $this->method->getPaypalPartnerId()
-        ];
+        if (is_string($idProfileExperience) === false) {
+            $this->idProfileExperience = '';
+            return $this;
+        }
 
-        return $headers;
+        $this->idProfileExperience = $idProfileExperience;
+        return $this;
     }
-
-    abstract public function execute();
 }

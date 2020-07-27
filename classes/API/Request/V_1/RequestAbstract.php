@@ -24,44 +24,48 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
-namespace PaypalAddons\classes\API\Request;
+namespace PaypalAddons\classes\API\Request\V_1;
 
+
+use PayPal\Rest\ApiContext;
+use PayPal\Auth\OAuthTokenCredential;
+use PaypalAddons\classes\API\Request\RequestInteface;
 use PaypalAddons\classes\AbstractMethodPaypal;
-use PayPalCheckoutSdk\Core\PayPalHttpClient;
 
 abstract class RequestAbstract implements RequestInteface
 {
-    /** PayPalHttpClient*/
-    protected $client;
-
-    /** @var \Context*/
-    protected $context;
-
     /** @var AbstractMethodPaypal*/
     protected $method;
 
-    /** @var \Module*/
-    protected $module;
-
-    public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method)
+    public function __construct(AbstractMethodPaypal $method)
     {
-        $this->client = $client;
         $this->method = $method;
-        $this->context = \Context::getContext();
-        $this->module = \Module::getInstanceByName($method->name);
     }
 
     /**
-     * @return array
+     * @return ApiContext
      */
-    protected function getHeaders()
+    public function getApiContext($mode_order = null)
     {
-        $headers = [
-            'PayPal-Partner-Attribution-Id' => $this->method->getPaypalPartnerId()
-        ];
+        if ($mode_order === null) {
+            $mode_order = $this->method->isSandbox();
+        }
 
-        return $headers;
+        $apiContext = new ApiContext(
+            new OAuthTokenCredential(
+                $this->method->getClientId($mode_order),
+                $this->method->getSecret($mode_order)
+            )
+        );
+
+        $apiContext->setConfig(
+            array(
+                'mode' => $mode_order ? 'sandbox' : 'live',
+                'log.LogEnabled' => false,
+                'cache.enabled' => true,
+            )
+        );
+
+        return $apiContext;
     }
-
-    abstract public function execute();
 }

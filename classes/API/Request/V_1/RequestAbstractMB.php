@@ -24,44 +24,26 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
-namespace PaypalAddons\classes\API\Request;
+namespace PaypalAddons\classes\API\Request\V_1;
 
-use PaypalAddons\classes\AbstractMethodPaypal;
-use PayPalCheckoutSdk\Core\PayPalHttpClient;
 
-abstract class RequestAbstract implements RequestInteface
+use Configuration;
+use Country;
+
+abstract class RequestAbstractMB extends RequestAbstract
 {
-    /** PayPalHttpClient*/
-    protected $client;
-
-    /** @var \Context*/
-    protected $context;
-
-    /** @var AbstractMethodPaypal*/
-    protected $method;
-
-    /** @var \Module*/
-    protected $module;
-
-    public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method)
+    public function getApiContext($mode_order = null)
     {
-        $this->client = $client;
-        $this->method = $method;
-        $this->context = \Context::getContext();
-        $this->module = \Module::getInstanceByName($method->name);
+        $apiContext = parent::getApiContext($mode_order);
+
+        if (Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')) == 'MX') {
+            $bnCodeSuffix = 'Mexico';
+        } else {
+            $bnCodeSuffix = 'Brazil';
+        }
+
+        $apiContext->addRequestHeader('PayPal-Partner-Attribution-Id', (getenv('PLATEFORM') == 'PSREAD')?'PrestaShop_Cart_Ready_'.$bnCodeSuffix:'PrestaShop_Cart_'.$bnCodeSuffix);
+
+        return $apiContext;
     }
-
-    /**
-     * @return array
-     */
-    protected function getHeaders()
-    {
-        $headers = [
-            'PayPal-Partner-Attribution-Id' => $this->method->getPaypalPartnerId()
-        ];
-
-        return $headers;
-    }
-
-    abstract public function execute();
 }

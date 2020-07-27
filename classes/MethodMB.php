@@ -25,24 +25,7 @@
  */
 
 
-use PayPal\Auth\OAuthTokenCredential;
-use PayPal\Rest\ApiContext;
-use PayPal\Api\Amount;
-use PayPal\Api\Details;
-use PayPal\Api\Item;
-use PayPal\Api\ItemList;
-use PayPal\Api\Payer;
-use PayPal\Api\PayerInfo;
-use PayPal\Api\Payment;
-use PayPal\Api\RedirectUrls;
-use PayPal\Api\Transaction;
-use PayPal\Api\Patch;
-use PayPal\Api\PatchRequest;
-use PayPal\Api\PaymentExecution;
-use PayPal\Api\Refund;
-use PayPal\Api\RefundRequest;
-use PayPal\Api\Sale;
-use PaypalAddons\classes\API\PaypalApiManager;
+use PaypalAddons\classes\API\PaypalApiManagerMB;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use PaypalAddons\services\ServicePaypalVaulting;
 use \PayPal\Api\ShippingAddress;
@@ -88,7 +71,7 @@ class MethodMB extends AbstractMethodPaypal
     public function __construct()
     {
         $this->servicePaypalVaulting = new ServicePaypalVaulting();
-        $this->paypalApiManager = new PaypalApiManager($this);
+        $this->paypalApiManager = new PaypalApiManagerMB($this);
     }
 
     /**
@@ -186,7 +169,7 @@ class MethodMB extends AbstractMethodPaypal
      */
     public function isConfigured($mode = null)
     {
-        return (bool)Configuration::get('PAYPAL_CONNECTION_MB_CONFIGURED');
+        return (bool)Configuration::get('PAYPAL_MB_EXPERIENCE');
     }
 
     public function getTplVars()
@@ -218,9 +201,9 @@ class MethodMB extends AbstractMethodPaypal
         $response = $this->paypalApiManager->getAccessTokenRequest()->execute();
 
         if ($response->isSuccess()) {
-            Configuration::updateValue('PAYPAL_CONNECTION_MB_CONFIGURED', 1);
+            Configuration::updateValue('PAYPAL_MB_EXPERIENCE', $response->getIdProfileExperience());
         } else {
-            Configuration::updateValue('PAYPAL_CONNECTION_MB_CONFIGURED', 0);
+            Configuration::updateValue('PAYPAL_MB_EXPERIENCE', '');
 
             if ($response->getError()) {
                 $this->errors[] = $response->getError()->getMessage();
@@ -466,36 +449,34 @@ class MethodMB extends AbstractMethodPaypal
         return $inputs;
     }
 
-    public function getClientId()
+    public function getClientId($sandbox = null)
     {
-        if ($this->clientId !== null) {
-            return $this->clientId;
+        if ($sandbox === null) {
+            $sandbox = $this->isSandbox();
         }
 
-        if ($this->isSandbox()) {
+        if ($sandbox) {
             $clientId = Configuration::get('PAYPAL_MB_SANDBOX_CLIENTID');
         } else {
             $clientId = Configuration::get('PAYPAL_MB_LIVE_CLIENTID');
         }
 
-        $this->clientId = $clientId;
-        return $this->clientId;
+        return $clientId;
     }
 
-    public function getSecret()
+    public function getSecret($sandbox = null)
     {
-        if ($this->secret !== null) {
-            return $this->secret;
+        if ($sandbox === null) {
+            $sandbox = $this->isSandbox();
         }
 
-        if ($this->isSandbox()) {
+        if ($sandbox) {
             $secret = Configuration::get('PAYPAL_MB_SANDBOX_SECRET');
         } else {
             $secret = Configuration::get('PAYPAL_MB_LIVE_SECRET');
         }
 
-        $this->secret = $secret;
-        return $this->secret;
+        return $secret;
     }
 
     public function getReturnUrl()

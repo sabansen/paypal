@@ -26,58 +26,57 @@
 
 namespace PaypalAddons\classes\API;
 
-
-use PaypalAddons\classes\API\Request\RequestAbstract;
+use PaypalAddons\classes\API\Request\RequestInteface;
 
 interface PaypalApiManagerInterface
 {
     /**
-     * @return RequestAbstract
+     * @return RequestInteface
      */
     public function getAccessTokenRequest();
 
     /**
-     * @return RequestAbstract
+     * @return RequestInteface
      */
     public function getOrderRequest();
 
     /**
-     * @return RequestAbstract
+     * @return RequestInteface
      */
     public function getOrderCaptureRequest($idPayment);
 
     /**
-     * @return RequestAbstract
+     * @return RequestInteface
      */
     public function getOrderAuthorizeRequest($idPayment);
 
     /**
-     * @return RequestAbstract
+     * @return RequestInteface
      */
     public function getOrderRefundRequest(\PaypalOrder $paypalOrder);
 
     /**
-     * @return RequestAbstract
+     * @return RequestInteface
      */
     public function getOrderPartialRefundRequest(\PaypalOrder $paypalOrder, $amount);
 
     /**
-     * @return RequestAbstract
+     * @return RequestInteface
      */
     public function getAuthorizationVoidRequest(\PaypalOrder $orderPayPal);
 
     /**
-     * @return RequestAbstract
+     * @return RequestInteface
      */
     public function getCaptureAuthorizeRequest(\PaypalOrder $paypalOrder);
 
     /**
-     * @return RequestAbstract
+     * @return RequestInteface
      */
     public function getOrderGetRequest($idPayment);
 
     /**
-     * @return RequestAbstract
+     * @return RequestInteface
      */
     public function geOrderPatchRequest($idPayment);
 }

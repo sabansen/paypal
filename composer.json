@@ -24,6 +24,7 @@
     },
     "require": {
       "paypal/paypal-checkout-sdk": " 1.*",
-      "guzzlehttp/guzzle": "6.*"
+      "guzzlehttp/guzzle": "6.*",
+      "paypal/rest-api-sdk-php": "1.*"
     }
 }
