@@ -28,6 +28,7 @@ namespace PaypalAddons\classes\API;
 
 
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\API\Request\V_1\PaypalOrderCaptureRequest;
 use PaypalAddons\classes\API\Request\V_1\PaypalOrderCreateRequest;
 use PaypalAddons\classes\API\Request\V_1\RequestAbstract;
 use PaypalAddons\classes\API\Request\V_1\CreateProfileExperienceRequest;
@@ -60,19 +61,15 @@ class PaypalApiManagerMB implements PaypalApiManagerInterface
     }
 
     /**
-     * @return RequestAbstract
+     * @return PaypalOrderCaptureRequest
      */
     public function getOrderCaptureRequest($idPayment)
     {
-        // TODO: Implement getOrderCaptureRequest() method.
+        return new PaypalOrderCaptureRequest($this->method);
     }
 
-    /**
-     * @return RequestAbstract
-     */
     public function getOrderAuthorizeRequest($idPayment)
     {
-        // TODO: Implement getOrderAuthorizeRequest() method.
     }
 
     /**
