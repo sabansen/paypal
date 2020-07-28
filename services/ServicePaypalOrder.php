@@ -60,6 +60,8 @@ class ServicePaypalOrder
 
             $psOrder->setCurrentState($idStatus);
         }
+
+        return true;
     }
 
     /**
