@@ -43,12 +43,6 @@ abstract class AbstractMethodPaypal extends AbstractMethod
     /** @var bool*/
     protected $isSandbox;
 
-    /** @var string*/
-    protected $clientId;
-
-    /** @var string*/
-    protected $secret;
-
     /** @var PaypalApiManagerInterface*/
     protected $paypalApiManager;
 
