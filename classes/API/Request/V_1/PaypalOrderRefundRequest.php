@@ -27,14 +27,18 @@
 namespace PaypalAddons\classes\API\Request\V_1;
 
 use DateTime;
+use PayPal;
 use PayPal\Api\DetailedRefund;
+use PayPal\Api\Payment;
 use PayPal\Api\Sale;
 use PayPal\Api\Amount;
 use PayPal\Api\RefundRequest;
+use PayPal\Api\Transaction;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\ResponseOrderRefund;
 use \PaypalOrder;
+use Symfony\Component\VarDumper\VarDumper;
 
 class PaypalOrderRefundRequest extends RequestAbstractMB
 {
@@ -92,9 +96,36 @@ class PaypalOrderRefundRequest extends RequestAbstractMB
      */
     protected function getAmount(Sale $sale)
     {
+        $payment = Payment::get($sale->getParentPayment(), $this->getApiContext($this->paypalOrder->sandbox));
+        $transaction = $payment->getTransactions()[0];
+        $amount = 0;
+
+        foreach ($transaction->getRelatedResources() as $resources) {
+            $resource = null;
+
+            if (isset($resources->sale)) {
+                $resource = $resources->sale;
+            }
+
+            if (isset($resources->refund)) {
+                $resource = $resources->refund;
+            }
+
+            if ($resource === null) {
+                continue;
+            }
+
+            if (is_callable(array($resource, 'amount'), true)) {
+                $transactionAmount = $resource->amount;
+                if (is_callable(array($transactionAmount, 'total'), true)) {
+                    $amount += $transactionAmount->total;
+                }
+            }
+        }
+
         $amt = new Amount();
         return $amt
             ->setCurrency($sale->getAmount()->getCurrency())
-            ->setTotal($sale->getAmount()->getTotal());
+            ->setTotal(number_format($amount, Paypal::getDecimal(), ".", ''));
     }
 }
