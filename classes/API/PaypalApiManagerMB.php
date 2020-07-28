@@ -33,6 +33,7 @@ use PaypalAddons\classes\API\Request\V_1\PaypalOrderCaptureRequest;
 use PaypalAddons\classes\API\Request\V_1\PaypalOrderCreateRequest;
 use PaypalAddons\classes\API\Request\V_1\RequestAbstract;
 use PaypalAddons\classes\API\Request\V_1\CreateProfileExperienceRequest;
+use PaypalAddons\classes\API\Request\V_1\PaypalOrderRefundRequest;
 
 class PaypalApiManagerMB implements PaypalApiManagerInterface
 {
@@ -79,7 +80,7 @@ class PaypalApiManagerMB implements PaypalApiManagerInterface
      */
     public function getOrderRefundRequest(\PaypalOrder $paypalOrder)
     {
-        // TODO: Implement getOrderRefundRequest() method.
+        return new PaypalOrderRefundRequest($this->method, $paypalOrder);
     }
 
     /**
