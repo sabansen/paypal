@@ -1090,7 +1090,7 @@ class PayPal extends \PaymentModule
     protected function getPartialRefund()
     {
         $this->context->smarty->assign('chb_paypal_refund', $this->l('Refund on PayPal'));
-        return $this->context->smarty->fetch('module:paypal/views/templates/hook/partialRefund.tpl');
+        return $this->context->smarty->fetch(_PS_MODULE_DIR_ . $this->name . '/views/templates/hook/partialRefund.tpl');
     }
 
     public function hookDisplayAdminOrderTop($params)
