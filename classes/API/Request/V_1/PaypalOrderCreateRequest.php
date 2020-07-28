@@ -101,17 +101,20 @@ class PaypalOrderCreateRequest extends RequestAbstractMB
         $transaction->setAmount($this->_amount)
             ->setItemList($this->_itemList)
             ->setDescription("Payment description")
-            ->setInvoiceNumber(uniqid())
-            ->setNotifyUrl(Context::getContext()->link->getModuleLink($this->method->name, 'ipn'));
+            ->setInvoiceNumber(uniqid());
+
+        if (is_callable(array(get_class($this->method), 'getIpnUrl'), true)) {
+            $transaction->setNotifyUrl($this->method->getIpnUrl());
+        }
 
         // ### Redirect urls
         // Set the urls that the buyer must be redirected to after
         // payment approval/ cancellation.
 
         $redirectUrls = new RedirectUrls();
-        $return_url = Context::getContext()->link->getModuleLink($this->method->name, 'pppValidation', array(), true);
-        $redirectUrls->setReturnUrl($return_url)
-            ->setCancelUrl(Context::getContext()->link->getPageLink('order', true));
+        $redirectUrls
+            ->setReturnUrl($this->method->getReturnUrl())
+            ->setCancelUrl($this->method->getCancelUrl());
 
         // ### Payment
         // A Payment Resource; create one using
@@ -121,8 +124,11 @@ class PaypalOrderCreateRequest extends RequestAbstractMB
         $payment->setIntent("sale")
             ->setPayer($payer)
             ->setRedirectUrls($redirectUrls)
-            ->setTransactions(array($transaction))
-            ->setExperienceProfileId(Configuration::get('PAYPAL_MB_EXPERIENCE'));
+            ->setTransactions(array($transaction));
+
+        if (is_callable(array(get_class($this->method), 'getIdProfileExperience'), true)) {
+            $payment->setExperienceProfileId($this->method->getIdProfileExperience());
+        }
 
         // ### Create Payment
         // Create a payment by calling the 'create' method

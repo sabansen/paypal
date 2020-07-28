@@ -479,14 +479,36 @@ class MethodMB extends AbstractMethodPaypal
         return $secret;
     }
 
+    /**
+     * @return string
+     */
     public function getReturnUrl()
     {
-        return Context::getContext()->link->getModuleLink($this->name, 'mbValidation', [], true);
+        return (string) Context::getContext()->link->getModuleLink($this->name, 'mbValidation', [], true);
     }
 
+    /**
+     * @return string
+     */
     public function getCancelUrl()
     {
-        return Context::getContext()->link->getPageLink('order', true);
+        return (string) Context::getContext()->link->getPageLink('order', true);
+    }
+
+    /**
+     * @return string
+     */
+    public function getIpnUrl()
+    {
+        return (string) Context::getContext()->link->getModuleLink($this->name, 'ipn');
+    }
+
+    /**
+     * @return string
+     */
+    public function getIdProfileExperience()
+    {
+        return (string) Configuration::get('PAYPAL_MB_EXPERIENCE');
     }
 
     public function getPaypalPartnerId()
