@@ -214,9 +214,13 @@ abstract class AbstractMethodPaypal extends AbstractMethod
     /**
      * @return ResponseOrderGet
      */
-    public function getInfo()
+    public function getInfo($paymentId = null)
     {
-        $response = $this->paypalApiManager->getOrderGetRequest($this->getPaymentId())->execute();
+        if ($paymentId === null) {
+            $paymentId = $this->getPaymentId();
+        }
+
+        $response = $this->paypalApiManager->getOrderGetRequest($paymentId)->execute();
         return $response;
     }
 

@@ -100,6 +100,41 @@ class PaypalOrderRefundRequest extends RequestAbstract
      */
     protected function buildRequestBody()
     {
-        return [];
+        $body = [
+            'amount' => $this->getAmount()
+        ];
+
+        return $body;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getAmount()
+    {
+        $total = 0;
+
+        try {
+            $order = $this->method->getInfo($this->paypalOrder->id_payment);
+            $payments = $order->getData()->result->purchase_units[0]->payments;
+
+            foreach ($payments->captures as $capture) {
+                $total += $capture->amount->value;
+            }
+
+            foreach ($payments->refunds as $refund) {
+                $total += -($refund->amount->value);
+            }
+        } catch (\Exception $e) {
+            // if there is the error, so return 0
+            $total = 0;
+        }
+
+        $amount = [
+            'currency_code' => $this->paypalOrder->currency,
+            'value' => $total
+        ];
+
+        return $amount;
     }
 }
