@@ -317,10 +317,10 @@ abstract class AbstractMethodPaypal extends AbstractMethod
     }
 
     /** @return  string*/
-    abstract public function getClientId();
+    abstract public function getClientId($sandbox);
 
     /** @return  string*/
-    abstract public function getSecret();
+    abstract public function getSecret($sandbox);
 
     /** @return  string*/
     abstract public function getReturnUrl();

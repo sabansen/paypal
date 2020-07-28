@@ -59,12 +59,6 @@ class MethodEC extends AbstractMethodPaypal
     /** @var bool*/
     protected $isSandbox;
 
-    /** @var string*/
-    protected $clientId;
-
-    /** @var string*/
-    protected $secret;
-
     public function __construct()
     {
         $this->paypalApiManager = new PaypalApiManager($this);
@@ -339,36 +333,34 @@ class MethodEC extends AbstractMethodPaypal
         return Configuration::get('PAYPAL_API_INTENT') == 'sale' ? 'CAPTURE' : 'AUTHORIZE';
     }
 
-    public function getClientId()
+    public function getClientId($sandbox = null)
     {
-        if ($this->clientId !== null) {
-            return $this->clientId;
+        if ($sandbox === null) {
+            $sandbox = $this->isSandbox();
         }
 
-        if ($this->isSandbox()) {
+        if ($sandbox) {
             $clientId = Configuration::get('PAYPAL_EC_CLIENTID_SANDBOX');
         } else {
             $clientId = Configuration::get('PAYPAL_EC_CLIENTID_LIVE');
         }
 
-        $this->clientId = $clientId;
-        return $this->clientId;
+        return $clientId;
     }
 
-    public function getSecret()
+    public function getSecret($sandbox = null)
     {
-        if ($this->secret !== null) {
-            return (string) $this->secret;
+        if ($sandbox === null) {
+            $sandbox = $this->isSandbox();
         }
 
-        if ($this->isSandbox()) {
+        if ($sandbox) {
             $secret = Configuration::get('PAYPAL_EC_SECRET_SANDBOX');
         } else {
             $secret = Configuration::get('PAYPAL_EC_SECRET_LIVE');
         }
 
-        $this->secret = $secret;
-        return (string) $this->secret;
+        return (string) $secret;
     }
 
     public function getReturnUrl()

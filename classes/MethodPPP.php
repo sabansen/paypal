@@ -328,36 +328,34 @@ class MethodPPP extends AbstractMethodPaypal
         return $inputs;
     }
 
-    public function getClientId()
+    public function getClientId($sandbox = null)
     {
-        if ($this->clientId !== null) {
-            return $this->clientId;
+        if ($sandbox === null) {
+            $sandbox = $this->isSandbox();
         }
 
-        if ($this->isSandbox()) {
+        if ($sandbox) {
             $clientId = Configuration::get('PAYPAL_SANDBOX_CLIENTID');
         } else {
             $clientId = Configuration::get('PAYPAL_LIVE_CLIENTID');
         }
 
-        $this->clientId = $clientId;
-        return $this->clientId;
+        return $clientId;
     }
 
-    public function getSecret()
+    public function getSecret($sandbox = null)
     {
-        if ($this->secret !== null) {
-            return $this->secret;
+        if ($sandbox === null) {
+            $sandbox = $this->isSandbox();
         }
 
-        if ($this->isSandbox()) {
+        if ($sandbox) {
             $secret = Configuration::get('PAYPAL_SANDBOX_SECRET');
         } else {
             $secret = Configuration::get('PAYPAL_LIVE_SECRET');
         }
 
-        $this->secret = $secret;
-        return $this->secret;
+        return $secret;
     }
 
     public function getIntent()
