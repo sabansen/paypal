@@ -31,7 +31,6 @@ use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Request\RequestDummy;
 use PaypalAddons\classes\API\Request\V_1\PaypalOrderCaptureRequest;
 use PaypalAddons\classes\API\Request\V_1\PaypalOrderCreateRequest;
-use PaypalAddons\classes\API\Request\V_1\RequestAbstract;
 use PaypalAddons\classes\API\Request\V_1\CreateProfileExperienceRequest;
 use PaypalAddons\classes\API\Request\V_1\PaypalOrderRefundRequest;
 use PaypalAddons\classes\API\Request\V_1\PaypalOrderPartialRefundRequest;
@@ -71,13 +70,16 @@ class PaypalApiManagerMB implements PaypalApiManagerInterface
         return new PaypalOrderCaptureRequest($this->method);
     }
 
+    /**
+     * @return RequestDummy
+     */
     public function getOrderAuthorizeRequest($idPayment)
     {
         return new RequestDummy();
     }
 
     /**
-     * @return RequestAbstract
+     * @return PaypalOrderRefundRequest
      */
     public function getOrderRefundRequest(\PaypalOrder $paypalOrder)
     {
@@ -85,42 +87,42 @@ class PaypalApiManagerMB implements PaypalApiManagerInterface
     }
 
     /**
-     * @return RequestAbstract
+     * @return PaypalOrderPartialRefundRequest
      */
     public function getOrderPartialRefundRequest(\PaypalOrder $paypalOrder, $amount)
     {
-        return new PaypalOrderPartialRefundRequest($this->client, $this->method, $paypalOrder, $amount);
+        return new PaypalOrderPartialRefundRequest($this->method, $paypalOrder, $amount);
     }
 
     /**
-     * @return RequestAbstract
+     * @return RequestDummy
      */
     public function getAuthorizationVoidRequest(\PaypalOrder $orderPayPal)
     {
-        // TODO: Implement getAuthorizationVoidRequest() method.
+        return new RequestDummy();
     }
 
     /**
-     * @return RequestAbstract
+     * @return RequestDummy
      */
     public function getCaptureAuthorizeRequest(\PaypalOrder $paypalOrder)
     {
-        // TODO: Implement getCaptureAuthorizeRequest() method.
+        return new RequestDummy();
     }
 
     /**
-     * @return RequestAbstract
+     * @return RequestDummy
      */
     public function getOrderGetRequest($idPayment)
     {
-        // TODO: Implement getOrderGetRequest() method.
+        return new RequestDummy();
     }
 
     /**
-     * @return RequestAbstract
+     * @return RequestDummy
      */
     public function geOrderPatchRequest($idPayment)
     {
-        // TODO: Implement geOrderPatchRequest() method.
+        return new RequestDummy();
     }
 }
