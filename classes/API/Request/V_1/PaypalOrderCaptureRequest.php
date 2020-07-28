@@ -42,12 +42,6 @@ class PaypalOrderCaptureRequest extends RequestAbstractMB
     public function execute()
     {
         $response = new ResponseOrderCapture();
-        $servicePaypalVaulting = new ServicePaypalVaulting();
-        $customer = new Customer(Context::getContext()->cart->id_customer);
-
-        if (Validate::isLoadedObject($customer) && $this->method->getRememberedCards()) {
-            $servicePaypalVaulting->createOrUpdatePaypalVaulting($customer->id, $this->method->getRememberedCards());
-        }
 
         // Get the payment Object by passing paymentId
         // payment id was previously stored in session in
