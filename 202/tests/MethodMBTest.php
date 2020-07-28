@@ -28,10 +28,12 @@ namespace PayPalTest;
 
 use PaypalAddons\classes\API\PaypalApiManager;
 use PaypalAddons\classes\API\Request\PaypalAccessTokenRequest;
+use PaypalAddons\classes\API\Request\V_1\CreateProfileExperienceRequest;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\PaypalResponseAccessToken;
 use \Context;
 use \Currency;
+use PaypalAddons\classes\API\Response\ResponseCreateProfileExperience;
 
 require_once dirname(__FILE__) . '/TotTestCase.php';
 require_once _PS_MODULE_DIR_.'paypal/vendor/autoload.php';
@@ -76,7 +78,7 @@ class MethodMBTest extends \TotTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $requestMock = $this->getMockBuilder(PaypalAccessTokenRequest::class)
+        $requestMock = $this->getMockBuilder(CreateProfileExperienceRequest::class)
             ->setMethods(array('execute'))
             ->disableOriginalConstructor()
             ->getMock();
@@ -235,11 +237,11 @@ class MethodMBTest extends \TotTestCase
 
     public function getDataForCheckCredentials()
     {
-        $responseSuccess = new PaypalResponseAccessToken();
-        $responseFailed = new PaypalResponseAccessToken();
+        $responseSuccess = new ResponseCreateProfileExperience();
+        $responseFailed = new ResponseCreateProfileExperience();
         $error = new Error();
         $responseFailed->setSuccess(false)->setError($error->setMessage('error message'));
-        $responseSuccess->setSuccess(true);
+        $responseSuccess->setSuccess(true)->setIdProfileExperience('IdProfileExperience');
 
 
         $data = array(
