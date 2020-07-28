@@ -34,6 +34,7 @@ use PaypalAddons\classes\API\Request\V_1\PaypalOrderCreateRequest;
 use PaypalAddons\classes\API\Request\V_1\RequestAbstract;
 use PaypalAddons\classes\API\Request\V_1\CreateProfileExperienceRequest;
 use PaypalAddons\classes\API\Request\V_1\PaypalOrderRefundRequest;
+use PaypalAddons\classes\API\Request\V_1\PaypalOrderPartialRefundRequest;
 
 class PaypalApiManagerMB implements PaypalApiManagerInterface
 {
@@ -88,7 +89,7 @@ class PaypalApiManagerMB implements PaypalApiManagerInterface
      */
     public function getOrderPartialRefundRequest(\PaypalOrder $paypalOrder, $amount)
     {
-        // TODO: Implement getOrderPartialRefundRequest() method.
+        return new PaypalOrderPartialRefundRequest($this->client, $this->method, $paypalOrder, $amount);
     }
 
     /**

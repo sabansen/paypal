@@ -56,16 +56,9 @@ class PaypalOrderRefundRequest extends RequestAbstractMB
 
         try {
             $sale = Sale::get($this->paypalOrder->id_transaction, $this->getApiContext($this->paypalOrder->sandbox));
-
-            // Includes both the refunded amount (to Payer)
-            // and refunded fee (to Payee). Use the $amt->details
-            // field to mention fees refund details.
-            $amt = new Amount();
-            $amt->setCurrency($sale->getAmount()->getCurrency())
-                ->setTotal($sale->getAmount()->getTotal());
+            $amt = $this->getAmount($sale);
             $refundRequest = new RefundRequest();
             $refundRequest->setAmount($amt);
-
             $exec = $sale->refundSale($refundRequest, $this->getApiContext($this->paypalOrder->sandbox));
 
             $response->setSuccess(true)
@@ -91,5 +84,17 @@ class PaypalOrderRefundRequest extends RequestAbstractMB
     {
         $date = DateTime::createFromFormat(DateTime::ISO8601, $detailedRefund->update_time);
         return $date->format('Y-m-d TH:i:s');
+    }
+
+    /**
+     * @param Sale $sale
+     * @return Amount
+     */
+    protected function getAmount(Sale $sale)
+    {
+        $amt = new Amount();
+        return $amt
+            ->setCurrency($sale->getAmount()->getCurrency())
+            ->setTotal($sale->getAmount()->getTotal());
     }
 }
