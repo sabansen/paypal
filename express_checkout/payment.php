@@ -168,6 +168,11 @@ if ($request_type && $ppec->type) {
     $product_quantity = (int) Tools::getValue('quantity');
     $id_product_attribute = Tools::getValue('id_p_attr');
 
+    // Check if there is customer in context
+    if (false == Validate::isLoadedObject($ppec->context->customer)) {
+        throw new Exception('Invalid customer in context');
+    }
+
     if (($id_product > 0) && $id_product_attribute !== false && ($product_quantity > 0)) {
         setContextData($ppec);
 
