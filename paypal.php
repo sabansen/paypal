@@ -2433,22 +2433,9 @@ class PayPal extends PaymentModule
 
     private function loadLangDefault()
     {
-        if (Configuration::get('PAYPAL_UPDATED_COUNTRIES_OK')) {
-            $this->iso_code = Tools::strtoupper($this->context->language->iso_code);
-            if ($this->iso_code == 'EN') {
-                $iso_code = 'GB';
-            } else {
-                $iso_code = $this->iso_code;
-            }
-
-            $this->default_country = Country::getByIso($iso_code);
-        } else {
-            $this->default_country = (int) Configuration::get('PS_COUNTRY_DEFAULT');
-            $country = new Country($this->default_country);
-            $this->iso_code = Tools::strtoupper($country->iso_code);
-        }
-
-        //$this->iso_code = AuthenticatePaymentMethods::getCountryDependency($iso_code);
+        $this->default_country = (int) Configuration::get('PS_COUNTRY_DEFAULT');
+        $country = new Country($this->default_country);
+        $this->iso_code = Tools::strtoupper($country->iso_code);
     }
 
     public function formatMessage($response, &$message)
