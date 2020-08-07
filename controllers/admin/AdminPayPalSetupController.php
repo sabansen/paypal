@@ -321,6 +321,7 @@ class AdminPayPalSetupController extends AdminPayPalController
                 'clientId' => $method->getClientId(),
                 'secret' => $method->getSecret()
             ));
+            $methodEC->checkCredentials();
         }
 
 
