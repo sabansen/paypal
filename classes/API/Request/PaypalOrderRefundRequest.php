@@ -130,7 +130,7 @@ class PaypalOrderRefundRequest extends RequestAbstract
             $total = 0;
         }
 
-        $total = $this->method->formatPrice($total);
+        $total = $this->method->formatPrice($total, $this->paypalOrder->currency);
 
         $amount = [
             'currency_code' => $this->paypalOrder->currency,

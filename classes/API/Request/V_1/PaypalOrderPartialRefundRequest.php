@@ -57,6 +57,6 @@ class PaypalOrderPartialRefundRequest extends PaypalOrderRefundRequest
         $amt = new Amount();
         return $amt
             ->setCurrency($sale->getAmount()->getCurrency())
-            ->setTotal(number_format($this->amount, Paypal::getDecimal(), ".", ''));
+            ->setTotal(number_format($this->amount, Paypal::getDecimal($this->paypalOrder->currency), ".", ''));
     }
 }

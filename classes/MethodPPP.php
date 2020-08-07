@@ -121,19 +121,6 @@ class MethodPPP extends AbstractMethodPaypal
     {
     }
 
-    public function formatPrice($price)
-    {
-        $context = Context::getContext();
-        $context_currency = $context->currency;
-        $paypal = Module::getInstanceByName($this->name);
-        if ($id_currency_to = $paypal->needConvert()) {
-            $currency_to_convert = new Currency($id_currency_to);
-            $price = Tools::convertPriceFull($price, $context_currency, $currency_to_convert);
-        }
-        $price = number_format($price, Paypal::getDecimal(), ".", '');
-        return $price;
-    }
-
     public function getOrderStatus()
     {
         if ((int)Configuration::get('PAYPAL_CUSTOMIZE_ORDER_STATUS')) {

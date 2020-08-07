@@ -1536,10 +1536,14 @@ class PayPal extends \PaymentModule
      * Get decimal correspondent to payment currency
      * @return integer Number of decimal
      */
-    public static function getDecimal()
+    public static function getDecimal($isoCurrency = null)
     {
         $paypal = Module::getInstanceByName('paypal');
         $currency_wt_decimal = array('HUF', 'JPY', 'TWD');
+
+        if ($isoCurrency === null || Currency::exists($isoCurrency) === false ) {
+            $isoCurrency = $paypal->getPaymentCurrencyIso();
+        }
 
         if (version_compare(_PS_VERSION_, '1.7.7', '<')) {
             $precision = _PS_PRICE_DISPLAY_PRECISION_;
@@ -1547,7 +1551,7 @@ class PayPal extends \PaymentModule
             $precision = Context::getContext()->getComputingPrecision();
         }
 
-        if (in_array($paypal->getPaymentCurrencyIso(), $currency_wt_decimal) || ($precision == 0)) {
+        if (in_array($isoCurrency, $currency_wt_decimal) || ($precision == 0)) {
             return (int)0;
         } else {
             return (int)2;

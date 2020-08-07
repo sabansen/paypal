@@ -27,15 +27,18 @@
 namespace PaypalAddons\classes;
 
 use Context;
+use Currency;
 use Customer;
 use Exception;
 use Module;
+use PayPal;
 use PaypalAddons\classes\API\PaypalApiManagerInterface;
 use PaypalAddons\classes\API\Response\Response;
 use PaypalAddons\classes\API\Response\ResponseOrderGet;
 use PaypalAddons\classes\API\Response\ResponseOrderRefund;
 use PaypalPPBTlib\AbstractMethod;
 use Symfony\Component\VarDumper\VarDumper;
+use Tools;
 use Validate;
 
 abstract class AbstractMethodPaypal extends AbstractMethod
@@ -222,6 +225,25 @@ abstract class AbstractMethodPaypal extends AbstractMethod
 
         $response = $this->paypalApiManager->getOrderGetRequest($paymentId)->execute();
         return $response;
+    }
+
+    /**
+     * Convert and format price
+     * @param $price
+     * @return float|int|string
+     */
+    public function formatPrice($price, $isoCurrency = null)
+    {
+        $context = Context::getContext();
+        $context_currency = $context->currency;
+        $paypal = Module::getInstanceByName($this->name);
+
+        if ($id_currency_to = $paypal->needConvert()) {
+            $currency_to_convert = new Currency($id_currency_to);
+            $price = Tools::convertPriceFull($price, $context_currency, $currency_to_convert);
+        }
+
+        return number_format($price, Paypal::getDecimal($isoCurrency), ".", '');
     }
 
     public function getLinkToTransaction($log)

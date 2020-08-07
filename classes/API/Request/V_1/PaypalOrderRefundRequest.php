@@ -126,6 +126,6 @@ class PaypalOrderRefundRequest extends RequestAbstractMB
         $amt = new Amount();
         return $amt
             ->setCurrency($sale->getAmount()->getCurrency())
-            ->setTotal(number_format($amount, Paypal::getDecimal(), ".", ''));
+            ->setTotal(number_format($amount, Paypal::getDecimal($this->paypalOrder->currency), ".", ''));
     }
 }
