@@ -100,6 +100,12 @@ class PaypalOrderRefundRequest extends RequestAbstract
      */
     protected function buildRequestBody()
     {
+        $amount = $this->getAmount();
+
+        if ((float)$amount['value'] == (float)$this->paypalOrder->total_paid) {
+            return [];
+        }
+
         $body = [
             'amount' => $this->getAmount()
         ];
