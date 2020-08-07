@@ -124,12 +124,16 @@ class PaypalOrderRefundRequest extends RequestAbstract
             $order = $this->method->getInfo($this->paypalOrder->id_payment);
             $payments = $order->getData()->result->purchase_units[0]->payments;
 
-            foreach ($payments->captures as $capture) {
-                $total += $capture->amount->value;
+            if (isset($payments->captures)) {
+                foreach ($payments->captures as $capture) {
+                    $total += $capture->amount->value;
+                }
             }
 
-            foreach ($payments->refunds as $refund) {
-                $total += -($refund->amount->value);
+            if (isset($payments->refunds)) {
+                foreach ($payments->refunds as $refund) {
+                    $total += -($refund->amount->value);
+                }
             }
         } catch (\Exception $e) {
             // if there is the error, so return 0
