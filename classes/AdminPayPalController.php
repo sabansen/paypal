@@ -301,7 +301,7 @@ class AdminPayPalController extends \ModuleAdminController
     {
         $return = false;
 
-        if ($this->method == 'EC' &&
+        if ((in_array($this->method, ['EC', 'PPP'])) &&
             \Configuration::get('PAYPAL_PREVIOUS_VERSION') &&
             version_compare('5.2.0', \Configuration::get('PAYPAL_PREVIOUS_VERSION'), '>')) {
             $return = true;

@@ -72,7 +72,6 @@ class AdminPaypalGetCredentialsController extends ModuleAdminController
     {
         // We can wait for authToken max 10 sec
         $maxDuration = 10;
-        $authToken = '';
         $start = time();
         $wait = true;
 
