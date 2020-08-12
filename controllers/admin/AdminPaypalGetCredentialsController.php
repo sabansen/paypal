@@ -90,7 +90,7 @@ class AdminPaypalGetCredentialsController extends ModuleAdminController
             }
         } while ($wait);
 
-        return $authToken;
+        return (string) $authToken;
     }
 }
 
