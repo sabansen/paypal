@@ -235,7 +235,28 @@ class MethodEC extends AbstractMethodPaypal
      */
     public function isConfigured()
     {
+        if ($this->isCredentialsSetted() === false) {
+            return false;
+        }
+
+        if ((bool)Configuration::get('PAYPAL_CONNECTION_EC_CONFIGURED')) {
+            return true;
+        }
+
+        $this->checkCredentials();
         return (bool)Configuration::get('PAYPAL_CONNECTION_EC_CONFIGURED');
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCredentialsSetted()
+    {
+        if ($this->isSandbox()) {
+            return Configuration::get('PAYPAL_EC_CLIENTID_SANDBOX') && Configuration::get('PAYPAL_EC_SECRET_SANDBOX');
+        } else {
+            return Configuration::get('PAYPAL_EC_CLIENTID_LIVE') && Configuration::get('PAYPAL_EC_SECRET_LIVE');
+        }
     }
 
     public function checkCredentials()
@@ -246,6 +267,10 @@ class MethodEC extends AbstractMethodPaypal
             Configuration::updateValue('PAYPAL_CONNECTION_EC_CONFIGURED', 1);
         } else {
             Configuration::updateValue('PAYPAL_CONNECTION_EC_CONFIGURED', 0);
+            $this->setConfig(array(
+                'clientId' => '',
+                'secret' => ''
+            ));
 
             if ($response->getError()) {
                 $this->errors[] = $response->getError()->getMessage();
