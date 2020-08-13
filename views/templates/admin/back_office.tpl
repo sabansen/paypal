@@ -285,6 +285,10 @@
 						<p class="description">{l s='Offer your customers a 2-click payment option' mod='paypal'}</p>
 						<input type="radio" name="express_checkout_shortcut" id="paypal_payment_ecs_no_shortcut" value="1" {if $PayPal_express_checkout_shortcut == 1}checked="checked"{/if} /> <label for="paypal_payment_ecs_no_shortcut">{l s='Yes' mod='paypal'} (recommanded)</label><br />
 						<input type="radio" name="express_checkout_shortcut" id="paypal_payment_ecs_shortcut" value="0" {if $PayPal_express_checkout_shortcut == 0}checked="checked"{/if} /> <label for="paypal_payment_ecs_shortcut">{l s='No' mod='paypal'}</label>
+						<p class="merchant_id">
+							<label>{l s='Merchant ID' mod='paypal'}</label>
+							<input type="text" name="in_context_checkout_merchant_id" id="in_context_checkout_merchant_id" value="{if isset($PayPal_in_context_checkout_merchant_id) && $PayPal_in_context_checkout_merchant_id != ""}{$PayPal_in_context_checkout_merchant_id|escape:'htmlall':'UTF-8'}{/if}" />
+						</p>
 					</div>
 
 					<div id="in_context_checkout" class="paypal-hide">
@@ -292,10 +296,6 @@
 						<p class="description">{l s='Make your client pay without leaving your website' mod='paypal'}</p>
 						<input type="radio" name="in_context_checkout" id="paypal_payment_ecs_no_in_context_checkout" value="1" {if $PayPal_in_context_checkout == 1}checked="checked"{/if} /> <label for="paypal_payment_ecs_no_in_context_checkout">{l s='Yes' mod='paypal'}</label><br />
 						<input type="radio" name="in_context_checkout" id="paypal_payment_ecs_in_context_checkout" value="0" {if $PayPal_in_context_checkout == 0}checked="checked"{/if} /> <label for="paypal_payment_ecs_in_context_checkout">{l s='No' mod='paypal'}</label>
-						<p class="merchant_id">
-							<label>{l s='Merchant ID' mod='paypal'}</label>
-							<input type="text" name="in_context_checkout_merchant_id" id="in_context_checkout_merchant_id" value="{if isset($PayPal_in_context_checkout_merchant_id) && $PayPal_in_context_checkout_merchant_id != ""}{$PayPal_in_context_checkout_merchant_id|escape:'htmlall':'UTF-8'}{/if}" />
-						</p>
 					</div>
 
 					<div>
