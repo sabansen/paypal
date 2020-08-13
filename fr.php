@@ -365,3 +365,4 @@ $_MODULE['<{paypal}prestashop>paypal_cart_summary_694e8d1f2ee056f98ee488bdc4982d
 $_MODULE['<{paypal}prestashop>paypal_cart_summary_e2867a925cba382f1436d1834bb52a1c'] = 'Le total de votre commande est de ';
 $_MODULE['<{paypal}prestashop>paypal_cart_summary_1f87346a16cf80c372065de3c54c86d9'] = '(TTC)';
 $_MODULE['<{paypal}prestashop>paypal_cart_summary_8ed356c32b198c9cb2abab7c3d262b93'] = 'Nous acceptons les devises suivantes : ';
+$_MODULE['<{paypal}prestashop>back_office_c9edd918547c6d6e3315c8a07f3dfd5a'] = 'Vous trouverez le merchant account ID dans l\'onglet \"Account options\" de la page \"Settings\" de votre compte PayPal.';
