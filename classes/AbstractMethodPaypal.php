@@ -80,6 +80,9 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         }
     }
 
+    /**
+     * @return bool
+     */
     public function isSandbox()
     {
         if ($this->isSandbox !== null) {
@@ -90,6 +93,9 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         return $this->isSandbox;
     }
 
+    /**
+     * @return \PaypalAddons\classes\API\Response\ResponseOrderCreate
+     */
     public function init()
     {
         if ($this->isConfigured() == false) {
@@ -152,9 +158,12 @@ abstract class AbstractMethodPaypal extends AbstractMethod
             $customer->secure_key);
     }
 
+    /**
+     * @param \PaypalAddons\classes\API\Response\ResponseOrderCapture $data
+     * @return  void
+     */
     public function setDetailsTransaction($data)
     {
-        /** @var $data \PaypalAddons\classes\API\Response\ResponseOrderCapture*/
         $transaction_detail = array(
             'method' => $data->getMethod(),
             'currency' => $data->getCurrency(),
@@ -246,6 +255,10 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         return number_format($price, Paypal::getDecimal($isoCurrency), ".", '');
     }
 
+    /**
+     * @param \PaypalLog
+     * @return string
+     */
     public function getLinkToTransaction($log)
     {
         if ($log->sandbox) {
