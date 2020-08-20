@@ -46,6 +46,9 @@ class PaypalCaptureAuthorizeRequest extends RequestAbstract
         $this->paypalOrder = $paypalOrder;
     }
 
+    /**
+     * @return ResponseCaptureAuthorize
+     */
     public function execute()
     {
         $response = new ResponseCaptureAuthorize();

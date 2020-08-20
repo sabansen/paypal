@@ -151,6 +151,11 @@ Public method.
 returns `void`  
 That is a template method that is used for create an order in Prestashop
 
+#### getUrlOnboarding()
+
+Protected method.  
+return `string` 
+
 
 
  
