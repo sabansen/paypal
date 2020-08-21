@@ -267,10 +267,6 @@ class MethodEC extends AbstractMethodPaypal
             Configuration::updateValue('PAYPAL_CONNECTION_EC_CONFIGURED', 1);
         } else {
             Configuration::updateValue('PAYPAL_CONNECTION_EC_CONFIGURED', 0);
-            $this->setConfig(array(
-                'clientId' => '',
-                'secret' => ''
-            ));
 
             if ($response->getError()) {
                 $this->errors[] = $response->getError()->getMessage();

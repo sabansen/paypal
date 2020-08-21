@@ -729,21 +729,8 @@ class PayPal extends \PaymentModule
 
             $method = AbstractMethodPaypal::load($this->paypal_method);
 
-            if ($this->paypal_method == 'MB') {
-                if ((int)Configuration::get('PAYPAL_MB_EC_ENABLED')) {
-                    $methodEC = AbstractMethodPaypal::load('EC');
-                    if (!$methodEC->isConfigured()) {
-                        return false;
-                    }
-                } else {
-                    if (Configuration::get('PAYPAL_API_CARD') && $method->isConfigured() == false) {
-                        return false;
-                    }
-                }
-            } else {
-                if ($method->isConfigured() == false) {
-                    return false;
-                }
+            if ($method->isConfigured() == false) {
+                return false;
             }
 
             if ((Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART')) && (isset($this->context->cookie->paypal_ecs) || isset($this->context->cookie->paypal_pSc))) {
