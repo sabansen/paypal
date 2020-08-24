@@ -199,7 +199,7 @@ class MethodEC extends AbstractMethodPaypal
      * @param $context
      * @param $type
      * @param $page_source
-     * @return mixed
+     * @return string
      */
     public function renderExpressCheckoutShortCut(Context &$context, $type, $page_source)
     {

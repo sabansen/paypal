@@ -1,9 +1,9 @@
 ---
-name: MethodEC
+name: MethodMB
 category: Classes
 ---
 
-The MethodEC extends the abstract class AbstractMethodPayPal.
+The MethodMB extends the abstract class AbstractMethodPayPal.
 
 ## Definition
 
@@ -13,6 +13,14 @@ This class contains an information about a state of the method
 
 ## Methods
 
+
+- **assignJSvarsPaypalMB**
+ 
+   Assigns the variables like `ajaxPatch`, `EMPTY_TAX_ID`, `INVALID_PAYER_TAX_ID` etc.  
+   
+   -**Return values**
+   
+    `void`
 
 - **checkCredentials()**  
     
@@ -24,16 +32,7 @@ This class contains an information about a state of the method
       
       
 - **confirmCapture($paypalOrder)**  
-
-    This method captures an authorized transaction
-
-    - **Parametres**
-          
-      $paypalOrder: `PaypalOrder` object
-    
-    - **Return Values**
-    
-      `ResponseCaptureAuthorize` object
+    Implements an abstract method
       
       
 - **getAdvancedFormInputs()**      
@@ -48,19 +47,34 @@ This class contains an information about a state of the method
 - **getClientId()**  
     Implements an abstract method
     
-- **getDateTransaction()**
+- **getIdProfileExperience()**
 
     - **Return value**  
-    `string` time of a transaction
+    `string` 
     
 - **getIntent()**  
     Implements an abstract method
-    
+  
+- **getIpnUrl()**
+
+    - **Return value**  
+    `string`
+              
 - **getOrderStatus()**
     
     - **Return Values**  
     `int` returns id order state. It is used in AbstractMethosPaypal::validation() method. 
+   
+- **getPayerId()**
+
+    - **Return value**  
+    `string` 
     
+- **getPayerTaxInfo()**
+
+    - **Return value**  
+    `array` return array that consists `tax_id` and `tax_id_type`
+     
 - **getPaymentId()**
     
     - **Return Value**  
@@ -69,9 +83,14 @@ This class contains an information about a state of the method
 - **getPaypalPartnerId()**  
     Implements an abstract method
     
+- **getRememberedCards()**
+
+    - **Return value**  
+    `string` 
+    
 - **getReturnUrl()**  
     Implements an abstract method
-    
+  
 - **getSecret()**  
     Implements an abstract method
     
@@ -80,13 +99,11 @@ This class contains an information about a state of the method
     - **Return Value**  
     `bool` returns true if the smart button is used
     
-           
-- **getInfo()**
+- **getTaxIdType()**
     
-    - **Return Values**
-    
-      `object` returns the \PayPal\PayPalAPI\GetExpressCheckoutDetailsResponseType object
-         
+    - **Return Value**  
+    `string`
+        
 - **getTplVars()**
     
     - **Return Values**
@@ -133,20 +150,8 @@ This class contains an information about a state of the method
     
     - **Return Values**
     
-      `void`
-     
-      
-- **useMobile()**
-    
-    - **Return Values**
-    
-      `boolean` should use the mobile view or desktop      
-      
-    
-            
-      
-      
-      
+      `void`    
+           
       
       
       
