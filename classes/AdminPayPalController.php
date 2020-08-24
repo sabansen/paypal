@@ -300,6 +300,11 @@ class AdminPayPalController extends \ModuleAdminController
     protected function isShowRestApiIntegrationMessage()
     {
         $return = false;
+        $method = AbstractMethodPaypal::load();
+
+        if ($method->isConfigured()) {
+            return $return;
+        }
 
         if ((in_array($this->method, ['EC', 'PPP'])) &&
             \Configuration::get('PAYPAL_PREVIOUS_VERSION') &&
