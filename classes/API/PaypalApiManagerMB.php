@@ -121,7 +121,7 @@ class PaypalApiManagerMB implements PaypalApiManagerInterface
     /**
      * @return RequestDummy
      */
-    public function geOrderPatchRequest($idPayment)
+    public function getOrderPatchRequest($idPayment)
     {
         return new RequestDummy();
     }

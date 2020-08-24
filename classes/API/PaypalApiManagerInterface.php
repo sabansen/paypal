@@ -78,5 +78,5 @@ interface PaypalApiManagerInterface
     /**
      * @return RequestInteface
      */
-    public function geOrderPatchRequest($idPayment);
+    public function getOrderPatchRequest($idPayment);
 }

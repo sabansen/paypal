@@ -219,7 +219,7 @@ abstract class AbstractMethodPaypal extends AbstractMethod
             return false;
         }
 
-        return $this->paypalApiManager->geOrderPatchRequest($this->getPaymentId())->execute();
+        return $this->paypalApiManager->getOrderPatchRequest($this->getPaymentId())->execute();
     }
 
 

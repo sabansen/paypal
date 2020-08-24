@@ -98,7 +98,7 @@ class PaypalApiManager implements PaypalApiManagerInterface
         return new PaypalOrderGetRequest($this->client, $this->method, $idPayment);
     }
 
-    public function geOrderPatchRequest($idPayment)
+    public function getOrderPatchRequest($idPayment)
     {
         return new PaypalOrderPatchRequest($this->client, $this->method, $idPayment);
     }
