@@ -92,7 +92,7 @@ class PaypalOrderRefundRequest extends RequestAbstract
     protected function getDateTransaction($exec)
     {
         $date = \DateTime::createFromFormat(\DateTime::ATOM, $exec->result->create_time);
-        return $date->format('Y-m-d TH:i:s');
+        return $date->format('Y-m-d H:i:s');
     }
 
     /**

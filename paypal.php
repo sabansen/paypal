@@ -592,8 +592,8 @@ class PayPal extends \PaymentModule
         if (Module::isEnabled('braintreeofficial') && (int)Configuration::get('BRAINTREEOFFICIAL_ACTIVATE_PAYPAL')) {
             return array();
         }
-        $isoCountryDefault = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
 
+        $isoCountryDefault = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
         $payments_options = array();
         $method = AbstractMethodPaypal::load();
         switch ($this->paypal_method) {
@@ -1229,7 +1229,8 @@ class PayPal extends \PaymentModule
                     $paypalOrder->id_cart,
                     $this->context->shop->id,
                     $paypalOrder->payment_tool,
-                    $paypalOrder->sandbox
+                    $paypalOrder->sandbox,
+                    $refundResponse->getDateTransaction()
                 );
                 ProcessLoggerHandler::closeLogger();
             } else {
