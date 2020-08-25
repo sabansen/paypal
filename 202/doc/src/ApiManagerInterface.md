@@ -6,11 +6,12 @@ category: API
 ## Definition
 
 For more flexibility and extensibility, the logic for creating orders, 
-refunds, and cancellation is placed in separate command classes.  
+refunds and cancellation is placed in the separate command classes.  
 Each command must implement the `RequestInteface` interface which contains only one 
-execute method.  
+method `execute()`.  
 The api manager, which must implement `PaypalApiManagerInterface`, is 
-responsible for defining the required class.
+responsible for defining the required class. So `PaypalApiManagerInterface` is an
+abstract factory of the `RequestInterace` commandes.
 
 - **getAccessTokenRequest()**
 
