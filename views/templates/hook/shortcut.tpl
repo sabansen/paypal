@@ -24,7 +24,7 @@
 *
 *}
 
-<div data-container-express-checkout data-paypal-source-page="{$source_page}" style="float:right; margin: 10px 40px 0 0">
+<div data-container-express-checkout data-paypal-source-page="{$source_page}" style="float:right; margin: 10px 40px 0 0; width: 200px">
     <form data-paypal-payment-form-cart class="paypal_payment_form" action="{$action_url|escape:'htmlall':'UTF-8'}" title="{l s='Pay with PayPal' mod='paypal'}" method="post" data-ajax="false">
         {if $source_page == 'product'}
           <input
