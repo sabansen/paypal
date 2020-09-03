@@ -181,7 +181,7 @@ class PayPalSubmitplusModuleFrontController extends ModuleFrontController
         $paymentId = Tools::getValue('paymentId');
         $submit = Tools::getValue('submit');
 
-        if ((!empty($id_cart) && $this->context->cart->id == $id_cart) &&
+        if ((!empty($id_cart) && (($this->context->cart instanceof Cart == false) || ($this->context->cart->id == $id_cart))) &&
             !empty($payerID) &&
             !empty($paymentId) &&
             !empty($submit)
