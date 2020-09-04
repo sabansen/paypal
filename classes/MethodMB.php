@@ -156,7 +156,21 @@ class MethodMB extends AbstractMethodPaypal
      */
     public function isConfigured($mode = null)
     {
-        return (bool)Configuration::get('PAYPAL_MB_EXPERIENCE');
+        $isMbConfigured = (bool)Configuration::get('PAYPAL_MB_EXPERIENCE');
+
+        // If a payment by PayPal account is enabled and the credentials for EC are not setted, so it should use MB credentials
+        if ($isMbConfigured && (bool)Configuration::get('PAYPAL_MB_EC_ENABLED')) {
+            $methodEC = self::load('EC');
+
+            if ($methodEC->isCredentialsSetted() === false) {
+                $methodEC->setConfig([
+                    'clientId' => $this->getClientId(),
+                    'secret' => $this->getSecret()
+                ]);
+            }
+        }
+
+        return $isMbConfigured;
     }
 
     public function getTplVars()
