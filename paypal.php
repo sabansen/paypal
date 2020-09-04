@@ -939,7 +939,11 @@ class PayPal extends \PaymentModule
         if ($id_currency = $this->needConvert()) {
             $currency = new Currency((int)$id_currency);
         } else {
-            $currency = Context::getContext()->currency;
+            if (Validate::isLoadedObject(Context::getContext()->currency)) {
+                $currency = Context::getContext()->currency;
+            } else {
+                $currency = new Currency((int)Configuration::get('PS_CURRENCY_DEFAULT'));
+            }
         }
         return $currency->iso_code;
     }
