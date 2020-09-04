@@ -403,4 +403,16 @@ $_MODULE['<{paypal}prestashop>messageforcustomertwo_952f622b6cbe191f3d9abb6d6f34
 $_MODULE['<{paypal}prestashop>messageforcustomertwo_b3e985da8b5a176abfb74c4c1ca960f9'] = 'indem Sie die Nutzungsbedingungen akzeptieren und auf den nachstehenden Button zur Bestätigung der Bestellung klicken.';
 $_MODULE['<{paypal}prestashop>messageforcustomertwo_768073dd22a31e3489fad6543b7301b1'] = 'Beachten Sie, dass die zusätzlichen Versandkosten (%1s) berücksichtigt wurden. Weitere Informationen finden Sie in der Bestellübersicht.';
 $_MODULE['<{paypal}prestashop>paypal_6b33c16e6353bb8c9e31464179231237'] = 'Bei der Rückzahlung ist ein unerwartetes Problem aufgetreten. Weitere Informationen finden Sie auf der Registerkarte \"PayPal\" in den Bestelldetails.';
-$_MODULE['<{paypal}prestashop>paypal_6b33c16e6353bb8c9e31464179231237'] = 'Bei der Rückzahlung ist ein unerwartetes Problem aufgetreten. Weitere Informationen finden Sie auf der Registerkarte "PayPal" in den Bestelldetails.';
+$_MODULE['<{paypal}prestashop>paypal_c3a5c8884cf21ed048acf66a9039a150'] = 'Der Bestellstatus wurde geändert, aber diese Transaktion wurde bereits vollständig rückerstattet.';
+$_MODULE['<{paypal}prestashop>paypalordercreaterequest_484f5a79672cebe198ebdde45a1d672f'] = 'Geschenkverpackung';
+$_MODULE['<{paypal}prestashop>adminpaypalsetupcontroller_20beb534b185ef0f27602cde37c17da4'] = 'Beim Speichern der Konfiguration \"Zahlungsaktion\" ist ein Fehler aufgetreten. Bitte speichern Sie diese Konfiguration erneut, um Zahlungsfehler zu vermeiden.';
+$_MODULE['<{paypal}prestashop>scorder_8f4603ba5094ec0d3fca1eeda5d0aab8'] = 'Fehler beim Verbinden mit ';
+$_MODULE['<{paypal}prestashop>scorder_7ff5bcd1a7dd3e2dc15e69b90babcfde'] = 'Der Staat ist für die Abwicklung der Zahlung erforderlich. Bitte Staatsfeld ausfüllen.';
+$_MODULE['<{paypal}prestashop>scorder_7afff0211446b3c00496c44b41bd634b'] = 'Land ist nicht aktiv';
+$_MODULE['<{paypal}prestashop>help_4f336480993eaf67f312bfae830b3151'] = 'Möchten Sie mehr Arten von Zahlungen akzeptieren?';
+$_MODULE['<{paypal}prestashop>accountsettingsblock_06aa6fa8bdc2078e7e1bd903e70c8f6a'] = 'verbunden';
+$_MODULE['<{paypal}prestashop>logomessage_7e5c120495d17247348b196adf61be8a'] = 'Wenn Sie die Weiterleitung zur PayPal-Kaufabwicklung verwenden, können Sie Ihr Shop-Logo anpassen. Das Logo kann über Ihre [a @href1@]Geschäftsprofileinstellungen[/a] geändert werden.';
+$_MODULE['<{paypal}prestashop>restapiintegrationmessage_29dd52f9530ecb11ec20a10b10590f5b'] = 'Da wir ständig an der Sicherheit Ihrer Informationen arbeiten, ist eine neue Version der Authentifizierung Ihres Händlerkontos ab der Version 5.2.0 des offiziellen PayPal-Moduls verfügbar.';
+$_MODULE['<{paypal}prestashop>restapiintegrationmessage_fbd76d66be64d3cc1bf860039b193db7'] = 'Bitte beachten Sie, dass es erforderlich ist, Ihr PayPal-Händlerkonto [/b] erneut zu verbinden, um die PayPal-Zahlungslösung weiterhin nutzen zu können.';
+$_MODULE['<{paypal}prestashop>displayorderpreview_2b6ab125b0384eb33453b95c3f8e4ae6'] = 'PayPal-Transaktions-ID';
+$_MODULE['<{paypal}prestashop>displayorderpreview_00aee8ea5d368378f1fa9a1638ae0238'] = 'Details zu den letzten Protokollen';

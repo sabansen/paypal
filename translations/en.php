@@ -389,3 +389,15 @@ $_MODULE['<{paypal}prestashop>messageforcustomertwo_952f622b6cbe191f3d9abb6d6f34
 $_MODULE['<{paypal}prestashop>messageforcustomertwo_b3e985da8b5a176abfb74c4c1ca960f9'] = 'by accepting the terms of service and clicking on the order validation button below.';
 $_MODULE['<{paypal}prestashop>messageforcustomertwo_768073dd22a31e3489fad6543b7301b1'] = 'Please note that the additional delivery fees (%1s) have been applied. For more details, please check your order summary.';
 $_MODULE['<{paypal}prestashop>paypal_6b33c16e6353bb8c9e31464179231237'] = 'We encountered an unexpected problem during the refund operation. For more details please see the \"PayPal\" tab in the order details.';
+$_MODULE['<{paypal}prestashop>paypal_c3a5c8884cf21ed048acf66a9039a150'] = 'The order status was changed but this transaction has already been fully refunded.';
+$_MODULE['<{paypal}prestashop>paypalordercreaterequest_484f5a79672cebe198ebdde45a1d672f'] = 'Gift wrapping';
+$_MODULE['<{paypal}prestashop>adminpaypalsetupcontroller_20beb534b185ef0f27602cde37c17da4'] = 'An error occurred while saving \"Payment action\" configuration. Please save this configuration again for avoiding any payment errors.';
+$_MODULE['<{paypal}prestashop>scorder_8f4603ba5094ec0d3fca1eeda5d0aab8'] = 'Error connecting to ';
+$_MODULE['<{paypal}prestashop>scorder_7ff5bcd1a7dd3e2dc15e69b90babcfde'] = 'State is required in order to process payment. Please fill in state field.';
+$_MODULE['<{paypal}prestashop>scorder_7afff0211446b3c00496c44b41bd634b'] = 'Country is not active';
+$_MODULE['<{paypal}prestashop>help_4f336480993eaf67f312bfae830b3151'] = 'Do you want to accept more types of payments?';
+$_MODULE['<{paypal}prestashop>accountsettingsblock_06aa6fa8bdc2078e7e1bd903e70c8f6a'] = 'connected';
+$_MODULE['<{paypal}prestashop>logomessage_7e5c120495d17247348b196adf61be8a'] = 'If you are using PayPal Checkout redirect you can customize your shop logo. The logo can be changed via your business profile [a @href1@]settings[/a].';
+$_MODULE['<{paypal}prestashop>restapiintegrationmessage_29dd52f9530ecb11ec20a10b10590f5b'] = 'As we are constantly working on the security of your information, a new version of your merchant account authentication is available starting from the v5.2.0 of PayPal Official module.';
+$_MODULE['<{paypal}prestashop>restapiintegrationmessage_fbd76d66be64d3cc1bf860039b193db7'] = 'Please pay attention that it is required to [b]reconnect your PayPal merchant account[/b] in order to continue to use PayPal payment solution.';
+$_MODULE['<{paypal}prestashop>displayorderpreview_00aee8ea5d368378f1fa9a1638ae0238'] = 'Last Logs Details';
