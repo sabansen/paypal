@@ -284,6 +284,8 @@ $_MODULE['<{paypal}prestashop>adminprocessloggercontroller_cb0f7aca75a7aeac5a132
 $_MODULE['<{paypal}prestashop>accountsettingsblock_1624e46cbfe7dbe4a96a59090061d15b'] = 'Dane uwierzytelniające API';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_2ff3bbcde155ca17950f1ea14810471d'] = 'Aby akceptować płatności PayPal, podaj dane uwierzytelniające interfejsu API REST.';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_bf733d8a933c1601697f364223fc7ecb'] = 'Dostęp';
+$_MODULE['<{paypal}prestashop>mbcredentialsform_1d18bf3e09ec1ad0236145e6e55fe193'] = 'https://developer.paypal.com/developer/applications/';
+
 $_MODULE['<{paypal}prestashop>accountsettingsblock_1d18bf3e09ec1ad0236145e6e55fe193'] = 'https://developer.paypal.com/developer/applications/';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_d87d45b4afb0f16d79ad4b3bc17f2d97'] = 'Zaloguj się lub załóż konto firmowe';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_5ba82ead337af776b86db00ba9b6d541'] = 'Utwórz „aplikację interfejsu API REST”';
@@ -389,15 +391,17 @@ $_MODULE['<{paypal}prestashop>mbcredentialsform_266ba5df48aed68af0cce5f735035291
 $_MODULE['<{paypal}prestashop>mbcredentialsform_37e31370e4ab230ff6fba12cc6390aff'] = 'Hasło API';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_195ca49498f0b30d3a8967eff22fa9b3'] = 'Podpis API';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_229a7ec501323b94db7ff3157a7623c9'] = 'ID handlowca';
+$_MODULE['<{paypal}prestashop>mbcredentialsform_1d18bf3e09ec1ad0236145e6e55fe193'] = 'https://developer.paypal.com/developer/applications/';
+
 $_MODULE['<{paypal}prestashop>accountsettingsblock_1d18bf3e09ec1ad0236145e6e55fe193'] = 'https://developer.paypal.com/developer/applications/';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_5ba82ead337af776b86db00ba9b6d541'] = 'Utwórz « aplikacje interfejsu API REST »';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_c4159369ab0d9986c1ef1a5949a5c900'] = 'Kliknij „Pokaż” poniżej opcji „Sekret:”';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_7f161ed5b9f8fd29729abb01773e8dbc'] = 'Skopiuj i wklej swój « Identyfikator klienta » i « Hasło » poniżej dla każdego środowiska';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_2652eec977dcb2a5aea85f5bec235b05'] = 'Centrum testowe';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_76525f0f34b48475e5ca33f71d296f3b'] = 'ID klienta';
-$_MODULE['<{paypal}prestashop>eccredentialsfields_76525f0f34b48475e5ca33f71d296f3b'] = 'ID klienta';
+$_MODULE['<{paypal}prestashop>eccredentialfields_76525f0f34b48475e5ca33f71d296f3b'] = 'ID klienta';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_1e6947ac7fb3a9529a9726eb692c8cc5'] = 'Sekret';
-$_MODULE['<{paypal}prestashop>eccredentialsfields_1e6947ac7fb3a9529a9726eb692c8cc5'] = 'Sekret';
+$_MODULE['<{paypal}prestashop>eccredentialfields_1e6947ac7fb3a9529a9726eb692c8cc5'] = 'Sekret';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_955ad3298db330b5ee880c2c9e6f23a0'] = 'Na żywo';
 $_MODULE['<{paypal}prestashop>forpaypalplususers_58f9d45a3e079c0585ade6a1f3702c4b'] = 'Korzystasz z niemieckiego rachunku handlowca. Począwszy od wersji 5.0.0 oficjalnego modułu PayPal, wymagane jest korzystanie z usługi PayPal Plus, a nie PayPal Express.';
 $_MODULE['<{paypal}prestashop>forpaypalplususers_1d943813b4aedae1adf6a962bf47f23f'] = 'Dodaj poniższe dane uwierzytelniające interfejsu API REST, aby skonfigurować konto i móc nadal oferować swoim klientom rozwiązanie płatnicze PayPal. [a @href1@]Dowiedz się więcej o usłudze PayPal Plus[/a].';

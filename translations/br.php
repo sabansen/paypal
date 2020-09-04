@@ -276,6 +276,8 @@ $_MODULE['<{paypal}prestashop>mbcredentialsform_266ba5df48aed68af0cce5f735035291
 $_MODULE['<{paypal}prestashop>mbcredentialsform_37e31370e4ab230ff6fba12cc6390aff'] = 'Senha da API';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_195ca49498f0b30d3a8967eff22fa9b3'] = 'Assinatura da API';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_229a7ec501323b94db7ff3157a7623c9'] = 'ID do lojista';
+$_MODULE['<{paypal}prestashop>mbcredentialsform_1d18bf3e09ec1ad0236145e6e55fe193'] = 'https://developer.paypal.com/developer/applications/';
+
 $_MODULE['<{paypal}prestashop>accountsettingsblock_1d18bf3e09ec1ad0236145e6e55fe193'] = 'https://developer.paypal.com/developer/applications/';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_5ba82ead337af776b86db00ba9b6d541'] = 'Crie um >';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_c4159369ab0d9986c1ef1a5949a5c900'] = 'Clique > abaixo de >';
@@ -283,8 +285,8 @@ $_MODULE['<{paypal}prestashop>mbcredentialsform_7f161ed5b9f8fd29729abb01773e8dbc
 $_MODULE['<{paypal}prestashop>mbcredentialsform_2652eec977dcb2a5aea85f5bec235b05'] = 'Sandbox';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_76525f0f34b48475e5ca33f71d296f3b'] = 'Client ID';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_1e6947ac7fb3a9529a9726eb692c8cc5'] = 'Secret';
-$_MODULE['<{paypal}prestashop>eccredentialsfields_76525f0f34b48475e5ca33f71d296f3b'] = 'Client ID';
-$_MODULE['<{paypal}prestashop>eccredentialsfields_1e6947ac7fb3a9529a9726eb692c8cc5'] = 'Secret';
+$_MODULE['<{paypal}prestashop>eccredentialfields_76525f0f34b48475e5ca33f71d296f3b'] = 'Client ID';
+$_MODULE['<{paypal}prestashop>eccredentialfields_1e6947ac7fb3a9529a9726eb692c8cc5'] = 'Secret';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_955ad3298db330b5ee880c2c9e6f23a0'] = 'Live';
 $_MODULE['<{paypal}prestashop>pppcredentialsform_1624e46cbfe7dbe4a96a59090061d15b'] = 'Credenciais de API';
 $_MODULE['<{paypal}prestashop>pppcredentialsform_54ca61db74af81cf576c81234e2afbe1'] = 'Para aceitar pagamentos com PayPal Plus, preencha as suas credenciais de API REST.';

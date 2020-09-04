@@ -379,15 +379,17 @@ $_MODULE['<{paypal}prestashop>mbcredentialsform_266ba5df48aed68af0cce5f735035291
 $_MODULE['<{paypal}prestashop>mbcredentialsform_37e31370e4ab230ff6fba12cc6390aff'] = 'Contraseña de API';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_195ca49498f0b30d3a8967eff22fa9b3'] = 'Firma de API';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_229a7ec501323b94db7ff3157a7623c9'] = 'Id. de vendedor';
+$_MODULE['<{paypal}prestashop>mbcredentialsform_1d18bf3e09ec1ad0236145e6e55fe193'] = 'https://developer.paypal.com/developer/applications/';
+
 $_MODULE['<{paypal}prestashop>accountsettingsblock_1d18bf3e09ec1ad0236145e6e55fe193'] = 'https://developer.paypal.com/developer/applications/';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_5ba82ead337af776b86db00ba9b6d541'] = 'Crea una \"aplicación con la API de REST\"';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_c4159369ab0d9986c1ef1a5949a5c900'] = 'Haga clic en \"Mostrar\" debajo de \"Secreto:\"';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_7f161ed5b9f8fd29729abb01773e8dbc'] = 'Copia y pega tu \"Id. de cliente\" y \"Secreto\" a continuación para cada entorno';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_2652eec977dcb2a5aea85f5bec235b05'] = 'Entorno de pruebas';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_76525f0f34b48475e5ca33f71d296f3b'] = 'Id. de cliente';
-$_MODULE['<{paypal}prestashop>eccredentialsfields_76525f0f34b48475e5ca33f71d296f3b'] = 'Id. de cliente';
+$_MODULE['<{paypal}prestashop>eccredentialfields_76525f0f34b48475e5ca33f71d296f3b'] = 'Id. de cliente';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_1e6947ac7fb3a9529a9726eb692c8cc5'] = 'Clave';
-$_MODULE['<{paypal}prestashop>eccredentialsfields_1e6947ac7fb3a9529a9726eb692c8cc5'] = 'Clave';
+$_MODULE['<{paypal}prestashop>eccredentialfields_1e6947ac7fb3a9529a9726eb692c8cc5'] = 'Clave';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_955ad3298db330b5ee880c2c9e6f23a0'] = 'En producción';
 $_MODULE['<{paypal}prestashop>forpaypalplususers_58f9d45a3e079c0585ade6a1f3702c4b'] = 'Utiliza la cuenta de vendedor en Alemania. A partir de la versión 5.0.0 del módulo oficial de PayPal, es imprescindible utilizar PayPal Plus en lugar de Pago exprés de PayPal.';
 $_MODULE['<{paypal}prestashop>forpaypalplususers_1d943813b4aedae1adf6a962bf47f23f'] = 'Añada sus credenciales de API REST a continuación para configurar su cuenta y continuar ofreciendo la solución de pago de PayPal a sus clientes. [a @href1@]Más información sobre PayPal Plus[/a].';

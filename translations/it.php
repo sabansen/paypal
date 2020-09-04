@@ -379,6 +379,8 @@ $_MODULE['<{paypal}prestashop>mbcredentialsform_266ba5df48aed68af0cce5f735035291
 $_MODULE['<{paypal}prestashop>mbcredentialsform_37e31370e4ab230ff6fba12cc6390aff'] = 'Password API';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_195ca49498f0b30d3a8967eff22fa9b3'] = 'Firma API';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_229a7ec501323b94db7ff3157a7623c9'] = 'Codice commerciante';
+$_MODULE['<{paypal}prestashop>mbcredentialsform_1d18bf3e09ec1ad0236145e6e55fe193'] = 'https://developer.paypal.com/developer/applications/';
+
 $_MODULE['<{paypal}prestashop>accountsettingsblock_1d18bf3e09ec1ad0236145e6e55fe193'] = 'https://developer.paypal.com/developer/applications/';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_5ba82ead337af776b86db00ba9b6d541'] = 'Crea una « app API REST »';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_c4159369ab0d9986c1ef1a5949a5c900'] = 'Clicca \"Mostra\" sotto a \"Codice segreto:\"';
@@ -386,8 +388,8 @@ $_MODULE['<{paypal}prestashop>mbcredentialsform_7f161ed5b9f8fd29729abb01773e8dbc
 $_MODULE['<{paypal}prestashop>mbcredentialsform_2652eec977dcb2a5aea85f5bec235b05'] = 'Sandbox';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_76525f0f34b48475e5ca33f71d296f3b'] = 'Codice cliente';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_1e6947ac7fb3a9529a9726eb692c8cc5'] = 'Codice segreto';
-$_MODULE['<{paypal}prestashop>eccredentialsfields_76525f0f34b48475e5ca33f71d296f3b'] = 'Codice cliente';
-$_MODULE['<{paypal}prestashop>eccredentialsfields_1e6947ac7fb3a9529a9726eb692c8cc5'] = 'Codice segreto';
+$_MODULE['<{paypal}prestashop>eccredentialfields_76525f0f34b48475e5ca33f71d296f3b'] = 'Codice cliente';
+$_MODULE['<{paypal}prestashop>eccredentialfields_1e6947ac7fb3a9529a9726eb692c8cc5'] = 'Codice segreto';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_955ad3298db330b5ee880c2c9e6f23a0'] = 'Live';
 $_MODULE['<{paypal}prestashop>forpaypalplususers_58f9d45a3e079c0585ade6a1f3702c4b'] = 'Stai usando il conto commerciante tedesco. A partire dalla versione 5.0.0 del modulo PayPal ufficiale, è necessario usare PayPal Plus anziché PayPal Express Checkout.';
 $_MODULE['<{paypal}prestashop>forpaypalplususers_1d943813b4aedae1adf6a962bf47f23f'] = 'Per configurare il tuo conto e continuare a offrire la soluzione di pagamento PayPal ai tuoi clienti, aggiungi le credenziali API REST riportate di seguito. [a @href1@]Scopri di più su PayPal Plus[/a].';
