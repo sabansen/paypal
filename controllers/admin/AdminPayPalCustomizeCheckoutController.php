@@ -26,6 +26,7 @@
 
 use PaypalAddons\classes\AdminPayPalController;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 
 class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
 {
@@ -40,8 +41,9 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             'paypal_express_checkout_in_context',
             'paypal_api_advantages',
             'paypal_config_brand',
-            'paypal_express_checkout_shortcut',
-            'paypal_express_checkout_shortcut_cart',
+            Tools::strtolower(ShortcutConfiguration::SHOW_ON_PRODUCT_PAGE),
+            Tools::strtolower(ShortcutConfiguration::SHOW_ON_CART_PAGE),
+            Tools::strtolower(ShortcutConfiguration::SHOW_ON_SIGNUP_STEP),
             'paypal_api_card',
             'paypal_vaulting',
             'paypal_mb_ec_enabled',
@@ -87,11 +89,11 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
     public function initForm()
     {
         $tpl_vars = array(
-            'paypal_express_checkout_shortcut' => (int)Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT'),
-            'paypal_express_checkout_shortcut_cart' => (int)Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART')
+            Tools::strtolower(ShortcutConfiguration::SHOW_ON_PRODUCT_PAGE) => (int)Configuration::get(ShortcutConfiguration::SHOW_ON_PRODUCT_PAGE),
+            Tools::strtolower(ShortcutConfiguration::SHOW_ON_CART_PAGE) => (int)Configuration::get(ShortcutConfiguration::SHOW_ON_CART_PAGE),
+            Tools::strtolower(ShortcutConfiguration::SHOW_ON_SIGNUP_STEP) => (int)Configuration::get(ShortcutConfiguration::SHOW_ON_SIGNUP_STEP),
         );
 
-        $isoCountryDefault = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
         $this->context->smarty->assign($tpl_vars);
         $htmlContent = $this->context->smarty->fetch($this->getTemplatePath() . '_partials/blockPreviewButtonContext.tpl');
         $this->fields_form['form']['form'] = array(
