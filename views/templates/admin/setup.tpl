@@ -42,7 +42,7 @@
             {/if}
 
         </div>
-        <div class="col-lg-4 pp__flex pp__flex_direction_column pp__justify-content-between">
+        <div class="col-lg-4 pp__flex pp__flex_direction_column pp__justify-content-between stretchHeightForm pp__pb-4">
             {if isset($formEnvironmentSettings)}
                 {$formEnvironmentSettings nofilter} {* the variable contains html code *}
             {/if}
@@ -59,10 +59,6 @@
         <div class="col-lg-8">
             {if isset($formPaymentSettings)}
                 {$formPaymentSettings nofilter} {* the variable contains html code *}
-            {/if}
-
-            {if isset($formMerchantAccounts)}
-                {$formMerchantAccounts nofilter}
             {/if}
         </div>
         <div class="col-lg-4 stretchHeightForm pp__pb-4 status-block-container">

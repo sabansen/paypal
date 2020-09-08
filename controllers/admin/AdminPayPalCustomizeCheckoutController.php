@@ -23,9 +23,9 @@
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
-include_once(_PS_MODULE_DIR_.'paypal/vendor/autoload.php');
 
 use PaypalAddons\classes\AdminPayPalController;
+use PaypalAddons\classes\AbstractMethodPaypal;
 
 class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
 {
@@ -69,11 +69,6 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
 
         if ($this->method == 'MB' && $this->showCurrencyRestrictionWarning()) {
             $this->warnings[] = $this->l('The currencies supported are: MXN, BRL, USD and EUR. For changing your Currency restrictions please go to the "Payment -> Preferences" page." please add link to the "Payment -> Preferences');
-        }
-
-        if (Tools::getValue('deleteLogo')) {
-            unlink(Configuration::get('PAYPAL_CONFIG_LOGO'));
-            Configuration::updateValue('PAYPAL_CONFIG_LOGO', '');
         }
 
         $this->initForm();
@@ -192,6 +187,12 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
         );
 
         $this->fields_form['form']['form']['input'][] = array(
+            'type' => 'html',
+            'name' => '',
+            'html_content' => $this->getLogoMessage()
+        );
+
+        $this->fields_form['form']['form']['input'][] = array(
             'type' => 'text',
             'label' => $this->l('Brand name shown on top left during PayPal checkout'),
             'name' => 'paypal_config_brand',
@@ -199,17 +200,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             'hint' => $this->l('A label that overrides the business name in the PayPal account on the PayPal pages. If logo is set, then brand name won\'t be shown.', get_class($this)),
         );
 
-        $this->fields_form['form']['form']['input'][] = array(
-            'type' => 'file',
-            'label' => $this->l('Shop logo shown on top right during PayPal checkout'),
-            'name' => 'paypal_config_logo',
-            'display_image' => true,
-            'image' => file_exists(Configuration::get('PAYPAL_CONFIG_LOGO'))?'<img src="'.Context::getContext()->link->getBaseLink().'modules/paypal/views/img/p_logo_'.Context::getContext()->shop->id.'.png" class="img img-thumbnail" />':'',
-            'delete_url' => $this->context->link->getAdminLink($this->controller_name, true, null, array('deleteLogo' => 1)),
-            'hint' => $this->l('An image must be stored on a secure (https) server. Use a valid graphics format, such as .gif, .jpg, or .png. Limit the image to 190 pixels wide by 60 pixels high. PayPal crops images that are larger. This logo will replace brand name at the top of the cart review area if PayPal checkout experience is set to REDIRECT.'),
-        );
-
-        if (in_array($isoCountryDefault, $this->module->countriesApiCartUnavailable) == false || $this->method == 'MB') {
+        if ($this->method == 'MB') {
             $this->fields_form['form']['form']['input'][] = array(
                 'type' => 'switch',
                 'label' => $this->l('Accept credit and debit card payment'),
@@ -411,7 +402,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
     {
         $result = true;
         if (\Tools::isSubmit('saveAdvancedForm')) {
-            $methodCurrent = \AbstractMethodPaypal::load($this->method);
+            $methodCurrent = AbstractMethodPaypal::load($this->method);
             $this->advanceFormParametres = array_merge($this->advanceFormParametres, $methodCurrent->advancedFormParametres);
 
             foreach ($this->advanceFormParametres as $parametre) {
@@ -431,27 +422,6 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             }
         }
 
-
-        if (isset($_FILES['paypal_config_logo']['tmp_name']) && $_FILES['paypal_config_logo']['tmp_name'] != '') {
-            if (!in_array($_FILES['paypal_config_logo']['type'], array('image/gif', 'image/png', 'image/jpeg'))) {
-                $this->errors[] = $this->l('Use a valid graphics format, such as .gif, .jpg, or .png.');
-                return;
-            }
-            $size = getimagesize($_FILES['paypal_config_logo']['tmp_name']);
-            if ($size[0] > 190 || $size[1] > 60) {
-                $this->errors[] = $this->l('Limit the image to 190 pixels wide by 60 pixels high.');
-                return;
-            }
-            if (!($tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS')) ||
-                !move_uploaded_file($_FILES['paypal_config_logo']['tmp_name'], $tmpName)) {
-                $this->errors[] = $this->l('An error occurred while copying the image.');
-            }
-            if (!ImageManager::resize($tmpName, _PS_MODULE_DIR_.'paypal/views/img/p_logo_'.Context::getContext()->shop->id.'.png')) {
-                $this->errors[] = $this->l('An error occurred while copying the image.');
-            }
-            $result &= Configuration::updateValue('PAYPAL_CONFIG_LOGO', _PS_MODULE_DIR_.'paypal/views/img/p_logo_'.Context::getContext()->shop->id.'.png');
-        }
-
         return $result;
     }
 
@@ -469,5 +439,16 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
         }
 
         return in_array($currency->iso_code, $this->module->currencyMB) == false;
+    }
+
+    protected function getLogoMessage()
+    {
+        if ((bool)Configuration::get('PAYPAL_SANDBOX')) {
+            $settingLink = 'https://www.sandbox.paypal.com/businessprofile/settings/info/edit';
+        } else {
+            $settingLink = 'https://www.paypal.com/businessprofile/settings/info/edit';
+        }
+        $this->context->smarty->assign('settingLink', $settingLink);
+        return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/messages/logoMessage.tpl');
     }
 }

@@ -26,9 +26,12 @@
 
 namespace PaypalAddons\classes;
 
+use PaypalAddons\classes\API\Onboarding\PaypalGetCredentials;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use PaypalAddons\classes\AbstractMethodPaypal;
+use Symfony\Component\VarDumper\VarDumper;
 
 class AdminPayPalController extends \ModuleAdminController
 {
@@ -75,7 +78,14 @@ class AdminPayPalController extends \ModuleAdminController
         $this->context->smarty->assign('moduleDir', _MODULE_DIR_);
         $this->context->smarty->assign('showPsCheckoutInfo', $showPsCheckoutInfo);
         $this->context->smarty->assign('headerToolBar', $this->headerToolBar);
-        $this->context->smarty->assign('showRestApiIntegrationMessage', version_compare($this->module->version, '5.2', '<'));
+        $this->context->smarty->assign('showRestApiIntegrationMessage', $this->isShowRestApiIntegrationMessage());
+        $this->context->smarty->assign('psVersion', _PS_VERSION_);
+
+        if ((int)\Configuration::get('PAYPAL_NEED_CHECK_CREDENTIALS')) {
+            $method = AbstractMethodPaypal::load();
+            $method->checkCredentials();
+            \Configuration::updateValue('PAYPAL_NEED_CHECK_CREDENTIALS', 0);
+        }
     }
 
     public function renderForm($fields_form = null)
@@ -107,7 +117,7 @@ class AdminPayPalController extends \ModuleAdminController
     {
         parent::setMedia($isNewTheme);
         \Media::addJsDef(array(
-            'controllerUrl' => \AdminController::$currentIndex . '&token=' . \Tools::getAdminTokenLite($this->controller_name)
+            'controllerUrl' => \AdminController::$currentIndex . '&token=' . \Tools::getAdminTokenLite($this->controller_name),
         ));
         $this->addCSS(_PS_MODULE_DIR_ . $this->module->name . '/views/css/paypal_bo.css');
     }
@@ -184,9 +194,8 @@ class AdminPayPalController extends \ModuleAdminController
 
     public function postProcess()
     {
-        if (\Tools::isSubmit("paypal_set_config")) {
-            $method = \AbstractMethodPaypal::load('EC');
-            $method->setConfig(\Tools::getAllValues());
+        if (\Tools::isSubmit("checkCredentials")) {
+            $method = AbstractMethodPaypal::load($this->method);
             $method->checkCredentials();
             $this->errors = array_merge($this->errors, $method->errors);
         }
@@ -286,5 +295,34 @@ class AdminPayPalController extends \ModuleAdminController
         }
 
         return $moduleManager->install('ps_checkout');
+    }
+
+    protected function isShowRestApiIntegrationMessage()
+    {
+        $return = false;
+        $method = AbstractMethodPaypal::load();
+
+        if ($method->isConfigured()) {
+            return $return;
+        }
+
+        if ((in_array($this->method, ['EC', 'PPP'])) &&
+            \Configuration::get('PAYPAL_PREVIOUS_VERSION') &&
+            version_compare('5.2.0', \Configuration::get('PAYPAL_PREVIOUS_VERSION'), '>')) {
+            $return = true;
+        }
+
+        if ($this->method == 'MB' &&
+            \Configuration::get('PAYPAL_PREVIOUS_VERSION') &&
+            version_compare('5.2.0', \Configuration::get('PAYPAL_PREVIOUS_VERSION'), '>')) {
+            $mode = \Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
+            $ecMerchantId = \Configuration::get('PAYPAL_MERCHANT_ID_' . $mode, '');
+
+            if (empty($ecMerchantId) == false) {
+                $return = true;
+            }
+        }
+
+        return $return;
     }
 }

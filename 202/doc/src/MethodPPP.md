@@ -3,98 +3,82 @@ name: MethodPPP
 category: Classes
 ---
 
-The MethodEC extends the abstract class AbstractMethodPayPal.
+The MethodPPP extends the abstract class AbstractMethodPayPal.
 
 ## Definition
 
-This class contains functions for creating transactions for paying for an order, 
-refunding money for already created transactions and other functions 
-related to the payment method "Express checkout"
+This class contains an information about a state of the method 
+(configured or non, client id, secret id etc)
 
 
 ## Methods
 
 
-- **_getCredentialsInfo([mode_order = null])**
+- **assignJSvarsPaypalPlus**
+ 
+   Assigns the variables like `approvalUrlPPP`, `idPaymentPPP`, `modePPP` etc.  
+   
+   -**Return values**
+   
+    `void`
 
-    - **Parametres**
-      
-      mode_order: `bool` True is mode **Sandbox**, False is mode **Live**. If mode_order is **null**
-      current mode configured will be used
+- **checkCredentials()**  
+    
+    This method check the setted credentials
     
     - **Return Values**
     
-      `array` returns array of the parameters for creating of the connection with PayPal  
-
-- **__getGiftWrapping(currency)**
-
-    - **Parametres**
+      `void` 
       
-      currency: `string` ISO of the currency
-    
-    - **Return Values**
-    
-      `void` adds the information related to the gift wrapping to the transaction      
-
-- **_getPaymentDetails()**
-    
-    - **Return Values**
-    
-      `void` adds the information about payment to the transaction. 
-      Calls the methods `_getDiscountsList()`, `__getGiftWrapping()`, `_getProductsList()`, `_getPaymentValues()`
-
-- **_getPaymentValues($currency)**
-
-    - **Parametres**
       
-      currency: `string` ISO of the currency
-    
-    - **Return Values**
-    
-      `void` adds the information about payment to the transaction
+- **confirmCapture($paypalOrder)**  
+    Implements an abstract method
       
-- **_getProductsList($currency)**
-
-    - **Parametres**
       
-      currency: `string` ISO of the currency
+- **getAdvancedFormInputs()**      
     
-    - **Return Values**
+    - **Return Values**  
+    `array` returns the advanced from fields
+      
+      
+- **getCancelUrl()**  
+    Implements an abstract method      
+      
+- **getClientId()**  
+    Implements an abstract method
     
-      `void` adds the information about the products of the order to the transaction
+- **getDateTransaction()**
 
-- **checkCredentials($mode = null)**
-
-    - **Parametres**
+    - **Return value**  
+    `string` time of a transaction
+    
+- **getIntent()**  
+    Implements an abstract method
+    
+- **getOrderStatus()**
+    
+    - **Return Values**  
+    `int` returns id order state. It is used in AbstractMethosPaypal::validation() method. 
+    
+- **getPaymentId()**
+    
+    - **Return Value**  
+    `string` returns id payment. It is used in AbstractMethosPaypal::validation() method.
+    
+- **getPaypalPartnerId()**  
+    Implements an abstract method
+    
+- **getReturnUrl()**  
+    Implements an abstract method
+    
+- **getSecret()**  
+    Implements an abstract method
+    
+- **getShortCut()**  
+    
+    - **Return Value**  
+    `bool` returns true if the smart button is used
           
-      mode: `boolean` the mode of the environment. True is Sandbox, False is Live
-    
-    - **Return Values**
-    
-      `void` check if the credentials are right and update the value 'PAYPAL_PLUS_EXPERIENCE' in DB
-      
-- **formatPrice($price)**
-
-    - **Parametres**
-          
-      price: `float` price
-    
-    - **Return Values**
-    
-      `string` returns the converted price
-
-- **getLinkToTransaction($id_transaction, $sandbox)**
-
-    - **Parametres**
-          
-      id_transaction: `string` id of the payment transaction
-          
-      sandbox: `boolean` the mode of the environment. True is Sandbox, False is Live
-    
-    - **Return Values**
-    
-      `string` returns the the link to the page of the transaction on the site of PayPal     
-      
 - **getTplVars()**
     
     - **Return Values**
@@ -119,31 +103,29 @@ related to the payment method "Express checkout"
     
     - **Return Values**
     
-      `void` does disconnect with PayPal by deleting the saved credentials       
+      `void` does disconnect with PayPal by deleting the saved credentials      
       
-- **getInstructionInfo($id_payment)**
+- **renderExpressCheckoutShortCut($context, $type, $page_source)**
 
     - **Parametres**
           
-      id_payment: `string` id of the payment
+      context: `Context` object  
+      type: `string`  
+      page_source: `string` like product / order
     
     - **Return Values**
     
-      `object|boolean` returns the \PayPal\Api\PaymentInstruction object or False    
-            
-- **renderExpressCheckoutShortCut(&$context, $type, $page_source)**
+      `string` HTML code
+      
+- **setConfig($params)**
 
     - **Parametres**
-    
-      context: `object` the Context object
-      
-      type: `string` PPP
           
-      page_source: `string` product or cart
+      params: `array` must consist the clientId and secret
     
     - **Return Values**
     
-      `string` returns the html code      
+      `void`    
            
       
       

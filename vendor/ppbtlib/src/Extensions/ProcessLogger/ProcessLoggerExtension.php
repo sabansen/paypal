@@ -113,4 +113,33 @@ class ProcessLoggerExtension extends AbstractModuleExtension
         \Context::getContext()->smarty->assign('logs', $collectionLogs->getResults());
         return \Context::getContext()->smarty->fetch(_PS_MODULE_DIR_ . 'paypal/views/templates/hook/displayAdminCartsView.tpl');
     }
+
+    public function hookDisplayOrderPreview($params)
+    {
+        $order = new \Order((int)$params['order_id']);
+
+        if ($order->module != 'paypal') {
+            return;
+        }
+
+        if (isset($params['class_logger']) && is_subclass_of($params['class_logger'], ProcessLoggerObjectModel::class)) {
+            $class_logger = $params['class_logger'];
+        } else {
+            $class_logger = ProcessLoggerObjectModel::class;
+        }
+
+        $collectionLogs = new \PrestaShopCollection($class_logger);
+        $collectionLogs
+            ->where('id_cart', '=', $order->id_cart)
+            ->orderBy('date_add', 'desc');
+
+        if ($collectionLogs->count() == 0) {
+            return;
+        }
+
+        $log = $collectionLogs->getResults();
+        \Context::getContext()->smarty->assign('log', $collectionLogs->getFirst());
+
+        return \Context::getContext()->smarty->fetch(_PS_MODULE_DIR_ . 'paypal/views/templates/hook/displayOrderPreview.tpl');
+    }
 }

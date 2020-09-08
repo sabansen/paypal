@@ -1,12 +1,21 @@
 {
     "config": {
-        "vendor-dir": "vendor"
+        "vendor-dir": "vendor",
+        "prepend-autoloader": false
     },
     "autoload": {
         "psr-4": {
             "PaypalPPBTlib\\": "vendor/ppbtlib/src/",
             "PaypalAddons\\": "."
-        }
+        },
+        "classmap": [
+          "classes/PaypalCapture.php",
+          "classes/PaypalOrder.php",
+          "classes/PaypalLog.php",
+          "classes/PaypalVaulting.php",
+          "classes/PaypalIpn.php",
+          "controllers/front/abstract.php"
+        ]
     },
     "scripts": {
         "pre-autoload-dump": [
@@ -14,9 +23,8 @@
         ]
     },
     "require": {
-      "paypal/sdk-core-php": "~3.4",
-      "paypal/merchant-sdk-php": "~3.12",
-      "paypal/permissions-sdk-php": "~3.9",
+      "paypal/paypal-checkout-sdk": " 1.*",
+      "guzzlehttp/guzzle": "6.*",
       "paypal/rest-api-sdk-php": "1.*"
     }
 }

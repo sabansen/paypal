@@ -26,8 +26,14 @@
 
 namespace PayPalTest;
 
+use Context;
+use Currency;
 use PayPal\Rest\ApiContext;
 use PayPal\Api\CreateProfileResponse;
+use PaypalAddons\classes\API\PaypalApiManager;
+use PaypalAddons\classes\API\Request\PaypalAccessTokenRequest;
+use PaypalAddons\classes\API\Response\Error;
+use PaypalAddons\classes\API\Response\PaypalResponseAccessToken;
 
 require_once dirname(__FILE__) . '/TotTestCase.php';
 require_once _PS_MODULE_DIR_.'paypal/vendor/autoload.php';
@@ -45,25 +51,31 @@ class MethodPPPTest extends \TotTestCase
     }
 
     /**
-     * @dataProvider getDataForGetCredentialsInfo
+     * @dataProvider getDataForCheckCredentials
      */
-    public function testGetCredentialsInfo($mode)
+    public function testCheckCredentials($response, $result)
     {
-        $this->assertInstanceOf(ApiContext::class, $this->method->_getCredentialsInfo($mode));
-    }
+        $apiManagerMock = $this->getMockBuilder(PaypalApiManager::class)
+            ->setMethods(array('getAccessTokenRequest'))
+            ->disableOriginalConstructor()
+            ->getMock();
 
-    public function testCreateWebExperience()
-    {
-        $webExp = $this->method->createWebExperience();
-        $this->assertTrue($webExp instanceof CreateProfileResponse || $webExp === false);
-    }
+        $requestMock = $this->getMockBuilder(PaypalAccessTokenRequest::class)
+            ->setMethods(array('execute'))
+            ->disableOriginalConstructor()
+            ->getMock();
 
-    /**
-     * @dataProvider getDataForCredentialsSetted
-     */
-    public function testCredentialsSetted($mode)
-    {
-        $this->assertTrue(is_bool($this->method->credentialsSetted($mode)));
+        $requestMock->method('execute')->willReturn($response);
+
+        $apiManagerMock->method('getAccessTokenRequest')->willReturn($requestMock);
+
+        $reflection = new \ReflectionClass($this->method);
+        $reflectionProperty = $reflection->getProperty('paypalApiManager');
+        $reflectionProperty->setAccessible(true);
+        $reflectionProperty->setValue($this->method, $apiManagerMock);
+
+        $this->method->checkCredentials();
+        $this->assertTrue($this->method->isConfigured() == $result);
     }
 
     /**
@@ -71,30 +83,68 @@ class MethodPPPTest extends \TotTestCase
      */
     public function testFormatPrice($price)
     {
+        $context = Context::getContext();
+        $context->currency = new Currency(1);
+        Context::setInstanceForTesting($context);
         $priceFormated = $this->method->formatPrice($price);
         $this->assertTrue(is_string($priceFormated));
     }
 
-    /**
-     * @dataProvider getDataForGetInstructionInfo
-     */
-    public function testGetInstructionInfo($id_payment)
+    public function testGetAdvancedFormInputs()
     {
-        $instructionInfo = $this->method->getInstructionInfo($id_payment);
-        $this->assertTrue(is_object($instructionInfo) || $instructionInfo === false);
+        $this->assertTrue(is_array($this->method->getAdvancedFormInputs()));
     }
 
-    /**
-     * @dataProvider getDataForGetLinkToTransaction
-     */
-    public function testGetLinkToTransaction($log)
+    public function testGetCancelUrl()
     {
-        $this->assertTrue(is_string($this->method->getLinkToTransaction($log)));
+        $this->assertTrue(is_string($this->method->getCancelUrl()));
     }
 
-    /**
-     * @dataProvider getDataForIsConfigured
-     */
+    public function testGetClientId()
+    {
+        $this->assertTrue(is_string($this->method->getClientId()));
+    }
+
+    public function testGetIntent()
+    {
+        $this->assertTrue(is_string($this->method->getIntent()));
+    }
+
+    public function testGetOrderStatus()
+    {
+        $this->assertTrue(is_int($this->method->getOrderStatus()));
+    }
+
+    public function testGetPaymentId()
+    {
+        $this->assertTrue(is_string($this->method->getPaymentId()));
+    }
+
+    public function testGetPaypalPartnerId()
+    {
+        $this->assertTrue(is_string($this->method->getPaypalPartnerId()));
+    }
+
+    public function testGetReturnUrl()
+    {
+        $this->assertTrue(is_string($this->method->getReturnUrl()));
+    }
+
+    public function testGetSecret()
+    {
+        $this->assertTrue(is_string($this->method->getSecret()));
+    }
+
+    public function testGetShortCut()
+    {
+        $this->assertTrue(is_bool($this->method->getShortCut()));
+    }
+
+    public function testGetTplVars()
+    {
+        $this->assertTrue(is_array($this->method->getTplVars()));
+    }
+
     public function testIsConfigured()
     {
         $this->assertTrue(is_bool($this->method->isConfigured()));
@@ -105,6 +155,12 @@ class MethodPPPTest extends \TotTestCase
         $this->assertTrue(is_string($this->method->init()));
     }
 
+    public function testLogOut()
+    {
+        $this->method->logOut();
+        $this->assertFalse($this->method->isConfigured());
+    }
+
     /**
      * @dataProvider getDataForRenderExpressCheckoutShortCut
      */
@@ -113,22 +169,22 @@ class MethodPPPTest extends \TotTestCase
         $this->assertTrue(is_string($this->method->renderExpressCheckoutShortCut($context, $type, $page_source)));
     }
 
-    public function getDataForGetCredentialsInfo()
+    /**
+     * @dataProvider getDataForSetPaymentId
+     */
+    public function testSetPaymentId($paymentId)
     {
-        $data = array(
-            array(1),
-            array(0),
-            array('string'),
-            array(00),
-            array(null),
-        );
-        return $data;
+        $this->method->setPaymentId($paymentId);
+        $this->assertTrue(is_string($this->method->getPaymentId()));
     }
 
-    public function getDataForCredentialsSetted()
+    /**
+     * @dataProvider getDataForSetPaymentId
+     */
+    public function testSetShortCut($shortCut)
     {
-        $data = $this->getDataForGetCredentialsInfo();
-        return$data;
+        $this->method->setShortCut($shortCut);
+        $this->assertTrue(is_bool($this->method->getShortCut()));
     }
 
     public function getDataForFormatPrice()
@@ -140,28 +196,6 @@ class MethodPPPTest extends \TotTestCase
             array(00),
             array(null),
         );
-        return $data;
-    }
-
-    public function getDataForGetInstructionInfo()
-    {
-        $data = $this->getDataForGetCredentialsInfo();
-        return $data;
-    }
-
-    public function getDataForGetLinkToTransaction()
-    {
-        $data = array(
-            array(new \PaypalLog(0)),
-            array(new \PaypalLog(1)),
-            array(new \PaypalLog(2))
-        );
-        return $data;
-    }
-
-    public function getDataForIsConfigured()
-    {
-        $data = $this->getDataForGetCredentialsInfo();
         return $data;
     }
 
@@ -178,5 +212,34 @@ class MethodPPPTest extends \TotTestCase
             array($context, null, null)
         );
         return $data;
+    }
+
+    public function getDataForCheckCredentials()
+    {
+        $responseSuccess = new PaypalResponseAccessToken();
+        $responseFailed = new PaypalResponseAccessToken();
+        $error = new Error();
+        $responseFailed->setSuccess(false)->setError($error->setMessage('error message'));
+        $responseSuccess->setSuccess(true);
+
+
+        $data = array(
+            array($responseSuccess, true),
+            array($responseFailed, false)
+        );
+
+        return $data;
+    }
+
+    public function getDataForSetPaymentId()
+    {
+        return [
+            'integer' => [1],
+            'null' => [null],
+            'bool' => [false],
+            'array' => [['value']],
+            'object' => [new \stdClass()],
+            'string' => [1],
+        ];
     }
 }

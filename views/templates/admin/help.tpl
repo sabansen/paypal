@@ -23,6 +23,11 @@
 *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
 *
 *}
+
+{if $showRestApiIntegrationMessage}
+    {include './_partials/messages/restApiIntegrationMessage.tpl'}
+{/if}
+
 {include './_partials/headerLogo.tpl'}
 
 <div class="panel">

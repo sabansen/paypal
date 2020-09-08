@@ -24,8 +24,9 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
-include_once _PS_MODULE_DIR_.'paypal/classes/AbstractMethodPaypal.php';
-include_once _PS_MODULE_DIR_.'paypal/controllers/front/abstract.php';
+
+use PaypalAddons\classes\AbstractMethodPaypal;
+use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * Prepare EC payment
@@ -50,11 +51,13 @@ class PaypalEcInitModuleFrontController extends PaypalAbstarctModuleFrontControl
     {
         try {
             $this->method->setParameters($this->values);
-            $url = $this->method->init();
+            $url = $this->method->init()->getApproveLink();
+
             if ($this->values['getToken']) {
-                $this->jsonValues = array('success' => true, 'token' => $this->method->token);
+                $this->jsonValues = array('success' => true, 'token' => $this->method->getPaymentId());
             } else {
-                $this->redirectUrl = $url.'&useraction=commit';
+                //$this->redirectUrl = $url.'&useraction=commit';
+                $this->redirectUrl = $url;
             }
         } catch (PayPal\Exception\PPConnectionException $e) {
             $this->errors['error_msg'] = $this->module->l('Error connecting to ', pathinfo(__FILE__)['filename']) . $e->getUrl();

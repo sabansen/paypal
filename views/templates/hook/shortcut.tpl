@@ -24,7 +24,7 @@
 *
 *}
 
-<div data-container-express-checkout data-paypal-source-page="{$source_page}" style="float:right; margin: 10px 40px 0 0">
+<div data-container-express-checkout data-paypal-source-page="{$source_page}" style="float:right; margin: 10px 40px 0 0; width: 200px">
     <form data-paypal-payment-form-cart class="paypal_payment_form" action="{$action_url|escape:'htmlall':'UTF-8'}" title="{l s='Pay with PayPal' mod='paypal'}" method="post" data-ajax="false">
         {if $source_page == 'product'}
           <input
@@ -39,12 +39,8 @@
         {/if}
         <input type="hidden" name="express_checkout" value="{$PayPal_payment_type|escape:'htmlall':'UTF-8'}"/>
         <input type="hidden" name="current_shop_url" data-paypal-url-page value="" />
-        {if isset($PayPal_tracking_code) && !empty($PayPal_tracking_code)}
-          <input type="hidden" name="bn" value="{$PayPal_tracking_code|escape:'htmlall':'UTF-8'}" />
-          <input type="hidden" id="in_context_checkout_enabled" value="0">
-        {/if}
         <input type="hidden" id="source_page" name="source_page" value="{$source_page}">
-        <img src="{$PayPal_img_esc|escape:'htmlall':'UTF-8'}" data-paypal-shortcut-btn alt="{l s='PayPal' mod='paypal'}" style="cursor:pointer;"/>
     </form>
+    <div paypal-button-container></div>
 </div>
 <div class="clearfix"></div>

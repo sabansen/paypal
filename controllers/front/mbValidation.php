@@ -24,10 +24,9 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
-include_once _PS_MODULE_DIR_.'paypal/classes/AbstractMethodPaypal.php';
-include_once _PS_MODULE_DIR_.'paypal/controllers/front/abstract.php';
 
 use Symfony\Component\HttpFoundation\JsonResponse;
+use PaypalAddons\classes\AbstractMethodPaypal;
 
 /**
  * Validate PPP payment
