@@ -36,6 +36,8 @@ use PaypalAddons\classes\API\PaypalApiManagerInterface;
 use PaypalAddons\classes\API\Response\Response;
 use PaypalAddons\classes\API\Response\ResponseOrderGet;
 use PaypalAddons\classes\API\Response\ResponseOrderRefund;
+use PaypalAddons\classes\Shortcut\ShortcutProduct;
+use PaypalAddons\classes\Shortcut\ShortcutCart;
 use PaypalPPBTlib\AbstractMethod;
 use Symfony\Component\VarDumper\VarDumper;
 use Tools;
@@ -347,6 +349,26 @@ abstract class AbstractMethodPaypal extends AbstractMethod
     public function getLandingPage()
     {
         return 'LOGIN';
+    }
+
+    /**
+     * @param $context
+     * @param $type
+     * @param $page_source
+     * @return string
+     */
+    public function renderExpressCheckoutShortCut(Context &$context, $type, $page_source)
+    {
+        if ($page_source === 'product') {
+            $Shortcut = new ShortcutProduct(
+                (int)Tools::getValue('id_product'),
+                (int)Tools::getValue('id_product_attribute')
+            );
+        } else {
+            $Shortcut = new ShortcutCart();
+        }
+
+        return $Shortcut->render();
     }
 
     /** @return  string*/
