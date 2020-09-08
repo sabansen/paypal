@@ -788,37 +788,12 @@ class PayPal extends \PaymentModule
                 return;
             }
 
-            if (($this->paypal_method == 'EC' && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT')) ||
-                ($this->paypal_method == 'MB' && (int)Configuration::get('PAYPAL_MB_EC_ENABLED') && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT'))) {
-                $resources[] = $method->getUrlJsSdkLib();
-            }
             if ($this->paypal_method == 'PPP') {
                 $resources[] = 'https://www.paypalobjects.com/webstatic/ppplus/ppplus.min.js';
             }
             if ($this->paypal_method == 'MB') {
                 $resources[] = 'https://www.paypalobjects.com/webstatic/ppplusdcc/ppplusdcc.min.js';
             }
-        }
-
-        if ((Tools::getValue('controller') == "product" && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') && (!Module::isEnabled('braintreeofficial') || !Configuration::get('BRAINTREEOFFICIAL_EXPRESS_CHECKOUT_SHORTCUT')))
-            || (Tools::getValue('controller') == "cart" && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART') && (!Module::isEnabled('braintreeofficial') || !Configuration::get('BRAINTREEOFFICIAL_EXPRESS_CHECKOUT_SHORTCUT_CART')))) {
-            if ((Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT') && $this->paypal_method == 'EC') ||
-                ($this->paypal_method == 'MB' && (int)Configuration::get('PAYPAL_MB_EC_ENABLED') && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT'))) {
-                $environment = (Configuration::get('PAYPAL_SANDBOX') ? 'sandbox' : 'live');
-                Media::addJsDef(array(
-                    'ec_sc_in_context' => 1,
-                    'ec_sc_environment' => $environment,
-                    'merchant_id' => Configuration::get('PAYPAL_MERCHANT_ID_' . Tools::strtoupper($environment)),
-                    'ec_sc_action_url' => $this->context->link->getModuleLink($this->name, 'ScInit', array('credit_card' => '0', 'getToken' => 1), true),
-                ));
-            }
-
-            $this->context->controller->registerJavascript($this->name . '-paypal-checkout', $method->getUrlJsSdkLib(), array('server' => 'remote'));
-            $this->context->controller->registerJavascript($this->name . '-paypal-shortcut', 'modules/' . $this->name . '/views/js/shortcut.js');
-            Media::addJsDef(array(
-                'sc_init_url' => $this->context->link->getModuleLink($this->name, 'ScInit', array(), true),
-                'scOrderUrl' => $this->context->link->getModuleLink($this->name, 'scOrder')
-            ));
         }
 
         $this->context->smarty->assign('resources', $resources);
