@@ -296,9 +296,9 @@ $_MODULE['<{paypal}prestashop>pppcredentialsform_d87d45b4afb0f16d79ad4b3bc17f2d9
 $_MODULE['<{paypal}prestashop>pppcredentialsform_5ba82ead337af776b86db00ba9b6d541'] = 'Criar \'aplicações API REST\'';
 $_MODULE['<{paypal}prestashop>pppcredentialsform_c4159369ab0d9986c1ef1a5949a5c900'] = 'Clicar em \'Mostrar\' abaixo \'Segredo\'';
 $_MODULE['<{paypal}prestashop>pppcredentialsform_7f161ed5b9f8fd29729abb01773e8dbc'] = 'Copiar/colar \'ID do cliente\' e \'Segredo\' abaixo para cada ambiente';
-$_MODULE['<{paypal}testprestashop>pppcredentialsform_5ba82ead337af776b86db00ba9b6d541'] = 'Criar \'aplicações API REST\'';
-$_MODULE['<{paypal}testprestashop>pppcredentialsform_c4159369ab0d9986c1ef1a5949a5c900'] = 'Clicar em \'Mostrar\' abaixo \'Segredo\'';
-$_MODULE['<{paypal}testprestashop>pppcredentialsform_7f161ed5b9f8fd29729abb01773e8dbc'] = 'Copiar/colar \'ID do cliente\' e \'Segredo\' abaixo para cada ambiente';
+$_MODULE['<{paypal}prestashop>accountsettingsblock_5ba82ead337af776b86db00ba9b6d541'] = 'Criar \'aplicações API REST\'';
+$_MODULE['<{paypal}prestashop>accountsettingsblock_c4159369ab0d9986c1ef1a5949a5c900'] = 'Clicar em \'Mostrar\' abaixo \'Segredo\'';
+$_MODULE['<{paypal}prestashop>accountsettingsblock_7f161ed5b9f8fd29729abb01773e8dbc'] = 'Copiar/colar \'ID do cliente\' e \'Segredo\' abaixo para cada ambiente';
 
 $_MODULE['<{paypal}prestashop>pppcredentialsform_2652eec977dcb2a5aea85f5bec235b05'] = 'Sandbox';
 $_MODULE['<{paypal}prestashop>pppcredentialsform_8914753a79f56d24f12a63c4578e4880'] = 'Pode mudar para o ambiente Em tempo real na parte superior direita';

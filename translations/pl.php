@@ -171,7 +171,7 @@ $_MODULE['<{paypal}prestashop>pppcredentialsform_d87d45b4afb0f16d79ad4b3bc17f2d9
 $_MODULE['<{paypal}prestashop>pppcredentialsform_5ba82ead337af776b86db00ba9b6d541'] = 'Utwórz aplikacj_ interfejsu API REST';
 $_MODULE['<{paypal}prestashop>pppcredentialsform_c4159369ab0d9986c1ef1a5949a5c900'] = 'Kliknij Poka_ poni_ej opcji Sekret:';
 $_MODULE['<{paypal}prestashop>pppcredentialsform_7f161ed5b9f8fd29729abb01773e8dbc'] = 'Poni_ej skopiuj i wklej Identyfikator klienta i Sekret dla ka_dego _rodowiska';
-$_MODULE['<{paypal}prestashop>accountsettingsblock_5ba82ead337af776b86db00ba9b6d541'] = 'Utwórz aplikacj_ interfejsu API REST';
+
 $_MODULE['<{paypal}prestashop>accountsettingsblock_c4159369ab0d9986c1ef1a5949a5c900'] = 'Kliknij Poka_ poni_ej opcji Sekret:';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_7f161ed5b9f8fd29729abb01773e8dbc'] = 'Poni_ej skopiuj i wklej Identyfikator klienta i Sekret dla ka_dego _rodowiska';
 
