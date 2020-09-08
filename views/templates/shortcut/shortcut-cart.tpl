@@ -24,23 +24,16 @@
 *
 *}
 
-<div data-container-express-checkout data-paypal-source-page="{$source_page}" style="float:right; margin: 10px 40px 0 0; width: 200px">
+{extends 'module:paypal/views/templates/shortcut/shortcut-layout.tpl'}
+
+{block name='content'}
+  <div data-container-express-checkout data-paypal-source-page="cart" style="float:right; margin: 10px 40px 0 0; width: 200px">
     <form data-paypal-payment-form-cart class="paypal_payment_form" action="{$action_url|escape:'htmlall':'UTF-8'}" title="{l s='Pay with PayPal' mod='paypal'}" method="post" data-ajax="false">
-        {if $source_page == 'product'}
-          <input
-                  type="hidden"
-                  name="id_product"
-                  data-paypal-id-product
-                  value="{$paypalIdProduct|escape:'htmlall':'UTF-8'}"
-          />
-          <input type="hidden" name="quantity" data-paypal-qty value=""/>
-          <input type="hidden" name="combination" data-paypal-combination value="" />
-          <input type="hidden" data-paypal-id-product-attribute value="{$es_cs_product_attribute|escape:'htmlall':'UTF-8'}" />
-        {/if}
-        <input type="hidden" name="express_checkout" value="{$PayPal_payment_type|escape:'htmlall':'UTF-8'}"/>
-        <input type="hidden" name="current_shop_url" data-paypal-url-page value="" />
-        <input type="hidden" id="source_page" name="source_page" value="{$source_page}">
+      <input type="hidden" name="express_checkout" value="{$PayPal_payment_type|escape:'htmlall':'UTF-8'}"/>
+      <input type="hidden" name="current_shop_url" data-paypal-url-page value="" />
+      <input type="hidden" id="source_page" name="source_page" value="cart">
     </form>
     <div paypal-button-container></div>
-</div>
-<div class="clearfix"></div>
+  </div>
+  <div class="clearfix"></div>
+{/block}

@@ -27,6 +27,8 @@
 use PaypalAddons\classes\API\PaypalApiManager;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
+use PaypalAddons\classes\Shortcut\ShortcutEcProduct;
+use PaypalAddons\classes\Shortcut\ShortcutEcCart;
 
 
 /**
@@ -203,31 +205,16 @@ class MethodEC extends AbstractMethodPaypal
      */
     public function renderExpressCheckoutShortCut(Context &$context, $type, $page_source)
     {
-        $lang = $context->language->iso_code;
-        $environment = (Configuration::get('PAYPAL_SANDBOX')?'sandbox':'live');
-        $img_esc = "modules/paypal/views/img/ECShortcut/".Tools::strtolower($lang)."/buy/buy.png";
+        if ($page_source === 'product') {
+            $Shortcut = new ShortcutEcProduct(
+                (int)Tools::getValue('id_product'),
+                (int)Tools::getValue('id_product_attribute')
+            );
+        } else {
+            $Shortcut = new ShortcutEcCart();
+        }
 
-        if (!file_exists(_PS_ROOT_DIR_.'/'.$img_esc)) {
-            $img_esc = "modules/paypal/views/img/ECShortcut/us/buy/buy.png";
-        }
-        $shop_url = Context::getContext()->link->getBaseLink(Context::getContext()->shop->id, true);
-        $context->smarty->assign(array(
-            'shop_url' => $shop_url,
-            'PayPal_payment_type' => $type,
-            'PayPal_img_esc' => $shop_url.$img_esc,
-            'action_url' => $context->link->getModuleLink($this->name, 'ScInit', array(), true),
-            'ec_sc_in_context' => Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT'),
-            'merchant_id' => Configuration::get('PAYPAL_MERCHANT_ID_'.Tools::strtoupper($environment)),
-            'environment' => $environment,
-        ));
-        if ($page_source == 'product') {
-            $context->smarty->assign(array(
-                'es_cs_product_attribute' => Tools::getValue('id_product_attribute'),
-                'paypalIdProduct' => Tools::getValue('id_product')
-            ));
-        }
-        $context->smarty->assign('source_page', $page_source);
-        return $context->smarty->fetch('module:paypal/views/templates/hook/shortcut.tpl');
+        return $Shortcut->render();
     }
 
     /**
