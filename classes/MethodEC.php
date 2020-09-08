@@ -27,8 +27,6 @@
 use PaypalAddons\classes\API\PaypalApiManager;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
-use PaypalAddons\classes\Shortcut\ShortcutEcProduct;
-use PaypalAddons\classes\Shortcut\ShortcutEcCart;
 
 
 /**
@@ -195,26 +193,6 @@ class MethodEC extends AbstractMethodPaypal
     {
         $response = $this->paypalApiManager->getAuthorizationVoidRequest($orderPayPal)->execute();
         return $response;
-    }
-
-    /**
-     * @param $context
-     * @param $type
-     * @param $page_source
-     * @return string
-     */
-    public function renderExpressCheckoutShortCut(Context &$context, $type, $page_source)
-    {
-        if ($page_source === 'product') {
-            $Shortcut = new ShortcutEcProduct(
-                (int)Tools::getValue('id_product'),
-                (int)Tools::getValue('id_product_attribute')
-            );
-        } else {
-            $Shortcut = new ShortcutEcCart();
-        }
-
-        return $Shortcut->render();
     }
 
     /**

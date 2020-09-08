@@ -29,7 +29,7 @@ namespace PaypalAddons\classes\Shortcut;
 use Configuration;
 use Tools;
 
-class ShortcutEcProduct extends ShortcutAbstract
+class ShortcutProduct extends ShortcutAbstract
 {
     protected $idProduct;
 

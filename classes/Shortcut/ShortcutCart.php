@@ -29,7 +29,7 @@ namespace PaypalAddons\classes\Shortcut;
 use Configuration;
 use Tools;
 
-class ShortcutEcCart extends ShortcutAbstract
+class ShortcutCart extends ShortcutAbstract
 {
     protected function getTemplatePath()
     {
