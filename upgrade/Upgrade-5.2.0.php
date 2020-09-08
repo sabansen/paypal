@@ -39,6 +39,9 @@ function upgrade_module_5_2_0($module)
 {
     $return = true;
     $installer = new ModuleInstaller($module);
+
+    // Reset the admin controller translations
+    $return &= $installer->uninstallAdminControllers();
     $return &= $installer->installAdminControllers();
     $return &= $installer->registerHooks();
 
