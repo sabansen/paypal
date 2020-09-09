@@ -1656,14 +1656,30 @@ class PayPal extends \PaymentModule
 
     public function displayInformation($message, $btnClose = true, $widthByContent = false, $class = false)
     {
+        return $this->displayAlert($message, 'info', $btnClose, $widthByContent, $class);
+    }
+
+    public function displayError($message, $btnClose = true, $widthByContent = false, $class = false)
+    {
+        return $this->displayAlert($message, 'danger', $btnClose, $widthByContent, $class);
+    }
+
+    public function displayWarning($message, $btnClose = true, $widthByContent = false, $class = false)
+    {
+        return $this->displayAlert($message, 'warning', $btnClose, $widthByContent, $class);
+    }
+
+    public function displayAlert($message, $type, $btnClose = true, $widthByContent = false, $class = false)
+    {
         $tplVars = array(
             'message' => $message,
             'btnClose' => $btnClose,
             'widthByContent' => $widthByContent,
-            'class' => $class
+            'class' => $class,
+            'type' => $type
         );
         $this->context->smarty->assign($tplVars);
-        return $this->context->smarty->fetch(_PS_MODULE_DIR_ . $this->name . '/views/templates/admin/_partials/alertInfo.tpl');
+        return $this->context->smarty->fetch(_PS_MODULE_DIR_ . $this->name . '/views/templates/admin/_partials/alert.tpl');
     }
 
     public function isSslActive()

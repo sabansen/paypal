@@ -26,6 +26,7 @@
 // Import functions for scrolling effect to necessary block on click
 import {hoverConfig, hoverTabConfig} from './functions.js';
 import { SetupAdmin } from './adminSetup.js';
+import {Tools} from './tools.js';
 
 var CustomizeCheckout = {
   init() {
@@ -54,6 +55,8 @@ var CustomizeCheckout = {
       const EcOptions = [
           'paypal_express_checkout_in_context',
           'paypal_express_checkout_shortcut_cart',
+          'paypal_express_checkout_shortcut',
+          'paypal_express_checkout_shortcut_signup',
           'paypal_api_advantages',
           'paypal_config_brand',
           'paypal_config_logo'
@@ -74,6 +77,10 @@ var CustomizeCheckout = {
           'paypal_os_validation_error',
           'paypal_os_refunded_paypal'
       ];
+      const customShortcutStyle = $('[name="PAYPAL_EXPRESS_CHECKOUT_CUSTOMIZE_SHORTCUT_STYLE"]');
+      const shortcutLocationProduct = $('[name="paypal_express_checkout_shortcut"]');
+      const shortcutLocationCart = $('[name="paypal_express_checkout_shortcut_cart"]');
+      const shortcutLocationSignup = $('[name="paypal_express_checkout_shortcut_signup"]');
 
       if (paypalEcEnabled.length > 0 ) {
         if (paypalEcEnabled.prop('checked') == true) {
@@ -100,6 +107,20 @@ var CustomizeCheckout = {
         } else {
           statusOptions.forEach(CustomizeCheckout.hideConfiguration);
           $('.advanced-help-message').hide();
+        }
+      }
+
+      // Show the alert if the customize shortcut style is active and any shortcut location is not active
+      if (customShortcutStyle.length > 0) {
+        if (
+          customShortcutStyle.prop('checked') === true
+          && shortcutLocationProduct.prop('checked') === false
+          && shortcutLocationCart.prop('checked') === false
+          && shortcutLocationSignup.prop('checked') === false
+        ) {
+            $('.shortcut-customize-style-alert').removeClass('hidden');
+        } else {
+            $('.shortcut-customize-style-alert').addClass('hidden');
         }
       }
     },

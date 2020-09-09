@@ -55,7 +55,8 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             'paypal_os_refunded',
             'paypal_os_canceled',
             'paypal_os_accepted',
-            'paypal_os_capture_canceled'
+            'paypal_os_capture_canceled',
+            ShortcutConfiguration::CUSTOMIZE_STYLE
         );
     }
 
@@ -281,6 +282,32 @@ Shipping costs will be estimated on the base of the cart total and default carri
         $orderStatuses = $this->module->getOrderStatuses();
         $inputs = array();
         $inputsMethod = $method->getAdvancedFormInputs();
+
+        $inputs[] = array(
+            'type' => 'switch',
+            'label' => $this->l('Customize PayPal Express Checkout shortcut buttons'),
+            'name' => ShortcutConfiguration::CUSTOMIZE_STYLE,
+            'hint' => $this->l('You can customize the display options and styles of PayPal shortcuts. The styles and display options can be changed for each button separately depending on its location (Cart Page / Product pages / Sign up step in checkout).'),
+            'is_bool' => true,
+            'values' => array(
+                array(
+                    'id' => ShortcutConfiguration::CUSTOMIZE_STYLE . '_ON',
+                    'value' => 1,
+                    'label' => $this->l('Enabled'),
+                ),
+                array(
+                    'id' => ShortcutConfiguration::CUSTOMIZE_STYLE . '_OFF',
+                    'value' => 0,
+                    'label' => $this->l('Disabled'),
+                )
+            ),
+        );
+
+        $inputs[] = array(
+            'type' => 'html',
+            'name' => '',
+            'html_content' => $this->module->displayWarning($this->l('In order to customize PayPal Express Checkout Shortcut you have to enable this feature at least for one location : Cart Page / Product pages / Sign up step in checkout.'), false, false, 'hidden shortcut-customize-style-alert')
+        );
 
         $inputs[] = array(
             'type' => 'html',

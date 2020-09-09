@@ -1,5 +1,4 @@
-<?php
-/**
+/*
  * 2007-2020 PayPal
  *
  *  NOTICE OF LICENSE
@@ -24,16 +23,14 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
-namespace PaypalAddons\classes\Shortcut;
-
-
-class ShortcutConfiguration
-{
-    const SHOW_ON_SIGNUP_STEP = 'PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_SIGNUP';
-
-    const SHOW_ON_CART_PAGE = 'PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART';
-
-    const SHOW_ON_PRODUCT_PAGE = 'PAYPAL_EXPRESS_CHECKOUT_SHORTCUT';
-
-    const CUSTOMIZE_STYLE = 'PAYPAL_EXPRESS_CHECKOUT_CUSTOMIZE_SHORTCUT_STYLE';
+export const Tools = {
+  // Show error message
+  getAlert(message, typeAlert) {
+    const alert = document.createElement('div');
+    let messageNode = document.createElement('div');
+    messageNode.innerHTML = message;
+    alert.className = `alert alert-${typeAlert}`;
+    alert.appendChild(messageNode);
+    return alert;
+  },
 }
