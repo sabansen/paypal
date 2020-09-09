@@ -30,6 +30,8 @@ if (!defined('_PS_VERSION_')) {
 
 include_once(_PS_MODULE_DIR_ . 'paypal/vendor/autoload.php');
 
+use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
+use PaypalAddons\classes\Shortcut\ShortcutSignup;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerExtension;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 use PaypalPPBTlib\Install\ModuleInstaller;
@@ -552,13 +554,15 @@ class PayPal extends \PaymentModule
     public function hookDisplayShoppingCartFooter()
     {
         if (Module::isEnabled('braintreeofficial') && (int)Configuration::get('BRAINTREEOFFICIAL_ACTIVATE_PAYPAL')) {
-            return;
+            return '';
         }
-        if ('cart' !== $this->context->controller->php_self ||
-            !Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART') ||
-            $this->context->cart->nbProducts() == 0 ||
-            $this->paypal_method == 'MB' && (bool)Configuration::get('PAYPAL_MB_EC_ENABLED') == false) {
-            return false;
+
+        if ($this->context->controller instanceof CartController === false) {
+            return '';
+        }
+
+        if ($this->isShowShortcut() === false) {
+            return '';
         }
 
         if ($this->paypal_method == 'MB') {
@@ -570,7 +574,7 @@ class PayPal extends \PaymentModule
         $method = AbstractMethodPaypal::load($methodType);
 
         if ($method->isConfigured() == false) {
-            return;
+            return '';
         }
 
         return $method->renderExpressCheckoutShortCut($this->context, $methodType, 'cart');
@@ -713,6 +717,7 @@ class PayPal extends \PaymentModule
 
     public function hookHeader()
     {
+        $returnContent = '';
         $this->context->controller->registerStylesheet($this->name . '-fo', 'modules/' . $this->name . '/views/css/paypal_fo.css');
         $resources = array();
         $method = AbstractMethodPaypal::load($this->paypal_method);
@@ -733,7 +738,14 @@ class PayPal extends \PaymentModule
                 return false;
             }
 
-            if ((Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART')) && (isset($this->context->cookie->paypal_ecs) || isset($this->context->cookie->paypal_pSc))) {
+            // Show Shortcut on signup page if need
+            if ($this->isShowShortcut()) {
+                $Shortcut = new ShortcutSignup();
+                $returnContent .= $Shortcut->render();
+            }
+
+            if ((Configuration::get(ShortcutConfiguration::SHOW_ON_PRODUCT_PAGE) || Configuration::get(ShortcutConfiguration::SHOW_ON_CART_PAGE) || Configuration::get(ShortcutConfiguration::SHOW_ON_SIGNUP_STEP))
+                && (isset($this->context->cookie->paypal_ecs) || isset($this->context->cookie->paypal_pSc))) {
                 $this->context->controller->registerJavascript($this->name . '-paypal-ec-sc', 'modules/' . $this->name . '/views/js/shortcut_payment.js');
                 if (isset($this->context->cookie->paypal_ecs)) {
                     Media::addJsDef(array(
@@ -797,7 +809,8 @@ class PayPal extends \PaymentModule
         }
 
         $this->context->smarty->assign('resources', $resources);
-        return $this->context->smarty->fetch('module:paypal/views/templates/front/prefetch.tpl');
+        $returnContent .= $this->context->smarty->fetch('module:paypal/views/templates/front/prefetch.tpl');
+        return $returnContent;
     }
 
     public function checkActiveModule()
@@ -863,12 +876,15 @@ class PayPal extends \PaymentModule
     public function hookDisplayReassurance()
     {
         if (Module::isEnabled('braintreeofficial') && (int)Configuration::get('BRAINTREEOFFICIAL_ACTIVATE_PAYPAL')) {
-            return;
+            return '';
         }
-        if ('product' !== $this->context->controller->php_self ||
-            !Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') ||
-            $this->paypal_method == 'MB' && (bool)Configuration::get('PAYPAL_MB_EC_ENABLED') == false) {
-            return false;
+
+        if ($this->context->controller instanceof ProductController === false) {
+            return '';
+        }
+
+        if ($this->isShowShortcut() === false) {
+            return '';
         }
 
         if ($this->paypal_method == 'MB') {
@@ -880,7 +896,7 @@ class PayPal extends \PaymentModule
         $method = AbstractMethodPaypal::load($methodType);
 
         if ($method->isConfigured() == false) {
-            return;
+            return '';
         }
 
         return $method->renderExpressCheckoutShortCut($this->context, $methodType, 'product');
@@ -1919,5 +1935,39 @@ class PayPal extends \PaymentModule
         }
 
         return Configuration::updateValue('PAYPAL_NOT_SHOW_PS_CHECKOUT', json_encode($notShowDetailsArray));
+    }
+
+    /**
+     * @return bool
+     */
+    public function isShowShortcut()
+    {
+        if (is_null($this->context->controller)) {
+            return false;
+        }
+
+        if (Module::isEnabled('braintreeofficial') && (int)Configuration::get('BRAINTREEOFFICIAL_ACTIVATE_PAYPAL')) {
+            return false;
+        }
+
+        if ($this->paypal_method === 'MB' && (bool)Configuration::get('PAYPAL_MB_EC_ENABLED') === false) {
+            return false;
+        }
+
+        if ($this->context->controller instanceof OrderController) {
+            if (Configuration::get(ShortcutConfiguration::SHOW_ON_SIGNUP_STEP) && $this->context->customer->isLogged() === false) {
+                return true;
+            }
+        }
+
+        if ($this->context->controller instanceof ProductController && Configuration::get(ShortcutConfiguration::SHOW_ON_PRODUCT_PAGE)) {
+            return true;
+        }
+
+        if ($this->context->controller instanceof CartController && Configuration::get(ShortcutConfiguration::SHOW_ON_CART_PAGE)) {
+            return true;
+        }
+
+        return false;
     }
 }
