@@ -48,5 +48,9 @@ function upgrade_module_5_2_0($module)
     Configuration::updateValue('PAYPAL_PREVIOUS_VERSION', '5.1.5');
     Configuration::updateValue('PAYPAL_NEED_CHECK_CREDENTIALS', 1);
 
+    if (Configuration::get('PAYPAL_API_INTENT') === 'authorization') {
+        Configuration::updateValue('PAYPAL_API_INTENT', 'authorize');
+    }
+
     return $return;
 }
