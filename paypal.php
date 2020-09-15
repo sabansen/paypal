@@ -735,6 +735,7 @@ class PayPal extends \PaymentModule
 
             if ((Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART')) && (isset($this->context->cookie->paypal_ecs) || isset($this->context->cookie->paypal_pSc))) {
                 $this->context->controller->registerJavascript($this->name . '-paypal-ec-sc', 'modules/' . $this->name . '/views/js/shortcut_payment.js');
+                $resources[] = '/modules/' . $this->name . '/views/js/shortcut_payment.js' . '?v=' . $this->version;
                 if (isset($this->context->cookie->paypal_ecs)) {
                     Media::addJsDef(array(
                         'paypalCheckedMethod' => 'express_checkout_schortcut',
@@ -770,18 +771,24 @@ class PayPal extends \PaymentModule
                 ));
                 $this->context->controller->registerJavascript($this->name . '-paypal-checkout', 'https://www.paypalobjects.com/api/checkout.min.js', array('server' => 'remote'));
                 $this->context->controller->registerJavascript($this->name . '-paypal-checkout-in-context', 'modules/' . $this->name . '/views/js/ec_in_context.js');
+                $resources[] = '/modules/' . $this->name . '/views/js/ec_in_context.js' . '?v=' . $this->version;
+                $resources[] = 'https://www.paypalobjects.com/api/checkout.min.js' . '?v=' . $this->version;
             }
             if ($this->paypal_method == 'PPP') {
                 $method->assignJSvarsPaypalPlus();
                 $this->context->controller->registerJavascript($this->name . '-plus-minjs', 'https://www.paypalobjects.com/webstatic/ppplus/ppplus.min.js', array('server' => 'remote'));
                 $this->context->controller->registerJavascript($this->name . '-plus-payment-js', 'modules/' . $this->name . '/views/js/payment_ppp.js');
                 $this->context->controller->addJqueryPlugin('fancybox');
+                $resources[] = '/modules/' . $this->name . '/views/js/payment_ppp.js' . '?v=' . $this->version;
+                $resources[] = 'https://www.paypalobjects.com/webstatic/ppplus/ppplus.min.js' . '?v=' . $this->version;
             }
 
             if ($this->paypal_method == 'MB') {
                 $method->assignJSvarsPaypalMB();
                 $this->context->controller->registerJavascript($this->name . '-plusdcc-minjs', 'https://www.paypalobjects.com/webstatic/ppplusdcc/ppplusdcc.min.js', array('server' => 'remote'));
                 $this->context->controller->registerJavascript($this->name . '-mb-payment-js', 'modules/' . $this->name . '/views/js/payment_mb.js');
+                $resources[] = '/modules/' . $this->name . '/views/js/payment_mb.js' . '?v=' . $this->version;
+                $resources[] = 'https://www.paypalobjects.com/webstatic/ppplusdcc/ppplusdcc.min.js' . '?v=' . $this->version;
             }
         } elseif (Tools::getValue('controller') == "cart") {
             if (!$this->checkActiveModule()) {
@@ -789,10 +796,10 @@ class PayPal extends \PaymentModule
             }
 
             if ($this->paypal_method == 'PPP') {
-                $resources[] = 'https://www.paypalobjects.com/webstatic/ppplus/ppplus.min.js';
+                $resources[] = 'https://www.paypalobjects.com/webstatic/ppplus/ppplus.min.js' . '?v=' . $this->version;
             }
             if ($this->paypal_method == 'MB') {
-                $resources[] = 'https://www.paypalobjects.com/webstatic/ppplusdcc/ppplusdcc.min.js';
+                $resources[] = 'https://www.paypalobjects.com/webstatic/ppplusdcc/ppplusdcc.min.js' . '?v=' . $this->version;
             }
         }
 

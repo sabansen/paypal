@@ -84,8 +84,8 @@ abstract class ShortcutAbstract
             $JSscripts[] = $lib;
         }
 
+	$JSscripts[] = $this->method->getUrlJsSdkLib();
         $JSscripts[] = '/modules/' . $this->module->name . '/views/js/shortcut.js?v=' . $this->module->version;
-        $JSscripts[] = $this->method->getUrlJsSdkLib();
 
         return $JSscripts;
     }
