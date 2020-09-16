@@ -105,8 +105,7 @@ class AdminPayPalSetupController extends AdminPayPalController
         $this->context->smarty->assign($tpl_vars);
         $this->content = $this->context->smarty->fetch($this->getTemplatePath() . 'setup.tpl');
         $this->context->smarty->assign('content', $this->content);
-        $this->addJS(_PS_MODULE_DIR_ . $this->module->name . '/views/js/adminSetup.js');
-        //$this->addJS('https://www.sandbox.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js');
+        $this->addJS(_PS_MODULE_DIR_ . $this->module->name . '/views/js/adminSetup.js?v=' . $this->module->version);
     }
 
     public function initAccountSettingsBlock()

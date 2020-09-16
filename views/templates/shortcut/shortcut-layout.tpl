@@ -36,9 +36,11 @@
 {block name='content'}{/block}
 
 {block name='js'}
-    {foreach from=$JSscripts item=JSscript}
-      <script src="{$JSscript|addslashes}"></script>
-    {/foreach}
+    {if isset($JSscripts) && is_array($JSscripts) && false === empty($JSscripts)}
+        {foreach from=$JSscripts item=JSscript}
+          <script src="{$JSscript|addslashes}"></script>
+        {/foreach}
+    {/if}
 {/block}
 <!-- End shortcut. Module Paypal -->
 
