@@ -84,10 +84,18 @@ abstract class ShortcutAbstract
             $JSscripts[] = $lib;
         }
 
-	$JSscripts[] = $this->method->getUrlJsSdkLib();
+        $JSscripts[] = $this->method->getUrlJsSdkLib();
         $JSscripts[] = '/modules/' . $this->module->name . '/views/js/shortcut.js?v=' . $this->module->version;
 
         return $JSscripts;
+    }
+
+    /**
+     * @return string|null
+     */
+    protected function getMethodType()
+    {
+        return null;
     }
 
     /**
@@ -102,9 +110,4 @@ abstract class ShortcutAbstract
      * @return []
      */
     abstract protected function getTplVars();
-
-    /**
-     * @return string
-     */
-    abstract protected function getMethodType();
 }

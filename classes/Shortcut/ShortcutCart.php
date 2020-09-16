@@ -52,9 +52,4 @@ class ShortcutCart extends ShortcutAbstract
 
         return $return;
     }
-
-    protected function getMethodType()
-    {
-        return 'EC';
-    }
 }
