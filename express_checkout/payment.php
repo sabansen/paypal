@@ -168,10 +168,6 @@ if ($request_type && $ppec->type) {
     $product_quantity = (int) Tools::getValue('quantity');
     $id_product_attribute = Tools::getValue('id_p_attr');
 
-    // Check if there is customer in context
-    if (false == Validate::isLoadedObject($ppec->context->customer)) {
-        throw new Exception('Invalid customer in context');
-    }
 
     if (($id_product > 0) && $id_product_attribute !== false && ($product_quantity > 0)) {
         setContextData($ppec);
@@ -193,6 +189,10 @@ if ($request_type && $ppec->type) {
 
         $ppec->context->cart->updateQty((int) $product_quantity, (int) $id_product, (int) $id_product_attribute);
         $ppec->context->cart->update();
+    }
+
+    if (false === Validate::isLoadedObject($ppec->context->cart) || $ppec->context->cart->nbProducts() === 0) {
+        throw new Exception('Invalid cart in context');
     }
 
     $login_user = PaypalLoginUser::getByIdCustomer((int) $ppec->context->customer->id);
