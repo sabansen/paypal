@@ -56,7 +56,8 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             'paypal_os_canceled',
             'paypal_os_accepted',
             'paypal_os_capture_canceled',
-            ShortcutConfiguration::CUSTOMIZE_STYLE
+            ShortcutConfiguration::CUSTOMIZE_STYLE,
+            ShortcutConfiguration::DISPLAY_MODE_PRODUCT
         );
     }
 
@@ -310,6 +311,26 @@ Shipping costs will be estimated on the base of the cart total and default carri
         );
 
         $inputs[] = array(
+            'label' => $this->l('Product'),
+            'type' => 'html',
+            'name' => '',
+            'html_content' => ''
+        );
+
+        $inputs[] = array(
+            'type' => 'select',
+            'label' => $this->l('Display mode'),
+            'name' => ShortcutConfiguration::DISPLAY_MODE_PRODUCT,
+            'hint' => $this->l('By default, PayPal shortcut is displayed on your web site via PrestaShop native hook. If you choose to use PrestaShop widgets, you will be able to copy widget code and insert it wherever you want in the product template.'),
+            'class' => 'pp-w-100',
+            'options' => array(
+                'query' => $this->getShortcutProductCustomizeModeOptions(),
+                'id' => 'id',
+                'name' => 'name'
+            )
+        );
+
+        $inputs[] = array(
             'type' => 'html',
             'name' => '',
             'html_content' => $this->module->displayInformation($this->l('You can customize your orders\' status for each possible action in the PayPal module.'), false)
@@ -486,5 +507,19 @@ Shipping costs will be estimated on the base of the cart total and default carri
         }
         $this->context->smarty->assign('settingLink', $settingLink);
         return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/messages/logoMessage.tpl');
+    }
+
+    protected function getShortcutProductCustomizeModeOptions()
+    {
+        return array(
+            array(
+                'id' => ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK,
+                'name' => $this->l('PrestaShop native hook (recommended)')
+            ),
+            array(
+                'id' => ShortcutConfiguration::DISPLAY_MODE_TYPE_WIDGET,
+                'name' => $this->l('PrestaShop widget')
+            )
+        );
     }
 }
