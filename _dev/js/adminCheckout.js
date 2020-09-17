@@ -81,6 +81,22 @@ var CustomizeCheckout = {
       const shortcutLocationProduct = $('[name="paypal_express_checkout_shortcut"]');
       const shortcutLocationCart = $('[name="paypal_express_checkout_shortcut_cart"]');
       const shortcutLocationSignup = $('[name="paypal_express_checkout_shortcut_signup"]');
+      const showShortcutOnProductPage = document.querySelector('[name="paypal_express_checkout_shortcut"]');
+      const displayModeProductPageConf = [
+        'PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_PRODUCT',
+        'widgetCode',
+        'PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_HOOK_PRODUCT'
+      ];
+
+
+      // Show the product page display configurations of a shortcut if need
+      if (showShortcutOnProductPage.checked) {
+        displayModeProductPageConf.forEach(CustomizeCheckout.showConfiguration);
+        document.querySelector('[data-section-customize-mode-product]').style.display = 'block';
+      } else {
+        displayModeProductPageConf.forEach(CustomizeCheckout.hideConfiguration);
+        document.querySelector('[data-section-customize-mode-product]').style.display = 'none';
+      }
 
       if (paypalEcEnabled.length > 0 ) {
         if (paypalEcEnabled.prop('checked') == true) {

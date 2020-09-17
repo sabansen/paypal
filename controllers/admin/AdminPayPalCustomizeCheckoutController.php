@@ -312,10 +312,14 @@ Shipping costs will be estimated on the base of the cart total and default carri
         );
 
         $inputs[] = array(
-            'label' => $this->l('Product'),
             'type' => 'html',
             'name' => '',
-            'html_content' => ''
+            'html_content' => $this->context->smarty->assign(
+                array(
+                    'title' => $this->l('Product'),
+                    'attributes' => ['data-section-customize-mode-product']
+                )
+            )->fetch($this->getTemplatePath() . '_partials/form/sectionTitle.tpl')
         );
 
         $inputs[] = array(
@@ -543,7 +547,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
     protected function getProductPageWidgetField()
     {
         $this->context->smarty->assign('widgetCode', '{widget name=\'paypal\' identifier=\'paypalproduct\' action=\'paymentshortcut\'}');
-        return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/fields/widgetCode.tpl');
+        return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/form/fields/widgetCode.tpl');
     }
 
     protected function getProductPageHookSelect()
@@ -559,6 +563,6 @@ Shipping costs will be estimated on the base of the cart total and default carri
             'confName' => ShortcutConfiguration::PRODUCT_PAGE_HOOK,
             'selectedHook' => Configuration::get(ShortcutConfiguration::PRODUCT_PAGE_HOOK)
         ));
-        return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/fields/hookSelect.tpl');
+        return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/form/fields/hookSelect.tpl');
     }
 }

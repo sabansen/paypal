@@ -29,6 +29,7 @@
             readonly
             {if isset($widgetCode)}value="{$widgetCode}"{/if}
             id="productPageWidgetCode"
+            name="widgetCode"
     />
 
     <span
