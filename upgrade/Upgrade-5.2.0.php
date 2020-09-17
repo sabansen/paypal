@@ -39,11 +39,18 @@ function upgrade_module_5_2_0($module)
 {
     $return = true;
     $installer = new ModuleInstaller($module);
+
+    // Reset the admin controller translations
+    $return &= $installer->uninstallModuleAdminControllers();
     $return &= $installer->installAdminControllers();
     $return &= $installer->registerHooks();
 
     Configuration::updateValue('PAYPAL_PREVIOUS_VERSION', '5.1.5');
     Configuration::updateValue('PAYPAL_NEED_CHECK_CREDENTIALS', 1);
+
+    if (Configuration::get('PAYPAL_API_INTENT') === 'authorization') {
+        Configuration::updateValue('PAYPAL_API_INTENT', 'authorize');
+    }
 
     return $return;
 }

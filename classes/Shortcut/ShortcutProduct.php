@@ -65,9 +65,4 @@ class ShortcutProduct extends ShortcutAbstract
 
         return $return;
     }
-
-    protected function getMethodType()
-    {
-        return 'EC';
-    }
 }

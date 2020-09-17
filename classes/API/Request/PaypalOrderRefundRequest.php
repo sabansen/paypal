@@ -30,9 +30,11 @@ namespace PaypalAddons\classes\API\Request;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\ResponseOrderRefund;
+use PaypalAddons\services\ServicePaypalOrder;
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
 use PayPalCheckoutSdk\Payments\CapturesRefundRequest;
 use PayPalHttp\HttpException;
+use Validate;
 use Symfony\Component\VarDumper\VarDumper;
 
 class PaypalOrderRefundRequest extends RequestAbstract
@@ -48,7 +50,7 @@ class PaypalOrderRefundRequest extends RequestAbstract
     public function execute()
     {
         $response = new ResponseOrderRefund();
-        $captureRefund = new CapturesRefundRequest($this->paypalOrder->id_transaction);
+        $captureRefund = new CapturesRefundRequest($this->getResourceId());
         $captureRefund->prefer('return=representation');
 
         if ($body = $this->buildRequestBody()) {
@@ -73,6 +75,7 @@ class PaypalOrderRefundRequest extends RequestAbstract
         } catch (HttpException $e) {
             $error = new Error();
             $resultDecoded = json_decode($e->getMessage());
+
             $error->setMessage($resultDecoded->details[0]->description)->setErrorCode($e->getCode());
             $response->setSuccess(false)
                 ->setError($error);
@@ -148,5 +151,19 @@ class PaypalOrderRefundRequest extends RequestAbstract
         ];
 
         return $amount;
+    }
+
+    protected function getResourceId()
+    {
+        $paypalOrderService = new ServicePaypalOrder();
+        $capture = $paypalOrderService->getCapture($this->paypalOrder);
+
+        if (Validate::isLoadedObject($capture)) {
+            $idResource = $capture->id_capture;
+        } else {
+            $idResource = $this->paypalOrder->id_transaction;
+        }
+
+        return $idResource;
     }
 }

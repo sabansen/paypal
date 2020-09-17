@@ -171,6 +171,10 @@ $_MODULE['<{paypal}prestashop>pppcredentialsform_d87d45b4afb0f16d79ad4b3bc17f2d9
 $_MODULE['<{paypal}prestashop>pppcredentialsform_5ba82ead337af776b86db00ba9b6d541'] = 'Utwórz aplikacj_ interfejsu API REST';
 $_MODULE['<{paypal}prestashop>pppcredentialsform_c4159369ab0d9986c1ef1a5949a5c900'] = 'Kliknij Poka_ poni_ej opcji Sekret:';
 $_MODULE['<{paypal}prestashop>pppcredentialsform_7f161ed5b9f8fd29729abb01773e8dbc'] = 'Poni_ej skopiuj i wklej Identyfikator klienta i Sekret dla ka_dego _rodowiska';
+
+$_MODULE['<{paypal}prestashop>accountsettingsblock_c4159369ab0d9986c1ef1a5949a5c900'] = 'Kliknij Poka_ poni_ej opcji Sekret:';
+$_MODULE['<{paypal}prestashop>accountsettingsblock_7f161ed5b9f8fd29729abb01773e8dbc'] = 'Poni_ej skopiuj i wklej Identyfikator klienta i Sekret dla ka_dego _rodowiska';
+
 $_MODULE['<{paypal}prestashop>pppcredentialsform_2652eec977dcb2a5aea85f5bec235b05'] = 'Centrum testowe';
 $_MODULE['<{paypal}prestashop>pppcredentialsform_76525f0f34b48475e5ca33f71d296f3b'] = 'ID klienta';
 $_MODULE['<{paypal}prestashop>pppcredentialsform_1e6947ac7fb3a9529a9726eb692c8cc5'] = 'Sekret';
@@ -209,7 +213,7 @@ $_MODULE['<{paypal}prestashop>forbraintreeusers_bf51567cd44ed14522f9674cddbbdad3
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_81618d71d454c0993d01b9a5329937c4'] = 'Twoja konfiguracja sklepu jest poprawna. Mo_esz zacz__ konfigurowa_ modu_ Braintree.';
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_38dc1dc4db247b4c01b26636e6bf9666'] = 'Wersja TLS nie jest kompatybilna';
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_b4a34d3f58b039e7685c2e39b5413757'] = 'Pomyślna aktualizacja.';
-$_MODULE['<{paypal}prestashop>methodec_51a9f5fc2e4d9b1c8aa4a60a7c725243'] = 'Wystąpił błąd podczas tworzenia strony internetowej. Sprawdź swoje dane uwierzytelniające.';
+$_MODULE['<{paypal}prestashop>createprofileexperiencerequest_51a9f5fc2e4d9b1c8aa4a60a7c725243'] = 'Wystąpił błąd podczas tworzenia strony internetowej. Sprawdź swoje dane uwierzytelniające.';
 $_MODULE['<{paypal}prestashop>methodppp_51a9f5fc2e4d9b1c8aa4a60a7c725243'] = 'Wystąpił błąd podczas tworzenia strony internetowej. Sprawdź swoje dane uwierzytelniające.';
 $_MODULE['<{paypal}prestashop>methodppp_d1733321d6ae942df34b7f0aa743fb69'] = 'Za kilka sekund nastąpi przekierowanie do systemu PayPal. Czekaj.';
 $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_b39a035a995fc6597c8eb942210d1527'] = 'Zachowanie';
@@ -249,7 +253,7 @@ $_MODULE['<{paypal}prestashop>adminpaypalsetupcontroller_ec53a8c4f07baed5d882507
 $_MODULE['<{paypal}prestashop>ecinit_8f4603ba5094ec0d3fca1eeda5d0aab8'] = 'Wystąpił błąd podczas nawiązywania połączenia z ';
 $_MODULE['<{paypal}prestashop>ecinit_7980c38f094ddbe90d328a395bc78de9'] = 'Nieprawidłowa konfiguracja. Sprawdź plik konfiguracyjny';
 $_MODULE['<{paypal}prestashop>ecscorder_8f4603ba5094ec0d3fca1eeda5d0aab8'] = 'Wystąpił błąd podczas nawiązywania połączenia z ';
-$_MODULE['<{paypal}prestashop>ecscorder_7980c38f094ddbe90d328a395bc78de9'] = 'Nieprawidłowa konfiguracja. Sprawdź plik konfiguracyjny';
+$_MODULE['<{paypal}prestashop>scorder_7980c38f094ddbe90d328a395bc78de9'] = 'Nieprawidłowa konfiguracja. Sprawdź plik konfiguracyjny';
 $_MODULE['<{paypal}prestashop>ecscorder_7ff5bcd1a7dd3e2dc15e69b90babcfde'] = 'Pole stanu/województwa jest wymagane, aby przetworzyć płatność. Wypełnij pole stanu/województwa';
 $_MODULE['<{paypal}prestashop>ecscorder_7afff0211446b3c00496c44b41bd634b'] = 'Kraj nie jest aktywny';
 $_MODULE['<{paypal}prestashop>ecvalidation_8f4603ba5094ec0d3fca1eeda5d0aab8'] = 'Wystąpił błąd podczas nawiązywania połączenia z ';
@@ -284,6 +288,8 @@ $_MODULE['<{paypal}prestashop>adminprocessloggercontroller_cb0f7aca75a7aeac5a132
 $_MODULE['<{paypal}prestashop>accountsettingsblock_1624e46cbfe7dbe4a96a59090061d15b'] = 'Dane uwierzytelniające API';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_2ff3bbcde155ca17950f1ea14810471d'] = 'Aby akceptować płatności PayPal, podaj dane uwierzytelniające interfejsu API REST.';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_bf733d8a933c1601697f364223fc7ecb'] = 'Dostęp';
+$_MODULE['<{paypal}prestashop>mbcredentialsform_1d18bf3e09ec1ad0236145e6e55fe193'] = 'https://developer.paypal.com/developer/applications/';
+
 $_MODULE['<{paypal}prestashop>accountsettingsblock_1d18bf3e09ec1ad0236145e6e55fe193'] = 'https://developer.paypal.com/developer/applications/';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_d87d45b4afb0f16d79ad4b3bc17f2d97'] = 'Zaloguj się lub załóż konto firmowe';
 $_MODULE['<{paypal}prestashop>accountsettingsblock_5ba82ead337af776b86db00ba9b6d541'] = 'Utwórz „aplikację interfejsu API REST”';
@@ -308,8 +314,8 @@ $_MODULE['<{paypal}prestashop>blockpreviewbuttoncontext_b401397858880fcfe0c8da19
 $_MODULE['<{paypal}prestashop>blockpreviewbuttoncontext_0fcaf0531dd6d6a53f7bde67adafd035'] = 'Strony produktowe';
 $_MODULE['<{paypal}prestashop>paypal_112cee51bc7d0712033e013bf5154d97'] = 'Zapłać kartą kredytową lub debetową';
 $_MODULE['<{paypal}prestashop>paypal_9b9cf9f8778f69b4c6cf37e66f886be8'] = 'Wybierz status';
-$_MODULE['<{paypal}prestashop>methodec_01c6e0e36101786cfcfa6dd13cfbb099'] = 'Identyfikator koszyka: ';
-$_MODULE['<{paypal}prestashop>methodec_194c2a3181dd5484df19ff3548b4a019'] = 'Nazwa sklepu: ';
+$_MODULE['<{paypal}prestashop>abstractmethodpaypal_01c6e0e36101786cfcfa6dd13cfbb099'] = 'Identyfikator koszyka: ';
+$_MODULE['<{paypal}prestashop>abstractmethodpaypal_194c2a3181dd5484df19ff3548b4a019'] = 'Nazwa sklepu: ';
 $_MODULE['<{paypal}prestashop>methodec_b98521e63d9c5a52990b450965ab2878'] = 'Płatność została autoryzowana i oczekuje na zatwierdzenie przez administratora';
 $_MODULE['<{paypal}prestashop>methodec_915901b766a8e732f41c87693184fa89'] = 'Obecnie używasz trybu autoryzacji. Oznacza to, że autoryzacja płatności przebiega oddzielnie od pobrania środków z autoryzowanej płatności. Domyślnie utworzone zamówienia będą miały status „Oczekuje na płatność PayPal”, ale w razie potrzeby możesz go dostosować.';
 $_MODULE['<{paypal}prestashop>methodec_658c65a11f676a58088cdb35e0c2c3ab'] = 'Status domyślny: oczekuje na płatność PayPal';
@@ -320,7 +326,7 @@ $_MODULE['<{paypal}prestashop>methodmb_51a9f5fc2e4d9b1c8aa4a60a7c725243'] = 'Wys
 $_MODULE['<{paypal}prestashop>methodmb_180364e1d6074b6ac53dedba3e2fd4a8'] = 'W celu przetworzenia płatności przez system PayPal wymagane jest dodanie numeru VAT do adresu. Wypełnij i zrealizuj płatność.';
 $_MODULE['<{paypal}prestashop>methodmb_1e0610d55af1ecadbbc57ec6de0521e7'] = 'W celu przetworzenia płatności przez system PayPal wymagane jest dodanie ważnego numeru NIP do adresu. Sprawdź, czy Twój NIP jest poprawny, zmień go w razie potrzeby i zrealizuj płatność.';
 $_MODULE['<{paypal}prestashop>methodmb_5cd73cd823ab19e701f9da77aabf39fe'] = 'Płatność została zrealizowana. Za kilka sekund nastąpi przekierowanie do strony potwierdzenia płatności.';
-$_MODULE['<{paypal}prestashop>methodmb_b76c1a1463e45cece931ef4467c0bdf8'] = 'Zniżki łącznie';
+$_MODULE['<{paypal}prestashop>paypalordercreaterequest_b76c1a1463e45cece931ef4467c0bdf8'] = 'Zniżki łącznie';
 $_MODULE['<{paypal}prestashop>methodmb_5981855556d6acfd044f87984094e280'] = 'Zaakceptowano płatność i zrealizowano transakcję';
 $_MODULE['<{paypal}prestashop>methodmb_36500501ab89967d20b1beb686880d44'] = 'Obecnie używasz trybu autoryzacji. Oznacza to, że autoryzacja płatności przebiega oddzielnie od pobrania środków z autoryzowanej płatności. Aby pobrać środki z autoryzowanej płatności, musisz zmienić status zamówienia na „płatność zaakceptowana” (lub na status niestandardowy o tym samym znaczeniu). W tym miejscu możesz wybrać niestandardowy status zamówienia w celu zaakceptowania zamówienia i zatwierdzenia transakcji w trybie autoryzowania.';
 $_MODULE['<{paypal}prestashop>methodmb_c6a9094c053f62817cf82c904082378e'] = 'Status domyślny: płatność zaakceptowana';
@@ -363,7 +369,7 @@ $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_1c1c788e139
 $_MODULE['<{paypal}prestashop>adminpaypalhelpcontroller_09a74d0b7e593735e8f2ed964e25bc52'] = 'Elementy „hook” zostały zarejestrowane';
 $_MODULE['<{paypal}prestashop>adminpaypalsetupcontroller_ceac84408a31a0038e3a738f44bbdce1'] = 'Działanie płatnicze (dotyczy tylko PayPal Express)';
 $_MODULE['<{paypal}prestashop>adminpaypalsetupcontroller_1732ea113df380073ab4d32d831bf5ed'] = 'Działania płatnicze można zmienić wyłącznie na potrzeby płatności PayPal Express. Jeśli korzystasz z PayPal Plus, jedynym możliwym działaniem jest „Sprzedaż”.';
-$_MODULE['<{paypal}prestashop>ecscorder_ea34b5c6cf6511c7c9e23cf7bf5d6792'] = 'Twój adres jest niekompletny. Zaktualizuj go.';
+$_MODULE['<{paypal}prestashop>scorder_ea34b5c6cf6511c7c9e23cf7bf5d6792'] = 'Twój adres jest niekompletny. Zaktualizuj go.';
 $_MODULE['<{paypal}prestashop>mbvalidation_2cefaad0cc997fdcba5539e6c30f0fd2'] = 'Nieprawidłowa konfiguracja. Sprawdź plik konfiguracyjny.';
 $_MODULE['<{paypal}prestashop>adminprocessloggercontroller_53c6a96a3df980c3270d6ed82b6f174b'] = 'Czy chcesz usunąć zaznaczone przedmioty?';
 $_MODULE['<{paypal}prestashop>adminprocessloggercontroller_b4a34d3f58b039e7685c2e39b5413757'] = 'Pomyślna aktualizacja.';
@@ -390,12 +396,16 @@ $_MODULE['<{paypal}prestashop>mbcredentialsform_37e31370e4ab230ff6fba12cc6390aff
 $_MODULE['<{paypal}prestashop>mbcredentialsform_195ca49498f0b30d3a8967eff22fa9b3'] = 'Podpis API';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_229a7ec501323b94db7ff3157a7623c9'] = 'ID handlowca';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_1d18bf3e09ec1ad0236145e6e55fe193'] = 'https://developer.paypal.com/developer/applications/';
+
+$_MODULE['<{paypal}prestashop>accountsettingsblock_1d18bf3e09ec1ad0236145e6e55fe193'] = 'https://developer.paypal.com/developer/applications/';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_5ba82ead337af776b86db00ba9b6d541'] = 'Utwórz « aplikacje interfejsu API REST »';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_c4159369ab0d9986c1ef1a5949a5c900'] = 'Kliknij „Pokaż” poniżej opcji „Sekret:”';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_7f161ed5b9f8fd29729abb01773e8dbc'] = 'Skopiuj i wklej swój « Identyfikator klienta » i « Hasło » poniżej dla każdego środowiska';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_2652eec977dcb2a5aea85f5bec235b05'] = 'Centrum testowe';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_76525f0f34b48475e5ca33f71d296f3b'] = 'ID klienta';
+$_MODULE['<{paypal}prestashop>eccredentialfields_76525f0f34b48475e5ca33f71d296f3b'] = 'ID klienta';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_1e6947ac7fb3a9529a9726eb692c8cc5'] = 'Sekret';
+$_MODULE['<{paypal}prestashop>eccredentialfields_1e6947ac7fb3a9529a9726eb692c8cc5'] = 'Sekret';
 $_MODULE['<{paypal}prestashop>mbcredentialsform_955ad3298db330b5ee880c2c9e6f23a0'] = 'Na żywo';
 $_MODULE['<{paypal}prestashop>forpaypalplususers_58f9d45a3e079c0585ade6a1f3702c4b'] = 'Korzystasz z niemieckiego rachunku handlowca. Począwszy od wersji 5.0.0 oficjalnego modułu PayPal, wymagane jest korzystanie z usługi PayPal Plus, a nie PayPal Express.';
 $_MODULE['<{paypal}prestashop>forpaypalplususers_1d943813b4aedae1adf6a962bf47f23f'] = 'Dodaj poniższe dane uwierzytelniające interfejsu API REST, aby skonfigurować konto i móc nadal oferować swoim klientom rozwiązanie płatnicze PayPal. [a @href1@]Dowiedz się więcej o usłudze PayPal Plus[/a].';
@@ -419,4 +429,16 @@ $_MODULE['<{paypal}prestashop>help_44beb4f75b7808f19a23cbbfd15c8bdb'] = 'Jeśli 
 $_MODULE['<{paypal}prestashop>prestashopcheckoutinfo_65316efa7409b87099260ad5e3556708'] = 'Ten moduł umożliwia Twoim klientom płatności za pomocą konta PayPal. Jeśli poza PayPal chcesz również akceptować karty kredytowe i inne metody płatności, zalecamy moduł [a @href1@]PrestaShop Checkout[/a].';
 $_MODULE['<{paypal}prestashop>adminpaypalhelpcontroller_ca89e348869638cc70a085475a3be8c5'] = 'Pobierz PrestaShop Checkout';
 $_MODULE['<{paypal}prestashop>paypal_6b33c16e6353bb8c9e31464179231237'] = 'Wystąpił nieoczekiwany problem podczas zwrotu pieniędzy. Aby uzyskać więcej informacji, przejdź do zakładki PayPal w szczegółach zamówienia.';
-$_MODULE['<{paypal}prestashop>paypal_6b33c16e6353bb8c9e31464179231237'] = 'Wystąpił nieoczekiwany problem podczas zwrotu pieniędzy. Aby uzyskać więcej informacji, przejdź do zakładki PayPal w szczegółach zamówienia.';
+$_MODULE['<{paypal}prestashop>paypal_c3a5c8884cf21ed048acf66a9039a150'] = 'Status zamówienia został zmieniony, ale transakcja ta została już w pełni zwrócona.';
+$_MODULE['<{paypal}prestashop>paypalordercreaterequest_484f5a79672cebe198ebdde45a1d672f'] = 'Zawijanie prezentów';
+$_MODULE['<{paypal}prestashop>adminpaypalsetupcontroller_20beb534b185ef0f27602cde37c17da4'] = 'Podczas zapisywania konfiguracji \"Akcja płatności\" wystąpił błąd. Proszę zapisać tę konfigurację ponownie, aby uniknąć błędów płatności.';
+$_MODULE['<{paypal}prestashop>scorder_8f4603ba5094ec0d3fca1eeda5d0aab8'] = 'Błąd podłączenia do ';
+$_MODULE['<{paypal}prestashop>scorder_7ff5bcd1a7dd3e2dc15e69b90babcfde'] = 'Państwo jest zobowiązane do realizacji płatności. Proszę wypełnić pole Stan.';
+$_MODULE['<{paypal}prestashop>scorder_7afff0211446b3c00496c44b41bd634b'] = 'Kraj nie jest aktywny';
+$_MODULE['<{paypal}prestashop>help_4f336480993eaf67f312bfae830b3151'] = 'Czy chcesz przyjąć więcej rodzajów płatności?';
+$_MODULE['<{paypal}prestashop>accountsettingsblock_06aa6fa8bdc2078e7e1bd903e70c8f6a'] = 'podłączony';
+$_MODULE['<{paypal}prestashop>logomessage_7e5c120495d17247348b196adf61be8a'] = 'Jeśli używasz przekierowania kasy PayPal, możesz dostosować logo swojego sklepu. Logo można zmienić za pomocą [a @href1@]ustawień[/a] profilu biznesowego.';
+$_MODULE['<{paypal}prestashop>restapiintegrationmessage_29dd52f9530ecb11ec20a10b10590f5b'] = 'Ponieważ stale pracujemy nad bezpieczeństwem Twoich informacji, nowa wersja uwierzytelniania Twojego konta handlowego jest dostępna od modułu v5.2.0 PayPal Official.';
+$_MODULE['<{paypal}prestashop>restapiintegrationmessage_fbd76d66be64d3cc1bf860039b193db7'] = 'Proszę zwrócić uwagę na to, że aby kontynuować korzystanie z rozwiązania płatniczego PayPal, należy [b]ponownie podłączyć swoje konto handlowe PayPal[/b].';
+$_MODULE['<{paypal}prestashop>displayorderpreview_2b6ab125b0384eb33453b95c3f8e4ae6'] = 'ID transakcji PayPal';
+$_MODULE['<{paypal}prestashop>displayorderpreview_00aee8ea5d368378f1fa9a1638ae0238'] = 'Ostatnie logi Szczegóły';
