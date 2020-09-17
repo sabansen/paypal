@@ -332,6 +332,14 @@ Shipping costs will be estimated on the base of the cart total and default carri
 
         $inputs[] = array(
             'type' => 'html',
+            'label' => $this->l('Widget code'),
+            'name' => '',
+            'hint' => $this->l(''),
+            'html_content' => $this->getProductPageWidgetField()
+        );
+
+        $inputs[] = array(
+            'type' => 'html',
             'name' => '',
             'html_content' => $this->module->displayInformation($this->l('You can customize your orders\' status for each possible action in the PayPal module.'), false)
         );
@@ -521,5 +529,10 @@ Shipping costs will be estimated on the base of the cart total and default carri
                 'name' => $this->l('PrestaShop widget')
             )
         );
+    }
+
+    protected function getProductPageWidgetField()
+    {
+        return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/fields/productPageWidget.tpl');
     }
 }
