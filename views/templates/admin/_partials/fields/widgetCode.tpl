@@ -27,7 +27,7 @@
     <input
             type="text"
             readonly
-            value="{literal}{widget name='paypal' identifier='paypalproduct' action='paymentshortcut'}{/literal}"
+            {if isset($widgetCode)}value="{$widgetCode}"{/if}
             id="productPageWidgetCode"
     />
 

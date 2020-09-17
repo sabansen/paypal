@@ -57,7 +57,8 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             'paypal_os_accepted',
             'paypal_os_capture_canceled',
             ShortcutConfiguration::CUSTOMIZE_STYLE,
-            ShortcutConfiguration::DISPLAY_MODE_PRODUCT
+            ShortcutConfiguration::DISPLAY_MODE_PRODUCT,
+            ShortcutConfiguration::PRODUCT_PAGE_HOOK
         );
     }
 
@@ -340,6 +341,14 @@ Shipping costs will be estimated on the base of the cart total and default carri
 
         $inputs[] = array(
             'type' => 'html',
+            'label' => $this->l('Hook for displaying shortcut on product pages'),
+            'name' => '',
+            'hint' => $this->l(''),
+            'html_content' => $this->getProductPageHookSelect()
+        );
+
+        $inputs[] = array(
+            'type' => 'html',
             'name' => '',
             'html_content' => $this->module->displayInformation($this->l('You can customize your orders\' status for each possible action in the PayPal module.'), false)
         );
@@ -533,6 +542,23 @@ Shipping costs will be estimated on the base of the cart total and default carri
 
     protected function getProductPageWidgetField()
     {
-        return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/fields/productPageWidget.tpl');
+        $this->context->smarty->assign('widgetCode', '{widget name=\'paypal\' identifier=\'paypalproduct\' action=\'paymentshortcut\'}');
+        return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/fields/widgetCode.tpl');
+    }
+
+    protected function getProductPageHookSelect()
+    {
+        $this->context->smarty->assign(array(
+            'hooks' => array(
+                ShortcutConfiguration::HOOK_PRODUCT_ACTIONS => $this->l('displayProductActions (recommended) - This hook allows additional actions to be triggered, near the add to cart button.'),
+                ShortcutConfiguration::HOOK_REASSURANCE => $this->l('displayReassurance - This hook adds new elements just next to the reassurance block.'),
+                ShortcutConfiguration::HOOK_AFTER_PRODUCT_THUMBS => $this->l('displayAfterProductThumbs - This hook displays new elements below product images.'),
+                ShortcutConfiguration::HOOK_AFTER_PRODUCT_ADDITIONAL_INFO => $this->l('displayProductAdditionalInfo - This hook adds additional information next to the product description and data sheet.'),
+                ShortcutConfiguration::HOOK_FOOTER_PRODUCT => $this->l('displayFooterProduct - This hook adds new blocks on the product page just before global site footer.'),
+            ),
+            'confName' => ShortcutConfiguration::PRODUCT_PAGE_HOOK,
+            'selectedHook' => Configuration::get(ShortcutConfiguration::PRODUCT_PAGE_HOOK)
+        ));
+        return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/fields/hookSelect.tpl');
     }
 }
