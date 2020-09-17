@@ -47,6 +47,7 @@ var CustomizeCheckout = {
 
     CustomizeCheckout.checkConfigurations();
     $('input').change(CustomizeCheckout.checkConfigurations);
+    $('select').change(CustomizeCheckout.checkConfigurations);
   },
 
     checkConfigurations() {
@@ -82,20 +83,25 @@ var CustomizeCheckout = {
       const shortcutLocationCart = $('[name="paypal_express_checkout_shortcut_cart"]');
       const shortcutLocationSignup = $('[name="paypal_express_checkout_shortcut_signup"]');
       const showShortcutOnProductPage = document.querySelector('[name="paypal_express_checkout_shortcut"]');
-      const displayModeProductPageConf = [
-        'PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_PRODUCT',
-        'widgetCode',
-        'PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_HOOK_PRODUCT'
-      ];
-
+      const displayModeProductPage = document.querySelector('[name="PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_PRODUCT"]');
 
       // Show the product page display configurations of a shortcut if need
       if (showShortcutOnProductPage.checked) {
-        displayModeProductPageConf.forEach(CustomizeCheckout.showConfiguration);
         document.querySelector('[data-section-customize-mode-product]').style.display = 'block';
+        CustomizeCheckout.showConfiguration('PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_PRODUCT');
+
+        if (displayModeProductPage.value === '1') {
+          CustomizeCheckout.showConfiguration('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_HOOK_PRODUCT');
+          CustomizeCheckout.hideConfiguration('widgetCode');
+        } else if (displayModeProductPage.value === '2') {
+          CustomizeCheckout.hideConfiguration('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_HOOK_PRODUCT');
+          CustomizeCheckout.showConfiguration('widgetCode');
+        }
       } else {
-        displayModeProductPageConf.forEach(CustomizeCheckout.hideConfiguration);
         document.querySelector('[data-section-customize-mode-product]').style.display = 'none';
+        CustomizeCheckout.hideConfiguration('PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_PRODUCT');
+        CustomizeCheckout.hideConfiguration('widgetCode');
+        CustomizeCheckout.hideConfiguration('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_HOOK_PRODUCT');
       }
 
       if (paypalEcEnabled.length > 0 ) {
