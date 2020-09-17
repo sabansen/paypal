@@ -86,6 +86,9 @@ var CustomizeCheckout = {
       const displayModeProductPage = document.querySelector('[name="PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_PRODUCT"]');
       const showShortcutOnCartPage = document.querySelector('[name="paypal_express_checkout_shortcut_cart"]');
       const displayModeCartPage = document.querySelector('[name="PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_CART"]');
+      const showShortcutOnSignupPage = document.querySelector('[name="paypal_express_checkout_shortcut_signup"]');
+      const displayModeSignupPage = document.querySelector('[name="PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_SIGNUP"]');
+
 
       // Show the product page display configurations of a shortcut if need
       if (showShortcutOnProductPage.checked) {
@@ -123,6 +126,25 @@ var CustomizeCheckout = {
         CustomizeCheckout.hideConfiguration('PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_CART');
         CustomizeCheckout.hideConfiguration('cartPageWidgetCode');
         CustomizeCheckout.hideConfiguration('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_HOOK_CART');
+      }
+
+      // Show the signup page display configurations of a shortcut if need
+      if (showShortcutOnSignupPage.checked) {
+        document.querySelector('[data-section-customize-mode-signup]').style.display = 'block';
+        CustomizeCheckout.showConfiguration('PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_SIGNUP');
+
+        if (displayModeSignupPage.value === '1') {
+          CustomizeCheckout.showConfiguration('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_HOOK_SIGNUP');
+          CustomizeCheckout.hideConfiguration('signupPageWidgetCode');
+        } else if (displayModeSignupPage.value === '2') {
+          CustomizeCheckout.hideConfiguration('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_HOOK_SIGNUP');
+          CustomizeCheckout.showConfiguration('signupPageWidgetCode');
+        }
+      } else {
+        document.querySelector('[data-section-customize-mode-signup]').style.display = 'none';
+        CustomizeCheckout.hideConfiguration('PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_SIGNUP');
+        CustomizeCheckout.hideConfiguration('signupPageWidgetCode');
+        CustomizeCheckout.hideConfiguration('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_HOOK_SIGNUP');
       }
 
       if (paypalEcEnabled.length > 0 ) {
