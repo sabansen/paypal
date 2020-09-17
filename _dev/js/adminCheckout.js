@@ -84,6 +84,8 @@ var CustomizeCheckout = {
       const shortcutLocationSignup = $('[name="paypal_express_checkout_shortcut_signup"]');
       const showShortcutOnProductPage = document.querySelector('[name="paypal_express_checkout_shortcut"]');
       const displayModeProductPage = document.querySelector('[name="PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_PRODUCT"]');
+      const showShortcutOnCartPage = document.querySelector('[name="paypal_express_checkout_shortcut_cart"]');
+      const displayModeCartPage = document.querySelector('[name="PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_CART"]');
 
       // Show the product page display configurations of a shortcut if need
       if (showShortcutOnProductPage.checked) {
@@ -102,6 +104,25 @@ var CustomizeCheckout = {
         CustomizeCheckout.hideConfiguration('PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_PRODUCT');
         CustomizeCheckout.hideConfiguration('productPageWidgetCode');
         CustomizeCheckout.hideConfiguration('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_HOOK_PRODUCT');
+      }
+
+      // Show the cart page display configurations of a shortcut if need
+      if (showShortcutOnCartPage.checked) {
+        document.querySelector('[data-section-customize-mode-cart]').style.display = 'block';
+        CustomizeCheckout.showConfiguration('PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_CART');
+
+        if (displayModeCartPage.value === '1') {
+          CustomizeCheckout.showConfiguration('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_HOOK_CART');
+          CustomizeCheckout.hideConfiguration('cartPageWidgetCode');
+        } else if (displayModeCartPage.value === '2') {
+          CustomizeCheckout.hideConfiguration('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_HOOK_CART');
+          CustomizeCheckout.showConfiguration('cartPageWidgetCode');
+        }
+      } else {
+        document.querySelector('[data-section-customize-mode-cart]').style.display = 'none';
+        CustomizeCheckout.hideConfiguration('PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_CART');
+        CustomizeCheckout.hideConfiguration('cartPageWidgetCode');
+        CustomizeCheckout.hideConfiguration('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_HOOK_CART');
       }
 
       if (paypalEcEnabled.length > 0 ) {
