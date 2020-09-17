@@ -63,6 +63,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             ShortcutConfiguration::PRODUCT_PAGE_HOOK,
             ShortcutConfiguration::DISPLAY_MODE_CART,
             ShortcutConfiguration::CART_PAGE_HOOK,
+            ShortcutConfiguration::DISPLAY_MODE_SIGNUP
         );
     }
 
@@ -398,6 +399,38 @@ Shipping costs will be estimated on the base of the cart total and default carri
         $inputs[] = array(
             'type' => 'html',
             'name' => '',
+            'html_content' => $this->context->smarty->assign(
+                array(
+                    'title' => $this->l('Sign up step in checkout'),
+                    'attributes' => ['data-section-customize-mode-signup']
+                )
+            )->fetch($this->getTemplatePath() . '_partials/form/sectionTitle.tpl')
+        );
+
+        $inputs[] = array(
+            'type' => 'select',
+            'label' => $this->l('Display mode'),
+            'name' => ShortcutConfiguration::DISPLAY_MODE_SIGNUP,
+            'hint' => $this->l('By default, PayPal shortcut is displayed on your web site via PrestaShop native hook. If you choose to use PrestaShop widgets, you will be able to copy widget code and insert it wherever you want in the product template.'),
+            'class' => 'pp-w-100',
+            'options' => array(
+                'query' => $this->getShortcutCustomizeModeOptions(),
+                'id' => 'id',
+                'name' => 'name'
+            )
+        );
+
+        $inputs[] = array(
+            'type' => 'html',
+            'label' => $this->l('Widget code'),
+            'name' => '',
+            'hint' => $this->l(''),
+            'html_content' => $this->getSignupPageWidgetField()
+        );
+
+        $inputs[] = array(
+            'type' => 'html',
+            'name' => '',
             'html_content' => $this->module->displayInformation($this->l('You can customize your orders\' status for each possible action in the PayPal module.'), false)
         );
 
@@ -629,6 +662,13 @@ Shipping costs will be estimated on the base of the cart total and default carri
     {
         $this->context->smarty->assign('widgetCode', '{widget name=\'paypal\' identifier=\'paypalcart\' action=\'paymentshortcut\'}');
         $this->context->smarty->assign('confName', 'cartPageWidgetCode');
+        return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/form/fields/widgetCode.tpl');
+    }
+
+    protected function getSignupPageWidgetField()
+    {
+        $this->context->smarty->assign('widgetCode', '{widget name=\'paypal\' identifier=\'paypalcart\' action=\'paymentshortcut\'}');
+        $this->context->smarty->assign('confName', 'signupPageWidgetCode');
         return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/form/fields/widgetCode.tpl');
     }
 }
