@@ -92,15 +92,15 @@ var CustomizeCheckout = {
 
         if (displayModeProductPage.value === '1') {
           CustomizeCheckout.showConfiguration('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_HOOK_PRODUCT');
-          CustomizeCheckout.hideConfiguration('widgetCode');
+          CustomizeCheckout.hideConfiguration('productPageWidgetCode');
         } else if (displayModeProductPage.value === '2') {
           CustomizeCheckout.hideConfiguration('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_HOOK_PRODUCT');
-          CustomizeCheckout.showConfiguration('widgetCode');
+          CustomizeCheckout.showConfiguration('productPageWidgetCode');
         }
       } else {
         document.querySelector('[data-section-customize-mode-product]').style.display = 'none';
         CustomizeCheckout.hideConfiguration('PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_PRODUCT');
-        CustomizeCheckout.hideConfiguration('widgetCode');
+        CustomizeCheckout.hideConfiguration('productPageWidgetCode');
         CustomizeCheckout.hideConfiguration('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_HOOK_PRODUCT');
       }
 

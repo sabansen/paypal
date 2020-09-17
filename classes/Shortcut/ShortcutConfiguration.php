@@ -54,4 +54,12 @@ class ShortcutConfiguration
     const HOOK_FOOTER_PRODUCT = 'displayFooterProduct';
 
     const PRODUCT_PAGE_HOOK = 'PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_HOOK_PRODUCT';
+
+    const DISPLAY_MODE_CART = 'PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_CART';
+
+    const CART_PAGE_HOOK = 'PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_HOOK_CART';
+
+    const HOOK_EXPRESS_CHECKOUT = 'displayExpressCheckout';
+
+    const HOOK_SHOPPING_CART_FOOTER = 'displayShoppingCartFooter';
 }

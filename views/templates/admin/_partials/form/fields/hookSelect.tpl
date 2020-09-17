@@ -23,7 +23,7 @@
 * International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div class="pp-select-preview-container">
+<div class="pp-select-preview-container pp__mb-5">
   <div class="pp-select-container">
     <select name="{if isset($confName)}{$confName}{/if}">
         {if isset($hooks) && false === empty($hooks)}

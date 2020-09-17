@@ -60,7 +60,9 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             'paypal_os_capture_canceled',
             ShortcutConfiguration::CUSTOMIZE_STYLE,
             ShortcutConfiguration::DISPLAY_MODE_PRODUCT,
-            ShortcutConfiguration::PRODUCT_PAGE_HOOK
+            ShortcutConfiguration::PRODUCT_PAGE_HOOK,
+            ShortcutConfiguration::DISPLAY_MODE_CART,
+            ShortcutConfiguration::CART_PAGE_HOOK,
         );
     }
 
@@ -331,7 +333,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
             'hint' => $this->l('By default, PayPal shortcut is displayed on your web site via PrestaShop native hook. If you choose to use PrestaShop widgets, you will be able to copy widget code and insert it wherever you want in the product template.'),
             'class' => 'pp-w-100',
             'options' => array(
-                'query' => $this->getShortcutProductCustomizeModeOptions(),
+                'query' => $this->getShortcutCustomizeModeOptions(),
                 'id' => 'id',
                 'name' => 'name'
             )
@@ -351,6 +353,46 @@ Shipping costs will be estimated on the base of the cart total and default carri
             'name' => '',
             'hint' => $this->l(''),
             'html_content' => $this->getProductPageHookSelect()
+        );
+
+        $inputs[] = array(
+            'type' => 'html',
+            'name' => '',
+            'html_content' => $this->context->smarty->assign(
+                array(
+                    'title' => $this->l('Shopping cart page'),
+                    'attributes' => ['data-section-customize-mode-cart']
+                )
+            )->fetch($this->getTemplatePath() . '_partials/form/sectionTitle.tpl')
+        );
+
+        $inputs[] = array(
+            'type' => 'select',
+            'label' => $this->l('Display mode'),
+            'name' => ShortcutConfiguration::DISPLAY_MODE_CART,
+            'hint' => $this->l('By default, PayPal shortcut is displayed on your web site via PrestaShop native hook. If you choose to use PrestaShop widgets, you will be able to copy widget code and insert it wherever you want in the product template.'),
+            'class' => 'pp-w-100',
+            'options' => array(
+                'query' => $this->getShortcutCustomizeModeOptions(),
+                'id' => 'id',
+                'name' => 'name'
+            )
+        );
+
+        $inputs[] = array(
+            'type' => 'html',
+            'label' => $this->l('Widget code'),
+            'name' => '',
+            'hint' => $this->l(''),
+            'html_content' => $this->getCartPageWidgetField()
+        );
+
+        $inputs[] = array(
+            'type' => 'html',
+            'label' => $this->l('Hook for displaying shortcut on product pages'),
+            'name' => '',
+            'hint' => $this->l(''),
+            'html_content' => $this->getCartPageHookSelect()
         );
 
         $inputs[] = array(
@@ -532,7 +574,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
         return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/messages/logoMessage.tpl');
     }
 
-    protected function getShortcutProductCustomizeModeOptions()
+    protected function getShortcutCustomizeModeOptions()
     {
         return array(
             array(
@@ -548,6 +590,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
 
     protected function getProductPageWidgetField()
     {
+        $this->context->smarty->assign('confName', 'productPageWidgetCode');
         $this->context->smarty->assign('widgetCode', '{widget name=\'paypal\' identifier=\'paypalproduct\' action=\'paymentshortcut\'}');
         return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/form/fields/widgetCode.tpl');
     }
@@ -566,5 +609,26 @@ Shipping costs will be estimated on the base of the cart total and default carri
             'selectedHook' => Configuration::get(ShortcutConfiguration::PRODUCT_PAGE_HOOK)
         ));
         return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/form/fields/hookSelect.tpl');
+    }
+
+    protected function getCartPageHookSelect()
+    {
+        $this->context->smarty->assign(array(
+            'hooks' => array(
+                ShortcutConfiguration::HOOK_EXPRESS_CHECKOUT => $this->l('displayExpressCheckout (recommended) - This hook adds content to the cart view, in the right sidebar, after the cart totals.'),
+                ShortcutConfiguration::HOOK_SHOPPING_CART_FOOTER => $this->l('displayShoppingCartFooter - This hook displays some specific information after the list of products in the shopping cart.'),
+                ShortcutConfiguration::HOOK_REASSURANCE => $this->l('displayReassurance - This hook displays content in the right sidebar, in the block below the cart total.'),
+            ),
+            'confName' => ShortcutConfiguration::CART_PAGE_HOOK,
+            'selectedHook' => Configuration::get(ShortcutConfiguration::CART_PAGE_HOOK)
+        ));
+        return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/form/fields/hookSelect.tpl');
+    }
+
+    protected function getCartPageWidgetField()
+    {
+        $this->context->smarty->assign('widgetCode', '{widget name=\'paypal\' identifier=\'paypalcart\' action=\'paymentshortcut\'}');
+        $this->context->smarty->assign('confName', 'cartPageWidgetCode');
+        return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/form/fields/widgetCode.tpl');
     }
 }

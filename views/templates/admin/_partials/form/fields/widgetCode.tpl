@@ -23,19 +23,19 @@
 * International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div class="input-group">
+<div class="input-group pp__mb-5">
     <input
             type="text"
             readonly
             {if isset($widgetCode)}value="{$widgetCode}"{/if}
-            id="productPageWidgetCode"
-            name="widgetCode"
+            id="{if isset($confName)}{$confName}{/if}"
+            name="{if isset($confName)}{$confName}{/if}"
     />
 
     <span
             class="input-group-addon"
             style="cursor: pointer"
-            onclick="document.getElementById('productPageWidgetCode').select(); document.execCommand('copy')"
+            onclick="document.getElementById('{if isset($confName)}{$confName}{/if}').select(); document.execCommand('copy')"
     >
             <i class="icon-copy"></i>
     </span>
