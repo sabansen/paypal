@@ -36,4 +36,22 @@ class ShortcutConfiguration
     const SHOW_ON_PRODUCT_PAGE = 'PAYPAL_EXPRESS_CHECKOUT_SHORTCUT';
 
     const CUSTOMIZE_STYLE = 'PAYPAL_EXPRESS_CHECKOUT_CUSTOMIZE_SHORTCUT_STYLE';
+
+    const DISPLAY_MODE_PRODUCT = 'PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_PRODUCT';
+
+    const DISPLAY_MODE_TYPE_HOOK = 1;
+
+    const DISPLAY_MODE_TYPE_WIDGET = 2;
+
+    const HOOK_PRODUCT_ACTIONS = 'displayProductActions';
+
+    const HOOK_REASSURANCE = 'displayReassurance';
+
+    const HOOK_AFTER_PRODUCT_THUMBS = 'displayAfterProductThumbs';
+
+    const HOOK_AFTER_PRODUCT_ADDITIONAL_INFO = 'displayProductAdditionalInfo';
+
+    const HOOK_FOOTER_PRODUCT = 'displayFooterProduct';
+
+    const PRODUCT_PAGE_HOOK = 'PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_HOOK_PRODUCT';
 }

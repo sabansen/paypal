@@ -52,3 +52,30 @@
 .tick li {
   margin-bottom: 40px;
 }
+
+.pp-w-100, .bootstrap .pp-w-100 {
+  width: 100% !important;
+}
+
+.pp-select-preview-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+
+  .pp-select-container {
+    flex-basis: 50%;
+  }
+
+  .pp-preview-container {
+    display: flex;
+    flex-basis: 50%;
+    justify-content: center;
+    align-content: center;
+
+    .pp-preview {
+      flex-basis: 80%;
+      background-color: #7b8a8b;
+    }
+  }
+}
+
