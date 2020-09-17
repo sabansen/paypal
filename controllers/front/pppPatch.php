@@ -24,8 +24,8 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
-include_once _PS_MODULE_DIR_.'paypal/classes/AbstractMethodPaypal.php';
-include_once _PS_MODULE_DIR_.'paypal/controllers/front/abstract.php';
+
+use PaypalAddons\classes\AbstractMethodPaypal;
 
 /**
  * Update PPP payment request before initialize it.
@@ -36,10 +36,18 @@ class PaypalPppPatchModuleFrontController extends PaypalAbstarctModuleFrontContr
     public function postProcess()
     {
         $method_ppp = AbstractMethodPaypal::load('PPP');
+        $method_ppp->setPaymentId(Tools::getValue('idPayment'));
+
         if (Context::getContext()->cookie->paypal_plus_payment) {
             try {
-                $method_ppp->doPatch();
-                $this->jsonValues = array('success' => true);
+                $resultPath = $method_ppp->doOrderPatch();
+
+                if ($resultPath->isSuccess()) {
+                    $this->jsonValues = array('success' => $resultPath->isSuccess());
+                } else {
+                    $this->errors['error_msg'] = $resultPath->getError()->getMessage();
+                    $this->jsonValues = array('success' => false, 'redirect_link' => Context::getContext()->link->getModuleLink($this->name, 'error', $this->errors));
+                }
             } catch (Exception $e) {
                 $this->errors['error_code'] = $e->getCode();
                 $this->errors['error_msg'] = $e->getMessage();

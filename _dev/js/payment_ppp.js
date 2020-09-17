@@ -74,6 +74,9 @@ const doPatchPPP = () => {
       type: 'POST',
       url: ajaxPatchUrl,
       dataType: 'json',
+      data: {
+        idPayment: idPaymentPPP,
+      },
       success: (json) => {
         if (json.success) {
           ppp.doCheckout();

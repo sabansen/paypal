@@ -28,8 +28,7 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-require_once _PS_MODULE_DIR_ . 'paypal/classes/AbstractMethodPaypal.php';
-
+use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalPPBTlib\Install\ModuleInstaller;
 
 /**

@@ -24,8 +24,8 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
-include_once _PS_MODULE_DIR_.'paypal/classes/AbstractMethodPaypal.php';
-include_once _PS_MODULE_DIR_.'paypal/controllers/front/abstract.php';
+
+use PaypalAddons\classes\AbstractMethodPaypal;
 /**
  * Init payment for EC shortcut
  */
@@ -55,50 +55,11 @@ class PaypalScInitModuleFrontController extends PaypalAbstarctModuleFrontControl
         $this->setMethod(AbstractMethodPaypal::load($methodType));
     }
 
-    public function postProcess()
+    public function displayAjaxCheckAvailability()
     {
-        if ($this->values['checkAvailability']) {
-            return $this->checkAvailability();
-        }
+        $request = $this->getRequest();
 
-        if ($this->values['source_page'] == 'product') {
-            $this->prepareProduct();
-        }
-
-        if (Validate::isLoadedObject($this->context->cart) == false) {
-            return false;
-        }
-
-        try {
-            $this->method->setParameters($this->values);
-            $response = $this->method->init();
-
-            if ($this->values['getToken']) {
-                $this->jsonValues = array('success' => true, 'token' => $this->method->token);
-            } else {
-                $this->redirectUrl = $response;
-            }
-        } catch (PaypalAddons\classes\PaypalException $e) {
-            $this->errors['error_code'] = $e->getCode();
-            $this->errors['error_msg'] = $e->getMessage();
-            $this->errors['msg_long'] = $e->getMessageLong();
-        } catch (Exception $e) {
-            $this->errors['error_code'] = $e->getCode();
-            $this->errors['error_msg'] = $e->getMessage();
-        }
-
-        if (!empty($this->errors)) {
-            if ($this->values['getToken']) {
-                $this->jsonValues = array('success' => false, 'redirect_link' => Context::getContext()->link->getModuleLink($this->name, 'error', $this->errors));
-            } else {
-                $this->redirectUrl = Context::getContext()->link->getModuleLink($this->name, 'error', $this->errors);
-            }
-        }
-    }
-
-    public function checkAvailability()
-    {
-        switch ($this->values['source_page']) {
+        switch ($request->page) {
             case 'cart':
                 if ($this->context->cart->checkQuantities() && $this->context->cart->hasProducts()) {
                     $this->jsonValues = array('success' => true);
@@ -107,9 +68,10 @@ class PaypalScInitModuleFrontController extends PaypalAbstarctModuleFrontControl
                 }
                 break;
             case 'product':
-                $product = new Product($this->values['id_product']);
-                $product->id_product_attribute = $this->values['product_attribute'] != 0 ? $this->values['product_attribute'] : $this->values['id_product_attribute'];
-                if ($product->checkQty($this->values['quantity'])) {
+                $product = new Product((int)$request->idProduct);
+                $group = $this->parseCombination($request->combination);
+                $product->id_product_attribute = Product::getIdProductAttributeByIdAttributes($request->idProduct, $group);
+                if ($product->checkQty($request->quantity)) {
                     $this->jsonValues = array('success' => true);
                 } else {
                     $this->jsonValues = array('success' => false);
@@ -119,7 +81,19 @@ class PaypalScInitModuleFrontController extends PaypalAbstarctModuleFrontControl
         }
     }
 
+    protected function parseCombination($combination)
+    {
+        $temp_group = explode('|', $combination);
+        $group = array();
 
+        foreach ($temp_group as $item) {
+            $temp = explode(':', $item);
+            $temp = array_map(function($value) {return trim($value);}, $temp);
+            $group[$temp[0]] = $temp[1];
+        }
+
+        return $group;
+    }
 
     public function prepareProduct()
     {
@@ -137,13 +111,8 @@ class PaypalScInitModuleFrontController extends PaypalAbstarctModuleFrontControl
 
         if ($this->values['combination']) {
             // build group for search product attribute
-            $temp_group = explode('|', $this->values['combination']);
-            $group = array();
-            foreach ($temp_group as $item) {
-                $temp = explode(':', $item);
-                $group[$temp[0]] = $temp[1];
-            }
-            $this->context->cart->updateQty($this->values['quantity'], $this->values['id_product'], Product::getIdProductAttributesByIdAttributes($this->values['id_product'], $group));
+            $group = $this->parseCombination($this->values['combination']);
+            $this->context->cart->updateQty($this->values['quantity'], $this->values['id_product'], Product::getIdProductAttributeByIdAttributes($this->values['id_product'], $group));
         } else {
             $this->context->cart->updateQty($this->values['quantity'], $this->values['id_product']);
         }
@@ -152,5 +121,26 @@ class PaypalScInitModuleFrontController extends PaypalAbstarctModuleFrontControl
     public function setMethod($method)
     {
         $this->method = $method;
+    }
+
+    public function displayAjaxCreateOrder()
+    {
+        $request = $this->getRequest();
+
+        if ($request->page == 'product') {
+            $this->values['quantity'] = $request->quantity;
+            $this->values['id_product'] = $request->idProduct;
+            $this->values['combination'] = $request->combination;
+
+            $this->prepareProduct();
+        }
+
+        $this->method->init();
+        $this->jsonValues = ['success' => true, 'idOrder' => $this->method->getPaymentId()];
+    }
+
+    public function getRequest()
+    {
+        return json_decode(file_get_contents('php://input'));
     }
 }

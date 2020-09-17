@@ -68,12 +68,7 @@ class ServicePaypalIpn
      */
     public function getCartByTransaction($idTransaction)
     {
-        $query = new \DbQuery();
-        $query->from('paypal_order');
-        $query->select('id_cart');
-        $query->where('id_transaction = "' . pSQL($idTransaction) . '"');
-
-        if ($idCart = \Db::getInstance()->getValue($query)) {
+        if ($idCart = $this->getIdCartByTransaction($idTransaction)) {
             $cart = new \Cart((int)$idCart);
             if (\Validate::isLoadedObject($cart)) {
                 return $cart;
@@ -81,5 +76,19 @@ class ServicePaypalIpn
         }
 
         return false;
+    }
+
+    /**
+     * @param $idTransaction string
+     * @return int
+     */
+    public function getIdCartByTransaction($idTransaction)
+    {
+        $query = new \DbQuery();
+        $query->from('paypal_order');
+        $query->select('id_cart');
+        $query->where('id_transaction = "' . pSQL($idTransaction) . '"');
+
+        return (int) \Db::getInstance()->getValue($query);
     }
 }

@@ -7,127 +7,86 @@ The MethodEC extends the abstract class AbstractMethodPayPal.
 
 ## Definition
 
-This class contains functions for creating transactions for paying for an order, 
-refunding money for already created transactions and other functions 
-related to the payment method "Express checkout"
+This class contains an information about a state of the method 
+(configured or non, client id, secret id etc)
 
 
 ## Methods
 
 
-- **_getCredentialsInfo([mode_order = null])**
-
-    - **Parametres**
-      
-      mode_order: `bool` True is mode **Sandbox**, False is mode **Live**. If mode_order is **null**
-      current mode configured will be used
+- **checkCredentials()**  
+    
+    This method check the setted credentials
     
     - **Return Values**
     
-      `array` returns array of the parameters for creating of the connection with PayPal
+      `void` 
       
-- **_getDiscountsList(currency)**
-
-    - **Parametres**
       
-      currency: `string` ISO of the currency
-    
-    - **Return Values**
-    
-      `void` adds the information related to the used discounts to the transaction  
+- **confirmCapture($paypalOrder)**  
 
-- **__getGiftWrapping(currency)**
-
-    - **Parametres**
-      
-      currency: `string` ISO of the currency
-    
-    - **Return Values**
-    
-      `void` adds the information related to the gift wrapping to the transaction      
-
-- **_getPaymentDetails()**
-    
-    - **Return Values**
-    
-      `void` adds the information about payment to the transaction. 
-      Calls the methods `_getDiscountsList()`, `__getGiftWrapping()`, `_getProductsList()`, `_getPaymentValues()`
-
-- **_getPaymentValues($currency)**
-
-    - **Parametres**
-      
-      currency: `string` ISO of the currency
-    
-    - **Return Values**
-    
-      `void` adds the information about payment to the transaction
-      
-- **_getProductsList($currency)**
-
-    - **Parametres**
-      
-      currency: `string` ISO of the currency
-    
-    - **Return Values**
-    
-      `void` adds the information about the products of the order to the transaction
-
-- **_getShippingAddress()**
-    
-    - **Return Values**
-    
-      `object` returns the PayPal\EBLBaseComponents\AddressType object
-
-- **checkCredentials($mode = null)**
+    This method captures an authorized transaction
 
     - **Parametres**
           
-      mode: `boolean` the mode of the environment. True is Sandbox, False is Live
+      $paypalOrder: `PaypalOrder` object
     
     - **Return Values**
     
-      `void` check if the credentials are right and update the value 'PAYPAL_CONNECTION_EC_CONFIGURED'
-      in DB
-
-- **confirmCapture($paypal_order)**
-
-    - **Parametres**
-          
-      paypal_order: `object` the PaypalOrder object
-    
-    - **Return Values**
-    
-      `array` returns the result of the transaction confirmation
+      `ResponseCaptureAuthorize` object
       
-- **formatPrice($price)**
-
-    - **Parametres**
-          
-      price: `float` price
-    
-    - **Return Values**
-    
-      `string` returns the converted price      
       
+- **getAdvancedFormInputs()**      
+    
+    - **Return Values**  
+    `array` returns the advanced from fields
+      
+      
+- **getCancelUrl()**  
+    Implements an abstract method      
+      
+- **getClientId()**  
+    Implements an abstract method
+    
+- **getDateTransaction()**
+
+    - **Return value**  
+    `string` time of a transaction
+    
+- **getIntent()**  
+    Implements an abstract method
+    
+- **getOrderStatus()**
+    
+    - **Return Values**  
+    `int` returns id order state. It is used in AbstractMethosPaypal::validation() method. 
+    
+- **getPaymentId()**
+    
+    - **Return Value**  
+    `string` returns id payment. It is used in AbstractMethosPaypal::validation() method.
+    
+- **getPaypalPartnerId()**  
+    Implements an abstract method
+    
+- **getReturnUrl()**  
+    Implements an abstract method
+    
+- **getSecret()**  
+    Implements an abstract method
+    
+- **getShortCut()**  
+    
+    - **Return Value**  
+    `bool` returns true if the smart button is used
+    
+           
 - **getInfo()**
     
     - **Return Values**
     
       `object` returns the \PayPal\PayPalAPI\GetExpressCheckoutDetailsResponseType object
-
-- **getLinkToTransaction($id_transaction, $sandbox)**
-
-    - **Parametres**
-          
-      id_transaction: `string` id of the payment transaction
-          
-      sandbox: `boolean` the mode of the environment. True is Sandbox, False is Live
-    
-    - **Return Values**
-    
-      `string` returns the the link to the page of the transaction on the site of PayPal     
-      
+         
 - **getTplVars()**
     
     - **Return Values**
@@ -154,15 +113,28 @@ related to the payment method "Express checkout"
     
       `void` does disconnect with PayPal by deleting the saved credentials      
       
-- **redirectToAPI($method)**
+- **renderExpressCheckoutShortCut($context, $type, $page_source)**
 
     - **Parametres**
           
-      method: `string` EC, PPP
+      context: `Context` object  
+      type: `string`  
+      page_source: `string` like product / order
     
     - **Return Values**
     
-      `string` returns the link      
+      `string` HTML code
+      
+- **setConfig($params)**
+
+    - **Parametres**
+          
+      params: `array` must consist the clientId and secret
+    
+    - **Return Values**
+    
+      `void`
+     
       
 - **useMobile()**
     

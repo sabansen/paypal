@@ -25,6 +25,7 @@
 
 // Import functions for scrolling effect to necessary block on click
 import {hoverConfig, hoverTabConfig} from './functions.js';
+import {Onboarding} from "./Onboarding";
 
 export  const SetupAdmin = {
   init() {
@@ -65,6 +66,9 @@ export  const SetupAdmin = {
       let action = e.target.getAttribute('data-action');
       SetupAdmin.psCheckoutHandleAction(action);
     });
+
+    window.onboardCallback = Onboarding.handleResponse;
+    Onboarding.addPaypalLib();
   },
 
   logoutAccount() {

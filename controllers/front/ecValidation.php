@@ -24,8 +24,8 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
-include_once _PS_MODULE_DIR_.'paypal/classes/AbstractMethodPaypal.php';
-include_once _PS_MODULE_DIR_.'paypal/controllers/front/abstract.php';
+
+use PaypalAddons\classes\AbstractMethodPaypal;
 
 /**
  * Validate EC payment
@@ -36,8 +36,7 @@ class PaypalEcValidationModuleFrontController extends PaypalAbstarctModuleFrontC
     {
         parent::init();
         $this->values['short_cut'] = Tools::getvalue('short_cut');
-        $this->values['payerId'] = Tools::getvalue('PayerID');
-        $this->values['payment_token'] = Tools::getvalue('token');
+        $this->values['paymentId'] = Tools::getvalue('token');
     }
     /**
      * @see FrontController::postProcess()
@@ -46,8 +45,19 @@ class PaypalEcValidationModuleFrontController extends PaypalAbstarctModuleFrontC
     {
         $method_ec = AbstractMethodPaypal::load('EC');
         $paypal = Module::getInstanceByName($this->name);
+
         try {
             $method_ec->setParameters($this->values);
+
+            if ($method_ec->getShortCut()) {
+                /** @var $resultPath \PaypalAddons\classes\API\Response\Response*/
+                $resultPath = $method_ec->doOrderPatch();
+
+                if ($resultPath->isSuccess() == false) {
+                    throw new Exception($resultPath->getError()->getMessage());
+                }
+            }
+
             $method_ec->validation();
             $cart = Context::getContext()->cart;
             $customer = new Customer($cart->id_customer);
@@ -71,7 +81,6 @@ class PaypalEcValidationModuleFrontController extends PaypalAbstarctModuleFrontC
 
         //unset cookie of payment init
         Context::getContext()->cookie->__unset('paypal_ecs');
-        Context::getContext()->cookie->__unset('paypal_ecs_payerid');
         Context::getContext()->cookie->__unset('paypal_ecs_email');
 
         if (!empty($this->errors)) {
