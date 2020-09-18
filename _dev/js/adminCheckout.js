@@ -78,7 +78,7 @@ var CustomizeCheckout = {
           'paypal_os_validation_error',
           'paypal_os_refunded_paypal'
       ];
-      const customShortcutStyle = $('[name="PAYPAL_EXPRESS_CHECKOUT_CUSTOMIZE_SHORTCUT_STYLE"]');
+      const customShortcutStyle = document.querySelector('[name="PAYPAL_EXPRESS_CHECKOUT_CUSTOMIZE_SHORTCUT_STYLE"]');
       const shortcutLocationProduct = $('[name="paypal_express_checkout_shortcut"]');
       const shortcutLocationCart = $('[name="paypal_express_checkout_shortcut_cart"]');
       const shortcutLocationSignup = $('[name="paypal_express_checkout_shortcut_signup"]');
@@ -91,7 +91,7 @@ var CustomizeCheckout = {
 
 
       // Show the product page display configurations of a shortcut if need
-      if (showShortcutOnProductPage.checked) {
+      if (showShortcutOnProductPage.checked && customShortcutStyle.checked) {
         document.querySelector('[data-section-customize-mode-product]').style.display = 'block';
         CustomizeCheckout.showConfiguration('PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_PRODUCT');
 
@@ -110,7 +110,7 @@ var CustomizeCheckout = {
       }
 
       // Show the cart page display configurations of a shortcut if need
-      if (showShortcutOnCartPage.checked) {
+      if (showShortcutOnCartPage.checked  && customShortcutStyle.checked) {
         document.querySelector('[data-section-customize-mode-cart]').style.display = 'block';
         CustomizeCheckout.showConfiguration('PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_CART');
 
@@ -129,7 +129,7 @@ var CustomizeCheckout = {
       }
 
       // Show the signup page display configurations of a shortcut if need
-      if (showShortcutOnSignupPage.checked) {
+      if (showShortcutOnSignupPage.checked  && customShortcutStyle.checked) {
         document.querySelector('[data-section-customize-mode-signup]').style.display = 'block';
         CustomizeCheckout.showConfiguration('PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_SIGNUP');
 
@@ -176,9 +176,9 @@ var CustomizeCheckout = {
       }
 
       // Show the alert if the customize shortcut style is active and any shortcut location is not active
-      if (customShortcutStyle.length > 0) {
+      if (customShortcutStyle !== null) {
         if (
-          customShortcutStyle.prop('checked') === true
+          customShortcutStyle.checked === true
           && shortcutLocationProduct.prop('checked') === false
           && shortcutLocationCart.prop('checked') === false
           && shortcutLocationSignup.prop('checked') === false
