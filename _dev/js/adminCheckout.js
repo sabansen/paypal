@@ -48,6 +48,7 @@ var CustomizeCheckout = {
     CustomizeCheckout.checkConfigurations();
     $('input').change(CustomizeCheckout.checkConfigurations);
     $('select').change(CustomizeCheckout.checkConfigurations);
+    $(document).on('click', '[toggle-style-configuration]', CustomizeCheckout.toggleStyleConfiguration)
   },
 
     checkConfigurations() {
@@ -207,6 +208,20 @@ var CustomizeCheckout = {
 
         formGroup.show();
     },
+
+  toggleStyleConfiguration(e) {
+    var button = $(e.target);
+    var configurations = button.closest('[customize-style-shortcut-container]').find('[configuration-section]');
+    var preview = button.closest('[customize-style-shortcut-container]').find('[preview-section]');
+
+    if (configurations.hasClass('hidden')) {
+      configurations.removeClass('hidden');
+      preview.removeClass('invisible');
+    } else {
+      configurations.addClass('hidden');
+      preview.addClass('invisible');
+    }
+  }
 
 }
 

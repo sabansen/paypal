@@ -28,7 +28,13 @@ require_once _PS_MODULE_DIR_ . 'paypal/vendor/autoload.php';
 
 use PaypalAddons\classes\AdminPayPalController;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\Shortcut\Form\Definition\CustomizeButtonStyleSectionDefinition;
+use PaypalAddons\classes\Shortcut\Form\Field\InputChain;
+use PaypalAddons\classes\Shortcut\Form\Field\Select;
+use PaypalAddons\classes\Shortcut\Form\Field\SelectOption;
+use PaypalAddons\classes\Shortcut\Form\Field\TextInput;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
+use PaypalAddons\classes\Shortcut\ShortcutPreview;
 
 class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
 {
@@ -63,7 +69,12 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             ShortcutConfiguration::PRODUCT_PAGE_HOOK,
             ShortcutConfiguration::DISPLAY_MODE_CART,
             ShortcutConfiguration::CART_PAGE_HOOK,
-            ShortcutConfiguration::DISPLAY_MODE_SIGNUP
+            ShortcutConfiguration::DISPLAY_MODE_SIGNUP,
+            ShortcutConfiguration::STYLE_LABEL_PRODUCT,
+            ShortcutConfiguration::STYLE_COLOR_PRODUCT,
+            ShortcutConfiguration::STYLE_SHAPE_PRODUCT,
+            ShortcutConfiguration::STYLE_HEIGHT_PRODUCT,
+            ShortcutConfiguration::STYLE_WIDTH_PRODUCT
         );
     }
 
@@ -354,6 +365,14 @@ Shipping costs will be estimated on the base of the cart total and default carri
             'name' => '',
             'hint' => $this->l(''),
             'html_content' => $this->getProductPageHookSelect()
+        );
+
+        $inputs[] = array(
+            'type' => 'html',
+            'label' => $this->l('Current shortcut style'),
+            'name' => '',
+            'hint' => $this->l(''),
+            'html_content' => $this->getCustomizeStyleSectionProduct()
         );
 
         $inputs[] = array(
@@ -670,5 +689,151 @@ Shipping costs will be estimated on the base of the cart total and default carri
         $this->context->smarty->assign('widgetCode', '{widget name=\'paypal\' identifier=\'paypalcart\' action=\'paymentshortcut\'}');
         $this->context->smarty->assign('confName', 'signupPageWidgetCode');
         return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/form/fields/widgetCode.tpl');
+    }
+
+    protected function getCustomizeStyleSectionProduct()
+    {
+        $sectionDefinition = new CustomizeButtonStyleSectionDefinition();
+        $sectionDefinition
+            ->setNameColor(ShortcutConfiguration::STYLE_COLOR_PRODUCT)
+            ->setTypeColor(ShortcutConfiguration::TYPE_STYLE_SELECT)
+            ->setNameHeight(ShortcutConfiguration::STYLE_HEIGHT_PRODUCT)
+            ->setTypeHeight(ShortcutConfiguration::TYPE_STYLE_TEXT)
+            ->setNameWidth(ShortcutConfiguration::STYLE_WIDTH_PRODUCT)
+            ->setTypeWidth(ShortcutConfiguration::TYPE_STYLE_TEXT)
+            ->setNameLabel(ShortcutConfiguration::STYLE_LABEL_PRODUCT)
+            ->setTypeLabel(ShortcutConfiguration::TYPE_STYLE_SELECT)
+            ->setNameShape(ShortcutConfiguration::STYLE_SHAPE_PRODUCT)
+            ->setTypeShape(ShortcutConfiguration::TYPE_STYLE_SELECT);
+
+        return $this->getCustomizeStyleSection($sectionDefinition);
+    }
+
+    protected function getCustomizeStyleSection(CustomizeButtonStyleSectionDefinition $sectionDefinition)
+    {
+        $label = Configuration::get($sectionDefinition->getNameLabel(), null, null, null, 'pay');
+        $height = (int) Configuration::get($sectionDefinition->getNameHeight(), null, null, null, 35);
+        $width = (int) Configuration::get($sectionDefinition->getNameWidth(), null, null, null, 150);
+        $color = Configuration::get($sectionDefinition->getNameColor(), null, null, null, 'gold');
+        $shape = Configuration::get($sectionDefinition->getNameShape(), null, null, null, 'rect');
+
+        $ShortCut = new ShortcutPreview(
+            $label,
+            $height,
+            $width,
+            $color,
+            $shape
+        );
+
+        $configurations = [];
+
+        // Init color selection
+        $colorOptions = [
+            new SelectOption(
+                ShortcutConfiguration::STYLE_COLOR_GOLD,
+                $this->l('Gold (recommended)')
+            ),
+            new SelectOption(
+                ShortcutConfiguration::STYLE_COLOR_BLUE,
+                $this->l('Blue (first alternative)')
+            ),
+            new SelectOption(
+                ShortcutConfiguration::STYLE_COLOR_SILVER,
+                $this->l('Silver (second alternative)')
+            ),
+            new SelectOption(
+                ShortcutConfiguration::STYLE_COLOR_WHITE,
+                $this->l('White (second alternative)')
+            ),
+            new SelectOption(
+                ShortcutConfiguration::STYLE_COLOR_BLACK,
+                $this->l('Black (second alternative)')
+            )
+        ];
+
+        $colorSelect = new Select(
+            $sectionDefinition->getNameColor(),
+            $colorOptions,
+            $this->l('Color'),
+            $color
+        );
+
+        $configurations[] = $colorSelect;
+
+        // Init a shape selection
+        $shapeOptions = [
+            new SelectOption(
+                ShortcutConfiguration::STYLE_SHAPRE_RECT,
+                $this->l('Rectangle (recommended) - default button shape')
+            ),
+            new SelectOption(
+                ShortcutConfiguration::STYLE_SHAPRE_PILL,
+                $this->l('Pill - secondary button shape option')
+            )
+        ];
+
+        $shapeSelect = new Select(
+            $sectionDefinition->getNameShape(),
+            $shapeOptions,
+            $this->l('Shape'),
+            $shape
+        );
+
+        $configurations[] = $shapeSelect;
+
+        // Init a size field
+        $inputs = [];
+        $inputs[] = new TextInput(
+            $sectionDefinition->getNameWidth(),
+            $width,
+            $this->l('Width')
+        );
+
+        $inputs[] = new TextInput(
+            $sectionDefinition->getNameHeight(),
+            $height,
+            $this->l('Height (value from 25 to 55)')
+        );
+
+        $sizeField = new InputChain(
+            $inputs
+        );
+        $sizeField->setLabel($this->l('Size'));
+        $configurations[] = $sizeField;
+
+        // Init a label selection
+        $labelOptions = [
+            new SelectOption(
+                ShortcutConfiguration::STYLE_LABEL_BUYNOW,
+                $this->l('PayPal Buy Now button (recommended)')
+            ),
+            new SelectOption(
+                ShortcutConfiguration::STYLE_LABEL_PAYPAL,
+                $this->l('PayPal logo')
+            ),
+            new SelectOption(
+                ShortcutConfiguration::STYLE_LABEL_CHECKOUT,
+                $this->l('Checkout button')
+            ),
+            new SelectOption(
+                ShortcutConfiguration::STYLE_LABEL_PAY,
+                $this->l('Pay With PayPal button')
+            )
+        ];
+
+        $labelSelect = new Select(
+            $sectionDefinition->getNameLabel(),
+            $labelOptions,
+            $this->l('Label'),
+            $label
+        );
+
+        $configurations[] = $labelSelect;
+
+        $this->context->smarty
+            ->assign('shortcut', $ShortCut->render())
+            ->assign('configurations', $configurations);
+
+        return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/form/customizeStyleSection.tpl');
     }
 }
