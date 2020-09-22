@@ -51,8 +51,10 @@ var CustomizeCheckout = {
     $(document).on('click', '[toggle-style-configuration]', function (e) {
       CustomizeCheckout.toggleStyleConfiguration(e);
       CustomizeCheckout.updatePreviewButton(e);
+      CustomizeCheckout.updateColorDescription(e);
     });
     $(document).on('change', '[customize-style-shortcut-container]', CustomizeCheckout.updatePreviewButton);
+    $(document).on('change', '[data-type="color"]', CustomizeCheckout.updateColorDescription);
   },
 
     checkConfigurations() {
@@ -266,6 +268,22 @@ var CustomizeCheckout = {
         }
       },
     })
+  },
+
+  updateColorDescription(e) {
+    var container = $(e.target).closest('[customize-style-shortcut-container]');
+    var color = container.find('[data-type="color"]').val();
+
+    container.find('[after-select-content] [data-color]').hide();
+
+    if (color === 'gold') {
+      container.find('[after-select-content] [data-color="gold"]').show();
+    } else if(color === 'blue') {
+      container.find('[after-select-content] [data-color="blue"]').show();
+    } else if (['silver', 'white', 'black'].includes(color)) {
+      container.find('[after-select-content] [data-color="other"]').show();
+    }
+
   }
 
 };

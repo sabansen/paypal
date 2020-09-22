@@ -814,6 +814,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
             $color,
             ShortcutConfiguration::CONFIGURATION_TYPE_COLOR
         );
+        $colorSelect->setAfterSelectContent(Context::getContext()->smarty->fetch(_PS_MODULE_DIR_ . 'paypal/views/templates/admin/_partials/form/colorDescriptions.tpl'));
 
         $configurations[] = $colorSelect;
 
