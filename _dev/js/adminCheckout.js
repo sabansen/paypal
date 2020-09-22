@@ -225,9 +225,13 @@ var CustomizeCheckout = {
     var preview = button.closest('[customize-style-shortcut-container]').find('[preview-section]');
 
     if (configurations.hasClass('hidden')) {
+      button.find('i').addClass('icon-remove');
+      button.find('i').removeClass('icon-edit');
       configurations.removeClass('hidden');
       preview.removeClass('invisible');
     } else {
+      button.find('i').removeClass('icon-remove');
+      button.find('i').addClass('icon-edit');
       configurations.addClass('hidden');
       preview.addClass('invisible');
     }
