@@ -866,7 +866,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
         $labelOptions = [
             new SelectOption(
                 ShortcutConfiguration::STYLE_LABEL_BUYNOW,
-                $this->l('PayPal Buy Now button (recommended)')
+                $sectionDefinition->getNameLabel() === ShortcutConfiguration::STYLE_LABEL_PRODUCT ? $this->l('PayPal Buy Now button (recommended)') : $this->l('PayPal Buy Now button')
             ),
             new SelectOption(
                 ShortcutConfiguration::STYLE_LABEL_PAYPAL,
@@ -874,7 +874,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
             ),
             new SelectOption(
                 ShortcutConfiguration::STYLE_LABEL_CHECKOUT,
-                $this->l('Checkout button')
+                $sectionDefinition->getNameLabel() === ShortcutConfiguration::STYLE_LABEL_PRODUCT ? $this->l('Checkout button') : $this->l('Checkout button (recomended)')
             ),
             new SelectOption(
                 ShortcutConfiguration::STYLE_LABEL_PAY,
