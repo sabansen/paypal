@@ -35,25 +35,25 @@
 
   <script>
     {literal}
-      if (typeof styleSetting == 'undefined') {
-          var btnStyle = {
-              label: 'pay',
-              height: 35
+
+      function waitPaypalIsLoaded() {
+
+          if (typeof paypal == 'undefined') {
+              setTimeout(waitPaypalIsLoaded, 2000);
+              return;
           }
-      } else {
-        var btnStyle = styleSetting
-      }
 
-      if (typeof shortcutID == 'undefined') {
-          var selector = '[preview-button-container]';
-      } else {
-          var selector = '[preview-button-container][data-id="' + shortcutID + '"]';
-      }
+          var btnStyle = {/literal}{$styleSetting|json_encode nofilter}{literal};
 
-      paypal.Buttons({
-          fundingSource: paypal.FUNDING.PAYPAL,
-          style: btnStyle
-      }).render(document.querySelector(selector));
+          var selector = '[preview-button-container]{/literal}{if isset($shortcutID)}[data-id="{$shortcutID}"]{/if}{literal}';
+
+          paypal.Buttons({
+              fundingSource: paypal.FUNDING.PAYPAL,
+              style: btnStyle
+          }).render(document.querySelector(selector));
+      };
+
+      waitPaypalIsLoaded();
 
     {/literal}
   </script>

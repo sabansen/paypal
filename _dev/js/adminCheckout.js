@@ -264,7 +264,7 @@ var CustomizeCheckout = {
     })
   }
 
-}
+};
 
 $(document).ready(() => {
   CustomizeCheckout.init();

@@ -74,7 +74,6 @@ abstract class ShortcutAbstract
         $JSvars['sc_init_url'] = $this->context->link->getModuleLink($this->module->name, 'ScInit', array(), true);
         $JSvars['scOrderUrl'] = $this->context->link->getModuleLink($this->module->name, 'scOrder', array(), true);
         $JSvars['styleSetting'] = $this->getStyleSetting();
-        $JSvars['shortcutID'] = $this->getId();
 
         return $JSvars;
     }
