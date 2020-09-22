@@ -366,7 +366,6 @@ Shipping costs will be estimated on the base of the cart total and default carri
             'type' => 'html',
             'label' => $this->l('Widget code'),
             'name' => '',
-            'hint' => $this->l(''),
             'html_content' => $this->getProductPageWidgetField()
         );
 
@@ -374,7 +373,6 @@ Shipping costs will be estimated on the base of the cart total and default carri
             'type' => 'html',
             'label' => $this->l('Hook for displaying shortcut on product pages'),
             'name' => '',
-            'hint' => $this->l(''),
             'html_content' => $this->getProductPageHookSelect()
         );
 
@@ -414,7 +412,6 @@ Shipping costs will be estimated on the base of the cart total and default carri
             'type' => 'html',
             'label' => $this->l('Widget code'),
             'name' => '',
-            'hint' => $this->l(''),
             'html_content' => $this->getCartPageWidgetField()
         );
 
@@ -422,7 +419,6 @@ Shipping costs will be estimated on the base of the cart total and default carri
             'type' => 'html',
             'label' => $this->l('Hook for displaying shortcut on product pages'),
             'name' => '',
-            'hint' => $this->l(''),
             'html_content' => $this->getCartPageHookSelect()
         );
 
@@ -430,7 +426,6 @@ Shipping costs will be estimated on the base of the cart total and default carri
             'type' => 'html',
             'label' => $this->l('Current shortcut style'),
             'name' => '',
-            'hint' => $this->l(''),
             'html_content' => $this->getCustomizeStyleSectionCart()
         );
 
@@ -462,7 +457,6 @@ Shipping costs will be estimated on the base of the cart total and default carri
             'type' => 'html',
             'label' => $this->l('Widget code'),
             'name' => '',
-            'hint' => $this->l(''),
             'html_content' => $this->getSignupPageWidgetField()
         );
 
@@ -470,7 +464,6 @@ Shipping costs will be estimated on the base of the cart total and default carri
             'type' => 'html',
             'label' => $this->l('Current shortcut style'),
             'name' => '',
-            'hint' => $this->l(''),
             'html_content' => $this->getCustomizeStyleSectionSignup()
         );
 
