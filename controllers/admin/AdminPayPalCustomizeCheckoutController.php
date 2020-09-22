@@ -75,7 +75,17 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             ShortcutConfiguration::STYLE_COLOR_PRODUCT,
             ShortcutConfiguration::STYLE_SHAPE_PRODUCT,
             ShortcutConfiguration::STYLE_HEIGHT_PRODUCT,
-            ShortcutConfiguration::STYLE_WIDTH_PRODUCT
+            ShortcutConfiguration::STYLE_WIDTH_PRODUCT,
+            ShortcutConfiguration::STYLE_LABEL_CART,
+            ShortcutConfiguration::STYLE_COLOR_CART,
+            ShortcutConfiguration::STYLE_SHAPE_CART,
+            ShortcutConfiguration::STYLE_HEIGHT_CART,
+            ShortcutConfiguration::STYLE_WIDTH_CART,
+            ShortcutConfiguration::STYLE_LABEL_SIGNUP,
+            ShortcutConfiguration::STYLE_COLOR_SIGNUP,
+            ShortcutConfiguration::STYLE_SHAPE_SIGNUP,
+            ShortcutConfiguration::STYLE_HEIGHT_SIGNUP,
+            ShortcutConfiguration::STYLE_WIDTH_SIGNUP
         );
     }
 
@@ -418,6 +428,14 @@ Shipping costs will be estimated on the base of the cart total and default carri
 
         $inputs[] = array(
             'type' => 'html',
+            'label' => $this->l('Current shortcut style'),
+            'name' => '',
+            'hint' => $this->l(''),
+            'html_content' => $this->getCustomizeStyleSectionCart()
+        );
+
+        $inputs[] = array(
+            'type' => 'html',
             'name' => '',
             'html_content' => $this->context->smarty->assign(
                 array(
@@ -446,6 +464,14 @@ Shipping costs will be estimated on the base of the cart total and default carri
             'name' => '',
             'hint' => $this->l(''),
             'html_content' => $this->getSignupPageWidgetField()
+        );
+
+        $inputs[] = array(
+            'type' => 'html',
+            'label' => $this->l('Current shortcut style'),
+            'name' => '',
+            'hint' => $this->l(''),
+            'html_content' => $this->getCustomizeStyleSectionSignup()
         );
 
         $inputs[] = array(
@@ -705,6 +731,42 @@ Shipping costs will be estimated on the base of the cart total and default carri
             ->setNameLabel(ShortcutConfiguration::STYLE_LABEL_PRODUCT)
             ->setTypeLabel(ShortcutConfiguration::TYPE_STYLE_SELECT)
             ->setNameShape(ShortcutConfiguration::STYLE_SHAPE_PRODUCT)
+            ->setTypeShape(ShortcutConfiguration::TYPE_STYLE_SELECT);
+
+        return $this->getCustomizeStyleSection($sectionDefinition);
+    }
+
+    protected function getCustomizeStyleSectionCart()
+    {
+        $sectionDefinition = new CustomizeButtonStyleSectionDefinition();
+        $sectionDefinition
+            ->setNameColor(ShortcutConfiguration::STYLE_COLOR_CART)
+            ->setTypeColor(ShortcutConfiguration::TYPE_STYLE_SELECT)
+            ->setNameHeight(ShortcutConfiguration::STYLE_HEIGHT_CART)
+            ->setTypeHeight(ShortcutConfiguration::TYPE_STYLE_TEXT)
+            ->setNameWidth(ShortcutConfiguration::STYLE_WIDTH_CART)
+            ->setTypeWidth(ShortcutConfiguration::TYPE_STYLE_TEXT)
+            ->setNameLabel(ShortcutConfiguration::STYLE_LABEL_CART)
+            ->setTypeLabel(ShortcutConfiguration::TYPE_STYLE_SELECT)
+            ->setNameShape(ShortcutConfiguration::STYLE_SHAPE_CART)
+            ->setTypeShape(ShortcutConfiguration::TYPE_STYLE_SELECT);
+
+        return $this->getCustomizeStyleSection($sectionDefinition);
+    }
+
+    protected function getCustomizeStyleSectionSignup()
+    {
+        $sectionDefinition = new CustomizeButtonStyleSectionDefinition();
+        $sectionDefinition
+            ->setNameColor(ShortcutConfiguration::STYLE_COLOR_SIGNUP)
+            ->setTypeColor(ShortcutConfiguration::TYPE_STYLE_SELECT)
+            ->setNameHeight(ShortcutConfiguration::STYLE_HEIGHT_SIGNUP)
+            ->setTypeHeight(ShortcutConfiguration::TYPE_STYLE_TEXT)
+            ->setNameWidth(ShortcutConfiguration::STYLE_WIDTH_SIGNUP)
+            ->setTypeWidth(ShortcutConfiguration::TYPE_STYLE_TEXT)
+            ->setNameLabel(ShortcutConfiguration::STYLE_LABEL_SIGNUP)
+            ->setTypeLabel(ShortcutConfiguration::TYPE_STYLE_SELECT)
+            ->setNameShape(ShortcutConfiguration::STYLE_SHAPE_SIGNUP)
             ->setTypeShape(ShortcutConfiguration::TYPE_STYLE_SELECT);
 
         return $this->getCustomizeStyleSection($sectionDefinition);

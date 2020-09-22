@@ -99,6 +99,7 @@ var CustomizeCheckout = {
       if (showShortcutOnProductPage.checked && customShortcutStyle.checked) {
         document.querySelector('[data-section-customize-mode-product]').style.display = 'block';
         CustomizeCheckout.showConfiguration('PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_PRODUCT');
+        CustomizeCheckout.showConfiguration('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_STYLE_COLOR_PRODUCT');
 
         if (displayModeProductPage.value === '1') {
           CustomizeCheckout.showConfiguration('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_HOOK_PRODUCT');
@@ -112,12 +113,14 @@ var CustomizeCheckout = {
         CustomizeCheckout.hideConfiguration('PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_PRODUCT');
         CustomizeCheckout.hideConfiguration('productPageWidgetCode');
         CustomizeCheckout.hideConfiguration('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_HOOK_PRODUCT');
+        CustomizeCheckout.hideConfiguration('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_STYLE_COLOR_PRODUCT');
       }
 
       // Show the cart page display configurations of a shortcut if need
       if (showShortcutOnCartPage.checked  && customShortcutStyle.checked) {
         document.querySelector('[data-section-customize-mode-cart]').style.display = 'block';
         CustomizeCheckout.showConfiguration('PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_CART');
+        CustomizeCheckout.showConfiguration('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_STYLE_COLOR_CART');
 
         if (displayModeCartPage.value === '1') {
           CustomizeCheckout.showConfiguration('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_HOOK_CART');
@@ -131,12 +134,14 @@ var CustomizeCheckout = {
         CustomizeCheckout.hideConfiguration('PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_CART');
         CustomizeCheckout.hideConfiguration('cartPageWidgetCode');
         CustomizeCheckout.hideConfiguration('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_HOOK_CART');
+        CustomizeCheckout.hideConfiguration('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_STYLE_COLOR_CART');
       }
 
       // Show the signup page display configurations of a shortcut if need
       if (showShortcutOnSignupPage.checked  && customShortcutStyle.checked) {
         document.querySelector('[data-section-customize-mode-signup]').style.display = 'block';
         CustomizeCheckout.showConfiguration('PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_SIGNUP');
+        CustomizeCheckout.showConfiguration('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_STYLE_COLOR_SIGNUP');
 
         if (displayModeSignupPage.value === '1') {
           CustomizeCheckout.showConfiguration('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_HOOK_SIGNUP');
@@ -150,6 +155,7 @@ var CustomizeCheckout = {
         CustomizeCheckout.hideConfiguration('PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_SIGNUP');
         CustomizeCheckout.hideConfiguration('signupPageWidgetCode');
         CustomizeCheckout.hideConfiguration('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_HOOK_SIGNUP');
+        CustomizeCheckout.hideConfiguration('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_STYLE_COLOR_SIGNUP');
       }
 
       if (paypalEcEnabled.length > 0 ) {
