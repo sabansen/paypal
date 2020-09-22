@@ -100,4 +100,14 @@ class ShortcutConfiguration
     const STYLE_LABEL_BUYNOW = 'buynow';
 
     const STYLE_LABEL_PAY = 'pay';
+
+    const CONFIGURATION_TYPE_COLOR = 'color';
+
+    const CONFIGURATION_TYPE_SHAPE = 'shape';
+
+    const CONFIGURATION_TYPE_LABEL = 'label';
+
+    const CONFIGURATION_TYPE_WIDTH = 'width';
+
+    const CONFIGURATION_TYPE_HEIGHT = 'height';
 }

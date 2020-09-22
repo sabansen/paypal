@@ -27,7 +27,8 @@
   <input
           type="text"
           {if isset($name)}name="{$name}"{/if}
-          {if isset($value)}value="{$value}"{/if}>
+          {if isset($value)}value="{$value}"{/if}
+          {if isset($configType)}data-type="{$configType}"{/if}>
 </div>
 
 <div class="pp__flex pp__justify-content-center pp__mt-2">

@@ -48,7 +48,11 @@ var CustomizeCheckout = {
     CustomizeCheckout.checkConfigurations();
     $('input').change(CustomizeCheckout.checkConfigurations);
     $('select').change(CustomizeCheckout.checkConfigurations);
-    $(document).on('click', '[toggle-style-configuration]', CustomizeCheckout.toggleStyleConfiguration)
+    $(document).on('click', '[toggle-style-configuration]', function (e) {
+      CustomizeCheckout.toggleStyleConfiguration(e);
+      CustomizeCheckout.updatePreviewButton(e);
+    });
+    $(document).on('change', '[customize-style-shortcut-container]', CustomizeCheckout.updatePreviewButton);
   },
 
     checkConfigurations() {
@@ -221,6 +225,37 @@ var CustomizeCheckout = {
       configurations.addClass('hidden');
       preview.addClass('invisible');
     }
+  },
+
+  updatePreviewButton(e) {
+    var container = $(e.target).closest('[customize-style-shortcut-container]');
+    var preview = container.find('[preview-section]').find('[button-container]');
+    var configurations = container.find('[configuration-section]');
+    var color = configurations.find('[data-type="color"]').val();
+    var shape = configurations.find('[data-type="shape"]').val();
+    var label = configurations.find('[data-type="label"]').val();
+    var width = configurations.find('[data-type="width"]').val();
+    var height = configurations.find('[data-type="height"]').val();
+
+    $.ajax({
+      url: controllerUrl,
+      type: 'POST',
+      dataType: 'JSON',
+      data: {
+        ajax: true,
+        action: 'getShortcut',
+        color: color,
+        shape: shape,
+        label: label,
+        height: height,
+        width: width
+      },
+      success(response) {
+        if ('content' in response) {
+          preview.html(response.content);
+        }
+      },
+    })
   }
 
 }

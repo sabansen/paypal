@@ -31,12 +31,16 @@
   </div>
 
   <div field>
-    <select name="{if isset($name)}{$name}{/if}">
+    <select
+            name="{if isset($name)}{$name}{/if}"
+            {if isset($configType)}data-type="{$configType}"{/if}>
+
         {if isset($options) && false === empty($options)}
             {foreach from=$options item=option}
                 {$option->render() nofilter}
             {/foreach}
         {/if}
+
     </select>
   </div>
 </div>

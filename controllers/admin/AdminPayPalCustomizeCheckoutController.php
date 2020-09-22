@@ -35,6 +35,7 @@ use PaypalAddons\classes\Shortcut\Form\Field\SelectOption;
 use PaypalAddons\classes\Shortcut\Form\Field\TextInput;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Shortcut\ShortcutPreview;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
 {
@@ -755,7 +756,8 @@ Shipping costs will be estimated on the base of the cart total and default carri
             $sectionDefinition->getNameColor(),
             $colorOptions,
             $this->l('Color'),
-            $color
+            $color,
+            ShortcutConfiguration::CONFIGURATION_TYPE_COLOR
         );
 
         $configurations[] = $colorSelect;
@@ -776,7 +778,8 @@ Shipping costs will be estimated on the base of the cart total and default carri
             $sectionDefinition->getNameShape(),
             $shapeOptions,
             $this->l('Shape'),
-            $shape
+            $shape,
+            ShortcutConfiguration::CONFIGURATION_TYPE_SHAPE
         );
 
         $configurations[] = $shapeSelect;
@@ -786,13 +789,15 @@ Shipping costs will be estimated on the base of the cart total and default carri
         $inputs[] = new TextInput(
             $sectionDefinition->getNameWidth(),
             $width,
-            $this->l('Width')
+            $this->l('Width'),
+            ShortcutConfiguration::CONFIGURATION_TYPE_WIDTH
         );
 
         $inputs[] = new TextInput(
             $sectionDefinition->getNameHeight(),
             $height,
-            $this->l('Height (value from 25 to 55)')
+            $this->l('Height (value from 25 to 55)'),
+            ShortcutConfiguration::CONFIGURATION_TYPE_HEIGHT
         );
 
         $sizeField = new InputChain(
@@ -825,7 +830,8 @@ Shipping costs will be estimated on the base of the cart total and default carri
             $sectionDefinition->getNameLabel(),
             $labelOptions,
             $this->l('Label'),
-            $label
+            $label,
+            ShortcutConfiguration::CONFIGURATION_TYPE_LABEL
         );
 
         $configurations[] = $labelSelect;
@@ -835,5 +841,25 @@ Shipping costs will be estimated on the base of the cart total and default carri
             ->assign('configurations', $configurations);
 
         return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/form/customizeStyleSection.tpl');
+    }
+
+    public function displayAjaxGetShortcut()
+    {
+        $label = Tools::getValue('label', 'pay');
+        $height = (int) Tools::getValue('height', 35);
+        $width = (int) Tools::getValue('width', 150);
+        $color = Tools::getValue('color', 'gold');
+        $shape = Configuration::get('shape', 'rect');
+
+        $ShortCut = new ShortcutPreview(
+            $label,
+            $height,
+            $width,
+            $color,
+            $shape
+        );
+
+        $response = new JsonResponse(['content' => $ShortCut->render()]);
+        return $response->send();
     }
 }

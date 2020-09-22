@@ -66,7 +66,9 @@ class ShortcutPreview extends ShortcutAbstract
      */
     protected function getTplVars()
     {
-        return [];
+        return [
+            'shortcutID' => $this->getId()
+        ];
     }
 
     protected function getTemplatePath()

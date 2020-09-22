@@ -43,12 +43,16 @@ class Select implements FieldInteface
     /** @var mixed*/
     protected $value;
 
-    public function __construct(string $name, array $options, string $label, $value = null)
+    /** @var string*/
+    protected $type;
+
+    public function __construct(string $name, array $options, string $label, $value = null, $type = null)
     {
         $this->setName($name);
         $this->setOptions($options);
         $this->setLabel($label);
         $this->setValue($value);
+        $this->setType($type);
     }
 
     public function render()
@@ -65,6 +69,7 @@ class Select implements FieldInteface
             ->assign('name', $this->getName())
             ->assign('options', $this->getOptions())
             ->assign('label', $this->getLabel())
+            ->assign('configType', $this->getType())
             ->fetch(_PS_MODULE_DIR_ . 'paypal/views/templates/admin/_partials/form/fields/select.tpl');
     }
 
@@ -156,6 +161,24 @@ class Select implements FieldInteface
     public function setValue($value)
     {
         $this->value = $value;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return (string) $this->type;
+    }
+
+    /**
+     * @param string $type
+     * @return Select
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
         return $this;
     }
 }

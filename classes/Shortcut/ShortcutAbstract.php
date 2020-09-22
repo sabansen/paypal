@@ -43,11 +43,15 @@ abstract class ShortcutAbstract
     /** @var AbstractMethodPaypal*/
     protected $method;
 
+    /** @var string*/
+    protected $id;
+
     public function __construct()
     {
         $this->context = Context::getContext();
         $this->module = Module::getInstanceByName('paypal');
         $this->method = AbstractMethodPaypal::load($this->getMethodType());
+        $this->setId(uniqid());
     }
 
     /**
@@ -70,6 +74,7 @@ abstract class ShortcutAbstract
         $JSvars['sc_init_url'] = $this->context->link->getModuleLink($this->module->name, 'ScInit', array(), true);
         $JSvars['scOrderUrl'] = $this->context->link->getModuleLink($this->module->name, 'scOrder', array(), true);
         $JSvars['styleSetting'] = $this->getStyleSetting();
+        $JSvars['shortcutID'] = $this->getId();
 
         return $JSvars;
     }
@@ -119,5 +124,23 @@ abstract class ShortcutAbstract
         $styleSetting['height'] = 35;
 
         return $styleSetting;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return (string) $this->id;
+    }
+
+    /**
+     * @param string $id
+     * @return ShortcutAbstract
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
     }
 }

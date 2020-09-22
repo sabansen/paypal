@@ -27,7 +27,7 @@
 {extends file='./shortcut-layout.tpl'}
 
 {block name='content'}
-  <div preview-button-container></div>
+  <div preview-button-container {if isset($shortcutID)} data-id="{$shortcutID}" {/if}></div>
 {/block}
 
 {block name='js'}
@@ -43,10 +43,17 @@
       } else {
         var btnStyle = styleSetting
       }
+
+      if (typeof shortcutID == 'undefined') {
+          var selector = '[preview-button-container]';
+      } else {
+          var selector = '[preview-button-container][data-id="' + shortcutID + '"]';
+      }
+
       paypal.Buttons({
           fundingSource: paypal.FUNDING.PAYPAL,
           style: btnStyle
-      }).render(document.querySelector('[preview-button-container]'));
+      }).render(document.querySelector(selector));
 
     {/literal}
   </script>

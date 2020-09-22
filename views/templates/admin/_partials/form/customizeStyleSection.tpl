@@ -50,7 +50,8 @@
     </div>
   </div>
 
-  <div preview-section class="invisible">
+  <div preview-section class="invisible" style="position: relative">
     <div button-container></div>
+    <div class="overlay"></div>
   </div>
 </div>
