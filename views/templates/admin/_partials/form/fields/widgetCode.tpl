@@ -23,7 +23,8 @@
 * International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div class="input-group pp__mb-5">
+<div>
+  <div class="input-group pp__mb-5">
     <input
             type="text"
             readonly
@@ -39,5 +40,13 @@
     >
             <i class="icon-copy"></i>
     </span>
+  </div>
+
+  <div class="pp__mt-5">
+    <div class="alert alert-info">
+        {{l s='In order to display the PayPal button via widget([a @href1@]https://devdocs.prestashop.com/1.7/modules/concepts/widgets/[/a]) it will be necessary to add it to the template at the desired location.'}|paypalreplace:['@href1@' => 'https://devdocs.prestashop.com/1.7/modules/concepts/widgets/', '@target@' => {'target="blank"'}]}
+    </div>
+  </div>
 </div>
+
 
