@@ -766,11 +766,12 @@ Shipping costs will be estimated on the base of the cart total and default carri
 
     protected function getCustomizeStyleSection(CustomizeButtonStyleSectionDefinition $sectionDefinition)
     {
-        $label = Configuration::get($sectionDefinition->getNameLabel(), null, null, null, 'pay');
+        $defaultLabel = $sectionDefinition->getNameLabel() === ShortcutConfiguration::STYLE_LABEL_PRODUCT ? ShortcutConfiguration::STYLE_LABEL_BUYNOW : ShortcutConfiguration::STYLE_LABEL_CHECKOUT;
+        $label = Configuration::get($sectionDefinition->getNameLabel(), null, null, null, $defaultLabel);
         $height = (int) Configuration::get($sectionDefinition->getNameHeight(), null, null, null, 35);
         $width = (int) Configuration::get($sectionDefinition->getNameWidth(), null, null, null, 150);
-        $color = Configuration::get($sectionDefinition->getNameColor(), null, null, null, 'gold');
-        $shape = Configuration::get($sectionDefinition->getNameShape(), null, null, null, 'rect');
+        $color = Configuration::get($sectionDefinition->getNameColor(), null, null, null, ShortcutConfiguration::STYLE_COLOR_GOLD);
+        $shape = Configuration::get($sectionDefinition->getNameShape(), null, null, null, ShortcutConfiguration::STYLE_SHAPE_RECT);
 
         $ShortCut = new ShortcutPreview(
             $label,
@@ -820,11 +821,11 @@ Shipping costs will be estimated on the base of the cart total and default carri
         // Init a shape selection
         $shapeOptions = [
             new SelectOption(
-                ShortcutConfiguration::STYLE_SHAPRE_RECT,
+                ShortcutConfiguration::STYLE_SHAPE_RECT,
                 $this->l('Rectangle (recommended) - default button shape')
             ),
             new SelectOption(
-                ShortcutConfiguration::STYLE_SHAPRE_PILL,
+                ShortcutConfiguration::STYLE_SHAPE_PILL,
                 $this->l('Pill - secondary button shape option')
             )
         ];

@@ -109,9 +109,9 @@ class ShortcutConfiguration
 
     const STYLE_COLOR_BLACK = 'black';
 
-    const STYLE_SHAPRE_RECT = 'rect';
+    const STYLE_SHAPE_RECT = 'rect';
 
-    const STYLE_SHAPRE_PILL = 'pill';
+    const STYLE_SHAPE_PILL = 'pill';
 
     const STYLE_LABEL_PAYPAL = 'paypal';
 
