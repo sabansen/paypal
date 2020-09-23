@@ -343,51 +343,6 @@ Shipping costs will be estimated on the base of the cart total and default carri
             'name' => '',
             'html_content' => $this->context->smarty->assign(
                 array(
-                    'title' => $this->l('Product'),
-                    'attributes' => ['data-section-customize-mode-product']
-                )
-            )->fetch($this->getTemplatePath() . '_partials/form/sectionTitle.tpl')
-        );
-
-        $inputs[] = array(
-            'type' => 'select',
-            'label' => $this->l('Display mode'),
-            'name' => ShortcutConfiguration::DISPLAY_MODE_PRODUCT,
-            'hint' => $this->l('By default, PayPal shortcut is displayed on your web site via PrestaShop native hook. If you choose to use PrestaShop widgets, you will be able to copy widget code and insert it wherever you want in the product template.'),
-            'class' => 'pp-w-100',
-            'options' => array(
-                'query' => $this->getShortcutCustomizeModeOptions(),
-                'id' => 'id',
-                'name' => 'name'
-            )
-        );
-
-        $inputs[] = array(
-            'type' => 'html',
-            'label' => $this->l('Widget code'),
-            'name' => '',
-            'html_content' => $this->getProductPageWidgetField()
-        );
-
-        $inputs[] = array(
-            'type' => 'html',
-            'label' => $this->l('Hook for displaying shortcut on product pages'),
-            'name' => '',
-            'html_content' => $this->getProductPageHookSelect()
-        );
-
-        $inputs[] = array(
-            'type' => 'html',
-            'label' => $this->l('Current shortcut style'),
-            'name' => '',
-            'html_content' => $this->getCustomizeStyleSectionProduct()
-        );
-
-        $inputs[] = array(
-            'type' => 'html',
-            'name' => '',
-            'html_content' => $this->context->smarty->assign(
-                array(
                     'title' => $this->l('Shopping cart page'),
                     'attributes' => ['data-section-customize-mode-cart']
                 )
@@ -426,6 +381,51 @@ Shipping costs will be estimated on the base of the cart total and default carri
             'label' => $this->l('Current shortcut style'),
             'name' => '',
             'html_content' => $this->getCustomizeStyleSectionCart()
+        );
+
+        $inputs[] = array(
+            'type' => 'html',
+            'name' => '',
+            'html_content' => $this->context->smarty->assign(
+                array(
+                    'title' => $this->l('Product'),
+                    'attributes' => ['data-section-customize-mode-product']
+                )
+            )->fetch($this->getTemplatePath() . '_partials/form/sectionTitle.tpl')
+        );
+
+        $inputs[] = array(
+            'type' => 'select',
+            'label' => $this->l('Display mode'),
+            'name' => ShortcutConfiguration::DISPLAY_MODE_PRODUCT,
+            'hint' => $this->l('By default, PayPal shortcut is displayed on your web site via PrestaShop native hook. If you choose to use PrestaShop widgets, you will be able to copy widget code and insert it wherever you want in the product template.'),
+            'class' => 'pp-w-100',
+            'options' => array(
+                'query' => $this->getShortcutCustomizeModeOptions(),
+                'id' => 'id',
+                'name' => 'name'
+            )
+        );
+
+        $inputs[] = array(
+            'type' => 'html',
+            'label' => $this->l('Widget code'),
+            'name' => '',
+            'html_content' => $this->getProductPageWidgetField()
+        );
+
+        $inputs[] = array(
+            'type' => 'html',
+            'label' => $this->l('Hook for displaying shortcut on product pages'),
+            'name' => '',
+            'html_content' => $this->getProductPageHookSelect()
+        );
+
+        $inputs[] = array(
+            'type' => 'html',
+            'label' => $this->l('Current shortcut style'),
+            'name' => '',
+            'html_content' => $this->getCustomizeStyleSectionProduct()
         );
 
         $inputs[] = array(
