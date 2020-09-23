@@ -174,7 +174,10 @@ $(document).ready(function () {
         if (paypal_payment_method != PayPal_HSS) {
 
             if (paypal_payment_method == PayPal_PPP) {
+                $('#configuration').slideDown();
                 $('#paypalplus-credentials').slideDown();
+                $('#express_checkout_shortcut').slideDown();
+                $('input[type="submit"]').removeAttr('disabled');
             } else {
                 $('#paypalplus-credentials').slideUp();
                 $('#credentials').removeClass('paypal-disabled');
