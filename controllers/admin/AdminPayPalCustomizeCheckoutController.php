@@ -594,7 +594,25 @@ Shipping costs will be estimated on the base of the cart total and default carri
 
             foreach ($this->advanceFormParametres as $parametre) {
                 if (\Tools::isSubmit($parametre)) {
-                    $result &= \Configuration::updateValue(\Tools::strtoupper($parametre), pSQL(\Tools::getValue($parametre), ''));
+                    $value = pSQL(\Tools::getValue($parametre), '');
+
+                    if (in_array(
+                        $parametre,
+                        array(
+                            ShortcutConfiguration::STYLE_HEIGHT_PRODUCT,
+                            ShortcutConfiguration::STYLE_HEIGHT_CART,
+                            ShortcutConfiguration::STYLE_HEIGHT_SIGNUP)
+                    )) {
+                        if ((int) $value > 55) {
+                            $value = 55;
+                        }
+
+                        if ((int) $value < 25) {
+                            $value = 25;
+                        }
+                    }
+
+                    $result &= \Configuration::updateValue(\Tools::strtoupper($parametre), $value);
                 }
             }
         }
