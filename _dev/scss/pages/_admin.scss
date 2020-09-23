@@ -90,7 +90,6 @@
 
     [current-view-section] {
       display: flex;
-      justify-content: space-around;
     }
 
     [button-container] {
@@ -117,7 +116,6 @@
 
 [field-row] {
   display: flex;
-  align-items: center;
 
   [label] {
     flex-basis: 20%;

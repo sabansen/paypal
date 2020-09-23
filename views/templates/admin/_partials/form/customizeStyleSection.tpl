@@ -35,7 +35,7 @@
       </div>
 
       <div>
-        <span class="btn btn-default" toggle-style-configuration>
+        <span class="btn btn-default pp__ml-5" toggle-style-configuration>
             {l s='Customize' mod='paypal'}
           <i class="icon-edit"></i>
         </span>

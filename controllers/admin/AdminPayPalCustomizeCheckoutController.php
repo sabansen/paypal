@@ -380,7 +380,6 @@ Shipping costs will be estimated on the base of the cart total and default carri
             'type' => 'html',
             'label' => $this->l('Current shortcut style'),
             'name' => '',
-            'hint' => $this->l(''),
             'html_content' => $this->getCustomizeStyleSectionProduct()
         );
 
