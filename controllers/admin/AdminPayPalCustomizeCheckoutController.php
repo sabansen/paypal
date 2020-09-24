@@ -686,14 +686,24 @@ Shipping costs will be estimated on the base of the cart total and default carri
 
     protected function getProductPageHookSelect()
     {
+        $hooks = [];
+
+        if (version_compare(_PS_VERSION_, '1.7.6', '>=')) {
+            $hooks[ShortcutConfiguration::HOOK_PRODUCT_ACTIONS] = $this->l('displayProductActions (recommended) - This hook allows additional actions to be triggered, near the add to cart button.');
+            $hooks[ShortcutConfiguration::HOOK_REASSURANCE] = $this->l('displayReassurance - This hook adds new elements just next to the reassurance block.');
+        } else {
+            $hooks[ShortcutConfiguration::HOOK_REASSURANCE] = $this->l('displayReassurance - This hook adds new elements just next to the reassurance block (recomended).');
+        }
+
+        if (version_compare(_PS_VERSION_, '1.7.1', '>=')) {
+            $hooks[ShortcutConfiguration::HOOK_AFTER_PRODUCT_THUMBS] = $this->l('displayAfterProductThumbs - This hook displays new elements below product images.');
+            $hooks[ShortcutConfiguration::HOOK_AFTER_PRODUCT_ADDITIONAL_INFO] = $this->l('displayProductAdditionalInfo - This hook adds additional information next to the product description and data sheet.');
+        }
+
+        $hooks[ShortcutConfiguration::HOOK_FOOTER_PRODUCT] = $this->l('displayFooterProduct - This hook adds new blocks on the product page just before global site footer.');
+
         $this->context->smarty->assign(array(
-            'hooks' => array(
-                ShortcutConfiguration::HOOK_PRODUCT_ACTIONS => $this->l('displayProductActions (recommended) - This hook allows additional actions to be triggered, near the add to cart button.'),
-                ShortcutConfiguration::HOOK_REASSURANCE => $this->l('displayReassurance - This hook adds new elements just next to the reassurance block.'),
-                ShortcutConfiguration::HOOK_AFTER_PRODUCT_THUMBS => $this->l('displayAfterProductThumbs - This hook displays new elements below product images.'),
-                ShortcutConfiguration::HOOK_AFTER_PRODUCT_ADDITIONAL_INFO => $this->l('displayProductAdditionalInfo - This hook adds additional information next to the product description and data sheet.'),
-                ShortcutConfiguration::HOOK_FOOTER_PRODUCT => $this->l('displayFooterProduct - This hook adds new blocks on the product page just before global site footer.'),
-            ),
+            'hooks' => $hooks,
             'confName' => ShortcutConfiguration::PRODUCT_PAGE_HOOK,
             'selectedHook' => Configuration::get(ShortcutConfiguration::PRODUCT_PAGE_HOOK)
         ));
