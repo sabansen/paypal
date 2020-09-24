@@ -39,6 +39,7 @@ use PaypalAddons\classes\API\Response\ResponseOrderRefund;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Shortcut\ShortcutProduct;
 use PaypalAddons\classes\Shortcut\ShortcutCart;
+use PaypalAddons\classes\Shortcut\ShortcutSignup;
 use PaypalPPBTlib\AbstractMethod;
 use Symfony\Component\VarDumper\VarDumper;
 use Tools;
@@ -363,8 +364,12 @@ abstract class AbstractMethodPaypal extends AbstractMethod
                 (int)Tools::getValue('id_product'),
                 (int)Tools::getValue('id_product_attribute')
             );
-        } else {
+        } elseif ($sourcePage === ShortcutConfiguration::SOURCE_PAGE_CART) {
             $Shortcut = new ShortcutCart();
+        } elseif ($sourcePage === ShortcutConfiguration::SOURCE_PAGE_SIGNUP) {
+            $Shortcut = new ShortcutSignup();
+        } else {
+            return '';
         }
 
         return $Shortcut->render();

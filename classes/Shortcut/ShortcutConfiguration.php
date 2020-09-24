@@ -134,4 +134,6 @@ class ShortcutConfiguration
     const SOURCE_PAGE_PRODUCT = 1;
 
     const SOURCE_PAGE_CART = 2;
+
+    const SOURCE_PAGE_SIGNUP = 3;
 }

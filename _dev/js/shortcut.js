@@ -181,25 +181,18 @@ const Shortcut = {
 
 
 $(document).ready( () => {
-  var wait, duration;
-  var start = new Date().getTime();
 
-  do {
-    duration = new Date().getTime() - start;
-
+  function waitPaypalIsLoaded() {
     if (typeof paypal === 'undefined') {
-      wait = true;
-    } else {
-      wait = false;
-      Shortcut.init();
-      Shortcut.initButton();
+      setTimeout(waitPaypalIsLoaded, 200);
+      return;
     }
 
+    Shortcut.init();
+    Shortcut.initButton();
+  }
 
-    if (duration > 4000) {
-      wait = false;
-    }
-  } while (wait);
+  waitPaypalIsLoaded();
 
 });
 

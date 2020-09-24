@@ -564,7 +564,73 @@ class PayPal extends \PaymentModule
             return '';
         }
 
-        return $this->displayShortcutButton(['sourcePage' => ShortcutConfiguration::SOURCE_PAGE_CART]);
+        if ((int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_CART) !== ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK) {
+            return '';
+        }
+
+        return $this->displayShortcutButton([
+            'sourcePage' => ShortcutConfiguration::SOURCE_PAGE_CART,
+            'hook' => ShortcutConfiguration::HOOK_SHOPPING_CART_FOOTER
+        ]);
+    }
+
+    public function hookDisplayProductActions($params)
+    {
+        if ((int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_PRODUCT) !== ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK) {
+            return '';
+        }
+
+        return $this->displayShortcutButton([
+            'sourcePage' => ShortcutConfiguration::SOURCE_PAGE_PRODUCT,
+            'hook' => ShortcutConfiguration::HOOK_PRODUCT_ACTIONS
+        ]);
+    }
+
+    public function hookDisplayAfterProductThumbs($params)
+    {
+        if ((int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_PRODUCT) !== ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK) {
+            return '';
+        }
+
+        return $this->displayShortcutButton([
+            'sourcePage' => ShortcutConfiguration::SOURCE_PAGE_PRODUCT,
+            'hook' => ShortcutConfiguration::HOOK_AFTER_PRODUCT_THUMBS
+        ]);
+    }
+
+    public function hookDisplayProductAdditionalInfo($params)
+    {
+        if ((int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_PRODUCT) !== ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK) {
+            return '';
+        }
+
+        return $this->displayShortcutButton([
+            'sourcePage' => ShortcutConfiguration::SOURCE_PAGE_PRODUCT,
+            'hook' => ShortcutConfiguration::HOOK_AFTER_PRODUCT_ADDITIONAL_INFO
+        ]);
+    }
+
+    public function hookDisplayFooterProduct($params)
+    {
+        if ((int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_PRODUCT) !== ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK) {
+            return '';
+        }
+
+        return $this->displayShortcutButton([
+            'sourcePage' => ShortcutConfiguration::SOURCE_PAGE_PRODUCT,
+            'hook' => ShortcutConfiguration::HOOK_FOOTER_PRODUCT
+        ]);    }
+
+    public function hookDisplayExpressCheckout($params)
+    {
+        if ((int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_CART) !== ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK) {
+            return '';
+        }
+
+        return $this->displayShortcutButton([
+            'sourcePage' => ShortcutConfiguration::SOURCE_PAGE_CART,
+            'hook' => ShortcutConfiguration::HOOK_EXPRESS_CHECKOUT
+        ]);
     }
 
     public function getContent()
@@ -869,11 +935,29 @@ class PayPal extends \PaymentModule
 
     public function hookDisplayReassurance()
     {
-        if ($this->context->controller instanceof ProductController === false) {
-            return '';
+        if ($this->context->controller instanceof ProductController) {
+            if ((int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_PRODUCT) !== ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK) {
+                return '';
+            }
+
+            return $this->displayShortcutButton([
+                'sourcePage' => ShortcutConfiguration::SOURCE_PAGE_PRODUCT,
+                'hook' => ShortcutConfiguration::HOOK_REASSURANCE
+            ]);
         }
 
-        return $this->displayShortcutButton(['sourcePage' => ShortcutConfiguration::SOURCE_PAGE_PRODUCT]);
+        if ($this->context->controller instanceof CartController) {
+            if ((int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_CART) !== ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK) {
+                return '';
+            }
+
+            return $this->displayShortcutButton([
+                'sourcePage' => ShortcutConfiguration::SOURCE_PAGE_CART,
+                'hook' => ShortcutConfiguration::HOOK_REASSURANCE
+            ]);
+        }
+
+        return '';
     }
 
     /**
@@ -888,6 +972,16 @@ class PayPal extends \PaymentModule
 
         if (false === isset($data['sourcePage'])) {
             return '';
+        }
+
+        if (isset($data['hook'])) {
+            if ($data['sourcePage'] == ShortcutConfiguration::SOURCE_PAGE_PRODUCT && Configuration::get(ShortcutConfiguration::PRODUCT_PAGE_HOOK) !== $data['hook']) {
+                return '';
+            }
+
+            if ($data['sourcePage'] == ShortcutConfiguration::SOURCE_PAGE_CART && Configuration::get(ShortcutConfiguration::CART_PAGE_HOOK) !== $data['hook']) {
+                return '';
+            }
         }
 
         if ($this->paypal_method == 'MB') {
