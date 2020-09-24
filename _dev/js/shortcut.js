@@ -40,6 +40,8 @@ const Shortcut = {
 
   controllerScOrder: scOrderUrl,
 
+  styleSetting: typeof styleSetting === 'undefined' ? null : styleSetting,
+
   init() {
     this.updateInfo();
     prestashop.on('updatedProduct', function(e, xhr, settings) {
@@ -74,10 +76,7 @@ const Shortcut = {
     paypal.Buttons({
       fundingSource: paypal.FUNDING.PAYPAL,
 
-      style: {
-        label: 'pay',
-        height: 35
-      },
+      style: Shortcut.getStyleSetting(),
 
       createOrder: function(data, actions) {
         return Shortcut.getIdOrder();
@@ -165,13 +164,43 @@ const Shortcut = {
         Shortcut.button.style.display = 'none';
       }
     });
+  },
+
+  getStyleSetting() {
+    // Returns a default styles if styleSetting is not setted
+    if (this.styleSetting === null) {
+      return {
+        label: 'buynow',
+        height: 35
+      };
+    }
+
+    return this.styleSetting;
   }
 };
 
 
 $(document).ready( () => {
-  Shortcut.init();
-  Shortcut.initButton();
+  var wait, duration;
+  var start = new Date().getTime();
+
+  do {
+    duration = new Date().getTime() - start;
+
+    if (typeof paypal === 'undefined') {
+      wait = true;
+    } else {
+      wait = false;
+      Shortcut.init();
+      Shortcut.initButton();
+    }
+
+
+    if (duration > 4000) {
+      wait = false;
+    }
+  } while (wait);
+
 });
 
 

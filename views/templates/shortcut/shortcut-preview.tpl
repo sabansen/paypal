@@ -39,7 +39,7 @@
       function waitPaypalIsLoaded() {
 
           if (typeof paypal == 'undefined') {
-              setTimeout(waitPaypalIsLoaded, 2000);
+              setTimeout(waitPaypalIsLoaded, 200);
               return;
           }
 

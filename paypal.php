@@ -196,7 +196,14 @@ class PayPal extends \PaymentModule
         'displayAdminOrderTop',
         'displayAdminOrderTabLink',
         'displayAdminOrderTabContent',
-        'displayOrderPreview'
+        'displayOrderPreview',
+        ShortcutConfiguration::HOOK_REASSURANCE,
+        ShortcutConfiguration::HOOK_AFTER_PRODUCT_ADDITIONAL_INFO,
+        ShortcutConfiguration::HOOK_AFTER_PRODUCT_THUMBS,
+        ShortcutConfiguration::HOOK_EXPRESS_CHECKOUT,
+        ShortcutConfiguration::HOOK_FOOTER_PRODUCT,
+        ShortcutConfiguration::HOOK_PRODUCT_ACTIONS,
+        ShortcutConfiguration::HOOK_SHOPPING_CART_FOOTER
     );
 
     /**

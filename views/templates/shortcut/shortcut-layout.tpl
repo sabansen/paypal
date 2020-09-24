@@ -43,7 +43,7 @@
 
             if (null == script) {
                 var newScript = document.createElement('script');
-                newScript.setAttribute('src', '{$JSscript|addslashes}');
+                newScript.setAttribute('src', '{$JSscript nofilter}');
                 newScript.setAttribute('data-key', '{$keyScript}');
                 document.body.appendChild(newScript);
             }

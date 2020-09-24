@@ -27,6 +27,7 @@
 namespace PaypalAddons\classes\Shortcut;
 
 use Configuration;
+use Symfony\Component\VarDumper\VarDumper;
 use Tools;
 
 class ShortcutProduct extends ShortcutAbstract
@@ -64,5 +65,18 @@ class ShortcutProduct extends ShortcutAbstract
         );
 
         return $return;
+    }
+
+    protected function getStyleSetting()
+    {
+        $styleSetting = [
+            'label' => Configuration::get(ShortcutConfiguration::STYLE_LABEL_PRODUCT, null, null, null, ShortcutConfiguration::STYLE_LABEL_BUYNOW),
+            'color' => Configuration::get(ShortcutConfiguration::STYLE_COLOR_PRODUCT, null, null, null, ShortcutConfiguration::STYLE_COLOR_GOLD),
+            'shape' => Configuration::get(ShortcutConfiguration::STYLE_SHAPE_PRODUCT, null, null, null, ShortcutConfiguration::STYLE_SHAPE_RECT),
+            'height' => (int) Configuration::get(ShortcutConfiguration::STYLE_HEIGHT_PRODUCT, null, null, null, 35),
+            'width' => (int) Configuration::get(ShortcutConfiguration::STYLE_WIDTH_PRODUCT, null, null, null, 100),
+        ];
+
+        return $styleSetting;
     }
 }
