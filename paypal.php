@@ -2092,11 +2092,11 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
         $sourcePage = null;
 
-        if ($this->context->controller instanceof ProductController) {
+        if ($this->context->controller instanceof ProductController && (int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_PRODUCT) === ShortcutConfiguration::DISPLAY_MODE_TYPE_WIDGET) {
             $sourcePage = ShortcutConfiguration::SOURCE_PAGE_PRODUCT;
-        } elseif ($this->context->controller instanceof CartController) {
+        } elseif ($this->context->controller instanceof CartController && (int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_CART) === ShortcutConfiguration::DISPLAY_MODE_TYPE_WIDGET) {
             $sourcePage = ShortcutConfiguration::SOURCE_PAGE_CART;
-        } elseif ($this->context->controller instanceof OrderController) {
+        } elseif ($this->context->controller instanceof OrderController && (int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_SIGNUP) === ShortcutConfiguration::DISPLAY_MODE_TYPE_WIDGET) {
             $sourcePage = ShortcutConfiguration::SOURCE_PAGE_SIGNUP;
         }
 
