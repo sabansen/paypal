@@ -49,7 +49,7 @@ define('PAYPAL_PAYMENT_CUSTOMER_CURRENCY', -1);
 // BT = Braintree
 // PPP = PayPal Plus
 
-class PayPal extends \PaymentModule
+class PayPal extends \PaymentModule implements WidgetInterface
 {
     const PAYPAL_PARTNER_CLIENT_ID_LIVE = 'ATgR8ZE5M_Jd7F_XMMQDqMfFFgr7hJHFw8yKfklWU4TwzReENgydr5I042YfS1nRTDey7C1NbuFfKo_o';
 
@@ -2082,5 +2082,32 @@ class PayPal extends \PaymentModule
         }
 
         return false;
+    }
+
+    public function renderWidget($hookName, array $configuration)
+    {
+        if (false === isset($configuration['action']) || $configuration['action'] !== 'paymentshortcut') {
+            return '';
+        }
+
+        $sourcePage = null;
+
+        if ($this->context->controller instanceof ProductController) {
+            $sourcePage = ShortcutConfiguration::SOURCE_PAGE_PRODUCT;
+        } elseif ($this->context->controller instanceof CartController) {
+            $sourcePage = ShortcutConfiguration::SOURCE_PAGE_CART;
+        } elseif ($this->context->controller instanceof OrderController) {
+            $sourcePage = ShortcutConfiguration::SOURCE_PAGE_SIGNUP;
+        }
+
+        if ($sourcePage === null) {
+            return '';
+        }
+
+        return $this->displayShortcutButton(['sourcePage' => $sourcePage]);
+    }
+
+    public function getWidgetVariables($hookName, array $configuration)
+    {
     }
 }
