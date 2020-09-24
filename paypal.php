@@ -560,31 +560,11 @@ class PayPal extends \PaymentModule
 
     public function hookDisplayShoppingCartFooter()
     {
-        if (Module::isEnabled('braintreeofficial') && (int)Configuration::get('BRAINTREEOFFICIAL_ACTIVATE_PAYPAL')) {
-            return '';
-        }
-
         if ($this->context->controller instanceof CartController === false) {
             return '';
         }
 
-        if ($this->isShowShortcut() === false) {
-            return '';
-        }
-
-        if ($this->paypal_method == 'MB') {
-            $methodType = 'EC';
-        } else {
-            $methodType = $this->paypal_method;
-        }
-
-        $method = AbstractMethodPaypal::load($methodType);
-
-        if ($method->isConfigured() == false) {
-            return '';
-        }
-
-        return $method->renderExpressCheckoutShortCut($this->context, $methodType, 'cart');
+        return $this->displayShortcutButton(['sourcePage' => ShortcutConfiguration::SOURCE_PAGE_CART]);
     }
 
     public function getContent()
@@ -889,15 +869,24 @@ class PayPal extends \PaymentModule
 
     public function hookDisplayReassurance()
     {
-        if (Module::isEnabled('braintreeofficial') && (int)Configuration::get('BRAINTREEOFFICIAL_ACTIVATE_PAYPAL')) {
-            return '';
-        }
-
         if ($this->context->controller instanceof ProductController === false) {
             return '';
         }
 
+        return $this->displayShortcutButton(['sourcePage' => ShortcutConfiguration::SOURCE_PAGE_PRODUCT]);
+    }
+
+    /**
+     * @param array $data
+     * @return string
+     */
+    public function displayShortcutButton($data)
+    {
         if ($this->isShowShortcut() === false) {
+            return '';
+        }
+
+        if (false === isset($data['sourcePage'])) {
             return '';
         }
 
@@ -913,7 +902,7 @@ class PayPal extends \PaymentModule
             return '';
         }
 
-        return $method->renderExpressCheckoutShortCut($this->context, $methodType, 'product');
+        return $method->renderExpressCheckoutShortCut($data['sourcePage']);
     }
 
     /**

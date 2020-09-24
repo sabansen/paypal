@@ -36,6 +36,7 @@ use PaypalAddons\classes\API\PaypalApiManagerInterface;
 use PaypalAddons\classes\API\Response\Response;
 use PaypalAddons\classes\API\Response\ResponseOrderGet;
 use PaypalAddons\classes\API\Response\ResponseOrderRefund;
+use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Shortcut\ShortcutProduct;
 use PaypalAddons\classes\Shortcut\ShortcutCart;
 use PaypalPPBTlib\AbstractMethod;
@@ -352,14 +353,12 @@ abstract class AbstractMethodPaypal extends AbstractMethod
     }
 
     /**
-     * @param $context
-     * @param $type
-     * @param $page_source
+     * @param int $sourcePage
      * @return string
      */
-    public function renderExpressCheckoutShortCut(Context &$context, $type, $page_source)
+    public function renderExpressCheckoutShortCut($sourcePage)
     {
-        if ($page_source === 'product') {
+        if ($sourcePage === ShortcutConfiguration::SOURCE_PAGE_PRODUCT) {
             $Shortcut = new ShortcutProduct(
                 (int)Tools::getValue('id_product'),
                 (int)Tools::getValue('id_product_attribute')

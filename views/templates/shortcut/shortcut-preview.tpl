@@ -36,24 +36,27 @@
   <script>
     {literal}
 
-      function waitPaypalIsLoaded() {
+    // Wrap a logic in a function init() for to avoid the redefining the variables
+    function init () {
+        var btnStyle = {/literal}{$styleSetting|json_encode nofilter}{literal};
+        var selector = '[preview-button-container]{/literal}{if isset($shortcutID)}[data-id="{$shortcutID}"]{/if}{literal}';
 
-          if (typeof paypal == 'undefined') {
+        function waitPaypalIsLoaded() {
+          if (typeof paypal === 'undefined') {
               setTimeout(waitPaypalIsLoaded, 200);
               return;
           }
 
-          var btnStyle = {/literal}{$styleSetting|json_encode nofilter}{literal};
+            paypal.Buttons({
+                fundingSource: paypal.FUNDING.PAYPAL,
+                style: btnStyle
+            }).render(document.querySelector(selector));
+        }
 
-          var selector = '[preview-button-container]{/literal}{if isset($shortcutID)}[data-id="{$shortcutID}"]{/if}{literal}';
+        waitPaypalIsLoaded();
+    }
 
-          paypal.Buttons({
-              fundingSource: paypal.FUNDING.PAYPAL,
-              style: btnStyle
-          }).render(document.querySelector(selector));
-      };
-
-      waitPaypalIsLoaded();
+    init();
 
     {/literal}
   </script>

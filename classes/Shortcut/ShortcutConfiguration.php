@@ -130,4 +130,8 @@ class ShortcutConfiguration
     const CONFIGURATION_TYPE_WIDTH = 'width';
 
     const CONFIGURATION_TYPE_HEIGHT = 'height';
+
+    const SOURCE_PAGE_PRODUCT = 1;
+
+    const SOURCE_PAGE_CART = 2;
 }
