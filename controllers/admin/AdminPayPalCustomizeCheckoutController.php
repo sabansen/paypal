@@ -343,7 +343,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
             'name' => '',
             'html_content' => $this->context->smarty->assign(
                 array(
-                    'title' => $this->l('Cart page'),
+                    'sectionTitle' => $this->l('Cart page'),
                     'attributes' => ['data-section-customize-mode-cart']
                 )
             )->fetch($this->getTemplatePath() . '_partials/form/sectionTitle.tpl')
@@ -388,7 +388,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
             'name' => '',
             'html_content' => $this->context->smarty->assign(
                 array(
-                    'title' => $this->l('Product page'),
+                    'sectionTitle' => $this->l('Product page'),
                     'attributes' => ['data-section-customize-mode-product']
                 )
             )->fetch($this->getTemplatePath() . '_partials/form/sectionTitle.tpl')
@@ -433,7 +433,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
             'name' => '',
             'html_content' => $this->context->smarty->assign(
                 array(
-                    'title' => $this->l('Sign up step in checkout'),
+                    'sectionTitle' => $this->l('Sign up step in checkout'),
                     'attributes' => ['data-section-customize-mode-signup']
                 )
             )->fetch($this->getTemplatePath() . '_partials/form/sectionTitle.tpl')

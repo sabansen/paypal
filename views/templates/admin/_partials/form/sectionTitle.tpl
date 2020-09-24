@@ -23,8 +23,8 @@
 * International Registered Trademark & Property of PrestaShop SA
 *}
 
-{if isset($title)}
+{if isset($sectionTitle)}
     <div class="pp__my-5" {if isset($attributes) && false === empty($attributes)}{foreach from=$attributes item=attribute} {$attribute} {/foreach}{/if}>
-      <h3>{$title|escape:'htmlall':'utf-8'}</h3>
+      <h3>{$sectionTitle|escape:'htmlall':'utf-8'}</h3>
     </div>
 {/if}
