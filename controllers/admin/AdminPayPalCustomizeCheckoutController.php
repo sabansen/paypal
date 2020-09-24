@@ -689,18 +689,36 @@ Shipping costs will be estimated on the base of the cart total and default carri
         $hooks = [];
 
         if (version_compare(_PS_VERSION_, '1.7.6', '>=')) {
-            $hooks[ShortcutConfiguration::HOOK_PRODUCT_ACTIONS] = $this->l('displayProductActions (recommended) - This hook allows additional actions to be triggered, near the add to cart button.');
-            $hooks[ShortcutConfiguration::HOOK_REASSURANCE] = $this->l('displayReassurance - This hook adds new elements just next to the reassurance block.');
+            $hooks[ShortcutConfiguration::HOOK_PRODUCT_ACTIONS] = [
+                'desc' => $this->l('displayProductActions (recommended) - This hook allows additional actions to be triggered, near the add to cart button.'),
+                'preview' => '/modules/paypal/views/img/shortcut-preview/product-displayProductActions.jpg'
+            ];
+            $hooks[ShortcutConfiguration::HOOK_REASSURANCE] = [
+                'desc' => $this->l('displayReassurance - This hook adds new elements just next to the reassurance block.'),
+                'preview' => '/modules/paypal/views/img/shortcut-preview/product-displayReassurance.jpg'
+            ];
         } else {
-            $hooks[ShortcutConfiguration::HOOK_REASSURANCE] = $this->l('displayReassurance - This hook adds new elements just next to the reassurance block (recomended).');
+            $hooks[ShortcutConfiguration::HOOK_REASSURANCE] = [
+                'desc' => $this->l('displayReassurance - This hook adds new elements just next to the reassurance block (recomended).'),
+                'preview' => '/modules/paypal/views/img/shortcut-preview/product-displayReassurance.jpg'
+            ];
         }
 
         if (version_compare(_PS_VERSION_, '1.7.1', '>=')) {
-            $hooks[ShortcutConfiguration::HOOK_AFTER_PRODUCT_THUMBS] = $this->l('displayAfterProductThumbs - This hook displays new elements below product images.');
-            $hooks[ShortcutConfiguration::HOOK_AFTER_PRODUCT_ADDITIONAL_INFO] = $this->l('displayProductAdditionalInfo - This hook adds additional information next to the product description and data sheet.');
+            $hooks[ShortcutConfiguration::HOOK_AFTER_PRODUCT_THUMBS] = [
+                'desc' => $this->l('displayAfterProductThumbs - This hook displays new elements below product images.'),
+                'preview' => '/modules/paypal/views/img/shortcut-preview/product-displayAfterProductThumbs.jpg'
+            ];
+            $hooks[ShortcutConfiguration::HOOK_AFTER_PRODUCT_ADDITIONAL_INFO] = [
+                'desc' => $this->l('displayProductAdditionalInfo - This hook adds additional information next to the product description and data sheet.'),
+                'preview' => '/modules/paypal/views/img/shortcut-preview/product-displayProductAdditionalInfo.jpg'
+            ];
         }
 
-        $hooks[ShortcutConfiguration::HOOK_FOOTER_PRODUCT] = $this->l('displayFooterProduct - This hook adds new blocks on the product page just before global site footer.');
+        $hooks[ShortcutConfiguration::HOOK_FOOTER_PRODUCT] = [
+            'desc' => $this->l('displayFooterProduct - This hook adds new blocks on the product page just before global site footer.'),
+            'preview' => '/modules/paypal/views/img/shortcut-preview/product-displayProductFooter.jpg'
+        ];
 
         $this->context->smarty->assign(array(
             'hooks' => $hooks,
@@ -714,9 +732,18 @@ Shipping costs will be estimated on the base of the cart total and default carri
     {
         $this->context->smarty->assign(array(
             'hooks' => array(
-                ShortcutConfiguration::HOOK_EXPRESS_CHECKOUT => $this->l('displayExpressCheckout (recommended) - This hook adds content to the cart view, in the right sidebar, after the cart totals.'),
-                ShortcutConfiguration::HOOK_SHOPPING_CART_FOOTER => $this->l('displayShoppingCartFooter - This hook displays some specific information after the list of products in the shopping cart.'),
-                ShortcutConfiguration::HOOK_REASSURANCE => $this->l('displayReassurance - This hook displays content in the right sidebar, in the block below the cart total.'),
+                ShortcutConfiguration::HOOK_EXPRESS_CHECKOUT => [
+                    'desc' => $this->l('displayExpressCheckout (recommended) - This hook adds content to the cart view, in the right sidebar, after the cart totals.'),
+                    'preview' => '/modules/paypal/views/img/shortcut-preview/cart-displayExpressCheckout.jpg'
+                ],
+                ShortcutConfiguration::HOOK_SHOPPING_CART_FOOTER => [
+                    'desc' => $this->l('displayShoppingCartFooter - This hook displays some specific information after the list of products in the shopping cart.'),
+                    'preview' => '/modules/paypal/views/img/shortcut-preview/cart-displayShoppingCartFooter.jpg'
+                ],
+                ShortcutConfiguration::HOOK_REASSURANCE => [
+                    'desc' => $this->l('displayReassurance - This hook displays content in the right sidebar, in the block below the cart total.'),
+                    'preview' => '/modules/paypal/views/img/shortcut-preview/cart-displayReassurance.jpg'
+                ],
             ),
             'confName' => ShortcutConfiguration::CART_PAGE_HOOK,
             'selectedHook' => Configuration::get(ShortcutConfiguration::CART_PAGE_HOOK)

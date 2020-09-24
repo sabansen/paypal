@@ -46,6 +46,7 @@ var CustomizeCheckout = {
     });
 
     CustomizeCheckout.checkConfigurations();
+    CustomizeCheckout.updateHookPreview();
     $('input').change(CustomizeCheckout.checkConfigurations);
     $('select').change(CustomizeCheckout.checkConfigurations);
     $(document).on('click', '[toggle-style-configuration]', function (e) {
@@ -55,6 +56,7 @@ var CustomizeCheckout = {
     });
     $(document).on('change', '[customize-style-shortcut-container]', CustomizeCheckout.updatePreviewButton);
     $(document).on('change', '[data-type="color"]', CustomizeCheckout.updateColorDescription);
+    $(document).on('change', '.pp-select-preview-container', CustomizeCheckout.updateHookPreview);
   },
 
     checkConfigurations() {
@@ -284,6 +286,18 @@ var CustomizeCheckout = {
       container.find('[after-select-content] [data-color="other"]').show();
     }
 
+  },
+
+  updateHookPreview() {
+    const containers = $('.pp-select-preview-container');
+
+    containers.each((index, container) => {
+      container = $(container);
+      let option = container.find('option:selected');
+      let previewPath = option.attr('data-preview-image');
+      let previewContainter = container.find('.pp-preview');
+      previewContainter.css('background-image', `url(${previewPath})`);
+    });
   }
 
 };

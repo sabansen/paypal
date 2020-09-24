@@ -73,7 +73,9 @@
     align-content: center;
 
     .pp-preview {
-      flex-basis: 80%;
+      width: 20vw;
+      height: 20vw;
+      background-size: cover;
       background-color: #7b8a8b;
     }
   }

@@ -27,11 +27,12 @@
   <div class="pp-select-container">
     <select name="{if isset($confName)}{$confName}{/if}">
         {if isset($hooks) && false === empty($hooks)}
-            {foreach from=$hooks key=hookName item=hookDescription}
+            {foreach from=$hooks key=hookName item=hookData}
               <option
                       value="{$hookName}"
-                      {if isset($selectedHook) && $selectedHook === $hookName}selected{/if}>
-                  {$hookDescription}
+                      {if isset($selectedHook) && $selectedHook === $hookName}selected{/if}
+                      {if isset($hookData['preview'])}data-preview-image="{$hookData['preview']|addslashes}"{/if}>
+                  {if isset($hookData['desc'])}{$hookData['desc']|escape:'htmlall':'utf-8'}{/if}
               </option>
             {/foreach}
         {/if}
