@@ -183,7 +183,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         'displayAdminOrder',
         'actionOrderStatusPostUpdate',
         'actionOrderStatusUpdate',
-        'header',
+        'displayHeader',
         'displayFooterProduct',
         'actionBeforeCartUpdateQty',
         'displayReassurance',
