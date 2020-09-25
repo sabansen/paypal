@@ -91,7 +91,8 @@ class ShortcutPreview extends ShortcutAbstract
             'label' => $this->getLabel(),
             'height' => $this->getHeight(),
             'width' => $this->getWidth(),
-            'color' => $this->getColor()
+            'color' => $this->getColor(),
+            'shape' => $this->getShape()
         ];
     }
 

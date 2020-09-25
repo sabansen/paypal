@@ -960,7 +960,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
         $height = (int) Tools::getValue('height', 35);
         $width = (int) Tools::getValue('width', 150);
         $color = Tools::getValue('color', 'gold');
-        $shape = Configuration::get('shape', 'rect');
+        $shape = Tools::getValue('shape', 'rect');
 
         $ShortCut = new ShortcutPreview(
             $label,
