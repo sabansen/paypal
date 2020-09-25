@@ -710,7 +710,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
                 'preview' => '/modules/paypal/views/img/shortcut-preview/product-displayAfterProductThumbs.jpg'
             ];
             $hooks[ShortcutConfiguration::HOOK_AFTER_PRODUCT_ADDITIONAL_INFO] = [
-                'desc' => $this->l('displayProductAdditionalInfo - This hook adds additional information next to the product description and data sheet.'),
+                'desc' => $this->l('displayProductAdditionalInfo - This hook adds additional information before the reassurance block and product description.'),
                 'preview' => '/modules/paypal/views/img/shortcut-preview/product-displayProductAdditionalInfo.jpg'
             ];
         }
