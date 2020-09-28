@@ -693,6 +693,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
                 'desc' => $this->l('displayProductActions (recommended) - This hook allows additional actions to be triggered, near the add to cart button.'),
                 'preview' => '/modules/paypal/views/img/shortcut-preview/product-displayProductActions.jpg'
             ];
+
             $hooks[ShortcutConfiguration::HOOK_REASSURANCE] = [
                 'desc' => $this->l('displayReassurance - This hook adds new elements just next to the reassurance block.'),
                 'preview' => '/modules/paypal/views/img/shortcut-preview/product-displayReassurance.jpg'
@@ -705,13 +706,14 @@ Shipping costs will be estimated on the base of the cart total and default carri
         }
 
         if (version_compare(_PS_VERSION_, '1.7.1', '>=')) {
-            $hooks[ShortcutConfiguration::HOOK_AFTER_PRODUCT_THUMBS] = [
-                'desc' => $this->l('displayAfterProductThumbs - This hook displays new elements below product images.'),
-                'preview' => '/modules/paypal/views/img/shortcut-preview/product-displayAfterProductThumbs.jpg'
-            ];
             $hooks[ShortcutConfiguration::HOOK_AFTER_PRODUCT_ADDITIONAL_INFO] = [
                 'desc' => $this->l('displayProductAdditionalInfo - This hook adds additional information before the reassurance block and product description.'),
                 'preview' => '/modules/paypal/views/img/shortcut-preview/product-displayProductAdditionalInfo.jpg'
+            ];
+
+            $hooks[ShortcutConfiguration::HOOK_AFTER_PRODUCT_THUMBS] = [
+                'desc' => $this->l('displayAfterProductThumbs - This hook displays new elements below product images.'),
+                'preview' => '/modules/paypal/views/img/shortcut-preview/product-displayAfterProductThumbs.jpg'
             ];
         }
 
