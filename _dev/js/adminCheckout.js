@@ -101,7 +101,7 @@ var CustomizeCheckout = {
 
       // Show the product page display configurations of a shortcut if need
       if (showShortcutOnProductPage.checked && customShortcutStyle.checked) {
-        document.querySelector('[data-section-customize-mode-product]').style.display = 'block';
+        $('[data-section-customize-mode-product]').closest('.form-group').show();
         CustomizeCheckout.showConfiguration('PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_PRODUCT');
         CustomizeCheckout.showConfiguration('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_STYLE_COLOR_PRODUCT');
 
@@ -113,7 +113,7 @@ var CustomizeCheckout = {
           CustomizeCheckout.showConfiguration('productPageWidgetCode');
         }
       } else {
-        document.querySelector('[data-section-customize-mode-product]').style.display = 'none';
+        $('[data-section-customize-mode-product]').closest('.form-group').hide();
         CustomizeCheckout.hideConfiguration('PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_PRODUCT');
         CustomizeCheckout.hideConfiguration('productPageWidgetCode');
         CustomizeCheckout.hideConfiguration('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_HOOK_PRODUCT');
@@ -122,7 +122,7 @@ var CustomizeCheckout = {
 
       // Show the cart page display configurations of a shortcut if need
       if (showShortcutOnCartPage.checked  && customShortcutStyle.checked) {
-        document.querySelector('[data-section-customize-mode-cart]').style.display = 'block';
+        $('[data-section-customize-mode-cart]').closest('.form-group').show();
         CustomizeCheckout.showConfiguration('PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_CART');
         CustomizeCheckout.showConfiguration('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_STYLE_COLOR_CART');
 
@@ -134,7 +134,7 @@ var CustomizeCheckout = {
           CustomizeCheckout.showConfiguration('cartPageWidgetCode');
         }
       } else {
-        document.querySelector('[data-section-customize-mode-cart]').style.display = 'none';
+        $('[data-section-customize-mode-cart]').closest('.form-group').hide();
         CustomizeCheckout.hideConfiguration('PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_CART');
         CustomizeCheckout.hideConfiguration('cartPageWidgetCode');
         CustomizeCheckout.hideConfiguration('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_HOOK_CART');
@@ -143,7 +143,7 @@ var CustomizeCheckout = {
 
       // Show the signup page display configurations of a shortcut if need
       if (showShortcutOnSignupPage.checked  && customShortcutStyle.checked) {
-        document.querySelector('[data-section-customize-mode-signup]').style.display = 'block';
+        $('[data-section-customize-mode-signup]').closest('.form-group').show();
         CustomizeCheckout.showConfiguration('PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_SIGNUP');
         CustomizeCheckout.showConfiguration('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_STYLE_COLOR_SIGNUP');
 
@@ -155,7 +155,7 @@ var CustomizeCheckout = {
           CustomizeCheckout.showConfiguration('signupPageWidgetCode');
         }
       } else {
-        document.querySelector('[data-section-customize-mode-signup]').style.display = 'none';
+        $('[data-section-customize-mode-signup]').closest('.form-group').hide();
         CustomizeCheckout.hideConfiguration('PAYPAL_EXPRESS_CHECKOUT_DISPLAY_MODE_SIGNUP');
         CustomizeCheckout.hideConfiguration('signupPageWidgetCode');
         CustomizeCheckout.hideConfiguration('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_HOOK_SIGNUP');
@@ -198,9 +198,9 @@ var CustomizeCheckout = {
           && shortcutLocationCart.prop('checked') === false
           && shortcutLocationSignup.prop('checked') === false
         ) {
-            $('.shortcut-customize-style-alert').removeClass('hidden');
+            $('.shortcut-customize-style-alert').closest('.form-group').show();
         } else {
-            $('.shortcut-customize-style-alert').addClass('hidden');
+            $('.shortcut-customize-style-alert').closest('.form-group').hide();
         }
       }
     },

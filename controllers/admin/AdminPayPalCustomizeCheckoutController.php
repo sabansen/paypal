@@ -469,7 +469,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
         $inputs[] = array(
             'type' => 'html',
             'name' => '',
-            'html_content' => $this->module->displayInformation($this->l('You can customize your orders\' status for each possible action in the PayPal module.'), false)
+            'html_content' => $this->module->displayInformation($this->l('You can customize your orders\' status for each possible action in the PayPal module.'), false, false, 'pp__my-5')
         );
 
         $inputs[] = array(
