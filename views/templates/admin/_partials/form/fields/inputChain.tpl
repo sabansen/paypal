@@ -27,7 +27,7 @@
 <div field-row  class="pp__my-5">
   <div label>
     {if isset($label)}
-        <div class="h4">
+        <div class="pp__my-2 pp__label">
             {$label|escape:'htmlall':'utf-8'}
         </div>
     {/if}

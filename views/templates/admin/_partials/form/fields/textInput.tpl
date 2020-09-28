@@ -33,7 +33,7 @@
 
 <div class="pp__flex pp__justify-content-center pp__mt-2">
   {if isset($label)}
-      <div class="h4">
+      <div class="pp__label">
           {$label|escape:'htmlall':'utf-8'}
       </div>
   {/if}
