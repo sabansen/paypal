@@ -26,11 +26,25 @@
 
 namespace PaypalAddons\classes\Shortcut;
 
+use Configuration;
 
 class ShortcutSignup extends ShortcutCart
 {
     protected function getTemplatePath()
     {
         return 'module:paypal/views/templates/shortcut/shortcut-signup.tpl';
+    }
+
+    protected function getStyleSetting()
+    {
+        $styleSetting = [
+            'label' => Configuration::get(ShortcutConfiguration::STYLE_LABEL_SIGNUP, null, null, null, ShortcutConfiguration::STYLE_LABEL_CHECKOUT),
+            'color' => Configuration::get(ShortcutConfiguration::STYLE_COLOR_SIGNUP, null, null, null, ShortcutConfiguration::STYLE_COLOR_GOLD),
+            'shape' => Configuration::get(ShortcutConfiguration::STYLE_SHAPE_SIGNUP, null, null, null, ShortcutConfiguration::STYLE_SHAPE_RECT),
+            'height' => (int) Configuration::get(ShortcutConfiguration::STYLE_HEIGHT_SIGNUP, null, null, null, 35),
+            'width' => (int) Configuration::get(ShortcutConfiguration::STYLE_WIDTH_SIGNUP, null, null, null, 100),
+        ];
+
+        return $styleSetting;
     }
 }
