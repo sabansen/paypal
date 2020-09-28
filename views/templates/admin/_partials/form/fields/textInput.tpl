@@ -28,14 +28,20 @@
           type="text"
           {if isset($name)}name="{$name}"{/if}
           {if isset($value)}value="{$value}"{/if}
-          {if isset($configType)}data-type="{$configType}"{/if}>
+          {if isset($configType)}data-type="{$configType}"{/if}
+          {if isset($attributes) && is_array($attributes)}
+              {foreach from=$attributes key=attrName item=attrValue}
+                  {$attrName nofilter}='{$attrValue}'
+              {/foreach}
+          {/if}
+  >
 </div>
 
 <div class="pp__flex pp__justify-content-center pp__mt-2">
   {if isset($label)}
-      <div class="pp__label">
+      <em>
           {$label|escape:'htmlall':'utf-8'}
-      </div>
+      </em>
   {/if}
 </div>
 

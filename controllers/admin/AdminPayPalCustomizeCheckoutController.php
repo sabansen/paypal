@@ -911,7 +911,8 @@ Shipping costs will be estimated on the base of the cart total and default carri
             $sectionDefinition->getNameHeight(),
             $height,
             $this->l('Height (value from 25 to 55)'),
-            ShortcutConfiguration::CONFIGURATION_TYPE_HEIGHT
+            ShortcutConfiguration::CONFIGURATION_TYPE_HEIGHT,
+            ['data-msg-error' => $this->l('Value from 25 to 55 is required')]
         );
 
         $sizeField = new InputChain(

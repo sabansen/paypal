@@ -57,6 +57,7 @@ var CustomizeCheckout = {
     $(document).on('change', '[customize-style-shortcut-container]', CustomizeCheckout.updatePreviewButton);
     $(document).on('change', '[data-type="color"]', CustomizeCheckout.updateColorDescription);
     $(document).on('change', '.pp-select-preview-container', CustomizeCheckout.updateHookPreview);
+    $(document).on('change', '[data-type="height"]', CustomizeCheckout.checkHeight);
   },
 
     checkConfigurations() {
@@ -298,6 +299,33 @@ var CustomizeCheckout = {
       let previewContainter = container.find('.pp-preview');
       previewContainter.css('background-image', `url(${previewPath})`);
     });
+  },
+
+  checkHeight(e) {
+     console.log('checkHeight');
+     const containerSize = $(e.target).closest('[chain-input-container]');
+     const msgContainer = containerSize.closest('[field]').find('[msg-container]');
+     const inputHeight = containerSize.find('[data-type="height"]');
+     let height = inputHeight.val();
+     let msg = null;
+
+     if (height == 'undefined') {
+       return true;
+     }
+
+     height = parseInt(height);
+
+     if (height > 55 || height < 25) {
+       msg = Tools.getAlert(inputHeight.attr('data-msg-error'), 'danger');
+     }
+
+     if (msg == null) {
+       msgContainer.html('');
+       return true;
+     }
+
+     msgContainer.html(msg);
+     return true;
   }
 
 };

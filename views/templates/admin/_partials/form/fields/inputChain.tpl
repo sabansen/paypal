@@ -43,5 +43,7 @@
             {/foreach}
         {/if}
     </div>
+
+    <div msg-container></div>
   </div>
 </div>

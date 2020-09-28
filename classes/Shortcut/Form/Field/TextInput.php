@@ -42,12 +42,16 @@ class TextInput implements FieldInteface
     /** @var string*/
     protected $type;
 
-    public function __construct(string $name, string $value, string $label, $type = null)
+    /** @var array*/
+    protected $attributes;
+
+    public function __construct(string $name, string $value, string $label, $type = null, $attributes = null)
     {
         $this->setName($name);
         $this->setValue($value);
         $this->setLabel($label);
         $this->setType($type);
+        $this->setAttributes($attributes);
     }
 
     public function render()
@@ -57,6 +61,7 @@ class TextInput implements FieldInteface
             ->assign('value', $this->getValue())
             ->assign('label', $this->getLabel())
             ->assign('configType', $this->getType())
+            ->assign('attributes', $this->getAttributes())
             ->fetch(_PS_MODULE_DIR_ . 'paypal/views/templates/admin/_partials/form/fields/textInput.tpl');
     }
 
@@ -130,6 +135,28 @@ class TextInput implements FieldInteface
     public function setType($type)
     {
         $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAttributes()
+    {
+        return (array) $this->attributes;
+    }
+
+    /**
+     * @param array $attributes
+     * @return TextInput
+     */
+    public function setAttributes($attributes)
+    {
+        if (false === is_array($attributes)) {
+            return $this;
+        }
+
+        $this->attributes = $attributes;
         return $this;
     }
 }
