@@ -31,9 +31,13 @@
     .product-quantity {
       flex-wrap: wrap;
     }
+
+    .product-quantity [data-container-express-checkout] {
+      flex-basis: 100%;
+    }
   </style>
 
-  <div data-container-express-checkout data-paypal-source-page="product" style="float:right; margin: 10px 40px 0 0; width: 200px">
+  <div data-container-express-checkout data-paypal-source-page="product" style="float:right; margin: 10px 40px 0 0;">
     <form data-paypal-payment-form-cart class="paypal_payment_form" action="{$action_url|escape:'htmlall':'UTF-8'}" title="{l s='Pay with PayPal' mod='paypal'}" method="post" data-ajax="false">
       <input
               type="hidden"
@@ -48,7 +52,7 @@
       <input type="hidden" name="current_shop_url" data-paypal-url-page value="" />
       <input type="hidden" id="source_page" name="source_page" value="product">
     </form>
-    <div paypal-button-container></div>
+    <div paypal-button-container style="width: 200px"></div>
   </div>
   <div class="clearfix"></div>
 {/block}
