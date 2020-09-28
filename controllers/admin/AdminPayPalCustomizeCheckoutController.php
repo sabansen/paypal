@@ -573,6 +573,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
                 'class' => 'btn btn-default pull-right button',
                 'name' => 'saveAdvancedForm'
             ),
+            'id_form' => 'pp_advanced_form'
         );
 
         $values = array();
@@ -974,5 +975,14 @@ Shipping costs will be estimated on the base of the cart total and default carri
 
         $response = new JsonResponse(['content' => $ShortCut->render()]);
         return $response->send();
+    }
+
+    public function postProcess()
+    {
+        parent::postProcess();
+
+        if (Tools::isSubmit('saveAdvancedForm')) {
+            Tools::redirectAdmin($_SERVER['HTTP_REFERER'] . '#pp_advanced_form');
+        }
     }
 }
