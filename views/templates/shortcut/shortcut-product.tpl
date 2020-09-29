@@ -52,7 +52,7 @@
       <input type="hidden" name="current_shop_url" data-paypal-url-page value="" />
       <input type="hidden" id="source_page" name="source_page" value="product">
     </form>
-    <div paypal-button-container style="width: 200px"></div>
+    <div paypal-button-container></div>
   </div>
   <div class="clearfix"></div>
 {/block}

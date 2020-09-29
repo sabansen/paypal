@@ -73,6 +73,10 @@ const Shortcut = {
   },
 
   initButton() {
+    if (typeof Shortcut.getStyleSetting()['width'] !== 'undefined') {
+      Shortcut.button.style.width = Shortcut.getStyleSetting()['width'] + 'px';
+    }
+
     paypal.Buttons({
       fundingSource: paypal.FUNDING.PAYPAL,
 

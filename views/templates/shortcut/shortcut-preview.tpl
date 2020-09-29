@@ -46,7 +46,7 @@
               setTimeout(waitPaypalIsLoaded, 200);
               return;
           }
-
+            document.querySelector(selector).style.width = btnStyle['width'] + 'px';
             paypal.Buttons({
                 fundingSource: paypal.FUNDING.PAYPAL,
                 style: btnStyle
