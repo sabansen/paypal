@@ -1185,7 +1185,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         /* @var $paypal_order PaypalOrder */
         $id_order = $params['id_order'];
         $order = new Order((int)$id_order);
-        $paypal_msg = '';
+        $paypal_msg = "<div class='module_warning'>";
         $paypal_order = PaypalOrder::loadByOrderId($id_order);
         $paypal_capture = PaypalCapture::loadByOrderPayPalId($paypal_order->id);
 
@@ -1255,6 +1255,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $tmpMessage .= '</p>';
             $paypal_msg .= $this->displayWarning($tmpMessage);
         }
+
+        $paypal_msg .= "</div>";
 
         return $paypal_msg . $this->display(__FILE__, 'views/templates/hook/paypal_order.tpl');
     }

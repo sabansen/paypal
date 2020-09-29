@@ -28,5 +28,5 @@
     {if isset($btnClose) && $btnClose}
         <button type="button" class="close" data-dismiss="alert">×</button>
     {/if}
-    {$message|escape:'htmlall':'utf-8'}
+    {$message nofilter}
 </div>
