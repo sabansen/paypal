@@ -42,7 +42,7 @@ class ShortcutSignup extends ShortcutCart
             'color' => Configuration::get(ShortcutConfiguration::STYLE_COLOR_SIGNUP, null, null, null, ShortcutConfiguration::STYLE_COLOR_GOLD),
             'shape' => Configuration::get(ShortcutConfiguration::STYLE_SHAPE_SIGNUP, null, null, null, ShortcutConfiguration::STYLE_SHAPE_RECT),
             'height' => (int) Configuration::get(ShortcutConfiguration::STYLE_HEIGHT_SIGNUP, null, null, null, 35),
-            'width' => (int) Configuration::get(ShortcutConfiguration::STYLE_WIDTH_SIGNUP, null, null, null, 100),
+            'width' => (int) Configuration::get(ShortcutConfiguration::STYLE_WIDTH_SIGNUP, null, null, null, 200),
         ];
 
         return $styleSetting;

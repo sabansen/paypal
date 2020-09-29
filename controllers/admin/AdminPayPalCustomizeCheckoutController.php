@@ -827,7 +827,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
         $defaultLabel = $sectionDefinition->getNameLabel() === ShortcutConfiguration::STYLE_LABEL_PRODUCT ? ShortcutConfiguration::STYLE_LABEL_BUYNOW : ShortcutConfiguration::STYLE_LABEL_CHECKOUT;
         $label = Configuration::get($sectionDefinition->getNameLabel(), null, null, null, $defaultLabel);
         $height = (int) Configuration::get($sectionDefinition->getNameHeight(), null, null, null, 35);
-        $width = (int) Configuration::get($sectionDefinition->getNameWidth(), null, null, null, 100);
+        $width = (int) Configuration::get($sectionDefinition->getNameWidth(), null, null, null, 200);
         $color = Configuration::get($sectionDefinition->getNameColor(), null, null, null, ShortcutConfiguration::STYLE_COLOR_GOLD);
         $shape = Configuration::get($sectionDefinition->getNameShape(), null, null, null, ShortcutConfiguration::STYLE_SHAPE_RECT);
 
@@ -903,8 +903,9 @@ Shipping costs will be estimated on the base of the cart total and default carri
         $inputs[] = new TextInput(
             $sectionDefinition->getNameWidth(),
             $width,
-            $this->l('Width'),
-            ShortcutConfiguration::CONFIGURATION_TYPE_WIDTH
+            $this->l('Width (min 150)'),
+            ShortcutConfiguration::CONFIGURATION_TYPE_WIDTH,
+            ['data-msg-error' => $this->l('Minimum 150 px is required')]
         );
 
         $inputs[] = new TextInput(

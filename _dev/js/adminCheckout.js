@@ -58,6 +58,7 @@ var CustomizeCheckout = {
     $(document).on('change', '[data-type="color"]', CustomizeCheckout.updateColorDescription);
     $(document).on('change', '.pp-select-preview-container', CustomizeCheckout.updateHookPreview);
     $(document).on('change', '[data-type="height"]', CustomizeCheckout.checkHeight);
+    $(document).on('change', '[data-type="width"]', CustomizeCheckout.checkWidth);
   },
 
     checkConfigurations() {
@@ -302,7 +303,6 @@ var CustomizeCheckout = {
   },
 
   checkHeight(e) {
-     console.log('checkHeight');
      const containerSize = $(e.target).closest('[chain-input-container]');
      const msgContainer = containerSize.closest('[field]').find('[msg-container]');
      const inputHeight = containerSize.find('[data-type="height"]');
@@ -326,6 +326,32 @@ var CustomizeCheckout = {
 
      msgContainer.html(msg);
      return true;
+  },
+
+  checkWidth(e) {
+    const containerSize = $(e.target).closest('[chain-input-container]');
+    const msgContainer = containerSize.closest('[field]').find('[msg-container]');
+    const inputWidth = containerSize.find('[data-type="width"]');
+    let width = inputWidth.val();
+    let msg = null;
+
+    if (width == 'undefined') {
+      return true;
+    }
+
+    width = parseInt(width);
+
+    if (width < 150) {
+      msg = Tools.getAlert(inputWidth.attr('data-msg-error'), 'danger');
+    }
+
+    if (msg == null) {
+      msgContainer.html('');
+      return true;
+    }
+
+    msgContainer.html(msg);
+    return true;
   }
 
 };
