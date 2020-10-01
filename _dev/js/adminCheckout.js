@@ -59,6 +59,10 @@ var CustomizeCheckout = {
     $(document).on('change', '.pp-select-preview-container', CustomizeCheckout.updateHookPreview);
     $(document).on('change', '[data-type="height"]', CustomizeCheckout.checkHeight);
     $(document).on('change', '[data-type="width"]', CustomizeCheckout.checkWidth);
+
+    if (typeof sectionSelector !== 'undefined') {
+      CustomizeCheckout.scrollTo(sectionSelector);
+    }
   },
 
     checkConfigurations() {
@@ -352,6 +356,14 @@ var CustomizeCheckout = {
 
     msgContainer.html(msg);
     return true;
+  },
+
+  scrollTo(selector) {
+    const el = $(sectionSelector);
+    // Scroll to current block
+    $('html, body').animate({
+      scrollTop: el.offset().top - 200 + "px"
+    }, 900);
   }
 
 };

@@ -42,6 +42,14 @@
       </div>
     </div>
 
+    {if isset($errors) && false === empty($errors)}
+        {foreach from=$errors item=error}
+            <div class="alert alert-danger">
+              {$error nofilter}
+            </div>
+        {/foreach}
+    {/if}
+
     <div configuration-section class="hidden">
       {if isset($configurations) && false === empty($configurations)}
           {foreach from=$configurations item=configuration}

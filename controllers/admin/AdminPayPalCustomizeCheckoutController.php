@@ -43,6 +43,8 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
 
     protected $headerToolBar = true;
 
+    protected $advancedFormErrors = array();
+
     public function __construct()
     {
         parent::__construct();
@@ -596,21 +598,67 @@ Shipping costs will be estimated on the base of the cart total and default carri
             foreach ($this->advanceFormParametres as $parametre) {
                 if (\Tools::isSubmit($parametre)) {
                     $value = pSQL(\Tools::getValue($parametre), '');
+                    $wrongHeightMsg = $this->l('You are trying to save invalid settings. The size of the PayPal button was automatically changed to the default values (value from 25 to 55 is required). Please click on "Customize" in order to change the size if needed.');
+                    $wrongWidthMsg = $this->l('You are trying to save invalid settings. The size of the PayPal button was automatically changed to the default values (minimum 150 px is required). Please click on "Customize" in order to change the size if needed.');
 
-                    if (in_array(
-                        $parametre,
-                        array(
-                            ShortcutConfiguration::STYLE_HEIGHT_PRODUCT,
-                            ShortcutConfiguration::STYLE_HEIGHT_CART,
-                            ShortcutConfiguration::STYLE_HEIGHT_SIGNUP)
-                    )) {
-                        if ((int) $value > 55) {
-                            $value = 55;
-                        }
+                    switch ($parametre) {
+                        case ShortcutConfiguration::STYLE_HEIGHT_PRODUCT:
+                            if ((int) $value > 55) {
+                                $value = 55;
+                                $this->advancedFormErrors['product'] = $this->l($wrongHeightMsg);
+                            }
 
-                        if ((int) $value < 25) {
-                            $value = 25;
-                        }
+                            if ((int) $value < 25) {
+                                $value = 25;
+                                $this->advancedFormErrors['product'] = $this->l($wrongHeightMsg);
+                            }
+
+                            break;
+                        case ShortcutConfiguration::STYLE_HEIGHT_CART:
+                            if ((int) $value > 55) {
+                                $value = 55;
+                                $this->advancedFormErrors['cart'] = $this->l($wrongHeightMsg);
+                            }
+
+                            if ((int) $value < 25) {
+                                $value = 25;
+                                $this->advancedFormErrors['cart'] = $this->l($wrongHeightMsg);
+                            }
+
+                            break;
+                        case ShortcutConfiguration::STYLE_HEIGHT_SIGNUP:
+                            if ((int) $value > 55) {
+                                $value = 55;
+                                $this->advancedFormErrors['signup'] = $this->l($wrongHeightMsg);
+                            }
+
+                            if ((int) $value < 25) {
+                                $value = 25;
+                                $this->advancedFormErrors['signup'] = $this->l($wrongHeightMsg);
+                            }
+
+                            break;
+                        case ShortcutConfiguration::STYLE_WIDTH_PRODUCT:
+                            if ((int) $value < 150) {
+                                $value = 150;
+                                $this->advancedFormErrors['product'] = $this->l($wrongWidthMsg);
+                            }
+
+                            break;
+                        case ShortcutConfiguration::STYLE_WIDTH_CART:
+                            if ((int) $value < 150) {
+                                $value = 150;
+                                $this->advancedFormErrors['cart'] = $this->l($wrongWidthMsg);
+                            }
+
+                            break;
+                        case ShortcutConfiguration::STYLE_WIDTH_SIGNUP:
+                            if ((int) $value < 150) {
+                                $value = 150;
+                                $this->advancedFormErrors['signup'] = $this->l($wrongWidthMsg);
+                            }
+
+                            break;
                     }
 
                     $result &= \Configuration::updateValue(\Tools::strtoupper($parametre), $value);
@@ -783,6 +831,14 @@ Shipping costs will be estimated on the base of the cart total and default carri
             ->setNameShape(ShortcutConfiguration::STYLE_SHAPE_PRODUCT)
             ->setTypeShape(ShortcutConfiguration::TYPE_STYLE_SELECT);
 
+        if (false === empty($this->advanceFormErrors)) {
+            foreach ($this->advanceFormErrors as $key => $error) {
+                if ($key === 'product') {
+                    $sectionDefinition->addError($error);
+                }
+            }
+        }
+
         return $this->getCustomizeStyleSection($sectionDefinition);
     }
 
@@ -801,6 +857,14 @@ Shipping costs will be estimated on the base of the cart total and default carri
             ->setNameShape(ShortcutConfiguration::STYLE_SHAPE_CART)
             ->setTypeShape(ShortcutConfiguration::TYPE_STYLE_SELECT);
 
+        if (false === empty($this->advancedFormErrors)) {
+            foreach ($this->advancedFormErrors as $key => $error) {
+                if ($key === 'cart') {
+                    $sectionDefinition->addError($error);
+                }
+            }
+        }
+
         return $this->getCustomizeStyleSection($sectionDefinition);
     }
 
@@ -818,6 +882,14 @@ Shipping costs will be estimated on the base of the cart total and default carri
             ->setTypeLabel(ShortcutConfiguration::TYPE_STYLE_SELECT)
             ->setNameShape(ShortcutConfiguration::STYLE_SHAPE_SIGNUP)
             ->setTypeShape(ShortcutConfiguration::TYPE_STYLE_SELECT);
+
+        if (false === empty($this->advanceFormErrors)) {
+            foreach ($this->advanceFormErrors as $key => $error) {
+                if ($key === 'signup') {
+                    $sectionDefinition->addError($error);
+                }
+            }
+        }
 
         return $this->getCustomizeStyleSection($sectionDefinition);
     }
@@ -954,6 +1026,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
 
         $this->context->smarty
             ->assign('shortcut', $ShortCut->render())
+            ->assign('errors', $sectionDefinition->getErrors())
             ->assign('configurations', $configurations);
 
         return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/form/customizeStyleSection.tpl');
@@ -984,7 +1057,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
         parent::postProcess();
 
         if (Tools::isSubmit('saveAdvancedForm')) {
-            Tools::redirectAdmin($_SERVER['HTTP_REFERER'] . '#pp_advanced_form');
+            Media::addJsDef(['sectionSelector' => '#pp_advanced_form']);
         }
     }
 }

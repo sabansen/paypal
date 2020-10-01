@@ -58,6 +58,9 @@ class CustomizeButtonStyleSectionDefinition
     /** @var int*/
     protected $typeHeight;
 
+    /** @var array*/
+    protected $errors;
+
     /**
      * @return string
      */
@@ -235,6 +238,50 @@ class CustomizeButtonStyleSectionDefinition
     public function setTypeHeight($typeHeight)
     {
         $this->typeHeight = $typeHeight;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getErrors()
+    {
+        if (false === is_array($this->errors)) {
+            return [];
+        }
+
+        return $this->errors;
+    }
+
+    /**
+     * @param array $errors
+     * @return CustomizeButtonStyleSectionDefinition
+     */
+    public function setErrors($errors)
+    {
+        if (false === is_array($errors) || empty($errors)) {
+            $this->errors = [];
+            return $this;
+        }
+
+        foreach ($errors as $error) {
+            $this->addError($error);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $error
+     * @return CustomizeButtonStyleSectionDefinition
+     */
+    public function addError($error)
+    {
+        if (false === is_string($error)) {
+            return $this;
+        }
+
+        $this->errors[] = $error;
         return $this;
     }
 }
