@@ -780,11 +780,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             Configuration::updateValue('PAYPAL_NEED_CHECK_CREDENTIALS', 0);
         }
 
-        if (Tools::getValue('controller') == "order") {
-            if (!$this->checkActiveModule()) {
-                return;
-            }
-
+        if (Tools::getValue('controller') == "order" && $this->context->customer->isLogged() === false) { // On signup page should show only a smart button
             $method = AbstractMethodPaypal::load($this->paypal_method);
 
             if ($method->isConfigured() == false) {
@@ -795,6 +791,16 @@ class PayPal extends \PaymentModule implements WidgetInterface
             if ($this->isShowShortcut()) {
                 $Shortcut = new ShortcutSignup();
                 $returnContent .= $Shortcut->render();
+            }
+        } else if (Tools::getValue('controller') == "order") {
+            if (!$this->checkActiveModule()) {
+                return;
+            }
+
+            $method = AbstractMethodPaypal::load($this->paypal_method);
+
+            if ($method->isConfigured() == false) {
+                return false;
             }
 
             if ((Configuration::get(ShortcutConfiguration::SHOW_ON_PRODUCT_PAGE) || Configuration::get(ShortcutConfiguration::SHOW_ON_CART_PAGE) || Configuration::get(ShortcutConfiguration::SHOW_ON_SIGNUP_STEP))
