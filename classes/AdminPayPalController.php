@@ -181,7 +181,7 @@ class AdminPayPalController extends \ModuleAdminController
             $return['status'] = false;
             $curl_info = curl_getinfo($curl);
             if ($curl_info['http_code'] == 401) {
-                $return['error_message'] = $this->module->l('401 Unauthorized. Please note that the TLS verification can not be done if you have a htaccess password protection enabled on your website.', 'AdminPayPalController');
+                $return['error_message'] = $this->module->l('401 Unauthorised. Please note that the TLS verification can\'t be done if you have htaccess password protection, debug or maintenance mode enabled on your web site.', 'AdminPayPalController');
             } else {
                 $return['error_message'] = curl_error($curl);
             }
