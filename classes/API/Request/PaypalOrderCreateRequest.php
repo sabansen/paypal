@@ -329,7 +329,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
 
         if ($address->id_state) {
             $state = new \State($address->id_state);
-            $addressArray['address_line_1'] = $state->iso_code;
+            $addressArray['admin_area_1'] = $state->iso_code;
         }
 
         return $addressArray;
