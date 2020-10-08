@@ -604,8 +604,8 @@ Shipping costs will be estimated on the base of the cart total and default carri
             foreach ($this->advanceFormParametres as $parametre) {
                 if (\Tools::isSubmit($parametre)) {
                     $value = pSQL(\Tools::getValue($parametre), '');
-                    $wrongHeightMsg = $this->l('You are trying to save invalid settings. The size of the PayPal button was automatically changed to the default values (value from 25 to 55 is required). Please click on "Customize" in order to change the size if needed.');
-                    $wrongWidthMsg = $this->l('You are trying to save invalid settings. The size of the PayPal button was automatically changed to the default values (minimum 150 px is required). Please click on "Customize" in order to change the size if needed.');
+                    $wrongHeightMsg = $this->l('You are trying to save invalid settings. The size of the PayPal button was automatically changed to the default values (value from 25 to 55 is required). Please click on « Customize » in order to change the size if needed.');
+                    $wrongWidthMsg = $this->l('You are trying to save invalid settings. The size of the PayPal button was automatically changed to the default values (minimum 150 px is required). Please click on « Customize » in order to change the size if needed.');
 
                     switch ($parametre) {
                         case ShortcutConfiguration::STYLE_HEIGHT_PRODUCT:
