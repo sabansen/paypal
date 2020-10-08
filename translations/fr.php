@@ -430,3 +430,4 @@ $_MODULE['<{paypal}prestashop>restapiintegrationmessage_29dd52f9530ecb11ec20a10b
 $_MODULE['<{paypal}prestashop>restapiintegrationmessage_fbd76d66be64d3cc1bf860039b193db7'] = 'Veuillez noter qu\'il est nécessaire de [b]reconnecter votre compte marchand PayPal[/b] afin de pouvoir continuer à utiliser la solution de paiement PayPal.';
 $_MODULE['<{paypal}prestashop>displayorderpreview_2b6ab125b0384eb33453b95c3f8e4ae6'] = 'ID de transaction PayPal';
 $_MODULE['<{paypal}prestashop>displayorderpreview_00aee8ea5d368378f1fa9a1638ae0238'] = 'Détails des derniers journaux';
+$_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_51bc4f8c73d447b0a5d16f25202b4942'] = 'Vous pouvez personnaliser les boutons de raccourci de la page Checkout dans le module PayPal.';

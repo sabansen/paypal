@@ -315,6 +315,12 @@ Shipping costs will be estimated on the base of the cart total and default carri
         $inputsMethod = $method->getAdvancedFormInputs();
 
         $inputs[] = array(
+            'type' => 'html',
+            'name' => '',
+            'html_content' => $this->module->displayInformation($this->l('You can customise your Checkout shortcut buttons in the PayPal module.'), false, false, 'shortcut-customize-style-info')
+        );
+
+        $inputs[] = array(
             'type' => 'switch',
             'label' => $this->l('Customize PayPal Express Checkout shortcut buttons'),
             'name' => ShortcutConfiguration::CUSTOMIZE_STYLE,
