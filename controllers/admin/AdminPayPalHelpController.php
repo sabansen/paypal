@@ -65,7 +65,7 @@ class AdminPayPalHelpController extends AdminPayPalController
         $tpl_vars = array(
             'need_rounding' => $need_rounding,
             'psCheckoutBtnText' => $this->getCheckoutBtnText(),
-            'showPsCheckout' => in_array($countryDefault->iso_code, $this->module->psCheckoutCountry)
+            'showPsCheckout' => in_array($countryDefault->iso_code, $this->module->countriesApiCartUnavailable)
         );
 
         $this->context->smarty->assign($tpl_vars);
