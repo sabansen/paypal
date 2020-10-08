@@ -61,6 +61,8 @@ class ShortcutConfiguration
 
     const HOOK_SHOPPING_CART_FOOTER = 'displayShoppingCartFooter';
 
+    const HOOK_PERSONAL_INFORMATION_TOP = 'displayPersonalInformationTop';
+
     const PRODUCT_PAGE_HOOK = 'PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_HOOK_PRODUCT';
 
     const CART_PAGE_HOOK = 'PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_HOOK_CART';

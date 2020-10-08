@@ -203,7 +203,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
         ShortcutConfiguration::HOOK_EXPRESS_CHECKOUT,
         ShortcutConfiguration::HOOK_FOOTER_PRODUCT,
         ShortcutConfiguration::HOOK_PRODUCT_ACTIONS,
-        ShortcutConfiguration::HOOK_SHOPPING_CART_FOOTER
+        ShortcutConfiguration::HOOK_SHOPPING_CART_FOOTER,
+        ShortcutConfiguration::HOOK_PERSONAL_INFORMATION_TOP
     );
 
     /**
@@ -633,6 +634,18 @@ class PayPal extends \PaymentModule implements WidgetInterface
         ]);
     }
 
+    public function hookDisplayPersonalInformationTop($params)
+    {
+        if ((int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_SIGNUP) !== ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK) {
+            return '';
+        }
+
+        return $this->displayShortcutButton([
+            'sourcePage' => ShortcutConfiguration::SOURCE_PAGE_SIGNUP,
+            'hook' => ShortcutConfiguration::HOOK_PERSONAL_INFORMATION_TOP
+        ]);
+    }
+
     public function getContent()
     {
         return Tools::redirectAdmin($this->context->link->getAdminLink('AdminPayPalSetup'));
@@ -780,19 +793,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             Configuration::updateValue('PAYPAL_NEED_CHECK_CREDENTIALS', 0);
         }
 
-        if (Tools::getValue('controller') == "order" && $this->context->customer->isLogged() === false) { // On signup page should show only a smart button
-            $method = AbstractMethodPaypal::load($this->paypal_method);
-
-            if ($method->isConfigured() == false) {
-                return false;
-            }
-
-            // Show Shortcut on signup page if need
-            if ($this->isShowShortcut()) {
-                $Shortcut = new ShortcutSignup();
-                $returnContent .= $Shortcut->render();
-            }
-        } else if (Tools::getValue('controller') == "order") {
+       if (Tools::getValue('controller') == "order") {
             if (!$this->checkActiveModule()) {
                 return;
             }
@@ -801,6 +802,18 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
             if ($method->isConfigured() == false) {
                 return false;
+            }
+
+            // Show Shortcut on signup page if need
+            // if ps version is '1.7.6' and bigger than use native hook displayPersonalInformationTop
+            if ($this->isShowShortcut()) {
+                if (version_compare(_PS_VERSION_, '1.7.6', '<')
+                    && (int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_SIGNUP) == ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK) {
+                    $Shortcut = new ShortcutSignup();
+                    $returnContent .= $Shortcut->render();
+                }
+                $returnContent .= $this->context->smarty->fetch('module:paypal/views/templates/front/prefetch.tpl');
+                return $returnContent;
             }
 
             if ((Configuration::get(ShortcutConfiguration::SHOW_ON_PRODUCT_PAGE) || Configuration::get(ShortcutConfiguration::SHOW_ON_CART_PAGE) || Configuration::get(ShortcutConfiguration::SHOW_ON_SIGNUP_STEP))
@@ -2075,10 +2088,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
             return false;
         }
 
-        if ($this->context->controller instanceof OrderController) {
-            if (Configuration::get(ShortcutConfiguration::SHOW_ON_SIGNUP_STEP) && $this->context->customer->isLogged() === false) {
-                return true;
-            }
+        if ($this->context->controller instanceof OrderController && Configuration::get(ShortcutConfiguration::SHOW_ON_SIGNUP_STEP)) {
+            return true;
         }
 
         if ($this->context->controller instanceof ProductController && Configuration::get(ShortcutConfiguration::SHOW_ON_PRODUCT_PAGE)) {
