@@ -66,7 +66,7 @@ class PayPal extends \PaymentModule
     public $countriesApiCartUnavailable = array("FR", "GB", "IT", "ES", "DE");
     public $currencyMB = array('USD', 'MXN', 'EUR', 'BRL');
     public $paypal_method;
-    public $psCheckoutCountry = ['FR', 'ES', 'IT', 'GB', 'PL', 'BE', 'NL', 'LU', 'US'];
+    public $psCheckoutCountry = ['FR', 'ES', 'IT', 'GB', 'PL', 'BE', 'NL', 'LU', 'US', 'GR', 'DK', 'CZ', 'PT', 'FI', 'SE', 'NO', 'SK', 'CY', 'EE', 'LV', 'LT', 'MT', 'SI'];
 
     /** @var array matrix of state iso codes between paypal and prestashop */
     public static $state_iso_code_matrix = array(
