@@ -65,7 +65,7 @@ class PayPal extends \PaymentModule
     public $errors;
     public $currencyMB = array('USD', 'MXN', 'EUR', 'BRL');
     public $paypal_method;
-    public $psCheckoutCountry = ['FR', 'ES', 'IT', 'GB', 'PL', 'BE', 'NL', 'LU', 'US'];
+    public $countriesApiCartUnavailable = ['FR', 'ES', 'IT', 'GB', 'PL', 'BE', 'NL', 'LU', 'US', 'GR', 'DK', 'CZ', 'PT', 'FI', 'SE', 'NO', 'SK', 'CY', 'EE', 'LV', 'LT', 'MT', 'SI'];
 
     /** @var array matrix of state iso codes between paypal and prestashop */
     public static $state_iso_code_matrix = array(
@@ -601,6 +601,17 @@ class PayPal extends \PaymentModule
                 if ($method->isConfigured()) {
                     $paymentOptionsEc = $this->renderEcPaymentOptions($params);
                     $payments_options = array_merge($payments_options, $paymentOptionsEc);
+
+                    if (Configuration::get('PAYPAL_API_CARD') && (in_array($isoCountryDefault, $this->countriesApiCartUnavailable) == false)) {
+                        $payment_option = new PaymentOption();
+                        $action_text = $this->l('Pay with debit or credit card');
+                        $payment_option->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/logo_card.png'));
+                        $payment_option->setCallToActionText($action_text);
+                        $payment_option->setModuleName($this->name);
+                        $payment_option->setAction($this->context->link->getModuleLink($this->name, 'ecInit', array('credit_card' => '1'), true));
+                        $payment_option->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_infos_card.tpl'));
+                        $payments_options[] = $payment_option;
+                    }
                 }
                 break;
             case 'PPP':
@@ -1903,7 +1914,7 @@ class PayPal extends \PaymentModule
             $notShowPsCheckout = false;
         }
 
-        return in_array($countryDefault->iso_code, $this->psCheckoutCountry) && ($notShowPsCheckout == false);
+        return in_array($countryDefault->iso_code, $this->countriesApiCartUnavailable) && ($notShowPsCheckout == false);
     }
 
     public function setPsCheckoutMessageValue($value)
