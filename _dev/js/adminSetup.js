@@ -69,6 +69,17 @@ export  const SetupAdmin = {
 
     window.onboardCallback = Onboarding.handleResponse;
     Onboarding.addPaypalLib();
+
+    $('[data-update-rounding-settings]').on('click', (e) => {
+      SetupAdmin.updateRoundingSettings(e);
+    });
+
+    $('[data-show-rounding-alert]').on('click', (e) => {
+      let $alert = $('[data-rounding-alert]');
+      $alert.removeClass('hidden');
+      let offset = $alert.offset().top - $('.page-head').height() - 45;
+      $('html, body').animate({scrollTop: offset}, 500);
+    });
   },
 
   logoutAccount() {
@@ -120,7 +131,26 @@ export  const SetupAdmin = {
       });
     }
 
-  }
+  },
+
+  updateRoundingSettings(el) {
+    $.ajax({
+      url: controllerUrl,
+      type: 'POST',
+      data: {
+        ajax: true,
+        action: 'UpdateRoundingSettings',
+      },
+      success(response) {
+        let $alert = $(el.currentTarget).closest('[data-rounding-alert]');
+        if ($alert.length > 0) {
+          $alert.removeClass('alert-warning').addClass('alert-success');
+          $alert.html(response);
+          setTimeout(() => $alert.remove(), 5000);
+        }
+      },
+    });
+  },
 
 };
 

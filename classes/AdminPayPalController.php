@@ -77,15 +77,26 @@ class AdminPayPalController extends \ModuleAdminController
             \Configuration::updateValue('PAYPAL_NEED_CHECK_CREDENTIALS', 0);
         }
 
+        $need_rounding = false;
+
+        if (\Configuration::get('PS_ROUND_TYPE') != \Order::ROUND_ITEM
+            || \Configuration::get('PS_PRICE_ROUND_MODE') != PS_ROUND_HALF_UP
+            || \Configuration::get('PS_PRICE_DISPLAY_PRECISION') != 2) {
+            $need_rounding = true;
+        }
+
         $showWarningForUserBraintree = $this->module->showWarningForUserBraintree();
         $showPsCheckoutInfo = $this->module->showPsCheckoutMessage();
-        $this->context->smarty->assign('showWarningForUserBraintree', $showWarningForUserBraintree);
-        $this->context->smarty->assign('methodType', $this->method);
-        $this->context->smarty->assign('moduleDir', _MODULE_DIR_);
-        $this->context->smarty->assign('showPsCheckoutInfo', $showPsCheckoutInfo);
-        $this->context->smarty->assign('headerToolBar', $this->headerToolBar);
-        $this->context->smarty->assign('showRestApiIntegrationMessage', $this->isShowRestApiIntegrationMessage());
-        $this->context->smarty->assign('psVersion', _PS_VERSION_);
+        $this->context->smarty->assign([
+            'showWarningForUserBraintree' => $showWarningForUserBraintree,
+            'methodType' => $this->method,
+            'moduleDir' => _MODULE_DIR_,
+            'showPsCheckoutInfo' => $showPsCheckoutInfo,
+            'headerToolBar' => $this->headerToolBar,
+            'showRestApiIntegrationMessage' => $this->isShowRestApiIntegrationMessage(),
+            'psVersion' => _PS_VERSION_,
+            'need_rounding' => $need_rounding,
+        ]);
     }
 
     public function renderForm($fields_form = null)
@@ -129,7 +140,6 @@ class AdminPayPalController extends \ModuleAdminController
             'message' => array()
         );
         $hooksUnregistered = $this->module->getHooksUnregistered();
-
         if (empty($hooksUnregistered) == false) {
             $response['success'] = false;
             $response['message'][] = $this->getHooksUnregisteredMessage($hooksUnregistered);
@@ -283,6 +293,37 @@ class AdminPayPalController extends \ModuleAdminController
 
         $jsonResponse = new JsonResponse($response);
         return $jsonResponse->send();
+    }
+
+    public function displayAjaxUpdateRoundingSettings()
+    {
+        \Configuration::updateValue(
+            'PS_ROUND_TYPE',
+            '1',
+            false,
+            null,
+            (int) $this->context->shop->id
+        );
+
+        \Configuration::updateValue(
+            'PS_PRICE_ROUND_MODE',
+            '2',
+            false,
+            null,
+            (int) $this->context->shop->id
+        );
+
+        \Configuration::updateValue(
+            'PS_PRICE_DISPLAY_PRECISION',
+            '2',
+            false,
+            null,
+            (int) $this->context->shop->id
+        );
+
+        $message = $this->module->l('Settings updated. Your rounding settings are compatible with PayPal!', 'AdminPayPalController');
+
+        $this->ajaxDie($message);
     }
 
     public function installPsCheckout()
