@@ -205,8 +205,10 @@ var CustomizeCheckout = {
           && shortcutLocationSignup.prop('checked') === false
         ) {
             $('.shortcut-customize-style-alert').closest('.form-group').show();
+            $('.shortcut-customize-style-alert').removeClass('hidden');
         } else {
             $('.shortcut-customize-style-alert').closest('.form-group').hide();
+            $('.shortcut-customize-style-alert').addClass('hidden');
         }
       }
     },
