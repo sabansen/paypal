@@ -126,6 +126,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             Tools::strtolower(ShortcutConfiguration::SHOW_ON_SIGNUP_STEP) => (int)Configuration::get(ShortcutConfiguration::SHOW_ON_SIGNUP_STEP),
         );
 
+        $countryDefault = new Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
         $this->context->smarty->assign($tpl_vars);
         $htmlContent = $this->context->smarty->fetch($this->getTemplatePath() . '_partials/blockPreviewButtonContext.tpl');
         $this->fields_form['form']['form'] = array(
@@ -235,7 +236,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
             'hint' => $this->l('A label that overrides the business name in the PayPal account on the PayPal pages. If logo is set, then brand name won\'t be shown.', get_class($this)),
         );
 
-        if (in_array($isoCountryDefault, $this->module->countriesApiCartUnavailable) == false || $this->method == 'MB') {
+        if (in_array($countryDefault->iso_code, $this->module->countriesApiCartUnavailable) == false || $this->method == 'MB') {
             $this->fields_form['form']['form']['input'][] = array(
                 'type' => 'switch',
                 'label' => $this->l('Accept credit and debit card payment'),

@@ -37,7 +37,7 @@ class InputChain implements FieldInteface
     /** @var string*/
     protected $label;
 
-    public function __construct(array $inputs)
+    public function __construct($inputs)
     {
         $this->setInputs($inputs);
     }
@@ -54,7 +54,7 @@ class InputChain implements FieldInteface
      * @param TextInput[] $inputs
      * @return InputChain
      */
-    public function setInputs(array $inputs)
+    public function setInputs($inputs)
     {
         $this->inputs = [];
 

@@ -49,7 +49,7 @@ class Select implements FieldInteface
     /** @var string*/
     protected $afterSelectContent;
 
-    public function __construct(string $name, array $options, string $label, $value = null, $type = null)
+    public function __construct($name, $options, $label, $value = null, $type = null)
     {
         $this->setName($name);
         $this->setOptions($options);
@@ -107,7 +107,7 @@ class Select implements FieldInteface
      * @param array $options
      * @return Select
      */
-    public function setOptions(array $options)
+    public function setOptions($options)
     {
         $this->options = [];
 

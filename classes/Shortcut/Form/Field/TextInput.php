@@ -45,7 +45,7 @@ class TextInput implements FieldInteface
     /** @var array*/
     protected $attributes;
 
-    public function __construct(string $name, string $value, string $label, $type = null, $attributes = null)
+    public function __construct($name, $value, $label, $type = null, $attributes = null)
     {
         $this->setName($name);
         $this->setValue($value);

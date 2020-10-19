@@ -39,7 +39,7 @@ class SelectOption implements FieldInteface
     /** @var bool*/
     protected $isSelected;
 
-    public function __construct(string $value, string $description)
+    public function __construct($value, $description)
     {
         $this->setDescription($description);
         $this->setValue($value);
