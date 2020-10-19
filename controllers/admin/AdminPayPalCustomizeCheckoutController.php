@@ -235,7 +235,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
             'hint' => $this->l('A label that overrides the business name in the PayPal account on the PayPal pages. If logo is set, then brand name won\'t be shown.', get_class($this)),
         );
 
-        if ($this->method == 'MB') {
+        if (in_array($isoCountryDefault, $this->module->countriesApiCartUnavailable) == false || $this->method == 'MB') {
             $this->fields_form['form']['form']['input'][] = array(
                 'type' => 'switch',
                 'label' => $this->l('Accept credit and debit card payment'),
