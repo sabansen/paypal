@@ -1191,13 +1191,19 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
 
         $return = $this->getAdminOrderPageMessages($params);
-        $return .= $this->getPartialRefund();
+        $return .= $this->getPartialRefund($params);
 
         return $return;
     }
 
-    protected function getPartialRefund()
+    protected function getPartialRefund($params)
     {
+        $paypal_order = PaypalOrder::loadByOrderId($params['id_order']);
+
+        if (!Validate::isLoadedObject($paypal_order)) {
+            return '';
+        }
+
         $this->context->smarty->assign('chb_paypal_refund', $this->l('Refund on PayPal'));
         return $this->context->smarty->fetch(_PS_MODULE_DIR_ . $this->name . '/views/templates/hook/partialRefund.tpl');
     }
@@ -1205,7 +1211,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
     public function hookDisplayAdminOrderTop($params)
     {
         $return = $this->getAdminOrderPageMessages($params);
-        $return .= $this->getPartialRefund();
+        $return .= $this->getPartialRefund($params);
 
         return $return;
     }
