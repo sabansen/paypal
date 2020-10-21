@@ -293,6 +293,10 @@ class PaypalOrderCreateRequest extends RequestAbstract
             'user_action' => 'PAY_NOW'
         ];
 
+        if ($this->context->cart->isVirtualCart()) {
+            $applicationContext['shipping_prefernces'] = 'NO_SHIPPING';
+        }
+
         return $applicationContext;
     }
 
