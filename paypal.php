@@ -1005,12 +1005,37 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
 
         if (isset($data['hook'])) {
-            if ($data['sourcePage'] == ShortcutConfiguration::SOURCE_PAGE_PRODUCT && Configuration::get(ShortcutConfiguration::PRODUCT_PAGE_HOOK) !== $data['hook']) {
-                return '';
+
+            if ($data['sourcePage'] == ShortcutConfiguration::SOURCE_PAGE_PRODUCT) {
+                // Take a hook by default
+                if (version_compare(_PS_VERSION_, '1.7.6', '>=')) {
+                    $hookSetted = ShortcutConfiguration::HOOK_PRODUCT_ACTIONS;
+                } else {
+                    $hookSetted = ShortcutConfiguration::HOOK_REASSURANCE;
+                }
+
+                // If a style customization conf is active, take a hook configured
+                if (Configuration::get(ShortcutConfiguration::CUSTOMIZE_STYLE)) {
+                    $hookSetted = Configuration::get(ShortcutConfiguration::PRODUCT_PAGE_HOOK);
+                }
+
+                if ($hookSetted != $data['hook']) {
+                    return '';
+                }
             }
 
-            if ($data['sourcePage'] == ShortcutConfiguration::SOURCE_PAGE_CART && Configuration::get(ShortcutConfiguration::CART_PAGE_HOOK) !== $data['hook']) {
-                return '';
+            if ($data['sourcePage'] == ShortcutConfiguration::SOURCE_PAGE_CART) {
+                // Take a hook by default
+                $hookSetted = ShortcutConfiguration::HOOK_EXPRESS_CHECKOUT;
+
+                // If a style customization conf is active, take a hook configured
+                if (Configuration::get(ShortcutConfiguration::CUSTOMIZE_STYLE)) {
+                    $hookSetted = Configuration::get(ShortcutConfiguration::CART_PAGE_HOOK);
+                }
+
+                if ($hookSetted != $data['hook']) {
+                    return '';
+                }
             }
         }
 

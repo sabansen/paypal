@@ -69,13 +69,23 @@ class ShortcutProduct extends ShortcutAbstract
 
     protected function getStyleSetting()
     {
-        $styleSetting = [
-            'label' => Configuration::get(ShortcutConfiguration::STYLE_LABEL_PRODUCT, null, null, null, ShortcutConfiguration::STYLE_LABEL_BUYNOW),
-            'color' => Configuration::get(ShortcutConfiguration::STYLE_COLOR_PRODUCT, null, null, null, ShortcutConfiguration::STYLE_COLOR_GOLD),
-            'shape' => Configuration::get(ShortcutConfiguration::STYLE_SHAPE_PRODUCT, null, null, null, ShortcutConfiguration::STYLE_SHAPE_RECT),
-            'height' => (int) Configuration::get(ShortcutConfiguration::STYLE_HEIGHT_PRODUCT, null, null, null, 35),
-            'width' => (int) Configuration::get(ShortcutConfiguration::STYLE_WIDTH_PRODUCT, null, null, null, 200),
-        ];
+        if (Configuration::get(ShortcutConfiguration::CUSTOMIZE_STYLE)) {
+            $styleSetting = [
+                'label' => Configuration::get(ShortcutConfiguration::STYLE_LABEL_PRODUCT, null, null, null, ShortcutConfiguration::STYLE_LABEL_BUYNOW),
+                'color' => Configuration::get(ShortcutConfiguration::STYLE_COLOR_PRODUCT, null, null, null, ShortcutConfiguration::STYLE_COLOR_GOLD),
+                'shape' => Configuration::get(ShortcutConfiguration::STYLE_SHAPE_PRODUCT, null, null, null, ShortcutConfiguration::STYLE_SHAPE_RECT),
+                'height' => (int) Configuration::get(ShortcutConfiguration::STYLE_HEIGHT_PRODUCT, null, null, null, 35),
+                'width' => (int) Configuration::get(ShortcutConfiguration::STYLE_WIDTH_PRODUCT, null, null, null, 200),
+            ];
+        } else {
+            $styleSetting = [
+                'label' => ShortcutConfiguration::STYLE_LABEL_BUYNOW,
+                'color' => ShortcutConfiguration::STYLE_COLOR_GOLD,
+                'shape' => ShortcutConfiguration::STYLE_SHAPE_RECT,
+                'height' => 35,
+                'width' => 200,
+            ];
+        }
 
         return $styleSetting;
     }
