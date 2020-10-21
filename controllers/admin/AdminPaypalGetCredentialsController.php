@@ -75,9 +75,15 @@ class AdminPaypalGetCredentialsController extends ModuleAdminController
         $maxDuration = 10;
         $start = time();
         $wait = true;
+        $query = new DbQuery();
+        $query
+            ->select('value')
+            ->from('configuration')
+            ->where('name=\'PAYPAL_AUTH_TOKEN\'');
 
         do {
-            $authToken = Configuration::get('PAYPAL_AUTH_TOKEN');
+            // Not use Configuration::get(), because it doesn't allow disable cache
+            $authToken = Db::getInstance()->getValue($query, false);
 
             if (false === empty($authToken)) {
                 $wait = false;

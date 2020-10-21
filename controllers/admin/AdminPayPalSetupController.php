@@ -60,9 +60,13 @@ class AdminPayPalSetupController extends AdminPayPalController
     public function init()
     {
         parent::init();
+
         if (Tools::getValue('useWithoutBraintree')) {
             Configuration::updateValue('PAYPAL_USE_WITHOUT_BRAINTREE', 1);
         }
+
+        // Reset token
+        Configuration::updateValue('PAYPAL_AUTH_TOKEN', '');
     }
 
     public function initContent()
