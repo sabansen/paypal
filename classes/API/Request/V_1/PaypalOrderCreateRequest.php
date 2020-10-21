@@ -91,6 +91,7 @@ class PaypalOrderCreateRequest extends RequestAbstractMB
         $this->_amount = new Amount();
 
         $this->_getPaymentDetails();
+        $this->_itemList->setShippingAddress($this->getPayerShippingAddress());
 
         // ### Transaction
         // A transaction defines the contract of a
@@ -172,9 +173,6 @@ class PaypalOrderCreateRequest extends RequestAbstractMB
             $payerTaxId = str_replace(array('.', '-', '/'), '', $addressCustomer->vat_number);
             $payerInfo->setTaxId($payerTaxId);
             $payerInfo->setTaxIdType($this->method->getTaxIdType($payerTaxId));
-        } else {
-            $payerInfo->setTaxId('');
-            $payerInfo->setTaxIdType('');
         }
 
         return $payerInfo;
