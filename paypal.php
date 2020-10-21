@@ -565,10 +565,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
             return '';
         }
 
-        if ((int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_CART) !== ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK) {
-            return '';
-        }
-
         return $this->displayShortcutButton([
             'sourcePage' => ShortcutConfiguration::SOURCE_PAGE_CART,
             'hook' => ShortcutConfiguration::HOOK_SHOPPING_CART_FOOTER
@@ -577,10 +573,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
     public function hookDisplayProductActions($params)
     {
-        if ((int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_PRODUCT) !== ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK) {
-            return '';
-        }
-
         return $this->displayShortcutButton([
             'sourcePage' => ShortcutConfiguration::SOURCE_PAGE_PRODUCT,
             'hook' => ShortcutConfiguration::HOOK_PRODUCT_ACTIONS
@@ -601,10 +593,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
     public function hookDisplayProductAdditionalInfo($params)
     {
-        if ((int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_PRODUCT) !== ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK) {
-            return '';
-        }
-
         return $this->displayShortcutButton([
             'sourcePage' => ShortcutConfiguration::SOURCE_PAGE_PRODUCT,
             'hook' => ShortcutConfiguration::HOOK_AFTER_PRODUCT_ADDITIONAL_INFO
@@ -613,10 +601,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
     public function hookDisplayFooterProduct($params)
     {
-        if ((int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_PRODUCT) !== ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK) {
-            return '';
-        }
-
         return $this->displayShortcutButton([
             'sourcePage' => ShortcutConfiguration::SOURCE_PAGE_PRODUCT,
             'hook' => ShortcutConfiguration::HOOK_FOOTER_PRODUCT
@@ -624,10 +608,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
     public function hookDisplayExpressCheckout($params)
     {
-        if ((int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_CART) !== ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK) {
-            return '';
-        }
-
         return $this->displayShortcutButton([
             'sourcePage' => ShortcutConfiguration::SOURCE_PAGE_CART,
             'hook' => ShortcutConfiguration::HOOK_EXPRESS_CHECKOUT
@@ -636,10 +616,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
     public function hookDisplayPersonalInformationTop($params)
     {
-        if ($this->context->customer->isLogged() || (int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_SIGNUP) !== ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK) {
-            return '';
-        }
-
         return $this->displayShortcutButton([
             'sourcePage' => ShortcutConfiguration::SOURCE_PAGE_SIGNUP,
             'hook' => ShortcutConfiguration::HOOK_PERSONAL_INFORMATION_TOP
@@ -819,7 +795,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             // if ps version is '1.7.6' and bigger than use native hook displayPersonalInformationTop
             if ($this->isShowShortcut() && !$this->context->customer->isLogged()) {
                 if (version_compare(_PS_VERSION_, '1.7.6', '<')
-                    && (int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_SIGNUP) == ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK) {
+                    && ((bool)Configuration::get(ShortcutConfiguration::CUSTOMIZE_STYLE) === false || (int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_SIGNUP) == ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK)) {
                     $Shortcut = new ShortcutSignup();
                     $returnContent .= $Shortcut->render();
                 }
@@ -966,10 +942,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
     public function hookDisplayReassurance()
     {
         if ($this->context->controller instanceof ProductController) {
-            if ((int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_PRODUCT) !== ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK) {
-                return '';
-            }
-
             return $this->displayShortcutButton([
                 'sourcePage' => ShortcutConfiguration::SOURCE_PAGE_PRODUCT,
                 'hook' => ShortcutConfiguration::HOOK_REASSURANCE
@@ -977,10 +949,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
 
         if ($this->context->controller instanceof CartController) {
-            if ((int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_CART) !== ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK) {
-                return '';
-            }
-
             return $this->displayShortcutButton([
                 'sourcePage' => ShortcutConfiguration::SOURCE_PAGE_CART,
                 'hook' => ShortcutConfiguration::HOOK_REASSURANCE
@@ -1007,6 +975,11 @@ class PayPal extends \PaymentModule implements WidgetInterface
         if (isset($data['hook'])) {
 
             if ($data['sourcePage'] == ShortcutConfiguration::SOURCE_PAGE_PRODUCT) {
+                if (Configuration::get(ShortcutConfiguration::CUSTOMIZE_STYLE)
+                    && (int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_PRODUCT) !== ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK) {
+
+                    return '';
+                }
                 // Take a hook by default
                 if (version_compare(_PS_VERSION_, '1.7.6', '>=')) {
                     $hookSetted = ShortcutConfiguration::HOOK_PRODUCT_ACTIONS;
@@ -1025,6 +998,11 @@ class PayPal extends \PaymentModule implements WidgetInterface
             }
 
             if ($data['sourcePage'] == ShortcutConfiguration::SOURCE_PAGE_CART) {
+                if (Configuration::get(ShortcutConfiguration::CUSTOMIZE_STYLE)
+                    && (int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_CART) !== ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK) {
+
+                    return '';
+                }
                 // Take a hook by default
                 $hookSetted = ShortcutConfiguration::HOOK_EXPRESS_CHECKOUT;
 
@@ -1034,6 +1012,14 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 }
 
                 if ($hookSetted != $data['hook']) {
+                    return '';
+                }
+            }
+
+            if ($data['sourcePage'] == ShortcutConfiguration::SOURCE_PAGE_SIGNUP) {
+                if (Configuration::get(ShortcutConfiguration::CUSTOMIZE_STYLE)
+                    && (int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_SIGNUP) !== ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK) {
+
                     return '';
                 }
             }
