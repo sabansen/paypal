@@ -91,6 +91,7 @@ class PaypalOrderCreateRequest extends RequestAbstractMB
         $this->_amount = new Amount();
 
         $this->_getPaymentDetails();
+        $this->_itemList->setShippingAddress($this->getPayerShippingAddress());
 
         // ### Transaction
         // A transaction defines the contract of a
@@ -126,9 +127,8 @@ class PaypalOrderCreateRequest extends RequestAbstractMB
             ->setRedirectUrls($redirectUrls)
             ->setTransactions(array($transaction));
 
-        if (is_callable(array(get_class($this->method), 'getIdProfileExperience'), true)) {
-            $payment->setExperienceProfileId($this->method->getIdProfileExperience());
-        }
+        // Set application_context
+        $payment->application_context = $this->getApplicationContext();
 
         // ### Create Payment
         // Create a payment by calling the 'create' method
@@ -154,6 +154,21 @@ class PaypalOrderCreateRequest extends RequestAbstractMB
             ->setSuccess(true);
     }
 
+    protected function getApplicationContext()
+    {
+        if (Context::getContext()->cart->isVirtualCart()) {
+            $applicationContext = [
+                'shipping_preference' => 'NO_SHIPPING'
+            ];
+        } else {
+            $applicationContext = [
+                'shipping_preference' => 'SET_PROVIDED_ADDRESS'
+            ];
+        }
+
+        return $applicationContext;
+    }
+
     /**
      * @return PayerInfo
      */
@@ -172,9 +187,6 @@ class PaypalOrderCreateRequest extends RequestAbstractMB
             $payerTaxId = str_replace(array('.', '-', '/'), '', $addressCustomer->vat_number);
             $payerInfo->setTaxId($payerTaxId);
             $payerInfo->setTaxIdType($this->method->getTaxIdType($payerTaxId));
-        } else {
-            $payerInfo->setTaxId('');
-            $payerInfo->setTaxIdType('');
         }
 
         return $payerInfo;
