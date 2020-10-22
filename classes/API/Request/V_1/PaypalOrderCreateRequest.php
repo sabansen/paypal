@@ -136,7 +136,7 @@ class PaypalOrderCreateRequest extends RequestAbstractMB
         // The return object contains the state and the
         // url to which the buyer must be redirected to
         // for payment approval
-
+        
         try {
             $payment->create($this->getApiContext());
         } catch (\Exception $e) {
