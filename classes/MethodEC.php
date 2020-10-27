@@ -251,10 +251,9 @@ class MethodEC extends AbstractMethodPaypal
         $tplVars['mode'] = $this->isSandbox() ? 'SANDBOX' : 'LIVE';
         $tplVars['paypal_ec_clientid'] = $this->getClientId();
         $tplVars['paypal_ec_secret'] = $this->getSecret();
-
-        \Media::addJsDef([
-            'paypalOnboardingLib' => $this->isSandbox() ? 'https://www.sandbox.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js' : 'https://www.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js'
-        ]);
+        $tplVars['paypalOnboardingLib'] = $this->isSandbox() ?
+            'https://www.sandbox.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js' :
+            'https://www.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js';
 
         return $tplVars;
     }

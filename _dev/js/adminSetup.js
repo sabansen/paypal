@@ -68,7 +68,6 @@ export  const SetupAdmin = {
     });
 
     window.onboardCallback = Onboarding.handleResponse;
-    Onboarding.addPaypalLib();
   },
 
   logoutAccount() {
@@ -120,7 +119,7 @@ export  const SetupAdmin = {
       });
     }
 
-  }
+  },
 
 };
 
