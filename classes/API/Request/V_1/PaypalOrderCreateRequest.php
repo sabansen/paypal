@@ -91,7 +91,10 @@ class PaypalOrderCreateRequest extends RequestAbstractMB
         $this->_amount = new Amount();
 
         $this->_getPaymentDetails();
-        $this->_itemList->setShippingAddress($this->getPayerShippingAddress());
+
+        if (Context::getContext()->cart->isVirtualCart() === false) {
+            $this->_itemList->setShippingAddress($this->getPayerShippingAddress());
+        }
 
         // ### Transaction
         // A transaction defines the contract of a
