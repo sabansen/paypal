@@ -221,10 +221,9 @@ class MethodPPP extends AbstractMethodPaypal
 
         $tplVars['accountConfigured'] = $this->isConfigured();
         $tplVars['urlOnboarding'] = $this->getUrlOnboarding();
-
-        \Media::addJsDef([
-            'paypalOnboardingLib' => $this->isSandbox() ? 'https://www.sandbox.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js' : 'https://www.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js'
-        ]);
+        $tplVars['paypalOnboardingLib'] = $this->isSandbox() ?
+            'https://www.sandbox.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js' :
+            'https://www.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js';
 
         return $tplVars;
 

@@ -68,7 +68,6 @@ export  const SetupAdmin = {
     });
 
     window.onboardCallback = Onboarding.handleResponse;
-    Onboarding.addPaypalLib();
 
     $('[data-update-rounding-settings]').on('click', (e) => {
       SetupAdmin.updateRoundingSettings(e);

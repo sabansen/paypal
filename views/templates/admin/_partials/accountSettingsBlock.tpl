@@ -106,6 +106,8 @@
               <i class="icon-signin"></i>
               {l s='Connect or create PayPal account' mod='paypal'}
           </a>
+
+          <script src="{$paypalOnboardingLib|addslashes}"></script>
         {/if}
 
     {/if}
