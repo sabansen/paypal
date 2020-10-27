@@ -136,7 +136,7 @@ class PaypalOrderCreateRequest extends RequestAbstractMB
         // The return object contains the state and the
         // url to which the buyer must be redirected to
         // for payment approval
-        
+
         try {
             $payment->create($this->getApiContext());
         } catch (\Exception $e) {
@@ -181,7 +181,6 @@ class PaypalOrderCreateRequest extends RequestAbstractMB
         $payerInfo->setEmail($customer->email);
         $payerInfo->setFirstName($customer->firstname);
         $payerInfo->setLastName($customer->lastname);
-        $payerInfo->setShippingAddress($this->getPayerShippingAddress());
 
         if ($countryCustomer->iso_code == 'BR') {
             $payerTaxId = str_replace(array('.', '-', '/'), '', $addressCustomer->vat_number);
