@@ -146,7 +146,10 @@ class PaypalOrderCreateRequest extends RequestAbstract
             'surname' => $this->context->customer->lastname
         ];
         $payer['email'] = $this->context->customer->email;
-        $payer['address'] = $this->getAddress();
+
+        if ($this->context->cart->isVirtualCart() === false) {
+            $payer['address'] = $this->getAddress();
+        }
 
         if ($this->method instanceof \MethodMB) {
             $taxInfo = $this->method->getPayerTaxInfo();
