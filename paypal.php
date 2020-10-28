@@ -736,7 +736,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
         $paymentOption = new PaymentOption();
         $action_text = $this->l('Pay with Paypal');
-        $paymentOption->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/paypal_sm.png'));
+        $paymentOption->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/paypal_logo.png'));
         $paymentOption->setModuleName($this->name);
         if (Configuration::get('PAYPAL_API_ADVANTAGES')) {
             $action_text .= ' | ' . $this->l('It\'s simple, fast and secure');
@@ -753,6 +753,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
         if (!$is_virtual) {
             $paymentOption->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_infos.tpl'));
         }
+
+        $paymentOption->setModuleName('paypal-ec');
 
         $paymentOptions[] = $paymentOption;
 
@@ -790,6 +792,9 @@ class PayPal extends \PaymentModule implements WidgetInterface
             if ($method->isConfigured() == false) {
                 return false;
             }
+
+           $this->context->controller->registerJavascript($this->name . '-paypal-info', 'modules/' . $this->name . '/views/js/paypal-info.js');
+           $resources[] = '/modules/' . $this->name . '/views/js/paypal-info.js';
 
             // Show Shortcut on signup page if need
             // if ps version is '1.7.6' and bigger than use native hook displayPersonalInformationTop

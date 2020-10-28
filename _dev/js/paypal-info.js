@@ -1,4 +1,4 @@
-/*!
+/*
  * 2007-2020 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,45 +23,34 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
-// Components
-@import "components/loader";
+// init in-context
+$(document).ready( () => {
 
-@import "helpers/display";
-
-.pp-info {
-  .item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-size: 14px;
-
-    .header {
-      font-weight: 700;
+  // Insert paypal info block after option name
+  $('.payment-option').each((i) => {
+    if ($(`#payment-option-${i}-container [data-module-name='paypal-ec']`).length > 0) {
+      $('[data-paypal-info]').insertAfter($(`#payment-option-${i}-container label`));
     }
+  });
 
-    .desc {
-      text-align: center;
-      line-height: 1.3;
-      width: 100%;
-    }
+  // Show block with paypal payment benefits
+  let configs = getConfigPopup();
+  $('[data-paypal-info-popover]').popover({
+    placement: configs.popoverPlacement,
+    trigger: configs.popoverTrigger
+  });
+});
+
+const getConfigPopup = () => {
+  let placement = 'right',
+    trigger = 'hover';
+  if ($(window).width() < 992) {
+    placement = 'bottom';
+    trigger = 'click';
   }
-}
-
-@media only screen and (min-width: 992px) {
-  body.pp-popover .popover {max-width:500px;}
-}
-
-@media only screen and (max-width: 991px) {
-  .popover.bs-tether-element-attached-top {
-    left: -95px !important;
-    width: 276px;
-    top: 13px !important;
-
-    &::before,
-    &::after {
-      left: 85%;
-    }
+  return {
+    popoverPlacement: placement,
+    popoverTrigger: trigger
   }
+
 }
-
-
