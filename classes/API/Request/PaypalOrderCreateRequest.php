@@ -305,7 +305,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
      */
     protected function getShippingInfo()
     {
-        if ($this->context->cart->id_address_delivery == false) {
+        if ($this->context->cart->id_address_delivery == false || $this->context->cart->isVirtualCart()) {
             return [];
         }
         $shippingInfo = [
