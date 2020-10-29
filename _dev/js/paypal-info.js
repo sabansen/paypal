@@ -39,6 +39,11 @@ $(document).ready( () => {
     placement: configs.popoverPlacement,
     trigger: configs.popoverTrigger
   });
+
+  if ($(window).width() > 991) {
+    hoverPopup();
+  }
+
 });
 
 const getConfigPopup = () => {
@@ -53,4 +58,22 @@ const getConfigPopup = () => {
     popoverTrigger: trigger
   }
 
+}
+
+const hoverPopup = () => {
+  $('[data-paypal-info-popover] i').on('mouseover', (e) => {
+    e.target.innerText = 'cancel';
+    $('body').addClass('pp-popover');
+  })
+
+  $('[data-paypal-info-popover] i').on('mouseout', (e) => {
+    e.target.innerText = 'info';
+    if (!$('[data-pp-info]').is(':visible')) {
+      $('body').removeClass('pp-popover');
+    }
+  })
+
+  $('[data-paypal-info-popover] i').on('click', (e) => {
+    hidePopup($(e.target));
+  })
 }
