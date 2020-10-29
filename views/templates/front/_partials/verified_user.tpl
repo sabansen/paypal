@@ -25,18 +25,53 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="18px" height="23px" viewBox="0 0 18 23" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Checkout-Payment" transform="translate(-620.000000, -406.000000)">
-            <g id="paypal-reassurance-tooltip" transform="translate(491.000000, 385.000000)">
-                <g id="better-security" transform="translate(39.000000, 20.500000)">
-                    <g id="outline-verified_user-24px" transform="translate(87.000000, 0.000000)">
-                        <polygon id="Path" points="0 0 24 0 24 24 0 24"></polygon>
-                        <path d="M12,1 L3,5 L3,11 C3,16.55 6.84,21.74 12,23 C17.16,21.74 21,16.55 21,11 L21,5 L12,1 Z M19,11 C19,15.52 16.02,19.69 12,20.93 C7.98,19.69 5,15.52 5,11 L5,6.3 L12,3.19 L19,6.3 L19,11 Z M7.41,11.59 L6,13 L10,17 L18,9 L16.59,7.58 L10,14.17 L7.41,11.59 Z" id="Shape" fill="#00B3E3" fill-rule="nonzero"></path>
-                    </g>
-                </g>
-            </g>
-        </g>
+<?xml version="1.0" encoding="iso-8859-1"?>
+<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+     viewBox="0 0 477.867 477.867" style="enable-background:new 0 0 477.867 477.867;" xml:space="preserve" width="20px" height="21px">
+<g>
+  <g>
+    <path d="M409.6,170.667h-17.067V153.6C392.439,68.808,323.725,0.094,238.933,0c-84.792,0.094-153.506,68.808-153.6,153.6v17.067
+			H68.267c-9.426,0-17.067,7.641-17.067,17.067V460.8c0,9.426,7.641,17.067,17.067,17.067H409.6c9.426,0,17.067-7.641,17.067-17.067
+			V187.733C426.667,178.308,419.026,170.667,409.6,170.667z M119.467,153.6c0-65.98,53.487-119.467,119.467-119.467
+			S358.4,87.62,358.4,153.6v17.067H119.467V153.6z M392.533,443.733h-307.2V204.8h307.2V443.733z"/>
+  </g>
+</g>
+  <g>
+    <g>
+      <path d="M287.209,290.111c-7.211-20.472-26.571-34.152-48.276-34.111c-28.211-0.053-51.124,22.773-51.177,50.984
+			c-0.041,21.705,13.639,41.065,34.111,48.276v37.274c0,9.426,7.641,17.067,17.067,17.067S256,401.959,256,392.533V355.26
+			C282.609,345.888,296.582,316.719,287.209,290.111z M238.933,324.267c-9.426,0-17.067-7.641-17.067-17.067
+			s7.641-17.067,17.067-17.067S256,297.774,256,307.2S248.359,324.267,238.933,324.267z"/>
     </g>
+  </g>
+  <g>
+  </g>
+  <g>
+  </g>
+  <g>
+  </g>
+  <g>
+  </g>
+  <g>
+  </g>
+  <g>
+  </g>
+  <g>
+  </g>
+  <g>
+  </g>
+  <g>
+  </g>
+  <g>
+  </g>
+  <g>
+  </g>
+  <g>
+  </g>
+  <g>
+  </g>
+  <g>
+  </g>
+  <g>
+  </g>
 </svg>
