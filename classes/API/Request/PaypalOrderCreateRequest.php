@@ -289,7 +289,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
         $applicationContext = [
             'locale' => $this->context->language->locale,
             'landing_page' => $this->method->getLandingPage(),
-            'shipping_prefernces' => 'SET_PROVIDED_ADDRESS',
+            'shipping_preference' => 'SET_PROVIDED_ADDRESS',
             'return_url' => $this->method->getReturnUrl(),
             'cancel_url' => $this->method->getCancelUrl(),
             'brand_name' => $this->getBrandName(),
@@ -297,7 +297,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
         ];
 
         if ($this->context->cart->isVirtualCart()) {
-            $applicationContext['shipping_prefernces'] = 'NO_SHIPPING';
+            $applicationContext['shipping_preference'] = 'NO_SHIPPING';
         }
 
         return $applicationContext;
