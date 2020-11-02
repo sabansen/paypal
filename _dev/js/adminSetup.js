@@ -67,6 +67,10 @@ export  const SetupAdmin = {
       SetupAdmin.psCheckoutHandleAction(action);
     });
 
+    $(document).on('contextmenu', '[data-paypal-button]', (e) => {
+      e.preventDefault();
+    });
+
     window.onboardCallback = Onboarding.handleResponse;
 
     $('[data-update-rounding-settings]').on('click', (e) => {
@@ -154,3 +158,6 @@ export  const SetupAdmin = {
 };
 
 $(document).ready(() => SetupAdmin.init());
+
+// Wait until window is loaded
+$(window).on('load', () => $('[data-paypal-button]').removeClass('spinner-button'));
