@@ -297,6 +297,10 @@ class PaypalOrderCreateRequest extends RequestAbstract
             $applicationContext['shipping_preference'] = 'NO_SHIPPING';
         }
 
+        if ($this->isShortcut()) {
+            $applicationContext['shipping_preference'] = 'GET_FROM_FILE';
+        }
+
         return $applicationContext;
     }
 
@@ -355,5 +359,17 @@ class PaypalOrderCreateRequest extends RequestAbstract
     protected function getBrandName()
     {
         return $this->method->getBrandName();
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isShortcut()
+    {
+        if (is_callable([$this->method, 'getShortCut']) === false) {
+            return false;
+        }
+
+        return (bool) $this->method->getShortCut();
     }
 }
