@@ -189,6 +189,10 @@ class PaypalOrderCreateRequest extends RequestAbstract
                 $product['name'] .= ' - '.$product['attributes'];
             }
 
+            if (isset($product['reference']) && false === empty($product['reference'])) {
+                $product['name'] .= ' Ref: ' . $product['reference'];
+            }
+
             $item['name'] = \Tools::substr($product['name'], 0, 126);
             $item['sku'] = $product['id_product'];
             $item['unit_amount'] = [
