@@ -616,6 +616,10 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
     public function hookDisplayPersonalInformationTop($params)
     {
+        if ($this->context->customer->isLogged()) {
+            return '';
+        }
+
         return $this->displayShortcutButton([
             'sourcePage' => ShortcutConfiguration::SOURCE_PAGE_SIGNUP,
             'hook' => ShortcutConfiguration::HOOK_PERSONAL_INFORMATION_TOP
