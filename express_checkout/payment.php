@@ -305,6 +305,10 @@ if ($request_type && $ppec->type) {
  */
 function validateOrder($customer, $cart, $ppec)
 {
+    // Checks if order is not already created
+    if (Order::getOrderByCartId($cart->id)) {
+        return;
+    }
     // Payment succeed
     if ($ppec->hasSucceedRequest() && !empty($ppec->token)) {
         if ((bool) Configuration::get('PAYPAL_CAPTURE')) {
