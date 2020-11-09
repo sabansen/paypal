@@ -212,18 +212,6 @@ class MethodEC extends AbstractMethodPaypal
         return (bool)Configuration::get('PAYPAL_CONNECTION_EC_CONFIGURED');
     }
 
-    /**
-     * @return bool
-     */
-    public function isCredentialsSetted()
-    {
-        if ($this->isSandbox()) {
-            return Configuration::get('PAYPAL_EC_CLIENTID_SANDBOX') && Configuration::get('PAYPAL_EC_SECRET_SANDBOX');
-        } else {
-            return Configuration::get('PAYPAL_EC_CLIENTID_LIVE') && Configuration::get('PAYPAL_EC_SECRET_LIVE');
-        }
-    }
-
     public function checkCredentials()
     {
         $response = $this->paypalApiManager->getAccessTokenRequest()->execute();

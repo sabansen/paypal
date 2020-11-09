@@ -375,6 +375,14 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         return $Shortcut->render();
     }
 
+    /**
+     * @return bool
+     */
+    public function isCredentialsSetted($sandbox = null)
+    {
+        return $this->getClientId($sandbox) && $this->getSecret($sandbox);
+    }
+
     /** @return  string*/
     abstract public function getClientId($sandbox);
 

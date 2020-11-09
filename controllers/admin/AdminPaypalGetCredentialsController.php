@@ -26,7 +26,6 @@
 
 require_once _PS_MODULE_DIR_ . 'paypal/vendor/autoload.php';
 
-use PaypalAddons\classes\API\Onboarding\PaypalGetCredentials;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 
@@ -36,56 +35,15 @@ class AdminPaypalGetCredentialsController extends ModuleAdminController
     {
         parent::init();
 
-        $method = AbstractMethodPaypal::load();
-        $authToken = $this->getAuthTokent();
-
-        $partnerId = $method->isSandbox() ? PayPal::PAYPAL_PARTNER_ID_SANDBOX : PayPal::PAYPAL_PARTNER_ID_LIVE;
-        $paypalGetCredentials = new PaypalGetCredentials($authToken, $partnerId, $method->isSandbox());
-        $result = $paypalGetCredentials->execute();
-
-        if ($result->isSuccess()) {
-            $params = [
-                'clientId' => $result->getClientId(),
-                'secret' => $result->getSecret()
-            ];
-            $method->setConfig($params);
-        } else {
-            ProcessLoggerHandler::openLogger();
-            ProcessLoggerHandler::logError(
-                $result->getError()->getMessage(),
-                null,
-                null,
-                null,
-                null,
-                null,
-                $method->isSandbox()
-            );
-            ProcessLoggerHandler::closeLogger();
-        }
-
-        Tools::redirectAdmin($this->context->link->getAdminLink('AdminPayPalSetup', true, [], ['checkCredentials' => 1]));
-    }
-
-    /**
-     * @return string
-     */
-    protected function getAuthTokent()
-    {
         // We can wait for authToken max 10 sec
         $maxDuration = 10;
         $start = time();
         $wait = true;
-        $query = new DbQuery();
-        $query
-            ->select('value')
-            ->from('configuration')
-            ->where('name=\'PAYPAL_AUTH_TOKEN\'');
+        $method = AbstractMethodPaypal::load();
 
         do {
-            // Not use Configuration::get(), because it doesn't allow disable cache
-            $authToken = Db::getInstance()->getValue($query, false);
-
-            if (false === empty($authToken)) {
+            Configuration::clearConfigurationCacheForTesting();
+            if ($method->isCredentialsSetted()) {
                 $wait = false;
             }
 
@@ -96,7 +54,7 @@ class AdminPaypalGetCredentialsController extends ModuleAdminController
             }
         } while ($wait);
 
-        return (string) $authToken;
+        Tools::redirectAdmin($this->context->link->getAdminLink('AdminPayPalSetup', true, [], ['checkCredentials' => 1]));
     }
 }
 
