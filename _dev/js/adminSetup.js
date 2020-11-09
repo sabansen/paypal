@@ -123,4 +123,4 @@ export  const SetupAdmin = {
 
 };
 
-$(document).ready(() => SetupAdmin.init());
+window.addEventListener('load', () => SetupAdmin.init());
