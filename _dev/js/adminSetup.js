@@ -157,7 +157,7 @@ export  const SetupAdmin = {
 
 };
 
-$(document).ready(() => SetupAdmin.init());
+window.addEventListener('load', () => SetupAdmin.init());
 
 // Wait until window is loaded
 $(window).on('load', () => $('[data-paypal-button]').removeClass('spinner-button'));
