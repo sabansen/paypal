@@ -34,7 +34,7 @@ const Shortcut = {
 
   page: null,
 
-  button: document.querySelector('[paypal-button-container]'),
+  button: null,
 
   controller: sc_init_url,
 
@@ -51,6 +51,7 @@ const Shortcut = {
 
   updateInfo() {
     this.page = $('[data-container-express-checkout]').data('paypal-source-page');
+    this.button = document.querySelector('[paypal-button-container]');
 
     if (this.page == 'product') {
       this.productQuantity = $('input[name="qty"]').val();
@@ -180,24 +181,10 @@ const Shortcut = {
     }
 
     return this.styleSetting;
-  }
+  },
+
 };
 
-
-$(document).ready( () => {
-
-  function waitPaypalIsLoaded() {
-    if (typeof paypal === 'undefined') {
-      setTimeout(waitPaypalIsLoaded, 200);
-      return;
-    }
-
-    Shortcut.init();
-    Shortcut.initButton();
-  }
-
-  waitPaypalIsLoaded();
-
-});
+window.Shortcut = Shortcut;
 
 

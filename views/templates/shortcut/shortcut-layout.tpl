@@ -51,6 +51,22 @@
         {/foreach}
     {/if}
 {/block}
+
+{block name='init-button'}
+  <script>
+      function waitPaypalIsLoaded() {
+          if (typeof paypal === 'undefined' || typeof Shortcut === 'undefined') {
+              setTimeout(waitPaypalIsLoaded, 200);
+              return;
+          }
+
+          Shortcut.init();
+          Shortcut.initButton();
+      }
+
+      waitPaypalIsLoaded();
+  </script>
+{/block}
 <!-- End shortcut. Module Paypal -->
 
 

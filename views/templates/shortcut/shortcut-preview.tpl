@@ -30,9 +30,7 @@
   <div preview-button-container {if isset($shortcutID)} data-id="{$shortcutID}" {/if}></div>
 {/block}
 
-{block name='js'}
-    {$smarty.block.parent}
-
+{block name='init-button'}
   <script>
     {literal}
 
