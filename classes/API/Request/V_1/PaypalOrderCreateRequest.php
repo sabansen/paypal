@@ -199,7 +199,7 @@ class PaypalOrderCreateRequest extends RequestAbstractMB
     {
         $addressCustomer = new Address(Context::getContext()->cart->id_address_delivery);
         $payerShippingAddress = new ShippingAddress();
-        $payerShippingAddress->setCountryCode(Country::getIsoById($addressCustomer->id_country));
+        $payerShippingAddress->setCountryCode(Tools::strtoupper(Country::getIsoById($addressCustomer->id_country)));
         $payerShippingAddress->setCity($addressCustomer->city);
         $payerShippingAddress->setLine1($addressCustomer->address1);
         $payerShippingAddress->setPostalCode($addressCustomer->postcode);
@@ -207,7 +207,7 @@ class PaypalOrderCreateRequest extends RequestAbstractMB
 
         if ((int)$addressCustomer->id_state) {
             $state = new State($addressCustomer->id_state);
-            $payerShippingAddress->setState($state->iso_code);
+            $payerShippingAddress->setState(Tools::strtoupper($state->iso_code));
         }
 
         return $payerShippingAddress;
