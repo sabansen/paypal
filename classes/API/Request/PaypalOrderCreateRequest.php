@@ -338,13 +338,13 @@ class PaypalOrderCreateRequest extends RequestAbstract
             'address_line_1' => $address->address1,
             'address_line_2' => $address->address2,
             'postal_code' => $address->postcode,
-            'country_code' => $country->iso_code,
+            'country_code' => \Tools::strtoupper($country->iso_code),
             'admin_area_2' => $address->city,
         ];
 
         if ($address->id_state) {
             $state = new \State($address->id_state);
-            $addressArray['admin_area_1'] = $state->iso_code;
+            $addressArray['admin_area_1'] = \Tools::strtoupper($state->iso_code);
         }
 
         return $addressArray;
