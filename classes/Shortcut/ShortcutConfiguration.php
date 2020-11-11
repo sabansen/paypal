@@ -138,4 +138,6 @@ class ShortcutConfiguration
     const SOURCE_PAGE_CART = 2;
 
     const SOURCE_PAGE_SIGNUP = 3;
+
+    const USE_OLD_HOOK = 'PAYPAL_USE_OLD_HOOK';
 }

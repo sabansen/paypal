@@ -29,6 +29,7 @@ if (!defined('_PS_VERSION_')) {
 }
 
 use PaypalPPBTlib\Install\ModuleInstaller;
+use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 
 /**
  * @param $module PayPal
@@ -37,6 +38,7 @@ use PaypalPPBTlib\Install\ModuleInstaller;
 function upgrade_module_5_3_0($module)
 {
     $installer = new ModuleInstaller($module);
+    Configuration::updateGlobalValue(ShortcutConfiguration::USE_OLD_HOOK, 1);
     // Registre the new hooks
     return $installer->registerHooks();
 }

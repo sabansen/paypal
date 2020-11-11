@@ -599,6 +599,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
     {
         $result = true;
         if (\Tools::isSubmit('saveAdvancedForm')) {
+            \Configuration::updateGlobalValue(ShortcutConfiguration::USE_OLD_HOOK, 0);
             $methodCurrent = AbstractMethodPaypal::load($this->method);
             $this->advanceFormParametres = array_merge($this->advanceFormParametres, $methodCurrent->advancedFormParametres);
 

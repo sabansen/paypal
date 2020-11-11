@@ -990,10 +990,11 @@ class PayPal extends \PaymentModule implements WidgetInterface
                     return '';
                 }
                 // Take a hook by default
-                if (version_compare(_PS_VERSION_, '1.7.6', '>=')) {
-                    $hookSetted = ShortcutConfiguration::HOOK_PRODUCT_ACTIONS;
-                } else {
+                if (version_compare(_PS_VERSION_, '1.7.6', '<')
+                    || (int)Configuration::getGlobalValue(ShortcutConfiguration::USE_OLD_HOOK)) {
                     $hookSetted = ShortcutConfiguration::HOOK_REASSURANCE;
+                } else {
+                    $hookSetted = ShortcutConfiguration::HOOK_PRODUCT_ACTIONS;
                 }
 
                 // If a style customization conf is active, take a hook configured
@@ -1013,7 +1014,12 @@ class PayPal extends \PaymentModule implements WidgetInterface
                     return '';
                 }
                 // Take a hook by default
-                $hookSetted = ShortcutConfiguration::HOOK_EXPRESS_CHECKOUT;
+                if ((int)Configuration::getGlobalValue(ShortcutConfiguration::USE_OLD_HOOK)) {
+                    $hookSetted = ShortcutConfiguration::HOOK_SHOPPING_CART_FOOTER;
+                } else {
+                    $hookSetted = ShortcutConfiguration::HOOK_EXPRESS_CHECKOUT;
+                }
+
 
                 // If a style customization conf is active, take a hook configured
                 if (Configuration::get(ShortcutConfiguration::CUSTOMIZE_STYLE)) {
