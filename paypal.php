@@ -754,7 +754,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         } else {
             $paymentOption->setAction($this->context->link->getModuleLink($this->name, 'ecInit', array('credit_card' => '0'), true));
         }
-        if (!$is_virtual) {
+        if (!$is_virtual && Configuration::get('PAYPAL_API_ADVANTAGES')) {
             $paymentOption->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_infos.tpl'));
         }
 
