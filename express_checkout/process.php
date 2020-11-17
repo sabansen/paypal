@@ -187,20 +187,24 @@ class PaypalExpressCheckout extends Paypal
 
     public function setCancelUrl(&$fields)
     {
-        $url = urldecode(Tools::getValue('current_shop_url'));
-        $parsed_data = parse_url($url);
-
-        $parsed_data['scheme'] .= '://';
-
-        if (isset($parsed_data['path'])) {
-            $parsed_data['path'] .= '?step=3&';
-            $parsed_data['query'] = isset($parsed_data['query']) ? $parsed_data['query'] : null;
+        if (Configuration::get('PS_ORDER_PROCESS_TYPE') == '1') {
+            $cancel_url = Context::getContext()->link->getPageLink('order');
         } else {
-            $parsed_data['path'] = '?step=3&';
-            $parsed_data['query'] = '/'.(isset($parsed_data['query']) ? $parsed_data['query'] : null);
-        }
+            $url = urldecode(Tools::getValue('current_shop_url'));
+            $parsed_data = parse_url($url);
 
-        $cancel_url = Tools::secureReferrer(implode($parsed_data));
+            $parsed_data['scheme'] .= '://';
+
+            if (isset($parsed_data['path'])) {
+                $parsed_data['path'] .= '?step=3&';
+                $parsed_data['query'] = isset($parsed_data['query']) ? $parsed_data['query'] : null;
+            } else {
+                $parsed_data['path'] = '?step=3&';
+                $parsed_data['query'] = '/'.(isset($parsed_data['query']) ? $parsed_data['query'] : null);
+            }
+
+            $cancel_url = Tools::secureReferrer(implode($parsed_data));
+        }
 
         if (!empty($cancel_url)) {
             $fields['CANCELURL'] = $cancel_url;
