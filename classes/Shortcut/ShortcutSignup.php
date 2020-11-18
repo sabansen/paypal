@@ -39,11 +39,11 @@ class ShortcutSignup extends ShortcutCart
     {
         if (Configuration::get(ShortcutConfiguration::CUSTOMIZE_STYLE)) {
             $styleSetting = [
-                'label' => Configuration::get(ShortcutConfiguration::STYLE_LABEL_CART, null, null, null, ShortcutConfiguration::STYLE_LABEL_CHECKOUT),
-                'color' => Configuration::get(ShortcutConfiguration::STYLE_COLOR_CART, null, null, null, ShortcutConfiguration::STYLE_COLOR_GOLD),
-                'shape' => Configuration::get(ShortcutConfiguration::STYLE_SHAPE_CART, null, null, null, ShortcutConfiguration::STYLE_SHAPE_RECT),
-                'height' => (int) Configuration::get(ShortcutConfiguration::STYLE_HEIGHT_CART, null, null, null, 35),
-                'width' => (int) Configuration::get(ShortcutConfiguration::STYLE_WIDTH_CART, null, null, null, 200),
+                'label' => Configuration::get(ShortcutConfiguration::STYLE_LABEL_SIGNUP, null, null, null, ShortcutConfiguration::STYLE_LABEL_CHECKOUT),
+                'color' => Configuration::get(ShortcutConfiguration::STYLE_COLOR_SIGNUP, null, null, null, ShortcutConfiguration::STYLE_COLOR_GOLD),
+                'shape' => Configuration::get(ShortcutConfiguration::STYLE_SHAPE_SIGNUP, null, null, null, ShortcutConfiguration::STYLE_SHAPE_RECT),
+                'height' => (int) Configuration::get(ShortcutConfiguration::STYLE_HEIGHT_SIGNUP, null, null, null, 35),
+                'width' => (int) Configuration::get(ShortcutConfiguration::STYLE_WIDTH_SIGNUP, null, null, null, 200),
             ];
         } else {
             $styleSetting = [
