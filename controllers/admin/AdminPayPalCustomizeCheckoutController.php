@@ -115,7 +115,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
         $this->content = $this->context->smarty->fetch($this->getTemplatePath() . 'customizeCheckout.tpl');
         $this->context->smarty->assign('content', $this->content);
         Media::addJsDef(array('paypalMethod' => $this->method));
-        $this->addJS(_PS_MODULE_DIR_ . $this->module->name . '/views/js/adminCheckout.js');
+        $this->addJS(_PS_MODULE_DIR_ . $this->module->name . '/views/js/adminCheckout.js?v=' . $this->module->version);
     }
 
     public function initForm()
