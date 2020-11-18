@@ -38,7 +38,31 @@ use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 function upgrade_module_5_3_0($module)
 {
     $installer = new ModuleInstaller($module);
+    $shops = Shop::getShops();
     Configuration::updateGlobalValue(ShortcutConfiguration::USE_OLD_HOOK, 1);
+
+    if (Shop::isFeatureActive()) {
+        foreach ($shops as $shop) {
+            Configuration::updateValue(
+                ShortcutConfiguration::PRODUCT_PAGE_HOOK,
+                ShortcutConfiguration::HOOK_REASSURANCE,
+                false,
+                null,
+                (int)$shop['id_shop']
+            );
+
+            Configuration::updateValue(
+                ShortcutConfiguration::CART_PAGE_HOOK,
+                ShortcutConfiguration::HOOK_SHOPPING_CART_FOOTER,
+                false,
+                null,
+                (int)$shop['id_shop']
+            );
+        }
+    } else {
+        Configuration::updateValue(ShortcutConfiguration::PRODUCT_PAGE_HOOK, ShortcutConfiguration::HOOK_REASSURANCE);
+        Configuration::updateValue(ShortcutConfiguration::CART_PAGE_HOOK, ShortcutConfiguration::HOOK_SHOPPING_CART_FOOTER);
+    }
     // Registre the new hooks
     return $installer->registerHooks();
 }
