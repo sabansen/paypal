@@ -27,7 +27,7 @@ https://addons.prestashop.com/en/contact-us?id_product=1748
 | PrestaShop version | Module version     |  Repo                | Doc                |  PHP Version |
 |---------|------------|---------------------|---------------------|-------------|
 | 1.5.x - 1.6.x     | 3.x        |  [release/3.14.0][paypal-3.12] | |   5.3 or greater    |
-| 1.7.x    | 5.x        |  [master][paypal-4] | [module documentation][6]|   5.4 or greater    |
+| 1.7.x    | 5.x        |  [master][paypal-4] | [User Guide][6]|   5.4 or greater    |
 
 ## Requirements
 
