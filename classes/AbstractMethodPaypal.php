@@ -114,12 +114,14 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         }
 
         $this->setPaymentId($response->getPaymentId());
+        $this->updateCartTrace(Context::getContext()->cart, $response->getPaymentId());
 
         return $response;
     }
 
     /**
      * @see AbstractMethodPaypal::validation()
+     * @throws Exception
      */
     public function validation()
     {
@@ -133,6 +135,10 @@ abstract class AbstractMethodPaypal extends AbstractMethod
 
         if ($this->getPaymentId() == false) {
             throw new Exception('Payment ID isn\'t setted');
+        }
+
+        if (false === $this->isCorrectCart($cart, $this->getPaymentId())) {
+            throw new Exception('Cart is changed');
         }
 
         if ($this->getIntent() == 'CAPTURE') {
@@ -222,6 +228,8 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         if ($this->isConfigured() == false) {
             return false;
         }
+
+        $this->updateCartTrace(Context::getContext()->cart, $this->getPaymentId());
 
         return $this->paypalApiManager->getOrderPatchRequest($this->getPaymentId())->execute();
     }
@@ -381,6 +389,64 @@ abstract class AbstractMethodPaypal extends AbstractMethod
     public function isCredentialsSetted($sandbox = null)
     {
         return $this->getClientId($sandbox) && $this->getSecret($sandbox);
+    }
+
+    /**
+     * @param \Cart $cart
+     * @param string $paymentId
+     * @return string
+     */
+    protected function getCartTrace(\Cart $cart, $paymentId)
+    {
+        $key = [];
+        $products = $cart->getProducts();
+        $cartRules = $cart->getCartRules();
+
+        if (empty($products) === false) {
+            foreach ($products as $product) {
+                $key[] = implode(
+                    '-',
+                    [
+                        $product['id_product'],
+                        $product['id_product_attribute'],
+                        $product['quantity']
+                    ]);
+            }
+        }
+
+        if (false === empty($cartRules)) {
+            foreach ($cartRules as $cartRule) {
+                $key[] = isset($cartRule['id_cart_rule']) ? $cartRule['id_cart_rule'] : '';
+            }
+        }
+
+        if ($cart->id_carrier) {
+            $key[] = $cart->id_carrier;
+        }
+
+        $key[] = $paymentId;
+
+        return md5(implode('_', $key));
+    }
+
+    /**
+     * @param \Cart $cart
+     * @param string $paymentId
+     * @return void
+     */
+    protected function updateCartTrace(\Cart $cart, $paymentId)
+    {
+        Context::getContext()->cookie->paypal_cart_trace = $this->getCartTrace($cart, $paymentId);
+    }
+
+    /**
+     * @param \Cart $cart
+     * @param string $paymentId
+     * @return bool
+     */
+    protected function isCorrectCart(\Cart $cart, $paymentId)
+    {
+        return Context::getContext()->cookie->paypal_cart_trace == $this->getCartTrace($cart, $paymentId);
     }
 
     /** @return  string*/
