@@ -18,6 +18,10 @@ On PrestaShop 1.6 :
 
 https://addons.prestashop.com/en/payment-card-wallet/1748-paypal-official.html
 
+#### Support on PrestaShop Addons:
+
+https://addons.prestashop.com/en/contact-us?id_product=1748
+
 ## Module version guide
 
 | PrestaShop version | Module version     |  Repo                | Doc                |  PHP Version |
