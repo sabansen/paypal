@@ -1,4 +1,4 @@
-# PayPal Officiel
+# PayPal Official Module for PrestaShop
 
 ## About
 
