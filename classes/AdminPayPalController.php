@@ -64,6 +64,8 @@ class AdminPayPalController extends \ModuleAdminController
 
     public function initContent()
     {
+        header('Clear-Site-Data: "cache"');
+
         if ((int)\Configuration::get('PAYPAL_SANDBOX') == 1) {
             $message = $this->module->l('Your PayPal account is currently configured to accept payments on Sandbox.', 'AdminPayPalController');
             $message .= ' (<b>' . $this->module->l('test environment', 'AdminPayPalController') . '</b>). ';
