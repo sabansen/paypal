@@ -1468,13 +1468,19 @@ class PayPal extends PaymentModule
     public function renderExpressCheckoutButton($type)
     {
         if ((!Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT'))) {
-            return null;
+            return '';
         }
 
-        if (!in_array(ECS, $this->getPaymentMethods()) || (((int) Configuration::get('PAYPAL_BUSINESS')
-            == 1) &&
-            (int) Configuration::get('PAYPAL_PAYMENT_METHOD') == HSS)) {
-            return null;
+        if (!in_array(ECS, $this->getPaymentMethods())) {
+            return '';
+        }
+
+        if (((int) Configuration::get('PAYPAL_BUSINESS') == 1) && (int) Configuration::get('PAYPAL_PAYMENT_METHOD') == HSS) {
+            return '';
+        }
+
+        if ((int) Configuration::get('PAYPAL_PAYMENT_METHOD') == PPP) {
+            return '';
         }
 
         $paypal_logos = $this->paypal_logos->getLogos();

@@ -176,7 +176,7 @@ $(document).ready(function () {
             if (paypal_payment_method == PayPal_PPP) {
                 $('#configuration').slideDown();
                 $('#paypalplus-credentials').slideDown();
-                $('#express_checkout_shortcut').slideDown();
+                $('#express_checkout_shortcut').slideUp();
                 $('input[type="submit"]').removeAttr('disabled');
             } else {
                 $('#paypalplus-credentials').slideUp();
@@ -236,6 +236,10 @@ $(document).ready(function () {
             $('#standard-credentials').slideUp();
             $('#express_checkout_shortcut').slideUp();
             $('#integral-credentials').slideDown();
+        } else if (paypal_payment_method == PayPal_PPP) {
+            $('#standard-credentials').slideDown();
+            $('#express_checkout_shortcut').slideUp();
+            $('#integral-credentials').slideUp();
         } else {
             $('#standard-credentials').slideDown();
             $('#express_checkout_shortcut').slideDown();
