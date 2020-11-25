@@ -53,6 +53,9 @@ abstract class AbstractMethodPaypal extends AbstractMethod
     /** @var PaypalApiManagerInterface*/
     protected $paypalApiManager;
 
+    /** @var string*/
+    protected $cartTrace;
+
     /**
      * @param string $method
      * @return AbstractMethodPaypal
@@ -396,7 +399,7 @@ abstract class AbstractMethodPaypal extends AbstractMethod
      * @param string $paymentId
      * @return string
      */
-    protected function getCartTrace(\Cart $cart, $paymentId)
+    public function buildCartTrace(\Cart $cart, $paymentId)
     {
         $key = [];
         $products = $cart->getProducts();
@@ -430,13 +433,37 @@ abstract class AbstractMethodPaypal extends AbstractMethod
     }
 
     /**
+     * @param string $cartTrace
+     * @return AbstractMethodPaypal
+     */
+    public function setCartTrace($cartTrace)
+    {
+        $this->cartTrace = (string) $cartTrace;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCartTrace()
+    {
+        if ($this->cartTrace) {
+            return $this->cartTrace;
+        }
+
+        return isset($_COOKIE['paypal_cart_trace']) ? $_COOKIE['paypal_cart_trace'] : '';
+    }
+
+    /**
      * @param \Cart $cart
      * @param string $paymentId
      * @return void
      */
-    protected function updateCartTrace(\Cart $cart, $paymentId)
+    public function updateCartTrace(\Cart $cart, $paymentId)
     {
-        Context::getContext()->cookie->paypal_cart_trace = $this->getCartTrace($cart, $paymentId);
+        $cartTrace = $this->buildCartTrace($cart, $paymentId);
+        $this->setCartTrace($cartTrace);
+        setcookie('paypal_cart_trace', $cartTrace, 0, '/');
     }
 
     /**
@@ -446,7 +473,7 @@ abstract class AbstractMethodPaypal extends AbstractMethod
      */
     protected function isCorrectCart(\Cart $cart, $paymentId)
     {
-        return Context::getContext()->cookie->paypal_cart_trace == $this->getCartTrace($cart, $paymentId);
+        return $this->getCartTrace() == $this->buildCartTrace($cart, $paymentId);
     }
 
     /** @return  string*/
