@@ -29,7 +29,7 @@ $(document).ready( () => {
   // Insert paypal info block after option name
   $('.payment-option').each((step) => {
     let i = step + 1;
-    if ($(`#payment-option-${i}-container [data-module-name='paypal-ec']`).length > 0) {
+    if ($(`#payment-option-${i}-container [data-module-name^='paypal']`).length > 0) {
       $('[data-paypal-info]').insertAfter($(`#payment-option-${i}-container label`));
     }
   });
