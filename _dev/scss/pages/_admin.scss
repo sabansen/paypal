@@ -52,3 +52,95 @@
 .tick li {
   margin-bottom: 40px;
 }
+
+.pp-w-100, .bootstrap .pp-w-100 {
+  width: 100% !important;
+}
+
+.pp-select-preview-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+
+  .pp-select-container {
+    flex-basis: 75%;
+  }
+
+  .pp-preview-container {
+    display: flex;
+    flex-basis: 50%;
+    justify-content: center;
+    align-content: center;
+
+    .pp-preview {
+      width: 20vw;
+      height: 20vw;
+      background-size: cover;
+      background-color: #7b8a8b;
+    }
+  }
+}
+
+[customize-style-shortcut-container] {
+  display: flex;
+  justify-content: space-between;
+
+  [setting-section] {
+    display: flex;
+    flex-basis: 60%;
+    flex-direction: column;
+
+    [current-view-section] {
+      display: flex;
+    }
+
+    [button-container] {
+      position: relative;
+    }
+  }
+
+  [preview-section] {
+    flex-basis: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 999;
+}
+
+[field-row] {
+  display: flex;
+
+  [label] {
+    flex-basis: 20%;
+  }
+
+  [field] {
+    flex-basis: 80%;
+  }
+}
+
+[chain-input-container] {
+  display: flex;
+  justify-content: space-around;
+
+  [item] {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.pp__label {
+  font-size: 13px;
+}
+
+

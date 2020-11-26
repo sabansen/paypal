@@ -146,7 +146,10 @@ class PaypalOrderCreateRequest extends RequestAbstract
             'surname' => $this->context->customer->lastname
         ];
         $payer['email'] = $this->context->customer->email;
-        $payer['address'] = $this->getAddress();
+
+        if ($this->context->cart->isVirtualCart() === false) {
+            $payer['address'] = $this->getAddress();
+        }
 
         if ($this->method instanceof \MethodMB) {
             $taxInfo = $this->method->getPayerTaxInfo();
@@ -186,6 +189,10 @@ class PaypalOrderCreateRequest extends RequestAbstract
                 $product['name'] .= ' - '.$product['attributes'];
             }
 
+            if (isset($product['reference']) && false === empty($product['reference'])) {
+                $product['name'] .= ' Ref: ' . $product['reference'];
+            }
+
             $item['name'] = \Tools::substr($product['name'], 0, 126);
             $item['sku'] = $product['id_product'];
             $item['unit_amount'] = [
@@ -210,18 +217,13 @@ class PaypalOrderCreateRequest extends RequestAbstract
      */
     protected function getAmount($currency)
     {
-        $shippingTotal = $this->method->formatPrice($this->context->cart->getTotalShippingCost());
-        $productTotalExcl = $this->method->formatPrice($this->context->cart->getOrderTotal(false, \Cart::ONLY_PRODUCTS));
-        $productTotalIncl = $this->method->formatPrice($this->context->cart->getOrderTotal(true, \Cart::ONLY_PRODUCTS));
-        $wrappingIncl = $this->method->formatPrice($this->context->cart->getOrderTotal(true, \Cart::ONLY_WRAPPING));
-        $wrappingExcl = $this->method->formatPrice($this->context->cart->getOrderTotal(false, \Cart::ONLY_WRAPPING));
-        $subTotalIncl = $this->method->formatPrice($productTotalIncl + $wrappingIncl);
-        $subTotalExcl = $this->method->formatPrice($productTotalExcl + $wrappingExcl);
+        $cartSummary = $this->context->cart->getSummaryDetails();
+        $totalOrder = $this->method->formatPrice($cartSummary['total_price']);
+        $subTotalExcl = $this->method->formatPrice($cartSummary['total_products']);
+        $subTotalIncl = $this->method->formatPrice($cartSummary['total_products_wt']);
+        $shippingTotal = $this->method->formatPrice($cartSummary['total_shipping']);
         $subTotalTax = $this->method->formatPrice($subTotalIncl - $subTotalExcl);
-        $totalOrder = $this->method->formatPrice($this->context->cart->getOrderTotal(true, \Cart::BOTH));
-
-        // Some version of Prestashop calcul wrong a total discount if 2 "free shipping" discount are added
-        $discountTotal = $this->method->formatPrice($subTotalIncl + $shippingTotal - $totalOrder);
+        $discountTotal = $this->method->formatPrice($cartSummary['total_discounts']);
 
         $amount = array(
             'currency_code' => $currency,
@@ -229,21 +231,21 @@ class PaypalOrderCreateRequest extends RequestAbstract
             'breakdown' =>
                 array(
                     'item_total' => array(
-                            'currency_code' => $currency,
-                            'value' => $subTotalExcl,
-                        ),
+                        'currency_code' => $currency,
+                        'value' => $subTotalExcl,
+                    ),
                     'shipping' => array(
-                            'currency_code' => $currency,
-                            'value' => $shippingTotal,
-                        ),
+                        'currency_code' => $currency,
+                        'value' => $shippingTotal,
+                    ),
                     'tax_total' => array(
-                            'currency_code' => $currency,
-                            'value' => $subTotalTax,
-                        ),
+                        'currency_code' => $currency,
+                        'value' => $subTotalTax,
+                    ),
                     'discount' => array(
-                            'currency_code' => $currency,
-                            'value' => $discountTotal
-                        )
+                        'currency_code' => $currency,
+                        'value' => $discountTotal
+                    )
                 ),
         );
 
@@ -286,12 +288,20 @@ class PaypalOrderCreateRequest extends RequestAbstract
         $applicationContext = [
             'locale' => $this->context->language->locale,
             'landing_page' => $this->method->getLandingPage(),
-            'shipping_prefernces' => 'SET_PROVIDED_ADDRESS',
+            'shipping_preference' => 'SET_PROVIDED_ADDRESS',
             'return_url' => $this->method->getReturnUrl(),
             'cancel_url' => $this->method->getCancelUrl(),
             'brand_name' => $this->getBrandName(),
             'user_action' => 'PAY_NOW'
         ];
+
+        if ($this->context->cart->isVirtualCart()) {
+            $applicationContext['shipping_preference'] = 'NO_SHIPPING';
+        }
+
+        if ($this->isShortcut()) {
+            $applicationContext['shipping_preference'] = 'GET_FROM_FILE';
+        }
 
         return $applicationContext;
     }
@@ -301,7 +311,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
      */
     protected function getShippingInfo()
     {
-        if ($this->context->cart->id_address_delivery == false) {
+        if ($this->context->cart->id_address_delivery == false || $this->context->cart->isVirtualCart()) {
             return [];
         }
         $shippingInfo = [
@@ -323,13 +333,13 @@ class PaypalOrderCreateRequest extends RequestAbstract
             'address_line_1' => $address->address1,
             'address_line_2' => $address->address2,
             'postal_code' => $address->postcode,
-            'country_code' => $country->iso_code,
+            'country_code' => \Tools::strtoupper($country->iso_code),
             'admin_area_2' => $address->city,
         ];
 
         if ($address->id_state) {
             $state = new \State($address->id_state);
-            $addressArray['admin_area_1'] = $state->iso_code;
+            $addressArray['admin_area_1'] = \Tools::strtoupper($state->iso_code);
         }
 
         return $addressArray;
@@ -351,5 +361,17 @@ class PaypalOrderCreateRequest extends RequestAbstract
     protected function getBrandName()
     {
         return $this->method->getBrandName();
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isShortcut()
+    {
+        if (is_callable([$this->method, 'getShortCut']) === false) {
+            return false;
+        }
+
+        return (bool) $this->method->getShortCut();
     }
 }
