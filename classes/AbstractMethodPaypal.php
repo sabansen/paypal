@@ -141,7 +141,7 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         }
 
         if (false === $this->isCorrectCart($cart, $this->getPaymentId())) {
-            throw new Exception('Cart is changed');
+            throw new Exception('The elements in the shopping cart were changed. Please try to pay again.');
         }
 
         if ($this->getIntent() == 'CAPTURE') {
