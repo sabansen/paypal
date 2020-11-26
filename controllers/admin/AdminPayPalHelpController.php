@@ -48,22 +48,8 @@ class AdminPayPalHelpController extends AdminPayPalController
         parent::initContent();
 
         $countryDefault = new Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
-        $need_rounding = false;
-
-        if (Configuration::get('PS_ROUND_TYPE') != Order::ROUND_ITEM) {
-            $need_rounding = true;
-        }
-
-        if (Configuration::get('PS_PRICE_ROUND_MODE') != PS_ROUND_HALF_UP) {
-            $need_rounding = true;
-        }
-
-        if (defined('_PS_PRICE_COMPUTE_PRECISION_') && (int)_PS_PRICE_COMPUTE_PRECISION_ != 2) {
-            $need_rounding = true;
-        }
 
         $tpl_vars = array(
-            'need_rounding' => $need_rounding,
             'psCheckoutBtnText' => $this->getCheckoutBtnText(),
             'showPsCheckout' => in_array($countryDefault->iso_code, $this->module->countriesApiCartUnavailable)
         );

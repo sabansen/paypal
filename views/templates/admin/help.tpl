@@ -28,6 +28,10 @@
     {include './_partials/messages/restApiIntegrationMessage.tpl'}
 {/if}
 
+{if isset($need_rounding) && $need_rounding}
+  {include './_partials/messages/roundingSettingsMessage.tpl' variant='hidden'}
+{/if}
+
 {include './_partials/headerLogo.tpl'}
 
 <div class="panel">
@@ -40,7 +44,7 @@
 </div>
 
 {if isset($need_rounding) && $need_rounding}
-    {include file="./_partials/block_info.tpl"}
+    {include file="./_partials/block_info.tpl" variant="help"}
 {/if}
 
 <div class="panel help">

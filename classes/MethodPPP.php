@@ -181,6 +181,15 @@ class MethodPPP extends AbstractMethodPaypal
      */
     public function isConfigured()
     {
+        if ($this->isCredentialsSetted() === false) {
+            return false;
+        }
+
+        if ((bool)Configuration::get('PAYPAL_CONNECTION_PPP_CONFIGURED')) {
+            return true;
+        }
+
+        $this->checkCredentials();
         return (bool)Configuration::get('PAYPAL_CONNECTION_PPP_CONFIGURED');
     }
 

@@ -24,9 +24,9 @@
 *
 *}
 
-<div class="alert alert-info {if isset($widthByContent) && $widthByContent}d-inline-block{/if} {if isset($class) && $class} {$class} {/if}">
+<div class="alert alert-{$type} {if isset($widthByContent) && $widthByContent}d-inline-block{/if} {if isset($class) && $class} {$class} {/if}">
     {if isset($btnClose) && $btnClose}
         <button type="button" class="close" data-dismiss="alert">×</button>
     {/if}
-    {$message|escape:'htmlall':'utf-8'}
+    {$message nofilter}
 </div>
