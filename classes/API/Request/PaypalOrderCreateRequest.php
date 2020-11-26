@@ -217,18 +217,13 @@ class PaypalOrderCreateRequest extends RequestAbstract
      */
     protected function getAmount($currency)
     {
-        $shippingTotal = $this->method->formatPrice($this->context->cart->getTotalShippingCost());
-        $productTotalExcl = $this->method->formatPrice($this->context->cart->getOrderTotal(false, \Cart::ONLY_PRODUCTS));
-        $productTotalIncl = $this->method->formatPrice($this->context->cart->getOrderTotal(true, \Cart::ONLY_PRODUCTS));
-        $wrappingIncl = $this->method->formatPrice($this->context->cart->getOrderTotal(true, \Cart::ONLY_WRAPPING));
-        $wrappingExcl = $this->method->formatPrice($this->context->cart->getOrderTotal(false, \Cart::ONLY_WRAPPING));
-        $subTotalIncl = $this->method->formatPrice($productTotalIncl + $wrappingIncl);
-        $subTotalExcl = $this->method->formatPrice($productTotalExcl + $wrappingExcl);
+        $cartSummary = $this->context->cart->getSummaryDetails();
+        $totalOrder = $this->method->formatPrice($cartSummary['total_price']);
+        $subTotalExcl = $this->method->formatPrice($cartSummary['total_products']);
+        $subTotalIncl = $this->method->formatPrice($cartSummary['total_products_wt']);
+        $shippingTotal = $this->method->formatPrice($cartSummary['total_shipping']);
         $subTotalTax = $this->method->formatPrice($subTotalIncl - $subTotalExcl);
-        $totalOrder = $this->method->formatPrice($this->context->cart->getOrderTotal(true, \Cart::BOTH));
-
-        // Some version of Prestashop calcul wrong a total discount if 2 "free shipping" discount are added
-        $discountTotal = $this->method->formatPrice($subTotalIncl + $shippingTotal - $totalOrder);
+        $discountTotal = $this->method->formatPrice($cartSummary['total_discounts']);
 
         $amount = array(
             'currency_code' => $currency,
@@ -236,21 +231,21 @@ class PaypalOrderCreateRequest extends RequestAbstract
             'breakdown' =>
                 array(
                     'item_total' => array(
-                            'currency_code' => $currency,
-                            'value' => $subTotalExcl,
-                        ),
+                        'currency_code' => $currency,
+                        'value' => $subTotalExcl,
+                    ),
                     'shipping' => array(
-                            'currency_code' => $currency,
-                            'value' => $shippingTotal,
-                        ),
+                        'currency_code' => $currency,
+                        'value' => $shippingTotal,
+                    ),
                     'tax_total' => array(
-                            'currency_code' => $currency,
-                            'value' => $subTotalTax,
-                        ),
+                        'currency_code' => $currency,
+                        'value' => $subTotalTax,
+                    ),
                     'discount' => array(
-                            'currency_code' => $currency,
-                            'value' => $discountTotal
-                        )
+                        'currency_code' => $currency,
+                        'value' => $discountTotal
+                    )
                 ),
         );
 
