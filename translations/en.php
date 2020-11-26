@@ -478,3 +478,4 @@ $_MODULE['<{paypal}prestashop>payment_infos_327fa12a62a444f0b451df44c3a2aaf5'] =
 $_MODULE['<{paypal}prestashop>payment_infos_d5958aa5d9b6c407a9e4168c7db271b0'] = 'Skip entering your financial info, PayPal keeps your data secure.';
 $_MODULE['<{paypal}prestashop>shortcut-cart_dac2693baa5c5c9a5318609ed81c4f2a'] = 'Pay with PayPal';
 $_MODULE['<{paypal}prestashop>shortcut-product_dac2693baa5c5c9a5318609ed81c4f2a'] = 'Pay with PayPal';
+$_MODULE['<{paypal}prestashop>hookselect_cf7e0dec152058173716133deabf5343'] = 'If some elements added via other modules are displayed on the same hook, you can manage the position of the PayPal Official module via [a @href1@]« Design - Positions »[/a].';

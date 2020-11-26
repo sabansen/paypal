@@ -499,3 +499,4 @@ $_MODULE['<{paypal}prestashop>payment_infos_327fa12a62a444f0b451df44c3a2aaf5'] =
 $_MODULE['<{paypal}prestashop>payment_infos_d5958aa5d9b6c407a9e4168c7db271b0'] = 'Salte a introdução das suas informações financeiras, PayPal mantém os seus dados seguros.';
 $_MODULE['<{paypal}prestashop>shortcut-cart_dac2693baa5c5c9a5318609ed81c4f2a'] = 'Pague com PayPal';
 $_MODULE['<{paypal}prestashop>shortcut-product_dac2693baa5c5c9a5318609ed81c4f2a'] = 'Pague com PayPal';
+$_MODULE['<{paypal}prestashop>hookselect_cf7e0dec152058173716133deabf5343'] = 'Se alguns elementos adicionados através de outros módulos são exibidos no mesmo gancho, você pode gerenciar a posição do módulo PayPal através de [a @href1@]«Design – Posições»[/a].';

@@ -40,7 +40,7 @@
 
     <div class="pp__mt-5">
       <div class="alert alert-info">
-          {{l s='If some elements added via other modules are displayed on the same hook, you can manage the position of the PayPal Official module via [a @href1@]« Design - Positions »[/a].'}|paypalreplace:['@href1@' => {$link->getAdminLink('AdminModulesPositions', true)}, '@target@' => {'target="blank"'}]}
+          {{l s='If some elements added via other modules are displayed on the same hook, you can manage the position of the PayPal Official module via [a @href1@]« Design - Positions »[/a].' mod='paypal'}|paypalreplace:['@href1@' => {$link->getAdminLink('AdminModulesPositions', true)}, '@target@' => {'target="blank"'}]}
       </div>
     </div>
 
