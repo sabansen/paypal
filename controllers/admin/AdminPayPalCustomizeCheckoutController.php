@@ -223,12 +223,6 @@ Shipping costs will be estimated on the base of the cart total and default carri
         );
 
         $this->fields_form['form']['form']['input'][] = array(
-            'type' => 'html',
-            'name' => '',
-            'html_content' => $this->getLogoMessage()
-        );
-
-        $this->fields_form['form']['form']['input'][] = array(
             'type' => 'text',
             'label' => $this->l('Brand name shown on top left during PayPal checkout'),
             'name' => 'paypal_config_brand',
@@ -314,12 +308,6 @@ Shipping costs will be estimated on the base of the cart total and default carri
         $orderStatuses = $this->module->getOrderStatuses();
         $inputs = array();
         $inputsMethod = $method->getAdvancedFormInputs();
-
-        $inputs[] = array(
-            'type' => 'html',
-            'name' => '',
-            'html_content' => $this->module->displayInformation($this->l('You can customise your Checkout shortcut buttons in the PayPal module.'), false, false, 'shortcut-customize-style-info')
-        );
 
         $inputs[] = array(
             'type' => 'switch',
@@ -476,12 +464,6 @@ Shipping costs will be estimated on the base of the cart total and default carri
         );
 
         $inputs[] = array(
-            'type' => 'html',
-            'name' => '',
-            'html_content' => $this->module->displayInformation($this->l('You can customize your orders\' status for each possible action in the PayPal module.'), false, false, 'pp__my-5')
-        );
-
-        $inputs[] = array(
             'type' => 'switch',
             'label' => $this->l('Customize your order status'),
             'name' => 'paypal_customize_order_status',
@@ -499,12 +481,6 @@ Shipping costs will be estimated on the base of the cart total and default carri
                     'label' => $this->l('Disabled'),
                 )
             ),
-        );
-
-        $inputs[] = array(
-            'type' => 'html',
-            'name' => '',
-            'html_content' => $this->context->smarty->fetch($this->getTemplatePath() . '_partials/messages/formAdvancedHelpOne.tpl')
         );
 
         $inputs[] = array(
@@ -562,12 +538,6 @@ Shipping costs will be estimated on the base of the cart total and default carri
                 )
             );
         }
-
-        $inputs[] = array(
-            'type' => 'html',
-            'name' => '',
-            'html_content' => $this->context->smarty->fetch($this->getTemplatePath() . '_partials/messages/formAdvancedHelpTwo.tpl')
-        );
 
         $inputs = array_merge($inputs, $inputsMethod);
 

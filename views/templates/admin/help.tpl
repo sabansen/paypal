@@ -47,6 +47,8 @@
     {include file="./_partials/block_info.tpl" variant="help"}
 {/if}
 
+{include './_partials/messages/logoMessage.tpl'}
+
 <div class="panel help">
     <ul class="tick">
         <li>

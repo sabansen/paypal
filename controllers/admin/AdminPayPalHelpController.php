@@ -26,6 +26,7 @@
 
 require_once _PS_MODULE_DIR_ . 'paypal/vendor/autoload.php';
 
+use PaypalAddons\classes\AbstractMethodPaypal;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use PaypalAddons\classes\AdminPayPalController;
@@ -48,10 +49,19 @@ class AdminPayPalHelpController extends AdminPayPalController
         parent::initContent();
 
         $countryDefault = new Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
+        $method = AbstractMethodPaypal::load($this->method);
 
+        if ($method->isSandbox()) {
+            $settingLink = 'https://www.sandbox.paypal.com/businessprofile/settings/info/edit';
+        } else {
+            $settingLink = 'https://www.paypal.com/businessprofile/settings/info/edit';
+        }
+
+        $this->context->smarty->assign('settingLink', $settingLink);
         $tpl_vars = array(
             'psCheckoutBtnText' => $this->getCheckoutBtnText(),
-            'showPsCheckout' => in_array($countryDefault->iso_code, $this->module->countriesApiCartUnavailable)
+            'showPsCheckout' => in_array($countryDefault->iso_code, $this->module->countriesApiCartUnavailable),
+            'settingLink' => $settingLink
         );
 
         $this->context->smarty->assign($tpl_vars);
