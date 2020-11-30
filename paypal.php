@@ -438,9 +438,11 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $shops = Shop::getShops();
             foreach ($shops as $shop) {
                 Configuration::updateValue('PAYPAL_CRON_TIME', date('Y-m-d H:m:s'), false, null, (int)$shop['id_shop']);
+                Configuration::updateValue('PAYPAL_PREVIOUS_VERSION', $this->version, false, null, (int)$shop['id_shop']);
             }
         } else {
             Configuration::updateValue('PAYPAL_CRON_TIME', date('Y-m-d H:m:s'));
+            Configuration::updateValue('PAYPAL_PREVIOUS_VERSION', $this->version);
         }
 
         return true;
