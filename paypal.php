@@ -743,8 +743,6 @@ class PayPal extends PaymentModule
             'PayPal_integral_evolution_template' => Configuration::get('PAYPAL_HSS_TEMPLATE'),
             'PayPal_integral_evolution_solution' => Configuration::get('PAYPAL_HSS_SOLUTION'),
             'PayPal_login' => (int) Configuration::get('PAYPAL_LOGIN'),
-            'PayPal_login_client_id' => Configuration::get('PAYPAL_LOGIN_CLIENT_ID'),
-            'PayPal_login_secret' => Configuration::get('PAYPAL_LOGIN_SECRET'),
             'PayPal_login_tpl' => (int) Configuration::get('PAYPAL_LOGIN_TPL'),
             'default_lang_iso' => Language::getIsoById($this->context->employee->id_lang),
             'PayPal_plus_client' => Configuration::get('PAYPAL_PLUS_CLIENT_ID'),
@@ -845,24 +843,6 @@ class PayPal extends PaymentModule
             $process .= $this->fetchTemplate('header.tpl');
             $this->context->controller->addJS(_MODULE_DIR_.$this->name.'/views/js/incontext.js');
             $process .= '<script defer src="//www.paypalobjects.com/api/checkout.js"></script>';
-        }
-
-        if ((
-            (method_exists($smarty, 'getTemplateVars') && ($smarty->getTemplateVars('page_name')
-                == 'authentication' || $smarty->getTemplateVars('page_name') == 'order-opc'))
-            || (isset($smarty->_tpl_vars) && ($smarty->_tpl_vars['page_name']
-                == 'authentication' || $smarty->_tpl_vars['page_name'] == 'order-opc')))
-            &&
-            (int) Configuration::get('PAYPAL_LOGIN') == 1) {
-            $this->context->smarty->assign(array(
-                'paypal_locale' => $this->getLocale(),
-                'PAYPAL_LOGIN_CLIENT_ID' => Configuration::get('PAYPAL_LOGIN_CLIENT_ID'),
-                'PAYPAL_LOGIN_TPL' => Configuration::get('PAYPAL_LOGIN_TPL'),
-                'PAYPAL_RETURN_LINK' => PayPalLogin::getReturnLink(),
-            ));
-            $process .= '
-                    <script src="https://www.paypalobjects.com/js/external/api.js"></script>
-                    <script>'.$this->fetchTemplate('views/js/paypal_login.js').'</script>';
         }
 
 

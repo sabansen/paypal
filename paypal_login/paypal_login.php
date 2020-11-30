@@ -251,4 +251,25 @@ class PayPalLogin
 
         return $customer;
     }
+
+    public function getAuthorizationUrl()
+    {
+        $query = array(
+            'flowEntry' => 'static',
+            'clientId' => Configuration::get('PAYPAL_LOGIN_CLIENT_ID'),
+            'response_type' => 'code',
+            'redirect_uri' => self::getReturnLink(),
+            'scope' => 'openid profile email address'
+        );
+
+        if (Configuration::get('PAYPAL_SANDBOX')) {
+            $url = 'https://sandbox.paypal.com/connect?';
+        } else {
+            $url = 'https://paypal.com/connect?';
+        }
+
+        return $url . http_build_query($query);
+    }
+
+
 }

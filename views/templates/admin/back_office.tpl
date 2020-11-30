@@ -76,6 +76,12 @@
 		</div>
 	{/if}
 
+	{if $PayPal_login == 1}
+		<div class="alert alert-info">
+			{l s='PayPal Login feature has sunset in this release. If you had it enabled, it has been automatically disabled.' mod='paypal'}
+		</div>
+	{/if}
+
 </div>
 
 
@@ -297,56 +303,6 @@
 						<p class="description">{l s='Make your client pay without leaving your website' mod='paypal'}</p>
 						<input type="radio" name="in_context_checkout" id="paypal_payment_ecs_no_in_context_checkout" value="1" {if $PayPal_in_context_checkout == 1}checked="checked"{/if} /> <label for="paypal_payment_ecs_no_in_context_checkout">{l s='Yes' mod='paypal'}</label><br />
 						<input type="radio" name="in_context_checkout" id="paypal_payment_ecs_in_context_checkout" value="0" {if $PayPal_in_context_checkout == 0}checked="checked"{/if} /> <label for="paypal_payment_ecs_in_context_checkout">{l s='No' mod='paypal'}</label>
-					</div>
-
-					<div>
-						<p>{l s='Use the PayPal Login functionnality' mod='paypal'}</p>
-						<p class="description">
-							{l s='This function allows to your clients to connect with their PayPal credentials to shorten the check out' mod='paypal'}
-						</p>
-						<div id="paypal_login_yes_or_no" class="">
-							<p class="description"></p>
-							<input type="radio" name="paypal_login" id="paypal_login_yes" value="1" {if $PayPal_login == 1}checked="checked"{/if} /> <label for="paypal_login_yes">{l s='Yes' mod='paypal'} </label><br />
-							<input type="radio" name="paypal_login" id="paypal_login_no" value="0" {if $PayPal_login == 0}checked="checked"{/if} /> <label for="paypal_login_no">{l s='No' mod='paypal'}</label>
-						</div>
-						<div id="paypal_login_configuration"{if $PayPal_login == 0} style="display: none;"{/if}>
-							<p>
-								{l s='Fill in the informations of your PayPal account' mod='paypal'}.{if $default_lang_iso == 'fr'}(* {l s='See' mod='paypal'} <a href="http://altfarm.mediaplex.com/ad/ck/3484-197941-8030-96">{l s='Integration Guide' mod='paypal'}</a>){/if}.
-							</p>
-							<dl>
-								<dt>
-									{l s='Client ID' mod='paypal'}
-								</dt>
-								<dd>
-									<input type="text" name="paypal_login_client_id" value="{$PayPal_login_client_id|escape:'htmlall':'UTF-8'}" autocomplete="off" size="85">
-								</dd>
-								<dt>
-									{l s='Secret' mod='paypal'}
-								</dt>
-								<dd>
-									<input type="text" name="paypal_login_client_secret" value="{$PayPal_login_secret|escape:'htmlall':'UTF-8'}" autocomplete="off" size="85">
-								</dd>
-
-								<dt>
-									{l s='Choose your template' mod='paypal'}
-									<p class="description" style="margin-top:-10px;">({l s='Translated in your language' mod='paypal'})</p>
-								</dt>
-								<dd>
-									<input type="radio" name="paypal_login_client_template" id="paypal_login_client_template_paypal_blue" value="1"{if $PayPal_login_tpl == 1} checked{/if} />
-									<label for="paypal_login_client_template_paypal_blue">
-										<img src="../modules/paypal/views/img/paypal_login_blue.png" alt="">
-									</label>
-									<br />
-									<input type="radio" name="paypal_login_client_template" id="paypal_login_client_template_neutral" value="2"{if $PayPal_login_tpl == 2} checked{/if} />
-									<label for="paypal_login_client_template_neutral">
-										<img src="../modules/paypal/views/img/paypal_login_grey.png" alt="">
-									</label>
-								</dd>
-							</dl>
-
-
-							<div class="paypal-clear"></div>
-						</div>
 					</div>
 
 
