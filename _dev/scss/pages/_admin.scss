@@ -77,8 +77,14 @@
       height: 10vw;
       background-size: cover;
       background-color: #7b8a8b;
+      position: absolute;
+      top: -45px;
     }
   }
+}
+
+[widget-code-container] {
+  width: 75%;
 }
 
 [customize-style-shortcut-container] {
@@ -141,6 +147,15 @@
 
 .pp__label {
   font-size: 13px;
+}
+
+.displayModeSection {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+
+  [field] {
+    flex-basis: 75%;
+  }
 }
 
 

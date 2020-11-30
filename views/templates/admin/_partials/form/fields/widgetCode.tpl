@@ -23,7 +23,7 @@
 * International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div>
+<div widget-code-container>
   <div class="input-group pp__mb-5">
     <input
             type="text"

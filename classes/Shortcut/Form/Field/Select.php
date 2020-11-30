@@ -49,13 +49,20 @@ class Select implements FieldInteface
     /** @var string*/
     protected $afterSelectContent;
 
-    public function __construct($name, $options, $label, $value = null, $type = null)
+    /** @var string*/
+    protected $css;
+
+    /** @var string*/
+    protected $hint;
+
+    public function __construct($name, $options, $label = null, $value = null, $type = null, $hint = null, $css = null)
     {
         $this->setName($name);
         $this->setOptions($options);
         $this->setLabel($label);
         $this->setValue($value);
         $this->setType($type);
+        $this->setHint($hint);
     }
 
     public function render()
@@ -74,6 +81,7 @@ class Select implements FieldInteface
             ->assign('label', $this->getLabel())
             ->assign('configType', $this->getType())
             ->assign('afterSelectContent', $this->getAfterSelectContent())
+            ->assign('css', $this->getCss())
             ->fetch(_PS_MODULE_DIR_ . 'paypal/views/templates/admin/_partials/form/fields/select.tpl');
     }
 
@@ -201,6 +209,42 @@ class Select implements FieldInteface
     public function setAfterSelectContent($afterSelectContent)
     {
         $this->afterSelectContent = (string) $afterSelectContent;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCss()
+    {
+        return (string) $this->css;
+    }
+
+    /**
+     * @param string $css
+     * @return Select
+     */
+    public function setCss($css)
+    {
+        $this->css = $css;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHint()
+    {
+        return (string) $this->hint;
+    }
+
+    /**
+     * @param string $hint
+     * @return Select
+     */
+    public function setHint($hint)
+    {
+        $this->hint = $hint;
         return $this;
     }
 }

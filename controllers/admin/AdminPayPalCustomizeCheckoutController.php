@@ -347,16 +347,11 @@ Shipping costs will be estimated on the base of the cart total and default carri
         );
 
         $inputs[] = array(
-            'type' => 'select',
+            'type' => 'html',
             'label' => $this->l('Display mode'),
-            'name' => ShortcutConfiguration::DISPLAY_MODE_CART,
             'hint' => $this->l('By default, PayPal shortcut is displayed on your web site via PrestaShop native hook. If you choose to use PrestaShop widgets, you will be able to copy widget code and insert it wherever you want in the product template.'),
-            'class' => 'pp-w-100',
-            'options' => array(
-                'query' => $this->getShortcutCustomizeModeOptions(),
-                'id' => 'id',
-                'name' => 'name'
-            )
+            'name' => '',
+            'html_content' => $this->getDisplayModeSection(ShortcutConfiguration::DISPLAY_MODE_CART)
         );
 
         $inputs[] = array(
@@ -392,16 +387,11 @@ Shipping costs will be estimated on the base of the cart total and default carri
         );
 
         $inputs[] = array(
-            'type' => 'select',
+            'type' => 'html',
             'label' => $this->l('Display mode'),
-            'name' => ShortcutConfiguration::DISPLAY_MODE_PRODUCT,
             'hint' => $this->l('By default, PayPal shortcut is displayed on your web site via PrestaShop native hook. If you choose to use PrestaShop widgets, you will be able to copy widget code and insert it wherever you want in the product template.'),
-            'class' => 'pp-w-100',
-            'options' => array(
-                'query' => $this->getShortcutCustomizeModeOptions(),
-                'id' => 'id',
-                'name' => 'name'
-            )
+            'name' => '',
+            'html_content' => $this->getDisplayModeSection(ShortcutConfiguration::DISPLAY_MODE_PRODUCT)
         );
 
         $inputs[] = array(
@@ -437,16 +427,11 @@ Shipping costs will be estimated on the base of the cart total and default carri
         );
 
         $inputs[] = array(
-            'type' => 'select',
+            'type' => 'html',
             'label' => $this->l('Display mode'),
-            'name' => ShortcutConfiguration::DISPLAY_MODE_SIGNUP,
             'hint' => $this->l('By default, PayPal shortcut is displayed on your web site via PrestaShop native hook. If you choose to use PrestaShop widgets, you will be able to copy widget code and insert it wherever you want in the product template.'),
-            'class' => 'pp-w-100',
-            'options' => array(
-                'query' => $this->getShortcutCustomizeModeOptions(),
-                'id' => 'id',
-                'name' => 'name'
-            )
+            'name' => '',
+            'html_content' => $this->getDisplayModeSection(ShortcutConfiguration::DISPLAY_MODE_SIGNUP)
         );
 
         $inputs[] = array(
@@ -677,17 +662,6 @@ Shipping costs will be estimated on the base of the cart total and default carri
         }
 
         return in_array($currency->iso_code, $this->module->currencyMB) == false;
-    }
-
-    protected function getLogoMessage()
-    {
-        if ((bool)Configuration::get('PAYPAL_SANDBOX')) {
-            $settingLink = 'https://www.sandbox.paypal.com/businessprofile/settings/info/edit';
-        } else {
-            $settingLink = 'https://www.paypal.com/businessprofile/settings/info/edit';
-        }
-        $this->context->smarty->assign('settingLink', $settingLink);
-        return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/messages/logoMessage.tpl');
     }
 
     protected function getShortcutCustomizeModeOptions()
@@ -1037,5 +1011,32 @@ Shipping costs will be estimated on the base of the cart total and default carri
         if (Tools::isSubmit('saveAdvancedForm')) {
             Media::addJsDef(['sectionSelector' => '#pp_advanced_form']);
         }
+    }
+
+    /**
+     * @param string $name
+     * @return string
+     */
+    public function getDisplayModeSection($name)
+    {
+        $options = [
+            new SelectOption(
+                ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK,
+                $this->l('PrestaShop native hook (recommended)')
+            ),
+            new SelectOption(
+                ShortcutConfiguration::DISPLAY_MODE_TYPE_WIDGET,
+                $this->l('PrestaShop widget')
+            ),
+        ];
+
+        $select = new Select(
+            $name,
+            $options
+        );
+
+        $select->setCss('displayModeSection');
+
+        return $select->render();
     }
 }

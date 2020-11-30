@@ -23,12 +23,13 @@
 * International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div field-row class="pp__my-5 pp__label">
-  <div label>
-      {if isset($label)}
-        <div class="pp__my-2">{$label|escape:'hmlall':'utf-8'}</div>
-      {/if}
-  </div>
+<div field-row class="pp__my-5 pp__label {if isset($css) && $css}{$css}{/if}">
+
+    {if isset($label) && $label}
+        <div label>
+          <div class="pp__my-2">{$label|escape:'hmlall':'utf-8'}</div>
+        </div>
+    {/if}
 
   <div field>
     <select
