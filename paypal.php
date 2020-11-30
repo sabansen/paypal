@@ -443,6 +443,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
             Configuration::updateValue('PAYPAL_CRON_TIME', date('Y-m-d H:m:s'));
         }
 
+        Configuration::updateValue('PAYPAL_PREVIOUS_VERSION', $this->version);
+
         return true;
     }
 
