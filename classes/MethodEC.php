@@ -28,7 +28,6 @@ use PaypalAddons\classes\API\PaypalApiManager;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 
-
 /**
  * Class MethodEC.
  * @see https://developer.paypal.com/docs/classic/api/ NVP SOAP SDK

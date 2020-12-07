@@ -93,5 +93,4 @@ class PaypalOrderTest extends \TotTestCase
         $data = $this->getDataForLoadByOrderId();
         return $data;
     }
-
 }

@@ -26,7 +26,6 @@
 
 namespace PaypalAddons\classes\Shortcut\Form\Field;
 
-
 interface FieldInteface
 {
     public function render();

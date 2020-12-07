@@ -40,7 +40,6 @@ class ServicePaypalIpnTest extends \TotTestCase
     {
         parent::setUp();
         $this->servicePaypalIpn = new ServicePaypalIpn();
-
     }
 
     public function testExists()

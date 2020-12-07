@@ -26,7 +26,6 @@
 
 namespace PaypalAddons\classes\Shortcut;
 
-
 class ShortcutPreview extends ShortcutAbstract
 {
     /** @var string*/
@@ -50,8 +49,7 @@ class ShortcutPreview extends ShortcutAbstract
         $width,
         $color,
         $shape
-    )
-    {
+    ) {
         parent::__construct();
 
         $this->label = $label;

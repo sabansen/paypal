@@ -42,7 +42,6 @@ class ServicePaypalLogTest extends \TotTestCase
     {
         parent::setUp();
         $this->servicePaypalLog = new ServicePaypalLog();
-
     }
 
     public function testGetPaypalOrderByLog()

@@ -104,5 +104,4 @@ class TotTestCase extends TestCase
         \Configuration::updateValue('PAYPAL_CONNECTION_EC_CONFIGURED', 1);
         \Configuration::updateValue('PAYPAL_CONNECTION_PPP_CONFIGURED', 1);
     }
-
 }

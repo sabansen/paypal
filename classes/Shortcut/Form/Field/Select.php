@@ -26,7 +26,6 @@
 
 namespace PaypalAddons\classes\Shortcut\Form\Field;
 
-
 use Context;
 
 class Select implements FieldInteface
