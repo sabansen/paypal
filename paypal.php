@@ -2032,6 +2032,32 @@ class PayPal extends \PaymentModule implements WidgetInterface
         return $hooksUnregistered;
     }
 
+    public function resetHooks()
+    {
+        //Unregister module hooks
+        // Retrieve hooks used by the module
+        $query = new DbQuery();
+        $query
+            ->from('hook_module')
+            ->where('id_module = ' . (int)$this->id)
+            ->select('id_hook');
+        $result = Db::getInstance()->executeS($query);
+
+        if (false === empty($result)) {
+            foreach ($result as $row) {
+                $this->unregisterHook((int) $row['id_hook']);
+                $this->unregisterExceptions((int) $row['id_hook']);
+            }
+        }
+
+        //Register hooks
+        if (false === empty($this->hooks)) {
+            foreach ($this->hooks as $hook) {
+                $this->registerHook($hook);
+            }
+        }
+    }
+
     public function getIpnPaypalListener($sandbox = null)
     {
         if ($sandbox === null) {
