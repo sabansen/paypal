@@ -183,7 +183,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
             $item = [];
             $priceExcl = $this->method->formatPrice($product['price']);
             $priceIncl = $this->method->formatPrice($product['price_wt']);
-            $productTax = $this->method->formatPrice($priceIncl - $priceExcl);
+            $productTax = $this->method->formatPrice($priceIncl - $priceExcl, null, false);
 
             if (isset($product['attributes']) && (empty($product['attributes']) === false)) {
                 $product['name'] .= ' - '.$product['attributes'];
@@ -222,7 +222,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
         $subTotalExcl = $this->method->formatPrice($cartSummary['total_products']);
         $subTotalIncl = $this->method->formatPrice($cartSummary['total_products_wt']);
         $shippingTotal = $this->method->formatPrice($cartSummary['total_shipping']);
-        $subTotalTax = $this->method->formatPrice($subTotalIncl - $subTotalExcl);
+        $subTotalTax = $this->method->formatPrice($subTotalIncl - $subTotalExcl, null, false);
         $discountTotal = $this->method->formatPrice($cartSummary['total_discounts']);
 
         $amount = array(

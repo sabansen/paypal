@@ -256,13 +256,13 @@ abstract class AbstractMethodPaypal extends AbstractMethod
      * @param $price
      * @return float|int|string
      */
-    public function formatPrice($price, $isoCurrency = null)
+    public function formatPrice($price, $isoCurrency = null, $convert = true)
     {
         $context = Context::getContext();
         $context_currency = $context->currency;
         $paypal = Module::getInstanceByName($this->name);
 
-        if ($id_currency_to = $paypal->needConvert()) {
+        if ($convert && $id_currency_to = $paypal->needConvert()) {
             $currency_to_convert = new Currency($id_currency_to);
             $price = Tools::convertPriceFull($price, $context_currency, $currency_to_convert);
         }
