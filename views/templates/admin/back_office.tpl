@@ -77,7 +77,7 @@
 	{/if}
 
 	{if $PayPal_login == 1}
-		<div class="alert alert-info">
+		<div class="alert alert-warning">
 			{l s='PayPal Login feature has sunset in this release. If you had it enabled, it has been automatically disabled.' mod='paypal'}
 		</div>
 	{/if}
