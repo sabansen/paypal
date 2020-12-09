@@ -26,7 +26,6 @@
 
 namespace PaypalAddons\classes\API\Request;
 
-
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Request\RequestAbstract;
 use PaypalAddons\classes\API\Response\Error;
@@ -38,6 +37,10 @@ use Symfony\Component\VarDumper\VarDumper;
 
 class PaypalOrderCreateRequest extends RequestAbstract
 {
+    protected $items = [];
+
+    protected $wrappings = [];
+
     public function execute()
     {
         $response = new ResponseOrderCreate();
@@ -174,8 +177,12 @@ class PaypalOrderCreateRequest extends RequestAbstract
      * @param $currency string Iso code
      * @return array
      */
-    protected function getProductItems($currency)
+    protected function getProductItems($currency, $cache = false)
     {
+        if ($cache && false === empty($this->items)) {
+            return $this->items;
+        }
+
         $items = [];
         $products = $this->context->cart->getProducts();
 
@@ -183,7 +190,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
             $item = [];
             $priceExcl = $this->method->formatPrice($product['price']);
             $priceIncl = $this->method->formatPrice($product['price_wt']);
-            $productTax = $this->method->formatPrice($priceIncl - $priceExcl);
+            $productTax = $this->method->formatPrice($priceIncl - $priceExcl, null, false);
 
             if (isset($product['attributes']) && (empty($product['attributes']) === false)) {
                 $product['name'] .= ' - '.$product['attributes'];
@@ -208,6 +215,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
             $items[] = $item;
         }
 
+        $this->items = $items;
         return $items;
     }
 
@@ -218,12 +226,26 @@ class PaypalOrderCreateRequest extends RequestAbstract
     protected function getAmount($currency)
     {
         $cartSummary = $this->context->cart->getSummaryDetails();
-        $totalOrder = $this->method->formatPrice($cartSummary['total_price']);
-        $subTotalExcl = $this->method->formatPrice($cartSummary['total_products']);
-        $subTotalIncl = $this->method->formatPrice($cartSummary['total_products_wt']);
+        $productItmes = $this->getProductItems($currency, true);
+        $wrappingItems = $this->getWrappingItems($currency, true);
+        $items = array_merge($productItmes, $wrappingItems);
+        $subTotalExcl = 0;
         $shippingTotal = $this->method->formatPrice($cartSummary['total_shipping']);
-        $subTotalTax = $this->method->formatPrice($subTotalIncl - $subTotalExcl);
+        $subTotalTax = 0;
         $discountTotal = $this->method->formatPrice($cartSummary['total_discounts']);
+
+        foreach ($items as $item) {
+            $subTotalExcl += (float)$item['unit_amount']['value'] * (float)$item['quantity'];
+            $subTotalTax += (float)$item['tax']['value'] * (float)$item['quantity'];
+        }
+
+        $subTotalExcl = $this->method->formatPrice($subTotalExcl, null, false);
+        $subTotalTax = $this->method->formatPrice($subTotalTax, null, false);
+        $totalOrder = $this->method->formatPrice(
+            $subTotalExcl + $subTotalTax + $shippingTotal - $discountTotal,
+            null,
+            false
+        );
 
         $amount = array(
             'currency_code' => $currency,
@@ -252,8 +274,12 @@ class PaypalOrderCreateRequest extends RequestAbstract
         return $amount;
     }
 
-    protected function getWrappingItems($currency)
+    protected function getWrappingItems($currency, $cache = false)
     {
+        if ($cache && false === empty($this->wrappings)) {
+            return $this->wrappings;
+        }
+
         $items = [];
 
         if ($this->context->cart->gift && $this->context->cart->getGiftWrappingPrice()) {
@@ -277,6 +303,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
             $items[] = $item;
         }
 
+        $this->wrappings = $items;
         return $items;
     }
 

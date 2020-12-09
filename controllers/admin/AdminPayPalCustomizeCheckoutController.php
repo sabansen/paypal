@@ -223,12 +223,6 @@ Shipping costs will be estimated on the base of the cart total and default carri
         );
 
         $this->fields_form['form']['form']['input'][] = array(
-            'type' => 'html',
-            'name' => '',
-            'html_content' => $this->getLogoMessage()
-        );
-
-        $this->fields_form['form']['form']['input'][] = array(
             'type' => 'text',
             'label' => $this->l('Brand name shown on top left during PayPal checkout'),
             'name' => 'paypal_config_brand',
@@ -316,12 +310,6 @@ Shipping costs will be estimated on the base of the cart total and default carri
         $inputsMethod = $method->getAdvancedFormInputs();
 
         $inputs[] = array(
-            'type' => 'html',
-            'name' => '',
-            'html_content' => $this->module->displayInformation($this->l('You can customise your Checkout shortcut buttons in the PayPal module.'), false, false, 'shortcut-customize-style-info')
-        );
-
-        $inputs[] = array(
             'type' => 'switch',
             'label' => $this->l('Customize PayPal Express Checkout shortcut buttons'),
             'name' => ShortcutConfiguration::CUSTOMIZE_STYLE,
@@ -359,16 +347,11 @@ Shipping costs will be estimated on the base of the cart total and default carri
         );
 
         $inputs[] = array(
-            'type' => 'select',
+            'type' => 'html',
             'label' => $this->l('Display mode'),
-            'name' => ShortcutConfiguration::DISPLAY_MODE_CART,
             'hint' => $this->l('By default, PayPal shortcut is displayed on your web site via PrestaShop native hook. If you choose to use PrestaShop widgets, you will be able to copy widget code and insert it wherever you want in the product template.'),
-            'class' => 'pp-w-100',
-            'options' => array(
-                'query' => $this->getShortcutCustomizeModeOptions(),
-                'id' => 'id',
-                'name' => 'name'
-            )
+            'name' => '',
+            'html_content' => $this->getDisplayModeSection(ShortcutConfiguration::DISPLAY_MODE_CART)
         );
 
         $inputs[] = array(
@@ -404,16 +387,11 @@ Shipping costs will be estimated on the base of the cart total and default carri
         );
 
         $inputs[] = array(
-            'type' => 'select',
+            'type' => 'html',
             'label' => $this->l('Display mode'),
-            'name' => ShortcutConfiguration::DISPLAY_MODE_PRODUCT,
             'hint' => $this->l('By default, PayPal shortcut is displayed on your web site via PrestaShop native hook. If you choose to use PrestaShop widgets, you will be able to copy widget code and insert it wherever you want in the product template.'),
-            'class' => 'pp-w-100',
-            'options' => array(
-                'query' => $this->getShortcutCustomizeModeOptions(),
-                'id' => 'id',
-                'name' => 'name'
-            )
+            'name' => '',
+            'html_content' => $this->getDisplayModeSection(ShortcutConfiguration::DISPLAY_MODE_PRODUCT)
         );
 
         $inputs[] = array(
@@ -449,16 +427,11 @@ Shipping costs will be estimated on the base of the cart total and default carri
         );
 
         $inputs[] = array(
-            'type' => 'select',
+            'type' => 'html',
             'label' => $this->l('Display mode'),
-            'name' => ShortcutConfiguration::DISPLAY_MODE_SIGNUP,
             'hint' => $this->l('By default, PayPal shortcut is displayed on your web site via PrestaShop native hook. If you choose to use PrestaShop widgets, you will be able to copy widget code and insert it wherever you want in the product template.'),
-            'class' => 'pp-w-100',
-            'options' => array(
-                'query' => $this->getShortcutCustomizeModeOptions(),
-                'id' => 'id',
-                'name' => 'name'
-            )
+            'name' => '',
+            'html_content' => $this->getDisplayModeSection(ShortcutConfiguration::DISPLAY_MODE_SIGNUP)
         );
 
         $inputs[] = array(
@@ -473,12 +446,6 @@ Shipping costs will be estimated on the base of the cart total and default carri
             'label' => $this->l('Current shortcut style'),
             'name' => '',
             'html_content' => $this->getCustomizeStyleSectionSignup()
-        );
-
-        $inputs[] = array(
-            'type' => 'html',
-            'name' => '',
-            'html_content' => $this->module->displayInformation($this->l('You can customize your orders\' status for each possible action in the PayPal module.'), false, false, 'pp__my-5')
         );
 
         $inputs[] = array(
@@ -499,12 +466,6 @@ Shipping costs will be estimated on the base of the cart total and default carri
                     'label' => $this->l('Disabled'),
                 )
             ),
-        );
-
-        $inputs[] = array(
-            'type' => 'html',
-            'name' => '',
-            'html_content' => $this->context->smarty->fetch($this->getTemplatePath() . '_partials/messages/formAdvancedHelpOne.tpl')
         );
 
         $inputs[] = array(
@@ -562,12 +523,6 @@ Shipping costs will be estimated on the base of the cart total and default carri
                 )
             );
         }
-
-        $inputs[] = array(
-            'type' => 'html',
-            'name' => '',
-            'html_content' => $this->context->smarty->fetch($this->getTemplatePath() . '_partials/messages/formAdvancedHelpTwo.tpl')
-        );
 
         $inputs = array_merge($inputs, $inputsMethod);
 
@@ -707,17 +662,6 @@ Shipping costs will be estimated on the base of the cart total and default carri
         }
 
         return in_array($currency->iso_code, $this->module->currencyMB) == false;
-    }
-
-    protected function getLogoMessage()
-    {
-        if ((bool)Configuration::get('PAYPAL_SANDBOX')) {
-            $settingLink = 'https://www.sandbox.paypal.com/businessprofile/settings/info/edit';
-        } else {
-            $settingLink = 'https://www.paypal.com/businessprofile/settings/info/edit';
-        }
-        $this->context->smarty->assign('settingLink', $settingLink);
-        return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/messages/logoMessage.tpl');
     }
 
     protected function getShortcutCustomizeModeOptions()
@@ -1067,5 +1011,32 @@ Shipping costs will be estimated on the base of the cart total and default carri
         if (Tools::isSubmit('saveAdvancedForm')) {
             Media::addJsDef(['sectionSelector' => '#pp_advanced_form']);
         }
+    }
+
+    /**
+     * @param string $name
+     * @return string
+     */
+    public function getDisplayModeSection($name)
+    {
+        $options = [
+            new SelectOption(
+                ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK,
+                $this->l('PrestaShop native hook (recommended)')
+            ),
+            new SelectOption(
+                ShortcutConfiguration::DISPLAY_MODE_TYPE_WIDGET,
+                $this->l('PrestaShop widget')
+            ),
+        ];
+
+        $select = new Select(
+            $name,
+            $options
+        );
+
+        $select->setCss('displayModeSection');
+
+        return $select->render();
     }
 }

@@ -26,7 +26,6 @@
 
 namespace PaypalAddons\classes\API\Request\V_1;
 
-
 use Cart;
 use Configuration;
 use Context;

@@ -339,7 +339,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
         $this->description = $this->l('Allow your customers to pay with PayPal - the safest, quickest and easiest way to pay online.');
         $this->confirmUninstall = $this->l('Are you sure you want to delete your details?');
         $this->express_checkout = $this->l('PayPal Express Checkout ');
-        $this->module_link = $this->context->link->getAdminLink('AdminModules', true) . '&configure=' . $this->name . '&tab_module=' . $this->tab . '&module_name=' . $this->name;
 
         $this->errors = '';
         $countryDefault = new \Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
@@ -438,9 +437,11 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $shops = Shop::getShops();
             foreach ($shops as $shop) {
                 Configuration::updateValue('PAYPAL_CRON_TIME', date('Y-m-d H:m:s'), false, null, (int)$shop['id_shop']);
+                Configuration::updateValue('PAYPAL_PREVIOUS_VERSION', $this->version, false, null, (int)$shop['id_shop']);
             }
         } else {
             Configuration::updateValue('PAYPAL_CRON_TIME', date('Y-m-d H:m:s'));
+            Configuration::updateValue('PAYPAL_PREVIOUS_VERSION', $this->version);
         }
 
         Configuration::updateValue('PAYPAL_PREVIOUS_VERSION', $this->version);
@@ -2031,6 +2032,32 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
 
         return $hooksUnregistered;
+    }
+
+    public function resetHooks()
+    {
+        //Unregister module hooks
+        // Retrieve hooks used by the module
+        $query = new DbQuery();
+        $query
+            ->from('hook_module')
+            ->where('id_module = ' . (int)$this->id)
+            ->select('id_hook');
+        $result = Db::getInstance()->executeS($query);
+
+        if (false === empty($result)) {
+            foreach ($result as $row) {
+                $this->unregisterHook((int) $row['id_hook']);
+                $this->unregisterExceptions((int) $row['id_hook']);
+            }
+        }
+
+        //Register hooks
+        if (false === empty($this->hooks)) {
+            foreach ($this->hooks as $hook) {
+                $this->registerHook($hook);
+            }
+        }
     }
 
     public function getIpnPaypalListener($sandbox = null)

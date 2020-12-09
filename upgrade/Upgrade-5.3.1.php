@@ -24,9 +24,16 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
-namespace PaypalAddons\classes\Shortcut\Form\Field;
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
-interface FieldInteface
+/**
+ * @param $module PayPal
+ * @return bool
+ */
+function upgrade_module_5_3_1($module)
 {
-    public function render();
+    $module->resetHooks();
+    return true;
 }

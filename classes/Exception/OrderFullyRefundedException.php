@@ -26,7 +26,6 @@
 
 namespace PaypalAddons\classes\Exception;
 
-
 class OrderFullyRefundedException extends \Exception
 {
 

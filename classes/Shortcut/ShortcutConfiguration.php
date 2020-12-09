@@ -26,7 +26,6 @@
 
 namespace PaypalAddons\classes\Shortcut;
 
-
 class ShortcutConfiguration
 {
     const SHOW_ON_SIGNUP_STEP = 'PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_SIGNUP';

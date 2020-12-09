@@ -45,7 +45,6 @@ class ServicePaypalOrderTest extends \TotTestCase
     {
         parent::setUp();
         $this->servicePaypalOrder = new ServicePaypalOrder();
-
     }
 
     public function testSetOrderStatus()
