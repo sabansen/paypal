@@ -1218,7 +1218,7 @@ class PayPal extends PaymentModule
             || !Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT')
             || !in_array(ECS, $this->getPaymentMethods())
             || isset($this->context->cookie->express_checkout)
-            || Configuration::get('PAYPAL_PAYMENT_METHOD') == PVZ) {
+            || in_array(Configuration::get('PAYPAL_PAYMENT_METHOD'), array(PVZ, PPP))) {
             return null;
         }
 
