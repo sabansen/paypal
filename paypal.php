@@ -759,8 +759,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $paymentOption->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_infos.tpl'));
         }
 
-        $paymentOption->setModuleName('paypal-ec');
-
         $paymentOptions[] = $paymentOption;
 
         if ((Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART')) && isset($this->context->cookie->paypal_ecs)) {
