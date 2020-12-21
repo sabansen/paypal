@@ -496,7 +496,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
             );
         }
 
-        if ($this->method != 'PPP' && Configuration::get('PAYPAL_API_INTENT') == 'authorization') {
+        if ($this->method != 'PPP' && Configuration::get('PAYPAL_API_INTENT') == 'authorize') {
             $inputs[] = array(
                 'type' => 'select',
                 'label' => $this->l('Payment accepted via BO (call PayPal to get the payment)'),
