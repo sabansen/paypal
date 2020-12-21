@@ -720,6 +720,20 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 break;
         }
 
+        if ($method->isSandbox() && false === empty($payments_options)) {
+            foreach ($payments_options as $paymentOption) {
+                if ($paymentOption instanceof PaymentOption) {
+                    $additionalInformantion = $this->displayAlert(
+                        $this->l('Sandbox mode: all transactions will be fictitious.'),
+                        'info',
+                        false
+                    );
+                    $additionalInformantion .= $paymentOption->getAdditionalInformation();
+                    $paymentOption->setAdditionalInformation($additionalInformantion);
+                }
+            }
+        }
+
         return $payments_options;
     }
 
@@ -828,6 +842,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 }
 
                 $this->context->smarty->assign('paypalEmail', $cookie_paypal_email);
+                $this->context->smarty->assign('isSandbox', $method->isSandbox());
                 $carrierFees = $this->context->cart->getOrderTotal(true, Cart::ONLY_SHIPPING);
 
                 if ($carrierFees == 0) {

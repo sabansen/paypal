@@ -25,6 +25,12 @@
 *}
 
 <div class="alert alert-info">
+    {if isset($isSandbox) && $isSandbox}
+      <div>
+          {l s='Sandbox mode: all transactions will be fictitious.' mod='paypal'}
+      </div>
+    {/if}
+
     <div>
         {{l s='You have to [b]finish your payment[/b] done with your PayPal account ' mod='paypal'}|paypalreplace nofilter} {if isset($paypalEmail)}{$paypalEmail|escape:'htmlall':'utf-8'}{/if}
     </div>

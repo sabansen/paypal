@@ -30,12 +30,14 @@ $(document).ready( () => {
   $('.payment-option').each((step) => {
     let i = step + 1;
     if ($(`#payment-option-${i}-container [data-module-name^='paypal']`).length > 0) {
-      let dataPaypalInfo = $('[data-paypal-info]');
-      dataPaypalInfo.find('[data-paypal-info-popover]').attr('data-content', document.querySelector('[data-pp-info]').outerHTML);
-      dataPaypalInfo.insertAfter($(`#payment-option-${i}-container label`));
-      dataPaypalInfo.show();
-      $(`#payment-option-${i}-additional-information`).remove();
+      let dataPaypalInfo = $(`#payment-option-${i}-additional-information [data-paypal-info]`);
 
+      if (dataPaypalInfo.length > 0) {
+        dataPaypalInfo.find('[data-paypal-info-popover]').attr('data-content', document.querySelector('[data-pp-info]').outerHTML);
+        dataPaypalInfo.insertAfter($(`#payment-option-${i}-container label`));
+        dataPaypalInfo.show();
+        document.querySelector('[data-pp-info]').remove();
+      }
     }
   });
 
