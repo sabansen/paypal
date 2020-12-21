@@ -159,5 +159,4 @@ class PaypalOrderGetRequest extends RequestAbstract
     {
         return $exec->result->payer->name->surname;
     }
-
 }

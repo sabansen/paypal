@@ -129,7 +129,7 @@
 
           <p>
           <span class="btn btn-default install-ps-checkout" data-action="install">
-              {$psCheckoutBtnText|escape:'htmlall':'utf-8'}
+              {$psCheckoutBtnText|escape:'htmlall':'UTF-8'}
           </span>
           </p>
 

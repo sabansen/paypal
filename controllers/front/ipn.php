@@ -29,7 +29,6 @@ use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use PaypalAddons\services\ServicePaypalIpn;
 use PaypalAddons\services\ServicePaypalOrder;
 
-
 class PaypalIpnModuleFrontController extends PaypalAbstarctModuleFrontController
 {
     /** @var ServicePaypalIpn*/
@@ -74,7 +73,6 @@ class PaypalIpnModuleFrontController extends PaypalAbstarctModuleFrontController
 
             header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
         }
-
     }
 
     /**
@@ -234,10 +232,9 @@ class PaypalIpnModuleFrontController extends PaypalAbstarctModuleFrontController
             foreach ($mixed as $key => $value) {
                 $mixed[$key] = $this->utf8ize($value);
             }
-        } else if (is_string ($mixed)) {
+        } else if (is_string($mixed)) {
             return utf8_encode($mixed);
         }
         return $mixed;
     }
-
 }

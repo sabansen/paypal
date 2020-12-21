@@ -27,7 +27,7 @@
 
     {if isset($label) && $label}
         <div label>
-          <div class="pp__my-2">{$label|escape:'hmlall':'utf-8'}</div>
+          <div class="pp__my-2">{$label|escape:'hmlall':'UTF-8'}</div>
         </div>
     {/if}
 

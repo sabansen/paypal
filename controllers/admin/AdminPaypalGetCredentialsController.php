@@ -57,4 +57,3 @@ class AdminPaypalGetCredentialsController extends ModuleAdminController
         Tools::redirectAdmin($this->context->link->getAdminLink('AdminPayPalSetup', true, [], ['checkCredentials' => 1]));
     }
 }
-

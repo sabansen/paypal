@@ -317,7 +317,7 @@ class AdminPayPalSetupController extends AdminPayPalController
         }
 
         // We need use some functionality of EC method, so need also to configure MethodEC
-        if(Tools::isSubmit('saveMbCredentialsForm')) {
+        if (Tools::isSubmit('saveMbCredentialsForm')) {
             $methodEC = AbstractMethodPaypal::load('EC');
             $methodEC->setConfig(array(
                 'clientId' => $method->getClientId(),

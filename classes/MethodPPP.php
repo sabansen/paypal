@@ -147,36 +147,6 @@ class MethodPPP extends AbstractMethodPaypal
     }
 
     /**
-     * Get payment details
-     * @param $id_payment
-     * @return bool|mixed
-     */
-    public function getInstructionInfo($id_payment)
-    {
-        if ($this->isConfigured() == false) {
-            return false;
-        }
-        try {
-            $sale = Payment::get($id_payment, $this->_getCredentialsInfo());
-        } catch (Exception $e) {
-            $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 1)[0];
-            $message = 'Error in ' . $backtrace['file'];
-            $message .= ' (line ' . $backtrace['line'] . '); ';
-            $message .= 'Message: ' . $e->getMessage() . ';';
-            $message .= 'File: ' . $e->getFile() . '; ';
-            $message .= 'Line: ' . $e->getLine();
-
-            ProcessLoggerHandler::openLogger();
-            ProcessLoggerHandler::logError($message);
-            ProcessLoggerHandler::closeLogger();
-
-            return false;
-        }
-
-        return $sale->payment_instruction;
-    }
-
-    /**
      * @return bool
      */
     public function isConfigured()

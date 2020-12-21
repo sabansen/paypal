@@ -57,4 +57,3 @@ class PaypalIpn extends ObjectModel
         'collation' => 'utf8_general_ci'
     );
 }
-

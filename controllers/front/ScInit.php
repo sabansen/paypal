@@ -26,6 +26,7 @@
 
 
 use PaypalAddons\classes\AbstractMethodPaypal;
+
 /**
  * Init payment for EC shortcut
  */
@@ -88,7 +89,11 @@ class PaypalScInitModuleFrontController extends PaypalAbstarctModuleFrontControl
 
         foreach ($temp_group as $item) {
             $temp = explode(':', $item);
-            $temp = array_map(function($value) {return trim($value);}, $temp);
+            $temp = array_map(
+                function($value) {
+                    return trim($value);
+                }, 
+                $temp);
             $group[$temp[0]] = $temp[1];
         }
 

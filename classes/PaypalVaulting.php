@@ -64,6 +64,4 @@ class PaypalVaulting extends ObjectModel
         ),
         'collation' => 'utf8_general_ci'
     );
-
-
 }

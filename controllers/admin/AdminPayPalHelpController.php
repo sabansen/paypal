@@ -37,7 +37,7 @@ class AdminPayPalHelpController extends AdminPayPalController
     {
         parent::init();
 
-	    if (Tools::isSubmit('registerHooks')) {
+        if (Tools::isSubmit('registerHooks')) {
             if ($this->registerHooks()) {
                 $this->confirmations[] = $this->l('Hooks successfully registered');
             }

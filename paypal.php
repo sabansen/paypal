@@ -605,7 +605,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
         return $this->displayShortcutButton([
             'sourcePage' => ShortcutConfiguration::SOURCE_PAGE_PRODUCT,
             'hook' => ShortcutConfiguration::HOOK_FOOTER_PRODUCT
-        ]);    }
+        ]);
+    }
 
     public function hookDisplayExpressCheckout($params)
     {
@@ -799,7 +800,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             Configuration::updateValue('PAYPAL_NEED_CHECK_CREDENTIALS', 0);
         }
 
-       if (Tools::getValue('controller') == "order") {
+        if (Tools::getValue('controller') == "order") {
             if (!$this->checkActiveModule()) {
                 return;
             }
@@ -810,8 +811,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 return false;
             }
 
-           $this->context->controller->registerJavascript($this->name . '-paypal-info', 'modules/' . $this->name . '/views/js/paypal-info.js');
-           $resources[] = '/modules/' . $this->name . '/views/js/paypal-info.js';
+            $this->context->controller->registerJavascript($this->name . '-paypal-info', 'modules/' . $this->name . '/views/js/paypal-info.js');
+            $resources[] = '/modules/' . $this->name . '/views/js/paypal-info.js';
 
             // Show Shortcut on signup page if need
             // if ps version is '1.7.6' and bigger than use native hook displayPersonalInformationTop
@@ -940,14 +941,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             'transaction_id' => $paypal_order->id_transaction,
             'method' => $paypal_order->method,
         ));
-        if ($paypal_order->method == 'PPP' && $paypal_order->payment_tool == 'PAY_UPON_INVOICE') {
-            $method = AbstractMethodPaypal::load('PPP');
-            try {
-                $this->context->smarty->assign('ppp_information', $method->getInstructionInfo($paypal_order->id_payment));
-            } catch (Exception $e) {
-                $this->context->smarty->assign('error_msg', $this->l('We are not able to verify if payment was successful. Please check if you have received confirmation from PayPal on your account.'));
-            }
-        }
+        
         $this->context->controller->registerJavascript($this->name . '-order_confirmation_js', $this->_path . '/views/js/order_confirmation.js');
         return $this->context->smarty->fetch('module:paypal/views/templates/hook/order_confirmation.tpl');
     }
@@ -996,11 +990,10 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
 
         if (isset($data['hook'])) {
-
             if ($data['sourcePage'] == ShortcutConfiguration::SOURCE_PAGE_PRODUCT) {
                 if (Configuration::get(ShortcutConfiguration::CUSTOMIZE_STYLE)
-                    && (int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_PRODUCT) !== ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK) {
-
+                    && (int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_PRODUCT) 
+                    !== ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK) {
                     return '';
                 }
                 // Take a hook by default
@@ -1023,8 +1016,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
             if ($data['sourcePage'] == ShortcutConfiguration::SOURCE_PAGE_CART) {
                 if (Configuration::get(ShortcutConfiguration::CUSTOMIZE_STYLE)
-                    && (int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_CART) !== ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK) {
-
+                    && (int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_CART) 
+                    !== ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK) {
                     return '';
                 }
                 // Take a hook by default
@@ -1047,8 +1040,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
             if ($data['sourcePage'] == ShortcutConfiguration::SOURCE_PAGE_SIGNUP) {
                 if (Configuration::get(ShortcutConfiguration::CUSTOMIZE_STYLE)
-                    && (int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_SIGNUP) !== ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK) {
-
+                    && (int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_SIGNUP) 
+                    !== ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK) {
                     return '';
                 }
             }
@@ -1670,26 +1663,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
         return $response;
     }
 
-    public function hookDisplayInvoiceLegalFreeText($params)
-    {
-        $paypal_order = PaypalOrder::loadByOrderId($params['order']->id);
-        if (!Validate::isLoadedObject($paypal_order) || $paypal_order->method != 'PPP'
-            || $paypal_order->payment_tool != 'PAY_UPON_INVOICE') {
-            return;
-        }
-
-        $method = AbstractMethodPaypal::load('PPP');
-        $information = $method->getInstructionInfo($paypal_order->id_payment);
-        $tab = $this->l('Bank name') . ' : ' . $information->recipient_banking_instruction->bank_name . ';
-        ' . $this->l('Account holder name') . ' : ' . $information->recipient_banking_instruction->account_holder_name . ';
-        ' . $this->l('IBAN') . ' : ' . $information->recipient_banking_instruction->international_bank_account_number . ';
-        ' . $this->l('BIC') . ' : ' . $information->recipient_banking_instruction->bank_identifier_code . ';
-        ' . $this->l('Amount due / currency') . ' : ' . $information->amount->value . ' ' . $information->amount->currency . ';
-        ' . $this->l('Payment due date') . ' : ' . $information->payment_due_date . ';
-        ' . $this->l('Reference') . ' : ' . $information->reference_number . '.';
-        return $tab;
-    }
-
     /**
      * Get decimal correspondent to payment currency
      * @return integer Number of decimal
@@ -1699,7 +1672,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         $paypal = Module::getInstanceByName('paypal');
         $currency_wt_decimal = array('HUF', 'JPY', 'TWD');
 
-        if ($isoCurrency === null || Currency::exists($isoCurrency) === false ) {
+        if ($isoCurrency === null || Currency::exists($isoCurrency) === false) {
             $isoCurrency = $paypal->getPaymentCurrencyIso();
         }
 
@@ -1940,7 +1913,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
 
         return false;
-
     }
 
     /**
@@ -2033,7 +2005,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         $hooksUnregistered = array();
 
         foreach ($this->hooks as $hookName) {
-            $hookName = Hook::getNameById(Hook::getIdByName($hookName));;
+            $hookName = Hook::getNameById(Hook::getIdByName($hookName));
 
             if (Hook::isModuleRegisteredOnHook($this, $hookName, $this->context->shop->id)) {
                 continue;

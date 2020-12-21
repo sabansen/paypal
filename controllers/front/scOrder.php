@@ -215,7 +215,7 @@ class PaypalScOrderModuleFrontController extends PaypalAbstarctModuleFrontContro
 
         $invalidAddressIds = [];
 
-        if(version_compare(_PS_VERSION_, '1.7.3.0', '>=')) {
+        if (version_compare(_PS_VERSION_, '1.7.3.0', '>=')) {
             $addressValidator = new AddressValidator();
             $invalidAddressIds = $addressValidator->validateCartAddresses($this->context->cart);
         }

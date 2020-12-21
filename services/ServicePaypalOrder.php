@@ -100,5 +100,4 @@ class ServicePaypalOrder
 
         return $collection->getResults();
     }
-
 }

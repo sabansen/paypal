@@ -25,6 +25,6 @@
 
 {if isset($sectionTitle)}
     <div class="pp__my-5" {if isset($attributes) && false === empty($attributes)}{foreach from=$attributes item=attribute} {$attribute} {/foreach}{/if}>
-      <h3>{$sectionTitle|escape:'htmlall':'utf-8'}</h3>
+      <h3>{$sectionTitle|escape:'htmlall':'UTF-8'}</h3>
     </div>
 {/if}
