@@ -38,37 +38,28 @@
 
 {include './_partials/headerLogo.tpl'}
 
-<div>
-    <div class="row pp__flex">
-        <div class="col-lg-8 stretchHeightForm pp__pb-4">
-            {if isset($formAccountSettings)}
-                {$formAccountSettings nofilter} {* the variable contains html code *}
-            {/if}
+<div class="pp__flex">
+    {if isset($formAccountSettings)}
+      <div class="pp__flex-item-1 pp__mr-1 stretchHeightForm">
+          {$formAccountSettings nofilter}{* the variable contains html code *}
+      </div>
+    {/if}
 
-        </div>
-        <div class="col-lg-4 pp__flex pp__flex_direction_column pp__justify-content-between stretchHeightForm pp__pb-4">
-            {if isset($formEnvironmentSettings)}
-                {$formEnvironmentSettings nofilter} {* the variable contains html code *}
-            {/if}
+    {if isset($formEnvironmentSettings)}
+      <div class="pp__flex-item-1 pp__mr-1 stretchHeightForm">
+          {$formEnvironmentSettings nofilter}{* the variable contains html code *}
+      </div>
+    {/if}
 
-            <div class="status-block-container">
-                {if isset($formStatusTop)}
-                    {$formStatusTop nofilter} {* the variable contains html code *}
-                {/if}
-            </div>
-        </div>
-    </div>
+    {if isset($formPaymentSettings)}
+      <div class="pp__flex-item-1 pp__mr-1 stretchHeightForm">
+          {$formPaymentSettings nofilter}{* the variable contains html code *}
+      </div>
+    {/if}
 
-    <div class="row pp__flex">
-        <div class="col-lg-8">
-            {if isset($formPaymentSettings)}
-                {$formPaymentSettings nofilter} {* the variable contains html code *}
-            {/if}
-        </div>
-        <div class="col-lg-4 stretchHeightForm pp__pb-4 status-block-container">
-            {if isset($formStatus)}
-                {$formStatus nofilter} {* the variable contains html code *}
-            {/if}
-        </div>
-    </div>
+    {if isset($formStatus)}
+      <div class="pp__flex-item-1 stretchHeightForm">
+          {$formStatus nofilter}{* the variable contains html code *}
+      </div>
+    {/if}
 </div>
