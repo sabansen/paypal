@@ -75,4 +75,3 @@ if (!function_exists('smarty_modifier_paypalreplace')) {
         return $string;
     }
 }
-

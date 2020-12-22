@@ -38,19 +38,19 @@
         {foreach from=$logs item=log}
             <tr>
                 <td>
-                    {$log->date_add|escape:'html':'utf-8'}
+                    {$log->date_add|escape:'html':'UTF-8'}
                 </td>
                 <td>
-                    {$log->getDateTransaction()|escape:'html':'utf-8'}
+                    {$log->getDateTransaction()|escape:'html':'UTF-8'}
                 </td>
                 <td>
-                    <a href="{$log->getLinkToTransaction()|addslashes}" target="_blank">{$log->id_transaction|escape:'html':'utf-8'}</a>
+                    <a href="{$log->getLinkToTransaction()|addslashes}" target="_blank">{$log->id_transaction|escape:'html':'UTF-8'}</a>
                 </td>
                 <td>
-                    {$log->tools|escape:'html':'utf-8'}
+                    {$log->tools|escape:'html':'UTF-8'}
                 </td>
                 <td>
-                    {$log->log|escape:'html':'utf-8'}
+                    {$log->log|escape:'html':'UTF-8'}
                 </td>
             </tr>
         {/foreach}

@@ -941,7 +941,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             'transaction_id' => $paypal_order->id_transaction,
             'method' => $paypal_order->method,
         ));
-        
+
         $this->context->controller->registerJavascript($this->name . '-order_confirmation_js', $this->_path . '/views/js/order_confirmation.js');
         return $this->context->smarty->fetch('module:paypal/views/templates/hook/order_confirmation.tpl');
     }
@@ -992,7 +992,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         if (isset($data['hook'])) {
             if ($data['sourcePage'] == ShortcutConfiguration::SOURCE_PAGE_PRODUCT) {
                 if (Configuration::get(ShortcutConfiguration::CUSTOMIZE_STYLE)
-                    && (int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_PRODUCT) 
+                    && (int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_PRODUCT)
                     !== ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK) {
                     return '';
                 }
@@ -1016,7 +1016,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
             if ($data['sourcePage'] == ShortcutConfiguration::SOURCE_PAGE_CART) {
                 if (Configuration::get(ShortcutConfiguration::CUSTOMIZE_STYLE)
-                    && (int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_CART) 
+                    && (int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_CART)
                     !== ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK) {
                     return '';
                 }
@@ -1040,7 +1040,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
             if ($data['sourcePage'] == ShortcutConfiguration::SOURCE_PAGE_SIGNUP) {
                 if (Configuration::get(ShortcutConfiguration::CUSTOMIZE_STYLE)
-                    && (int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_SIGNUP) 
+                    && (int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_SIGNUP)
                     !== ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK) {
                     return '';
                 }

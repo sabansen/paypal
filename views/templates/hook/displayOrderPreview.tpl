@@ -26,9 +26,9 @@
 
 
 <div>
-  <b>{l s='PayPal Transaction ID' mod='paypal'}:</b> {if isset($log)}<a href="{$log->getLinkToTransaction()|addslashes}" target="_blank">{$log->id_transaction|escape:'html':'utf-8'}</a>{/if}
+  <b>{l s='PayPal Transaction ID' mod='paypal'}:</b> {if isset($log)}<a href="{$log->getLinkToTransaction()|addslashes}" target="_blank">{$log->id_transaction|escape:'html':'UTF-8'}</a>{/if}
 </div>
 
 <div>
-  <b>{l s='Last Logs Details' mod='paypal'}:</b> {if isset($log)}{$log->log|escape:'html':'utf-8'}{/if}
+  <b>{l s='Last Logs Details' mod='paypal'}:</b> {if isset($log)}{$log->log|escape:'html':'UTF-8'}{/if}
 </div>

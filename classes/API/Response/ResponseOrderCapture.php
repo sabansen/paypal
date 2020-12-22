@@ -230,4 +230,3 @@ class ResponseOrderCapture extends Response
         return $this;
     }
 }
-
