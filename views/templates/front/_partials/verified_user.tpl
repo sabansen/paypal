@@ -28,6 +28,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
      viewBox="0 0 477.867 477.867" style="enable-background:new 0 0 477.867 477.867;" xml:space="preserve" width="20px" height="21px">
+  <title>{l s='Safer and more protected' mod='paypal'}</title>
 <g>
   <g>
     <path fill="#00B3E3" d="M409.6,170.667h-17.067V153.6C392.439,68.808,323.725,0.094,238.933,0c-84.792,0.094-153.506,68.808-153.6,153.6v17.067

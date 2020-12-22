@@ -27,7 +27,8 @@
 
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="20px" height="21px" viewBox="0 0 20 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+  <title>{l s='Wherever you are' mod='paypal'}</title>
+  <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="Checkout-Payment" transform="translate(-619.000000, -496.000000)">
             <g id="paypal-reassurance-tooltip" transform="translate(491.000000, 385.000000)">
                 <g id="simple-and-convenient" transform="translate(39.000000, 109.500000)">
