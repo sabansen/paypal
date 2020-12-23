@@ -183,7 +183,8 @@ class PaypalOrderCreateRequest extends RequestAbstract
         }
 
         $items = [];
-        $products = $this->context->cart->getProducts();
+        $cartSummary = $this->context->cart->getSummaryDetails();
+        $products = $cartSummary['products'];
 
         foreach ($products as $product) {
             $item = [];
