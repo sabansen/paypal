@@ -1489,18 +1489,26 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 );
                 ProcessLoggerHandler::closeLogger();
             } else {
-                ProcessLoggerHandler::openLogger();
-                ProcessLoggerHandler::logError(
-                    $response->getError()->getMessage(),
-                    null,
-                    $orderPayPal->id_order,
-                    $orderPayPal->id_cart,
-                    $this->context->shop->id,
-                    $orderPayPal->payment_tool,
-                    $orderPayPal->sandbox
-                );
-                ProcessLoggerHandler::closeLogger();
-                Tools::redirect($_SERVER['HTTP_REFERER'] . '&cancel_failed=1');
+                if ($response->isAlreadyRefunded()) {
+                    if (session_status() == PHP_SESSION_NONE) {
+                        session_start();
+                    }
+
+                    $_SESSION['paypal_transaction_already_refunded'] = true;
+                } else {
+                    ProcessLoggerHandler::openLogger();
+                    ProcessLoggerHandler::logError(
+                        $response->getError()->getMessage(),
+                        null,
+                        $orderPayPal->id_order,
+                        $orderPayPal->id_cart,
+                        $this->context->shop->id,
+                        $orderPayPal->payment_tool,
+                        $orderPayPal->sandbox
+                    );
+                    ProcessLoggerHandler::closeLogger();
+                    Tools::redirect($_SERVER['HTTP_REFERER'] . '&cancel_failed=1');
+                }
             }
         }
 
