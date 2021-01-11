@@ -23,15 +23,17 @@
 * International Registered Trademark & Property of PrestaShop SA
 *}
 
-<div class="alert alert-info pp__my-5" data-color="gold">
-  {l s='People around the world know us for the color gold and research confirms it. Extensive testing determined just the right shade and shape that help increase conversion. Use it on your website to leverage PayPal’s recognition and preference.' mod='paypal'}
-</div>
+<div hint-wrap style="display: none">
+  <div class="alert alert-info pp__my-5" data-color="gold">
+      {l s='People around the world know us for the color gold and research confirms it. Extensive testing determined just the right shade and shape that help increase conversion. Use it on your website to leverage PayPal’s recognition and preference.' mod='paypal'}
+  </div>
 
-<div class="alert alert-info pp__my-5" data-color="blue">
-  {l s='If gold does not work for your site, try the PayPal blue button. Research shows that people know it is our brand color, which provides a halo of trust and security to your experience.' mod='paypal'}
-</div>
+  <div class="alert alert-info pp__my-5" data-color="blue">
+      {l s='If gold does not work for your site, try the PayPal blue button. Research shows that people know it is our brand color, which provides a halo of trust and security to your experience.' mod='paypal'}
+  </div>
 
 
-<div class="alert alert-info pp__my-5" data-color="other">
-  {l s='If gold or blue does not work for your site design or aesthetic, try the silver, white, or black buttons. Because these colors are less capable of drawing people’s attention, we recommend these button colors as a second alternative.' mod='paypal'}
+  <div class="alert alert-info pp__my-5" data-color="other">
+      {l s='If gold or blue does not work for your site design or aesthetic, try the silver, white, or black buttons. Because these colors are less capable of drawing people’s attention, we recommend these button colors as a second alternative.' mod='paypal'}
+  </div>
 </div>

@@ -50,17 +50,18 @@ class Select implements FieldInteface
     /** @var string*/
     protected $css;
 
-    /** @var string*/
-    protected $hint;
+    /** @var bool*/
+    protected $hintSwitch;
 
-    public function __construct($name, $options, $label = null, $value = null, $type = null, $hint = null, $css = null)
+    public function __construct($name, $options, $label = null, $value = null, $type = null, $hintSwitch = false, $css = null)
     {
         $this->setName($name);
         $this->setOptions($options);
         $this->setLabel($label);
         $this->setValue($value);
         $this->setType($type);
-        $this->setHint($hint);
+        $this->setHintSwitch($hintSwitch);
+        $this->setCss($css);
     }
 
     public function render()
@@ -80,6 +81,7 @@ class Select implements FieldInteface
             ->assign('configType', $this->getType())
             ->assign('afterSelectContent', $this->getAfterSelectContent())
             ->assign('css', $this->getCss())
+            ->assign('hintSwitch', $this->isHintSwitch())
             ->fetch(_PS_MODULE_DIR_ . 'paypal/views/templates/admin/_partials/form/fields/select.tpl');
     }
 
@@ -229,20 +231,20 @@ class Select implements FieldInteface
     }
 
     /**
-     * @return string
+     * @return bool
      */
-    public function getHint()
+    public function isHintSwitch()
     {
-        return (string) $this->hint;
+        return (bool) $this->hintSwitch;
     }
 
     /**
-     * @param string $hint
+     * @param bool $hintSwitch
      * @return Select
      */
-    public function setHint($hint)
+    public function setHintSwitch($hintSwitch)
     {
-        $this->hint = $hint;
+        $this->hintSwitch = $hintSwitch;
         return $this;
     }
 }
