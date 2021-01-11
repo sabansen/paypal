@@ -92,11 +92,6 @@ class AdminPayPalSetupController extends AdminPayPalController
             $tpl_vars['formPaymentSettings'] = $formPaymentSettings;
         }
 
-        $this->initEnvironmentSettings();
-        $formEnvironmentSettings = $this->renderForm();
-        $this->clearFieldsForm();
-        $tpl_vars['formEnvironmentSettings'] = $formEnvironmentSettings;
-
         $this->initStatusBlock();
         $formStatus = $this->renderForm();
         $this->clearFieldsForm();
