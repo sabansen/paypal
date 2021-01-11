@@ -193,6 +193,8 @@ class AdminPayPalSetupController extends AdminPayPalController
         $inputGroup[] = array(
             'type' => 'html',
             'name' => '',
+            'col' => 12,
+            'label' => '',
             'html_content' => $this->module->displayInformation($this->l('We recommend Authorize process only for lean manufacturers and craft products sellers.'))
         );
 
