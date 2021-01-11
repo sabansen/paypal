@@ -31,7 +31,6 @@ use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\VarDumper\VarDumper;
-use function GuzzleHttp\Psr7\build_query;
 
 class AdminPayPalController extends \ModuleAdminController
 {
@@ -371,7 +370,7 @@ class AdminPayPalController extends \ModuleAdminController
             'desc' => $this->trans('Sandbox mode', [], 'Modules.Paypal.Admin'),
             'icon' => 'process-icon-toggle-' . (\Configuration::get('PAYPAL_SANDBOX') ? 'on' : 'off'),
             'help' => $this->trans('Sandbox mode is the test environment where you\'ll be not able to collect any real payments.', [], 'Admin.Dashboard.Help'),
-            'href' => self::$currentIndex . '?' . build_query($query)
+            'href' => self::$currentIndex . '?' . http_build_query($query)
         ];
 
         parent::initPageHeaderToolbar();
