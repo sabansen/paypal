@@ -31,6 +31,7 @@ use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\VarDumper\VarDumper;
+use function GuzzleHttp\Psr7\build_query;
 
 class AdminPayPalController extends \ModuleAdminController
 {
@@ -59,6 +60,15 @@ class AdminPayPalController extends \ModuleAdminController
             default:
                 $this->method = "EC";
         }
+    }
+
+    public function init()
+    {
+        if (\Tools::getValue('action') === 'set_sandbox_mode') {
+            \Configuration::updateValue('PAYPAL_SANDBOX', (int)\Tools::getValue('sandbox_mode'));
+        }
+
+        parent::init();
     }
 
     public function initContent()
@@ -348,5 +358,22 @@ class AdminPayPalController extends \ModuleAdminController
         }
 
         return false;
+    }
+
+    public function initPageHeaderToolbar()
+    {
+        $query = [
+            'token' => $this->token,
+            'action' => 'set_sandbox_mode',
+            'sandbox_mode' => \Configuration::get('PAYPAL_SANDBOX') ? 0 : 1
+        ];
+        $this->page_header_toolbar_btn['switch_sandbox'] = [
+            'desc' => $this->trans('Sandbox mode', [], 'Modules.Paypal.Admin'),
+            'icon' => 'process-icon-toggle-' . (\Configuration::get('PAYPAL_SANDBOX') ? 'on' : 'off'),
+            'help' => $this->trans('Sandbox mode is the test environment where you\'ll be not able to collect any real payments.', [], 'Admin.Dashboard.Help'),
+            'href' => self::$currentIndex . '?' . build_query($query)
+        ];
+
+        parent::initPageHeaderToolbar();
     }
 }

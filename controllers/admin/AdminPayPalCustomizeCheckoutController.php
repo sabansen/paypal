@@ -1039,21 +1039,4 @@ Shipping costs will be estimated on the base of the cart total and default carri
 
         return $select->render();
     }
-
-    public function ajaxProcessSetSimulationMode()
-    {
-        Configuration::updateValue('PAYPAL_SANDBOX', (int) Tools::getValue('PAYPAL_SANDBOX'));
-        die('k' . Configuration::get('PAYPAL_SANDBOX') . 'k');
-    }
-
-    public function initPageHeaderToolbar()
-    {
-        $this->page_header_toolbar_btn['switch_sandbox'] = [
-            'desc' => $this->trans('Sandbox mode', [], 'Modules.Paypal.Admin'),
-            'icon' => 'process-icon-toggle-' . (Configuration::get('PAYPAL_SANDBOX') ? 'on' : 'off'),
-            'help' => $this->trans('Sandbox mode is the test environment where you\'ll be not able to collect any real payments.', [], 'Admin.Dashboard.Help'),
-        ];
-
-        parent::initPageHeaderToolbar();
-    }
 }
