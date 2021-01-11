@@ -189,7 +189,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             'type' => 'html',
             'label' => '',
             'name' => 'testName',
-            'html_content' => $this->module->displayInformation($this->l('In-Context has shown better conversion rate'), true, false, 'message-context'),
+            'html_content' => $this->module->displayAlert($this->l('In-Context has shown better conversion rate'), 'info', true, false, 'message-context icon-lightbulb'),
         );
 
         $this->fields_form['form']['form']['input'][] = array(

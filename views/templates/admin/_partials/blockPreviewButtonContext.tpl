@@ -94,7 +94,7 @@
   </div>
 </div>
 
-<div class="alert alert-info">
+<div class="alert alert-info icon-lightbulb">
 	<button type="button" class="close" data-dismiss="alert">×</button>
     {l s='PayPal shortcuts allow a faster checkout for your buyers. PayPal automatically provides you with the client\'s shipping and billing information.' mod='paypal'}
 </div>
