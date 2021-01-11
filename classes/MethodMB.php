@@ -392,7 +392,7 @@ class MethodMB extends AbstractMethodPaypal
             )
         );
 
-        if (Configuration::get('PAYPAL_API_INTENT') == 'authorization') {
+        if ($this->getIntent() == 'AUTHORIZE') {
             $inputs[] = array(
                 'type' => 'select',
                 'label' => $module->l('Payment authorized, waiting for validation by admin (paid via PayPal express checkout)', get_class($this)),
@@ -523,6 +523,6 @@ class MethodMB extends AbstractMethodPaypal
 
     public function getIntent()
     {
-        return 'CAPTURE';
+        return Configuration::get('PAYPAL_API_INTENT') == 'sale' ? 'CAPTURE' : 'AUTHORIZE';
     }
 }

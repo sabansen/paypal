@@ -250,7 +250,7 @@ class MethodEC extends AbstractMethodPaypal
         $module = Module::getInstanceByName($this->name);
         $orderStatuses = $module->getOrderStatuses();
 
-        if (Configuration::get('PAYPAL_API_INTENT') == 'authorization') {
+        if ($this->getIntent() == 'AUTHORIZE') {
             $inputs[] = array(
                 'type' => 'select',
                 'label' => $module->l('Payment authorized and waiting for validation by admin', get_class($this)),
