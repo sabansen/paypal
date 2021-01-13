@@ -23,29 +23,39 @@
 *
 *}
 
-{extends file='./admin.tpl'}
+{if isset($isModeSandbox) && $isModeSandbox}
+  <style>
+    .page-head {
+      background-color: #2D489A !important;
+    }
 
-{block name='content'}
-    {if $showPsCheckoutInfo}
-        {include './_partials/messages/prestashopCheckoutInfo.tpl'}
-    {/if}
+    .bootstrap .page-head .toolbarBox .btn-toolbar .toolbar_btn i {
+      color: #fff !important;
+    }
 
-    {if $showRestApiIntegrationMessage}
-        {include './_partials/messages/restApiIntegrationMessage.tpl'}
-    {/if}
+    .bootstrap .page-head ul.breadcrumb {
+      color: #fff !important;
+    }
 
-    {if isset($need_rounding) && $need_rounding}
-        {include './_partials/messages/roundingSettingsMessage.tpl'}
-    {/if}
+    .bootstrap .page-head ul.page-breadcrumb li:before {
+      color: #fff !important;
+    }
 
-    {include './_partials/headerLogo.tpl'}
+    .bootstrap .page-head ul.page-breadcrumb li a {
+      color: #fff !important;
+    }
 
-    {if isset($formBehavior)}
-        {$formBehavior nofilter} {* the variable contains html code *}
-    {/if}
+    .page-head .wrapper h1 {
+      color: #fff !important;
+    }
 
-    {if isset($formAdvanced)}
-        {$formAdvanced nofilter} {* the variable contains html code *}
-    {/if}
-{/block}
+    .bootstrap .page-head .toolbarBox .btn-toolbar .toolbar_btn {
+      color: #fff !important;
+    }
+
+
+  </style>
+{/if}
+
+{block name='content'}{/block}
 

@@ -23,42 +23,47 @@
 *
 *}
 
-{if $showPsCheckoutInfo}
-    {include './_partials/messages/prestashopCheckoutInfo.tpl'}
-{/if}
+{extends file='./admin.tpl'}
 
-{if $showRestApiIntegrationMessage}
-    {include './_partials/messages/restApiIntegrationMessage.tpl'}
-{/if}
-
-{if isset($need_rounding) && $need_rounding}
-  {include './_partials/messages/roundingSettingsMessage.tpl'}
-{/if}
-
-{include './_partials/headerLogo.tpl'}
-
-<div class="pp__flex">
-    {if isset($formAccountSettings)}
-      <div class="pp__flex-item-1 pp__mr-1 stretchHeightForm">
-          {$formAccountSettings nofilter}{* the variable contains html code *}
-      </div>
+{block name='content'}
+    {if $showPsCheckoutInfo}
+        {include './_partials/messages/prestashopCheckoutInfo.tpl'}
     {/if}
 
-    {if isset($formEnvironmentSettings)}
-      <div class="pp__flex-item-1 pp__mr-1 stretchHeightForm">
-          {$formEnvironmentSettings nofilter}{* the variable contains html code *}
-      </div>
+    {if $showRestApiIntegrationMessage}
+        {include './_partials/messages/restApiIntegrationMessage.tpl'}
     {/if}
 
-    {if isset($formPaymentSettings)}
-      <div class="pp__flex-item-1 pp__mr-1 stretchHeightForm">
-          {$formPaymentSettings nofilter}{* the variable contains html code *}
-      </div>
+    {if isset($need_rounding) && $need_rounding}
+        {include './_partials/messages/roundingSettingsMessage.tpl'}
     {/if}
 
-    {if isset($formStatus)}
-      <div class="pp__flex-item-1 stretchHeightForm">
-          {$formStatus nofilter}{* the variable contains html code *}
-      </div>
-    {/if}
-</div>
+    {include './_partials/headerLogo.tpl'}
+
+  <div class="pp__flex">
+      {if isset($formAccountSettings)}
+        <div class="pp__flex-item-1 pp__mr-1 stretchHeightForm">
+            {$formAccountSettings nofilter}{* the variable contains html code *}
+        </div>
+      {/if}
+
+      {if isset($formEnvironmentSettings)}
+        <div class="pp__flex-item-1 pp__mr-1 stretchHeightForm">
+            {$formEnvironmentSettings nofilter}{* the variable contains html code *}
+        </div>
+      {/if}
+
+      {if isset($formPaymentSettings)}
+        <div class="pp__flex-item-1 pp__mr-1 stretchHeightForm">
+            {$formPaymentSettings nofilter}{* the variable contains html code *}
+        </div>
+      {/if}
+
+      {if isset($formStatus)}
+        <div class="pp__flex-item-1 stretchHeightForm">
+            {$formStatus nofilter}{* the variable contains html code *}
+        </div>
+      {/if}
+  </div>
+{/block}
+

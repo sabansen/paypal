@@ -73,6 +73,7 @@ class AdminPayPalController extends \ModuleAdminController
     public function initContent()
     {
         header('Clear-Site-Data: "cache"');
+        $method = AbstractMethodPaypal::load();
 
         if ((int)\Configuration::get('PAYPAL_SANDBOX') == 1) {
             $message = $this->module->l('Your PayPal account is currently configured to accept payments on Sandbox.', 'AdminPayPalController');
@@ -82,7 +83,6 @@ class AdminPayPalController extends \ModuleAdminController
         }
 
         if ((int)\Configuration::get('PAYPAL_NEED_CHECK_CREDENTIALS')) {
-            $method = AbstractMethodPaypal::load();
             $method->checkCredentials();
             \Configuration::updateValue('PAYPAL_NEED_CHECK_CREDENTIALS', 0);
         }
@@ -106,6 +106,7 @@ class AdminPayPalController extends \ModuleAdminController
             'showRestApiIntegrationMessage' => $this->isShowRestApiIntegrationMessage(),
             'psVersion' => _PS_VERSION_,
             'need_rounding' => $need_rounding,
+            'isModeSandbox' => $method->isSandbox()
         ]);
     }
 
