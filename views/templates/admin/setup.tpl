@@ -43,7 +43,23 @@
   <div class="pp__flex">
       {if isset($formAccountSettings)}
         <div class="pp__flex-item-1 pp__mr-1 stretchHeightForm">
-            {$formAccountSettings nofilter}{* the variable contains html code *}
+            {if isset($country_iso) && in_array($country_iso, ['MX', 'BR', 'IN', 'JP'])}
+              <div>
+                  {$formAccountSettings nofilter}{* the variable contains html code *}
+              </div>
+
+              <div>
+                  {if isset($formPaymentSettings)}
+                    <div>
+                        {$formPaymentSettings nofilter}{* the variable contains html code *}
+                    </div>
+                  {/if}
+              </div>
+
+            {else}
+                {$formAccountSettings nofilter}{* the variable contains html code *}
+            {/if}
+
         </div>
       {/if}
 
@@ -53,14 +69,16 @@
         </div>
       {/if}
 
-      {if isset($formPaymentSettings)}
-        <div class="pp__flex-item-1 pp__mr-1 stretchHeightForm">
-            {$formPaymentSettings nofilter}{* the variable contains html code *}
-        </div>
+      {if isset($country_iso) === false || false === in_array($country_iso, ['MX', 'BR', 'IN', 'JP'])}
+          {if isset($formPaymentSettings)}
+            <div class="pp__flex-item-1 pp__mr-1 stretchHeightForm">
+                {$formPaymentSettings nofilter}{* the variable contains html code *}
+            </div>
+          {/if}
       {/if}
 
       {if isset($formStatus)}
-        <div class="pp__flex-item-1 stretchHeightForm">
+        <div class="pp__flex-item-1 {if false === isset($country_iso) || false === in_array($country_iso, ['MX', 'BR', 'IN', 'JP'])}stretchHeightForm{/if}">
             {$formStatus nofilter}{* the variable contains html code *}
         </div>
       {/if}

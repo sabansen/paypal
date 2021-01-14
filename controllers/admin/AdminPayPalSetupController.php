@@ -79,7 +79,10 @@ class AdminPayPalSetupController extends AdminPayPalController
             $this->warnings[] = $this->context->smarty->fetch($this->getTemplatePath() . '_partials/messages/forPayPalPlusUsers.tpl');
         }
 
-        $tpl_vars = array();
+        $countryDefault = new Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
+        $tpl_vars = array(
+            'country_iso' => $countryDefault->iso_code
+        );
         $this->initAccountSettingsBlock();
         $formAccountSettings = $this->renderForm();
         $this->clearFieldsForm();
