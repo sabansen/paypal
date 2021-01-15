@@ -89,7 +89,7 @@ abstract class ShortcutAbstract
         }
 
         $JSscripts['paypal-lib'] = $this->method->getUrlJsSdkLib();
-        $JSscripts['shortcut'] = '/modules/' . $this->module->name . '/views/js/shortcut.js?v=' . $this->module->version;
+        $JSscripts['shortcut'] = __PS_BASE_URI__ . 'modules/' . $this->module->name . '/views/js/shortcut.js?v=' . $this->module->version;
 
         return $JSscripts;
     }
