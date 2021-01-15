@@ -220,6 +220,7 @@ class PaypalOrderCreateRequest extends RequestAbstractMB
         $this->_getProductsList($currency);
         $this->_getDiscountsList($currency);
         $this->_getGiftWrapping($currency);
+        $this->_getHandling($currency);
         $this->_getPaymentValues($currency);
     }
 
@@ -257,6 +258,32 @@ class PaypalOrderCreateRequest extends RequestAbstractMB
 
             $this->_items[] = $discountItem;
             $this->_itemTotalValue += (-1 * $totalDiscounts);
+        }
+    }
+
+    protected function _getHandling($currency)
+    {
+        $discounts = Context::getContext()->cart->getCartRules();
+
+        if (empty($discounts)) {
+            return;
+        }
+
+        $module = Module::getInstanceByName($this->method->name);
+
+        foreach ($discounts as $discount) {
+            if ($discount['value_real'] < 0) {
+                $handlingValue = abs($this->method->formatPrice($discount['value_real']));
+                $handlingItem = new Item();
+                $handlingItem->setName($module->l('Handling', get_class($this)))
+                    ->setCurrency($currency)
+                    ->setQuantity(1)
+                    ->setSku('handling')
+                    ->setPrice($handlingValue);
+
+                $this->_items[] = $handlingItem;
+                $this->_itemTotalValue += $handlingValue;
+            }
         }
     }
 

@@ -233,6 +233,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
         $shippingTotal = $this->method->formatPrice($cartSummary['total_shipping']);
         $subTotalTax = 0;
         $discountTotal = $this->method->formatPrice($cartSummary['total_discounts']);
+        $handling = $this->getHandling($currency);
 
         foreach ($items as $item) {
             $subTotalExcl += (float)$item['unit_amount']['value'] * (float)$item['quantity'];
@@ -242,7 +243,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
         $subTotalExcl = $this->method->formatPrice($subTotalExcl, null, false);
         $subTotalTax = $this->method->formatPrice($subTotalTax, null, false);
         $totalOrder = $this->method->formatPrice(
-            $subTotalExcl + $subTotalTax + $shippingTotal - $discountTotal,
+            $subTotalExcl + $subTotalTax + $shippingTotal + $handling - $discountTotal,
             null,
             false
         );
@@ -267,6 +268,10 @@ class PaypalOrderCreateRequest extends RequestAbstract
                     'discount' => array(
                         'currency_code' => $currency,
                         'value' => $discountTotal
+                    ),
+                    'handling' => array(
+                        'currency_code' => $currency,
+                        'value' => $handling
                     )
                 ),
         );
@@ -400,5 +405,23 @@ class PaypalOrderCreateRequest extends RequestAbstract
         }
 
         return (bool) $this->method->getShortCut();
+    }
+
+    protected function getHandling($currency)
+    {
+        $handling = 0;
+        $discounts = $this->context->cart->getCartRules();
+
+        if (empty($discounts)) {
+            return $handling;
+        }
+
+        foreach ($discounts as $discount) {
+            if ($discount['value_real'] < 0) {
+                $handling += abs($this->method->formatPrice($discount['value_real']));
+            }
+        }
+
+        return $handling;
     }
 }
