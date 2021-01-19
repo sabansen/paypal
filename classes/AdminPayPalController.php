@@ -375,5 +375,6 @@ class AdminPayPalController extends \ModuleAdminController
         ];
 
         parent::initPageHeaderToolbar();
+        $this->context->smarty->clearAssign('help_link');
     }
 }
