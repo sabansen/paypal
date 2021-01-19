@@ -160,3 +160,20 @@
 .icon-lightbulb::before {
   content: '\f0eb' !important;
 }
+
+@media (max-width:768px) {
+  .setup-blocks {
+    flex-direction: column;
+  }
+
+  .block-preview-button-context {
+    flex-direction: column;
+
+    [config-block] {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 10px 0;
+    }
+  }
+}

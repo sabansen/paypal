@@ -25,7 +25,7 @@
   *}
 
 <div class="block-preview-button-context pp__flex">
-	<div class="pp__py-2 pp__px-1">
+	<div config-block class="pp__py-2 pp__px-1">
 		<div class="pp__mb-2">
 			<input type="checkbox" {if isset($paypal_express_checkout_shortcut_cart) &&
 				$paypal_express_checkout_shortcut_cart}checked{/if} name="paypal_express_checkout_shortcut_cart" value="1"
@@ -46,7 +46,7 @@
 		<img src="{$moduleDir|addslashes}paypal/views/img/cart_page_button.png" class="img-responsive" alt="cart_page">
 	</div>
 
-	<div class="pp__py-2 pp__px-1">
+	<div config-block class="pp__py-2 pp__px-1">
 		<div class="pp__mb-2">
 			<input type="checkbox" {if isset($paypal_express_checkout_shortcut) &&
 				$paypal_express_checkout_shortcut}checked{/if} name="paypal_express_checkout_shortcut"
@@ -73,7 +73,7 @@
 		<img src="{$moduleDir|addslashes}paypal/views/img/product_page_button.png" alt="product_page_button">
 	</div>
 
-  <div class="pp__py-2 pp__px-1">
+  <div config-block class="pp__py-2 pp__px-1">
     <div class="pp__mb-2">
       <input type="checkbox" {if isset($paypal_express_checkout_shortcut_signup) &&
       $paypal_express_checkout_shortcut_signup}checked{/if} name="paypal_express_checkout_shortcut_signup"

@@ -40,7 +40,7 @@
 
     {include './_partials/headerLogo.tpl'}
 
-  <div class="pp__flex">
+  <div class="pp__flex setup-blocks">
       {if isset($formAccountSettings)}
         <div class="pp__flex-item-1 pp__mr-1 stretchHeightForm">
             {if isset($country_iso) && in_array($country_iso, ['MX', 'BR', 'IN', 'JP'])}
