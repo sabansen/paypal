@@ -66,6 +66,7 @@
           var btn = e.target;
           var hint = btn.closest('[field]').querySelector('[hint-wrap]');
           hint.style.display = hint.style.display == 'none' ? 'block' : 'none';
+          btn.textContent = btn.textContent == '?' ? 'X' : '?';
       } catch (exception) {
           console.error(exception);
       }
