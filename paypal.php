@@ -270,6 +270,15 @@ class PayPal extends \PaymentModule implements WidgetInterface
         ),
         array(
             'name' => array(
+                'en' => 'Payment in 4x',
+                'fr' => 'Paiement en 4x',
+            ),
+            'class_name' => 'AdminPayPalInstallment',
+            'parent_class_name' => 'AdminPayPalConfiguration',
+            'visible' => true,
+        ),
+        array(
+            'name' => array(
                 'en' => 'Help',
                 'fr' => 'Aide',
                 'pt' => 'Ajuda',
