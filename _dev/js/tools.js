@@ -48,4 +48,13 @@ export const Tools = {
 
     formGroup.show();
   },
+
+  isVisible(el) {
+    const style = window.getComputedStyle(el);
+    return  style.width !== "0" &&
+      style.height !== "0" &&
+      style.opacity !== "0" &&
+      style.display!=='none' &&
+      style.visibility!== 'hidden';
+  }
 }

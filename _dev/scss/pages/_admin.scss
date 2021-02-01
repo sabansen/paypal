@@ -161,6 +161,14 @@
   content: '\f0eb' !important;
 }
 
+[installment-banner-style-section] {
+  flex-basis: 45%;
+}
+
+[installment-preview-container] {
+  flex-basis: 45%;
+}
+
 @media (max-width:768px) {
   .setup-blocks {
     flex-direction: column;

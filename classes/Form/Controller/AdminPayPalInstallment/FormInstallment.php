@@ -32,6 +32,8 @@ use \Module;
 use \Configuration;
 use \Tools;
 use \Context;
+use PaypalAddons\classes\Form\Field\Select;
+use PaypalAddons\classes\Form\Field\SelectOption;
 
 class FormInstallment implements FormInterface
 {
@@ -51,6 +53,8 @@ class FormInstallment implements FormInterface
     const CART_PAGE = 'PAYPAL_INSTALLMENT_CART_PAGE';
 
     const CATEGORY_PAGE = 'PAYPAL_INSTALLMENT_CATEGORY_PAGE';
+
+    const COLOR = 'PAYPAL_INSTALLMENT_COLOR';
 
     public function __construct()
     {
@@ -113,6 +117,20 @@ class FormInstallment implements FormInterface
                         )
                     ),
                 ),
+                array(
+                    'type' => 'html',
+                    'label' => $this->module->l('Widget code', $this->className),
+                    'hint' => $this->module->l('By default, PayPal 4x banner is displayed on your web site via PrestaShop native hook.
+If you choose to use widgets, you will be able to copy widget code and insert it wherever you want in the web site template.', $this->className),
+                    'name' => '',
+                    'html_content' => $this->getWidgetField()
+                ),
+                array(
+                    'type' => 'html',
+                    'html_content' => $this->getBannerStyleSection(),
+                    'name' => '',
+                    'label' => $this->module->l('The styles for the home page and category pages', $this->className),
+                )
             ),
             'submit' => array(
                 'title' => $this->module->l('Save', $this->className),
@@ -155,6 +173,9 @@ class FormInstallment implements FormInterface
         $return &= Configuration::updateValue(self::CATEGORY_PAGE, (int)Tools::getValue(self::CATEGORY_PAGE));
     }
 
+    /**
+     * @return string
+     */
     protected function getHtmlBlockPageDisplayingSetting()
     {
         Context::getContext()->smarty->assign([
@@ -164,5 +185,36 @@ class FormInstallment implements FormInterface
             self::CART_PAGE => Configuration::get(self::CART_PAGE)
         ]);
         return Context::getContext()->smarty->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/_partials/installmentPageDisplayingSetting.tpl');
+    }
+
+    /**
+     * @return string
+     */
+    protected function getWidgetField()
+    {
+        return Context::getContext()->smarty
+            ->assign('widgetCode', '{widget name=\'paypal\' action=\'banner4x\'}')
+            ->assign('confName', 'installmentWidgetCode')
+            ->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/_partials/form/fields/widgetCode.tpl');
+    }
+
+    protected function getBannerStyleSection()
+    {
+        $colorSelect = new Select(
+            self::COLOR,
+            [
+                new SelectOption('blue', $this->module->l('blue', $this->className)),
+                new SelectOption('black', $this->module->l('black', $this->className)),
+                new SelectOption('white', $this->module->l('white', $this->className)),
+                new SelectOption('gray', $this->module->l('gray', $this->className)),
+                new SelectOption('monochrome', $this->module->l('monochrome', $this->className)),
+                new SelectOption('grayscale', $this->module->l('grayscale', $this->className)),
+            ]
+        );
+
+        return Context::getContext()->smarty
+            ->assign('colorSelect', $colorSelect)
+            ->assign('banner', null)
+            ->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/_partials/paypalBanner/bannerStyleSection.tpl');
     }
 }

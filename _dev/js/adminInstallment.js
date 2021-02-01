@@ -39,6 +39,7 @@ var InstallmentSetting = {
     const installmentEnabled = document.querySelector('input[name="PAYPAL_ENABLE_INSTALLMENT"]');
     const displayingSettings = document.querySelector('[installment-page-displaying-setting-container]');
     const advancedOptions = document.querySelector('input[name="PAYPAL_ADVANCED_OPTIONS_INSTALLMENT"]');
+    const widgetCode = document.querySelector('input[name="installmentWidgetCode"]');
 
     if (installmentEnabled.checked) {
       displayingSettings.style.display = 'block';
@@ -46,6 +47,12 @@ var InstallmentSetting = {
     } else {
       displayingSettings.style.display = 'none';
       Tools.hideConfiguration(advancedOptions.getAttribute('name'));
+    }
+
+    if (advancedOptions.checked === false || installmentEnabled.checked === false) {
+      Tools.hideConfiguration(widgetCode.getAttribute('name'));
+    } else {
+      Tools.showConfiguration(widgetCode.getAttribute('name'));
     }
   }
 
