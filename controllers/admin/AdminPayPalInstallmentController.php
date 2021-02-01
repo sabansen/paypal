@@ -28,29 +28,46 @@ require_once _PS_MODULE_DIR_ . 'paypal/vendor/autoload.php';
 
 use PaypalAddons\classes\AdminPayPalController;
 use PaypalAddons\classes\AbstractMethodPaypal;
-use PaypalAddons\classes\Shortcut\Form\Definition\CustomizeButtonStyleSectionDefinition;
-use PaypalAddons\classes\Shortcut\Form\Field\InputChain;
-use PaypalAddons\classes\Shortcut\Form\Field\Select;
-use PaypalAddons\classes\Shortcut\Form\Field\SelectOption;
-use PaypalAddons\classes\Shortcut\Form\Field\TextInput;
-use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
-use PaypalAddons\classes\Shortcut\ShortcutPreview;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use PaypalAddons\classes\Form\FormInterface;
+use PaypalAddons\classes\Form\Controller\AdminPayPalInstallment\FormInstallment;
 
 class AdminPayPalInstallmentController extends AdminPayPalController
 {
     protected $headerToolBar = true;
 
+    /** @var array<string, FormInterface>*/
+    protected $forms;
+
     public function __construct()
     {
         parent::__construct();
+
+        $this->forms['formInstallment'] = new FormInstallment();
     }
 
     public function initContent()
     {
         parent::initContent();
 
+        $this->initFormInstallment();
+        $this->context->smarty->assign('formInstallment', $this->renderForm());
         $content = $this->context->smarty->fetch($this->getTemplatePath() . 'installment.tpl');
         $this->context->smarty->assign('content', $content);
     }
+
+    protected function initFormInstallment()
+    {
+        $this->fields_form['form']['form'] = $this->forms['formInstallment']->getFields();
+        $this->tpl_form_vars = array_merge(
+            $this->tpl_form_vars,
+            $this->forms['formInstallment']->getValues()
+        );
+    }
+
+    public function saveForm()
+    {
+        return $this->forms['formInstallment']->save();
+    }
+
 }

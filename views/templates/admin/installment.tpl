@@ -26,6 +26,12 @@
 {extends file='./admin.tpl'}
 
 {block name='content'}
-
+  <div>
+    <div>
+      {if isset($formInstallment)}
+          {$formInstallment nofilter}{* the variable contains html code *}
+      {/if}
+    </div>
+  </div>
 {/block}
 
