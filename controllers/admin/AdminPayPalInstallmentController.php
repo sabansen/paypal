@@ -54,6 +54,7 @@ class AdminPayPalInstallmentController extends AdminPayPalController
         $this->context->smarty->assign('formInstallment', $this->renderForm());
         $content = $this->context->smarty->fetch($this->getTemplatePath() . 'installment.tpl');
         $this->context->smarty->assign('content', $content);
+        $this->addJS(_PS_MODULE_DIR_ . $this->module->name . '/views/js/adminInstallment.js');
     }
 
     protected function initFormInstallment()
