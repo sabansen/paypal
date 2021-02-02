@@ -192,14 +192,13 @@ If you choose to use widgets, you will be able to copy widget code and insert it
         $colorSelect = new Select(
             ConfigurationMap::COLOR,
             [
-                new SelectOption(ConfigurationMap::COLOR_BLUE, $this->module->l('blue', $this->className)),
                 new SelectOption(ConfigurationMap::COLOR_BLACK, $this->module->l('black', $this->className)),
                 new SelectOption(ConfigurationMap::COLOR_WHITE, $this->module->l('white', $this->className)),
                 new SelectOption(ConfigurationMap::COLOR_MONOCHROME, $this->module->l('monochrome', $this->className)),
                 new SelectOption(ConfigurationMap::COLOR_GRAYSCALE, $this->module->l('grayscale', $this->className)),
             ],
             null,
-            Configuration::get(ConfigurationMap::COLOR, null, null, null, ConfigurationMap::COLOR_BLUE)
+            Configuration::get(ConfigurationMap::COLOR, null, null, null, ConfigurationMap::COLOR_BLACK)
         );
 
         return Context::getContext()->smarty

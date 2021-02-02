@@ -47,8 +47,6 @@ class ConfigurationMap
 
     const COLOR_WHITE = 'white';
 
-    const COLOR_BLUE = 'blue';
-
     const COLOR_MONOCHROME = 'monochrome';
 
     const COLOR_GRAYSCALE = 'grayscale';
