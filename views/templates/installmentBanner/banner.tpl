@@ -31,6 +31,7 @@
             data-pp-message
             data-pp-placement="{$placement}"
             data-pp-style-layout="{$layout}"
+            data-pp-style-ratio="20x1"
             {if isset($amount)}data-pp-amount="{$amount}"{/if}
             {if isset($color)}data-pp-style-color="{$color}"{/if}
     ></div>
