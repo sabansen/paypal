@@ -43,6 +43,10 @@ class ConfigurationMap
 
     const COLOR = 'PAYPAL_INSTALLMENT_COLOR';
 
+    const COLOR_BLUE = 'blue';
+
+    const COLOR_GRAY = 'gray';
+
     const COLOR_BLACK = 'black';
 
     const COLOR_WHITE = 'white';

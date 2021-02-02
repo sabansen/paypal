@@ -40,6 +40,9 @@ class Banner
     /** @var string*/
     protected $placement;
 
+    /** @var string*/
+    protected $layout;
+
     /** @var float*/
     protected $amount;
 
@@ -71,6 +74,7 @@ class Banner
         $vars = [];
         $vars['color'] = Configuration::get(ConfigurationMap::COLOR);
         $vars['placement'] = $this->getPlacement();
+        $vars['layout'] = $this->getLayout();
 
         if ($this->getAmount()) {
             $vars['amount'] = $this->getAmount();
@@ -111,6 +115,24 @@ class Banner
     public function setAmount($amount)
     {
         $this->amount = (float)$amount;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLayout()
+    {
+        return $this->layout ? $this->layout : 'flex';
+    }
+
+    /**
+     * @param string $layout
+     * @return Banner
+     */
+    public function setLayout($layout)
+    {
+        $this->layout = (string)$layout ;
         return $this;
     }
 }

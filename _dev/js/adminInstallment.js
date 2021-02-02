@@ -69,7 +69,7 @@ var InstallmentSetting = {
     const color = document.querySelector('[name="PAYPAL_INSTALLMENT_COLOR"]').value;
     document
       .querySelector('[installment-container] [data-pp-message]')
-      .setAttribute('data-pp-style-text-color', color);
+      .setAttribute('data-pp-style-color', color);
   }
 
 };
