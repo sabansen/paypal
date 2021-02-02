@@ -33,6 +33,12 @@ var InstallmentSetting = {
     document.querySelectorAll('form#pp_config_installment input').forEach((elem) => {
       elem.addEventListener('change', this.checkConfigurations);
     });
+
+    let initBannerEvent = document.createEvent('HTMLEvents');
+    initBannerEvent.initEvent('initPaypalBanner');
+    document.dispatchEvent(initBannerEvent);
+
+    document.querySelector('[name="PAYPAL_INSTALLMENT_COLOR"]').addEventListener('change', this.updateBannerTextColor)
   },
 
   checkConfigurations() {
@@ -40,6 +46,7 @@ var InstallmentSetting = {
     const displayingSettings = document.querySelector('[installment-page-displaying-setting-container]');
     const advancedOptions = document.querySelector('input[name="PAYPAL_ADVANCED_OPTIONS_INSTALLMENT"]');
     const widgetCode = document.querySelector('input[name="installmentWidgetCode"]');
+    const colorConf = document.querySelector('[name="PAYPAL_INSTALLMENT_COLOR"]');
 
     if (installmentEnabled.checked) {
       displayingSettings.style.display = 'block';
@@ -51,9 +58,18 @@ var InstallmentSetting = {
 
     if (advancedOptions.checked === false || installmentEnabled.checked === false) {
       Tools.hideConfiguration(widgetCode.getAttribute('name'));
+      Tools.hideConfiguration(colorConf.getAttribute('name'));
     } else {
       Tools.showConfiguration(widgetCode.getAttribute('name'));
+      Tools.showConfiguration(colorConf.getAttribute('name'));
     }
+  },
+
+  updateBannerTextColor() {
+    const color = document.querySelector('[name="PAYPAL_INSTALLMENT_COLOR"]').value;
+    document
+      .querySelector('[installment-container] [data-pp-message]')
+      .setAttribute('data-pp-style-text-color', color);
   }
 
 };

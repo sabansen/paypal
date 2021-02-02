@@ -23,16 +23,9 @@
 *
 *}
 
-<div class="pp__flex pp__justify-content-between">
-  <div installment-banner-style-section>
-    {if isset($colorSelect)}
-        {$colorSelect->render() nofilter}
-    {/if}
-  </div>
+<script>
+    {foreach from=$JSvars key=varName item=varValue}
+      var {$varName} = {$varValue|json_encode nofilter};
+    {/foreach}
+</script>
 
-  <div installment-preview-container>
-    {if isset($banner)}
-        {$banner->render() nofilter}
-    {/if}
-  </div>
-</div>

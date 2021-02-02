@@ -897,6 +897,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
             true
         );
         $colorSelect->setAfterSelectContent(Context::getContext()->smarty->fetch($this->getTemplatePath() . '_partials/form/colorDescriptions.tpl'));
+        $colorSelect->setCss('pp__my-5 pp__label');
 
         $configurations[] = $colorSelect;
 
@@ -919,6 +920,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
             $shape,
             ShortcutConfiguration::CONFIGURATION_TYPE_SHAPE
         );
+        $shapeSelect->setCss('pp__my-5 pp__label');
 
         $configurations[] = $shapeSelect;
 
@@ -973,6 +975,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
             $label,
             ShortcutConfiguration::CONFIGURATION_TYPE_LABEL
         );
+        $labelSelect->setCss('pp__my-5 pp__label');
 
         $configurations[] = $labelSelect;
 

@@ -340,4 +340,15 @@ class MethodEC extends AbstractMethodPaypal
 
         return 'LOGIN';
     }
+
+    /**
+     * @return string
+     */
+    public function getInstallmentLib()
+    {
+        return sprintf(
+            'https://www.paypal.com/sdk/js?client-id=%s&currency=EUR&components=messages',
+            $this->getClientId()
+        );
+    }
 }

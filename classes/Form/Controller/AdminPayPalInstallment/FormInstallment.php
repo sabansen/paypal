@@ -30,10 +30,12 @@ namespace PaypalAddons\classes\Form\Controller\AdminPayPalInstallment;
 use PaypalAddons\classes\Form\FormInterface;
 use \Module;
 use \Configuration;
+use PaypalAddons\classes\InstallmentBanner\Banner;
 use \Tools;
 use \Context;
 use PaypalAddons\classes\Form\Field\Select;
 use PaypalAddons\classes\Form\Field\SelectOption;
+use PaypalAddons\classes\InstallmentBanner\ConfigurationMap;
 
 class FormInstallment implements FormInterface
 {
@@ -41,20 +43,6 @@ class FormInstallment implements FormInterface
     protected $module;
 
     protected $className;
-
-    const ENABLE_INSTALLMENT = 'PAYPAL_ENABLE_INSTALLMENT';
-
-    const ADVANCED_OPTIONS_INSTALLMENT = 'PAYPAL_ADVANCED_OPTIONS_INSTALLMENT';
-
-    const PRODUCT_PAGE = 'PAYPAL_INSTALLMENT_PRODUCT_PAGE';
-
-    const HOME_PAGE = 'PAYPAL_INSTALLMENT_HOME_PAGE';
-
-    const CART_PAGE = 'PAYPAL_INSTALLMENT_CART_PAGE';
-
-    const CATEGORY_PAGE = 'PAYPAL_INSTALLMENT_CATEGORY_PAGE';
-
-    const COLOR = 'PAYPAL_INSTALLMENT_COLOR';
 
     public function __construct()
     {
@@ -78,16 +66,16 @@ class FormInstallment implements FormInterface
                 array(
                     'type' => 'switch',
                     'label' => $this->module->l('Enable the display of 4x banners', $this->className),
-                    'name' => self::ENABLE_INSTALLMENT,
+                    'name' => ConfigurationMap::ENABLE_INSTALLMENT,
                     'is_bool' => true,
                     'values' => array(
                         array(
-                            'id' => self::ENABLE_INSTALLMENT . '_on',
+                            'id' => ConfigurationMap::ENABLE_INSTALLMENT . '_on',
                             'value' => 1,
                             'label' => $this->module->l('Enabled', $this->className),
                         ),
                         array(
-                            'id' => self::ENABLE_INSTALLMENT . '_off',
+                            'id' => ConfigurationMap::ENABLE_INSTALLMENT . '_off',
                             'value' => 0,
                             'label' => $this->module->l('Disabled', $this->className),
                         )
@@ -102,16 +90,16 @@ class FormInstallment implements FormInterface
                 array(
                     'type' => 'switch',
                     'label' => $this->module->l('Advanced options', $this->className),
-                    'name' => self::ADVANCED_OPTIONS_INSTALLMENT,
+                    'name' => ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT,
                     'is_bool' => true,
                     'values' => array(
                         array(
-                            'id' => self::ADVANCED_OPTIONS_INSTALLMENT . '_on',
+                            'id' => ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT . '_on',
                             'value' => 1,
                             'label' => $this->module->l('Enabled', $this->className),
                         ),
                         array(
-                            'id' => self::ADVANCED_OPTIONS_INSTALLMENT . '_off',
+                            'id' => ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT . '_off',
                             'value' => 0,
                             'label' => $this->module->l('Disabled', $this->className),
                         )
@@ -149,8 +137,8 @@ If you choose to use widgets, you will be able to copy widget code and insert it
     public function getValues()
     {
         return [
-            self::ENABLE_INSTALLMENT => (int)Configuration::get(self::ENABLE_INSTALLMENT),
-            self::ADVANCED_OPTIONS_INSTALLMENT => (int)Configuration::get(self::ADVANCED_OPTIONS_INSTALLMENT)
+            ConfigurationMap::ENABLE_INSTALLMENT => (int)Configuration::get(ConfigurationMap::ENABLE_INSTALLMENT),
+            ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT => (int)Configuration::get(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT)
         ];
     }
 
@@ -165,12 +153,13 @@ If you choose to use widgets, you will be able to copy widget code and insert it
             return $return;
         }
 
-        $return &= Configuration::updateValue(self::ENABLE_INSTALLMENT, (int)Tools::getValue(self::ENABLE_INSTALLMENT));
-        $return &= Configuration::updateValue(self::ADVANCED_OPTIONS_INSTALLMENT, (int)Tools::getValue(self::ADVANCED_OPTIONS_INSTALLMENT));
-        $return &= Configuration::updateValue(self::PRODUCT_PAGE, (int)Tools::getValue(self::PRODUCT_PAGE));
-        $return &= Configuration::updateValue(self::CART_PAGE, (int)Tools::getValue(self::CART_PAGE));
-        $return &= Configuration::updateValue(self::HOME_PAGE, (int)Tools::getValue(self::HOME_PAGE));
-        $return &= Configuration::updateValue(self::CATEGORY_PAGE, (int)Tools::getValue(self::CATEGORY_PAGE));
+        $return &= Configuration::updateValue(ConfigurationMap::ENABLE_INSTALLMENT, (int)Tools::getValue(ConfigurationMap::ENABLE_INSTALLMENT));
+        $return &= Configuration::updateValue(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT, (int)Tools::getValue(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT));
+        $return &= Configuration::updateValue(ConfigurationMap::PRODUCT_PAGE, (int)Tools::getValue(ConfigurationMap::PRODUCT_PAGE));
+        $return &= Configuration::updateValue(ConfigurationMap::CART_PAGE, (int)Tools::getValue(ConfigurationMap::CART_PAGE));
+        $return &= Configuration::updateValue(ConfigurationMap::HOME_PAGE, (int)Tools::getValue(ConfigurationMap::HOME_PAGE));
+        $return &= Configuration::updateValue(ConfigurationMap::CATEGORY_PAGE, (int)Tools::getValue(ConfigurationMap::CATEGORY_PAGE));
+        $return &= Configuration::updateValue(ConfigurationMap::COLOR, Tools::getValue(ConfigurationMap::COLOR));
     }
 
     /**
@@ -179,10 +168,10 @@ If you choose to use widgets, you will be able to copy widget code and insert it
     protected function getHtmlBlockPageDisplayingSetting()
     {
         Context::getContext()->smarty->assign([
-            self::PRODUCT_PAGE => Configuration::get(self::PRODUCT_PAGE),
-            self::HOME_PAGE => Configuration::get(self::HOME_PAGE),
-            self::CATEGORY_PAGE => Configuration::get(self::CATEGORY_PAGE),
-            self::CART_PAGE => Configuration::get(self::CART_PAGE)
+            ConfigurationMap::PRODUCT_PAGE => Configuration::get(ConfigurationMap::PRODUCT_PAGE),
+            ConfigurationMap::HOME_PAGE => Configuration::get(ConfigurationMap::HOME_PAGE),
+            ConfigurationMap::CATEGORY_PAGE => Configuration::get(ConfigurationMap::CATEGORY_PAGE),
+            ConfigurationMap::CART_PAGE => Configuration::get(ConfigurationMap::CART_PAGE)
         ]);
         return Context::getContext()->smarty->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/_partials/installmentPageDisplayingSetting.tpl');
     }
@@ -201,20 +190,21 @@ If you choose to use widgets, you will be able to copy widget code and insert it
     protected function getBannerStyleSection()
     {
         $colorSelect = new Select(
-            self::COLOR,
+            ConfigurationMap::COLOR,
             [
-                new SelectOption('blue', $this->module->l('blue', $this->className)),
-                new SelectOption('black', $this->module->l('black', $this->className)),
-                new SelectOption('white', $this->module->l('white', $this->className)),
-                new SelectOption('gray', $this->module->l('gray', $this->className)),
-                new SelectOption('monochrome', $this->module->l('monochrome', $this->className)),
-                new SelectOption('grayscale', $this->module->l('grayscale', $this->className)),
-            ]
+                new SelectOption(ConfigurationMap::COLOR_BLUE, $this->module->l('blue', $this->className)),
+                new SelectOption(ConfigurationMap::COLOR_BLACK, $this->module->l('black', $this->className)),
+                new SelectOption(ConfigurationMap::COLOR_WHITE, $this->module->l('white', $this->className)),
+                new SelectOption(ConfigurationMap::COLOR_MONOCHROME, $this->module->l('monochrome', $this->className)),
+                new SelectOption(ConfigurationMap::COLOR_GRAYSCALE, $this->module->l('grayscale', $this->className)),
+            ],
+            null,
+            Configuration::get(ConfigurationMap::COLOR, null, null, null, ConfigurationMap::COLOR_BLUE)
         );
 
         return Context::getContext()->smarty
             ->assign('colorSelect', $colorSelect)
-            ->assign('banner', null)
+            ->assign('banner', new Banner())
             ->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/_partials/paypalBanner/bannerStyleSection.tpl');
     }
 }
