@@ -35,8 +35,6 @@
             {if isset($amount)}data-pp-amount="{$amount}"{/if}
             {if isset($color)}data-pp-style-color="{$color}"{/if}
     ></div>
-
-{*    <div data-pp-message data-pp-placement="product" data-pp-amount="500.00" data-pp-style-layout="text" data-pp-style-text-color="monochrome"></div>*}
   </div>
 
   <div script-container>
