@@ -38,6 +38,7 @@ use PaypalPPBTlib\Extensions\AbstractModuleExtension;
 use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\InstallmentBanner\BannerManager;
 
 define('BT_CARD_PAYMENT', 'card-braintree');
 define('BT_PAYPAL_PAYMENT', 'paypal-braintree');
@@ -196,6 +197,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         'displayAdminOrderTabLink',
         'displayAdminOrderTabContent',
         'displayOrderPreview',
+        'displayNavFullWidth',
         ShortcutConfiguration::HOOK_REASSURANCE,
         ShortcutConfiguration::HOOK_AFTER_PRODUCT_ADDITIONAL_INFO,
         ShortcutConfiguration::HOOK_AFTER_PRODUCT_THUMBS,
@@ -634,6 +636,23 @@ class PayPal extends \PaymentModule implements WidgetInterface
             'sourcePage' => ShortcutConfiguration::SOURCE_PAGE_SIGNUP,
             'hook' => ShortcutConfiguration::HOOK_PERSONAL_INFORMATION_TOP
         ]);
+    }
+
+    public function hookdisplayNavFullWidth()
+    {
+        $bannerManager = new BannerManager();
+
+        if ($bannerManager->isBannerAvailable() === false) {
+            return '';
+        }
+
+        if ($this->context->controller instanceof IndexController
+            || $this->context->controller instanceof CategoryController) {
+
+            return $bannerManager->renderForHomePage();
+        }
+
+        return '';
     }
 
     public function getContent()

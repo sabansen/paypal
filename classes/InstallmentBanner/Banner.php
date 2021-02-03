@@ -46,9 +46,13 @@ class Banner
     /** @var float*/
     protected $amount;
 
+    /** @var string*/
+    protected $template;
+
     public function __construct()
     {
         $this->module = Module::getInstanceByName('paypal');
+        $this->setTemplate(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/installmentBanner/banner.tpl');
     }
 
     public function render()
@@ -56,7 +60,7 @@ class Banner
         return Context::getContext()->smarty
             ->assign('JSvars', $this->getJsVars())
             ->assign($this->getTplVars())
-            ->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/installmentBanner/banner.tpl');
+            ->fetch($this->getTemplate());
     }
 
     protected function getJsVars()
@@ -64,7 +68,10 @@ class Banner
         $vars = [];
         /** @var \MethodEC $methodEC*/
         $methodEC = AbstractMethodPaypal::load('EC');
-        $vars['installmentLib'] = $methodEC->getInstallmentLib();
+        $vars['installmentLib'] = sprintf(
+            'https://www.paypal.com/sdk/js?client-id=%s&currency=EUR&components=messages',
+            $methodEC->getClientId()
+        );
 
         return $vars;
     }
@@ -133,6 +140,24 @@ class Banner
     public function setLayout($layout)
     {
         $this->layout = (string)$layout ;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTemplate()
+    {
+        return $this->template;
+    }
+
+    /**
+     * @param string $template
+     * @return Banner
+     */
+    public function setTemplate($template)
+    {
+        $this->template = $template;
         return $this;
     }
 }
