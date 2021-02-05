@@ -34,11 +34,22 @@ var InstallmentSetting = {
       elem.addEventListener('change', this.checkConfigurations);
     });
 
-    let initBannerEvent = document.createEvent('HTMLEvents');
-    initBannerEvent.initEvent('initPaypalBanner');
-    document.dispatchEvent(initBannerEvent);
+    window.addEventListener('load', this.initBanner);
 
-    document.querySelector('[name="PAYPAL_INSTALLMENT_COLOR"]').addEventListener('change', this.updateBannerTextColor)
+    document.querySelector('[name="PAYPAL_INSTALLMENT_COLOR"]').addEventListener('change', this.updateBannerColor)
+  },
+
+  initBanner() {
+    const color = InstallmentSetting.getColorBanner();
+
+    InstallmentSetting.banner = new Banner({
+      container: '[paypal-banner-message]',
+      layout: 'flex',
+      placement: 'home',
+      color: color
+    });
+
+    InstallmentSetting.banner.initBanner();
   },
 
   checkConfigurations() {
@@ -65,11 +76,19 @@ var InstallmentSetting = {
     }
   },
 
-  updateBannerTextColor() {
+  updateBannerColor() {
+    InstallmentSetting.banner.color = InstallmentSetting.getColorBanner();
+    InstallmentSetting.banner.initBanner();
+  },
+
+  getColorBanner() {
     const color = document.querySelector('[name="PAYPAL_INSTALLMENT_COLOR"]').value;
-    document
-      .querySelector('[installment-container] [data-pp-message]')
-      .setAttribute('data-pp-style-color', color);
+
+    if (typeof color == 'undefined') {
+      return 'bleu';
+    }
+
+    return color;
   }
 
 };

@@ -27,31 +27,55 @@
 
 <div installment-container>
   <div banner-container>
-    <div
-            data-pp-message
-            data-pp-placement="{$placement}"
-            data-pp-style-layout="{$layout}"
-            data-pp-style-ratio="20x1"
-            {if isset($amount)}data-pp-amount="{$amount}"{/if}
-            {if isset($color)}data-pp-style-color="{$color}"{/if}
-    ></div>
-  </div>
-
-  <div script-container>
-
+    <div paypal-banner-message></div>
   </div>
 </div>
 
 <script>
-  var Banner = {
-      init: function() {
-          var script = document.createElement('script');
-          var scriptContainer = document.querySelector('[installment-container] [script-container]');
+  var Banner = function (conf) {
 
-          script.setAttribute('src', installmentLib);
-          scriptContainer.innerHTML = '';
-          scriptContainer.appendChild(script);
+      this.placement = typeof conf.placement != 'undefined' ? conf.placement : null;
+
+      this.amount = typeof conf.amount != 'undefined' ? conf.amount : null;
+
+      this.layout = typeof conf.layout != 'undefined' ? conf.layout : null;
+
+      this.color = typeof conf.color != 'undefined' ? conf.color : null;
+
+      this.container = typeof conf.container != 'undefined' ? conf.container : null;
+  };
+
+  Banner.prototype.initBanner = function() {
+      if (typeof paypal == 'undefined') {
+          setTimeout(this.initBanner.bind(this), 200);
+          return;
       }
+
+      var conf = {
+          buyerCountry: "FR",
+          currency: "EUR",
+          style: {
+              ratio: '20x1'
+          }
+      };
+
+      if (this.placement) {
+          conf.placement = this.placement;
+      }
+
+      if (this.amount) {
+          conf.amount = this.amount;
+      }
+
+      if (this.layout) {
+          conf.style.layout = this.layout;
+      }
+
+      if (this.color && this.layout == 'flex') {
+          conf.style.color = this.color;
+      }
+
+      paypal.Messages(conf).render(this.container);
   };
 
   document.addEventListener('initPaypalBanner', Banner.init)

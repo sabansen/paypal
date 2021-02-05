@@ -49,6 +49,9 @@ class Banner
     /** @var string*/
     protected $template;
 
+    /** @var array*/
+    protected $jsVars;
+
     public function __construct()
     {
         $this->module = Module::getInstanceByName('paypal');
@@ -59,24 +62,11 @@ class Banner
     {
         return Context::getContext()->smarty
             ->assign('JSvars', $this->getJsVars())
-            ->assign($this->getTplVars())
+            ->assign('JSscripts', $this->getJS())
             ->fetch($this->getTemplate());
     }
 
     protected function getJsVars()
-    {
-        $vars = [];
-        /** @var \MethodEC $methodEC*/
-        $methodEC = AbstractMethodPaypal::load('EC');
-        $vars['installmentLib'] = sprintf(
-            'https://www.paypal.com/sdk/js?client-id=%s&currency=EUR&components=messages',
-            $methodEC->getClientId()
-        );
-
-        return $vars;
-    }
-
-    protected function getTplVars()
     {
         $vars = [];
         $vars['color'] = Configuration::get(ConfigurationMap::COLOR);
@@ -87,7 +77,24 @@ class Banner
             $vars['amount'] = $this->getAmount();
         }
 
+        if (empty($this->jsVars) === false) {
+            foreach ($this->jsVars as $name => $value) {
+                $vars[$name] = $value;
+            }
+        }
+
         return $vars;
+    }
+
+    protected function getJS()
+    {
+        $method = AbstractMethodPaypal::load();
+
+        $js = [
+            'paypal-lib' => $method->getUrlJsSdkLib()
+        ];
+
+        return $js;
     }
 
     /**
@@ -158,6 +165,21 @@ class Banner
     public function setTemplate($template)
     {
         $this->template = $template;
+        return $this;
+    }
+
+    /**
+     * @param string $name
+     * @param mixed $value
+     * @return Banner
+     */
+    public function addJsVar($name, $value)
+    {
+        if (is_array($this->jsVars) === false) {
+            $this->jsVars = [];
+        }
+
+        $this->jsVars[$name] = $value;
         return $this;
     }
 }

@@ -26,5 +26,11 @@
 {include file='./banner.tpl'}
 
 <script>
-    Banner.init();
+    var paypalBanner = new Banner({
+        color: color,
+        layout: layout,
+        placement: placement,
+        container: '[paypal-banner-message]'
+    });
+    paypalBanner.initBanner();
 </script>

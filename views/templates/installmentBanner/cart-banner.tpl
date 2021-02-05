@@ -23,24 +23,14 @@
 *
 *}
 
+{include file='./banner.tpl'}
+
 <script>
-    {foreach from=$JSvars key=varName item=varValue}
-      var {$varName} = {$varValue|json_encode nofilter};
-    {/foreach}
+    var paypalBanner = new Banner({
+        layout: layout,
+        amount: amount,
+        placement: placement,
+        container: '[paypal-banner-message]'
+    });
+    paypalBanner.initBanner();
 </script>
-
-{if isset($JSscripts) && is_array($JSscripts) && false === empty($JSscripts)}
-    {foreach from=$JSscripts key=keyScript item=JSscript}
-      <script>
-          var script = document.querySelector('script[data-key="{$keyScript}"]');
-
-          if (null == script) {
-              var newScript = document.createElement('script');
-              newScript.setAttribute('src', '{$JSscript nofilter}');
-              newScript.setAttribute('data-key', '{$keyScript}');
-              document.body.appendChild(newScript);
-          }
-      </script>
-    {/foreach}
-{/if}
-

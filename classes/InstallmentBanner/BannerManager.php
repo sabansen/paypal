@@ -34,6 +34,7 @@ use \ProductController;
 use \CartController;
 use \IndexController;
 use \Categorycontroller;
+use \OrderController;
 
 class BannerManager
 {
@@ -72,6 +73,12 @@ class BannerManager
             return false;
         }
 
+        if ($this->context->controller instanceof OrderController
+            && false === (bool)Configuration::get(ConfigurationMap::CART_PAGE)) {
+
+            return false;
+        }
+
         if ($this->context->controller instanceof ProductController
             && false === (bool)Configuration::get(ConfigurationMap::PRODUCT_PAGE)) {
 
@@ -103,12 +110,42 @@ class BannerManager
         return true;
     }
 
+    /**
+     * @return string
+     */
     public function renderForHomePage()
     {
         return $this->banner
             ->setPlacement('home')
             ->setLayout('flex')
             ->setTemplate(_PS_MODULE_DIR_ . 'paypal/views/templates/installmentBanner/home-banner.tpl')
+            ->render();
+    }
+
+    /**
+     * @return string
+     */
+    public function renderForCartPage()
+    {
+        return $this->banner
+            ->setPlacement('product')
+            ->setLayout('text')
+            ->setAmount($this->context->cart->getOrderTotal(true))
+            ->setTemplate(_PS_MODULE_DIR_ . 'paypal/views/templates/installmentBanner/cart-banner.tpl')
+            ->render();
+    }
+
+    /**
+     * @return string
+     */
+    public function renderForCheckoutPage()
+    {
+        return $this->banner
+            ->setPlacement('product')
+            ->setLayout('text')
+            ->setAmount($this->context->cart->getOrderTotal(true))
+            ->addJsVar('paypalInstallmentController', $this->context->link->getModuleLink('paypal', 'installment'))
+            ->setTemplate(_PS_MODULE_DIR_ . 'paypal/views/templates/installmentBanner/checkout-banner.tpl')
             ->render();
     }
 }

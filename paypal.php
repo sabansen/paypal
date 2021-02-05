@@ -620,10 +620,18 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
     public function hookDisplayExpressCheckout($params)
     {
-        return $this->displayShortcutButton([
+        $returnContent = $this->displayShortcutButton([
             'sourcePage' => ShortcutConfiguration::SOURCE_PAGE_CART,
             'hook' => ShortcutConfiguration::HOOK_EXPRESS_CHECKOUT
         ]);
+
+        $bannerManager = new BannerManager();
+
+        if ($bannerManager->isBannerAvailable()) {
+            $returnContent .= $bannerManager->renderForCartPage();
+        }
+
+        return $returnContent;
     }
 
     public function hookDisplayPersonalInformationTop($params)
@@ -638,21 +646,16 @@ class PayPal extends \PaymentModule implements WidgetInterface
         ]);
     }
 
-    public function hookdisplayNavFullWidth()
+    public function hookDisplayNavFullWidth()
     {
-        $bannerManager = new BannerManager();
-
-        if ($bannerManager->isBannerAvailable() === false) {
-            return '';
-        }
-
         if ($this->context->controller instanceof IndexController
             || $this->context->controller instanceof CategoryController) {
+            $bannerManager = new BannerManager();
 
-            return $bannerManager->renderForHomePage();
+            if ($bannerManager->isBannerAvailable()) {
+                return $bannerManager->renderForHomePage();
+            }
         }
-
-        return '';
     }
 
     public function getContent()
@@ -997,6 +1000,14 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 'sourcePage' => ShortcutConfiguration::SOURCE_PAGE_CART,
                 'hook' => ShortcutConfiguration::HOOK_REASSURANCE
             ]);
+        }
+
+        if ($this->context->controller instanceof OrderController) {
+            $bannerManager = new BannerManager();
+
+            if ($bannerManager->isBannerAvailable()) {
+                return $bannerManager->renderForCheckoutPage();
+            }
         }
 
         return '';
