@@ -39,6 +39,9 @@ use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\InstallmentBanner\BannerManager;
+use PaypalAddons\classes\Widget\ShortcutWidget;
+use PaypalAddons\classes\Widget\DummyWidget;
+use PaypalAddons\classes\Widget\InstallmentWidget;
 
 define('BT_CARD_PAYMENT', 'card-braintree');
 define('BT_PAYPAL_PAYMENT', 'paypal-braintree');
@@ -2222,25 +2225,9 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
     public function renderWidget($hookName, array $configuration)
     {
-        if (false === isset($configuration['action']) || $configuration['action'] !== 'paymentshortcut') {
-            return '';
-        }
+        $widget = $this->getWidget($hookName, $configuration);
 
-        $sourcePage = null;
-
-        if ($this->context->controller instanceof ProductController && (int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_PRODUCT) === ShortcutConfiguration::DISPLAY_MODE_TYPE_WIDGET) {
-            $sourcePage = ShortcutConfiguration::SOURCE_PAGE_PRODUCT;
-        } elseif ($this->context->controller instanceof CartController && (int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_CART) === ShortcutConfiguration::DISPLAY_MODE_TYPE_WIDGET) {
-            $sourcePage = ShortcutConfiguration::SOURCE_PAGE_CART;
-        } elseif ($this->context->controller instanceof OrderController && (int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_SIGNUP) === ShortcutConfiguration::DISPLAY_MODE_TYPE_WIDGET) {
-            $sourcePage = ShortcutConfiguration::SOURCE_PAGE_SIGNUP;
-        }
-
-        if ($sourcePage === null) {
-            return '';
-        }
-
-        return $this->displayShortcutButton(['sourcePage' => $sourcePage]);
+        return $widget->render();
     }
 
     public function getWidgetVariables($hookName, array $configuration)
@@ -2254,5 +2241,23 @@ class PayPal extends \PaymentModule implements WidgetInterface
         } else {
             return Product::getIdProductAttributeByIdAttributes($idProduct, $idAttributes, $findBest);
         }
+    }
+
+    /**
+     * @param string $hookName
+     * @param array $configurations
+     * @return \PaypalAddons\classes\Widget\AbstractWidget
+     */
+    protected function getWidget($hookName, array $configuration)
+    {
+        if (isset($configuration['action']) && $configuration['action'] === 'paymentshortcut') {
+            return new ShortcutWidget($this, $configuration);
+        }
+
+        if (isset($configuration['action']) && $configuration['action'] === 'banner4x') {
+            return new InstallmentWidget($this, $configuration);
+        }
+
+        return new DummyWidget($this, $configuration);
     }
 }

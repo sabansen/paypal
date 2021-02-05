@@ -1039,6 +1039,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
         );
 
         $select->setCss('displayModeSection');
+        $select->setValue(Configuration::get($name));
 
         return $select->render();
     }
