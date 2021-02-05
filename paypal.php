@@ -584,7 +584,14 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
     public function hookDisplayProductActions($params)
     {
-        return $this->displayShortcutButton([
+        $content = '';
+        $bannerManager = new BannerManager();
+
+        if ($bannerManager->isBannerAvailable()) {
+            $content .= $bannerManager->renderForProductPage();
+        }
+
+        return $content .= $this->displayShortcutButton([
             'sourcePage' => ShortcutConfiguration::SOURCE_PAGE_PRODUCT,
             'hook' => ShortcutConfiguration::HOOK_PRODUCT_ACTIONS
         ]);
@@ -989,7 +996,14 @@ class PayPal extends \PaymentModule implements WidgetInterface
     public function hookDisplayReassurance()
     {
         if ($this->context->controller instanceof ProductController) {
-            return $this->displayShortcutButton([
+            $content = '';
+            $bannerManager = new BannerManager();
+
+            if ($bannerManager->isBannerAvailable() && version_compare(_PS_VERSION_, '1.7.6', '<')) {
+                $content .= $bannerManager->renderForProductPage();
+            }
+
+            return $content .= $this->displayShortcutButton([
                 'sourcePage' => ShortcutConfiguration::SOURCE_PAGE_PRODUCT,
                 'hook' => ShortcutConfiguration::HOOK_REASSURANCE
             ]);

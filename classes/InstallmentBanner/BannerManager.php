@@ -148,4 +148,16 @@ class BannerManager
             ->setTemplate(_PS_MODULE_DIR_ . 'paypal/views/templates/installmentBanner/checkout-banner.tpl')
             ->render();
     }
+
+    /**
+     * @return string
+     */
+    public function renderForProductPage()
+    {
+        return $this->banner
+            ->setPlacement('product')
+            ->setLayout('text')
+            ->setTemplate(_PS_MODULE_DIR_ . 'paypal/views/templates/installmentBanner/product-banner.tpl')
+            ->render();
+    }
 }
