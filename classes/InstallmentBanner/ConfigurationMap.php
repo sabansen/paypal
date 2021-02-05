@@ -54,4 +54,18 @@ class ConfigurationMap
     const COLOR_MONOCHROME = 'monochrome';
 
     const COLOR_GRAYSCALE = 'grayscale';
+
+    public static function getColorGradient($color)
+    {
+        $gradientMap = [
+            self::COLOR_BLUE => '#023188',
+            self::COLOR_BLACK => '#000000',
+            self::COLOR_WHITE => '#ffffff',
+            self::COLOR_MONOCHROME => '#ffffff',
+            self::COLOR_GRAYSCALE => '#ffffff',
+            self::COLOR_GRAY => '#ebecee'
+        ];
+
+        return isset($gradientMap[$color]) ? $gradientMap[$color] : $gradientMap[self::COLOR_BLUE];
+    }
 }

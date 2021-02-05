@@ -52,6 +52,9 @@ class Banner
     /** @var array*/
     protected $jsVars;
 
+    /** @var array*/
+    protected $tplVars;
+
     public function __construct()
     {
         $this->module = Module::getInstanceByName('paypal');
@@ -62,6 +65,7 @@ class Banner
     {
         return Context::getContext()->smarty
             ->assign('JSvars', $this->getJsVars())
+            ->assign($this->getTplVars())
             ->assign('JSscripts', $this->getJS())
             ->fetch($this->getTemplate());
     }
@@ -180,6 +184,33 @@ class Banner
         }
 
         $this->jsVars[$name] = $value;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getTplVars()
+    {
+        if (is_array($this->tplVars)) {
+            return $this->tplVars;
+        }
+
+        return [];
+    }
+
+    /**
+     * @param string $name
+     * @param mixed $value
+     * @return Banner
+     */
+    public function addTplVar($name, $value)
+    {
+        if (is_array($this->tplVars) === false) {
+            $this->tplVars = [];
+        }
+
+        $this->tplVars[$name] = $value;
         return $this;
     }
 }

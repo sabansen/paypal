@@ -23,6 +23,16 @@
 *
 *}
 
+<style>
+  [paypal-banner-message] > span {
+    margin: auto;
+  }
+
+  [paypal-banner-message] {
+    background-color: {$colorGradient};
+  }
+</style>
+
 {include file='./banner.tpl'}
 
 <script>
