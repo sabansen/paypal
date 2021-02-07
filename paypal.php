@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\InstallmentBanner\BannerManager;
+use PaypalAddons\classes\InstallmentBanner\ConfigurationMap as InstallmentConfiguration;
 use PaypalAddons\classes\Widget\ShortcutWidget;
 use PaypalAddons\classes\Widget\DummyWidget;
 use PaypalAddons\classes\Widget\InstallmentWidget;
@@ -1123,6 +1124,18 @@ class PayPal extends \PaymentModule implements WidgetInterface
      */
     public function needConvert()
     {
+        $countryDefault = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT', null, null, $this->context->shop->id));
+
+        if (Validate::isLoadedObject($countryDefault) && Tools::strtolower($countryDefault->iso_code) === 'fr') {
+            if ((int)Configuration::get(InstallmentConfiguration::ENABLE_INSTALLMENT)) {
+                if (Tools::strtolower($this->context->language->iso_code) === 'fr') {
+                    if (Tools::strtolower($this->context->currency->iso_code) === 'eur') {
+                        return false;
+                    }
+                }
+            }
+        }
+
         $currency_mode = Currency::getPaymentCurrenciesSpecial($this->id);
         $mode_id = $currency_mode['id_currency'];
         if ($mode_id == -2) {
