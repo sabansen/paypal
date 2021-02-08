@@ -36,6 +36,7 @@ use PaypalPPBTlib\Install\ModuleInstaller;
  */
 function upgrade_module_5_3_3($module)
 {
+    $module->resetHooks();
     $installer = new ModuleInstaller($module);
     return $installer->installAdminControllers();
 }
