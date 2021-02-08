@@ -380,7 +380,7 @@ class AdminPayPalSetupController extends AdminPayPalController
             return false;
         }
 
-        if (false == (int)Configuration::get('PAYPAL_SHOW_INSTALLMENT_POPUP', null, null, $this->context->shop->id, 1)) {
+        if (false == (int)Configuration::get('PAYPAL_SHOW_INSTALLMENT_POPUP', null, null, $this->context->shop->id)) {
             return false;
         }
 

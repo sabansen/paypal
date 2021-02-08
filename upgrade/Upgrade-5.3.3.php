@@ -36,6 +36,20 @@ use PaypalPPBTlib\Install\ModuleInstaller;
  */
 function upgrade_module_5_3_3($module)
 {
+    if (Shop::isFeatureActive()) {
+        foreach ($shops as $shop) {
+            Configuration::updateValue(
+                'PAYPAL_SHOW_INSTALLMENT_POPUP',
+                1,
+                false,
+                null,
+                (int)$shop['id_shop']
+            );
+        }
+    } else {
+        Configuration::updateValue('PAYPAL_SHOW_INSTALLMENT_POPUP', 1);
+    }
+
     $module->resetHooks();
     $installer = new ModuleInstaller($module);
     return $installer->installAdminControllers();
