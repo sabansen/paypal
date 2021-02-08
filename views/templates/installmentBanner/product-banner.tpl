@@ -23,6 +23,16 @@
 *
 *}
 
+<style>
+  .product-quantity {
+    flex-wrap: wrap;
+  }
+
+  .product-quantity [installment-container] {
+    flex-basis: 100%;
+  }
+</style>
+
 {include file='./banner.tpl'}
 
 <script>
