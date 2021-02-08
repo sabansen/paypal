@@ -26,22 +26,6 @@
 {extends file='./admin.tpl'}
 
 {block name='content'}
-  <div class="panel active-panel pp__flex pp__align-items-center">
-    <div class="pp__pr-4">
-      <img style="width: 135px" src="{$moduleDir|addslashes}paypal/views/img/paypal.png">
-    </div>
-    <div class="pp__pl-5">
-      <div>
-        {l s='Display the 4X PayPal Payment on your site. Payment in 4X PayPal allows French consumers to pay in 4 equal installments. You can promote 4X PayPal Payment only if you are a merchant based in France, with a French website and standard PayPal integration.' mod='paypal'}
-        {l s='Merchants with the Vaulting tool (digital safe) or recurring payments / subscription integration, as well as those with certain activities (sale of digital goods / non-physical goods) are not eligible to promote 4X PayPal Payment . We will post messages on your site promoting 4X PayPal Payment. You cannot promote 4X PayPal Payment with any other content.' mod='paypal'}
-      </div>
-      <div>
-        <a href="https://www.paypal.com/fr/webapps/mpp/4x">
-            {l s='See more' mod='paypal'}
-        </a>
-      </div>
-    </div>
-  </div>
 
   <div>
     <div>

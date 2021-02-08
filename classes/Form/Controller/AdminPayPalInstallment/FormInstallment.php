@@ -64,6 +64,13 @@ class FormInstallment implements FormInterface
             ),
             'input' => array(
                 array(
+                    'type' => 'html',
+                    'html_content' => $this->getDisclaimerHtml(),
+                    'name' => '',
+                    'col' => 12,
+                    'label' => '',
+                ),
+                array(
                     'type' => 'switch',
                     'label' => $this->module->l('Enable the display of 4x banners', $this->className),
                     'name' => ConfigurationMap::ENABLE_INSTALLMENT,
@@ -173,7 +180,7 @@ If you choose to use widgets, you will be able to copy widget code and insert it
             ConfigurationMap::CATEGORY_PAGE => Configuration::get(ConfigurationMap::CATEGORY_PAGE),
             ConfigurationMap::CART_PAGE => Configuration::get(ConfigurationMap::CART_PAGE)
         ]);
-        return Context::getContext()->smarty->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/_partials/installmentPageDisplayingSetting.tpl');
+        return Context::getContext()->smarty->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/_partials/paypalBanner/installmentPageDisplayingSetting.tpl');
     }
 
     /**
@@ -207,5 +214,11 @@ If you choose to use widgets, you will be able to copy widget code and insert it
             ->assign('colorSelect', $colorSelect)
             ->assign('banner', new Banner())
             ->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/_partials/paypalBanner/bannerStyleSection.tpl');
+    }
+
+    protected function getDisclaimerHtml()
+    {
+        return Context::getContext()->smarty
+            ->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/_partials/paypalBanner/installmentDisclaimer.tpl');
     }
 }

@@ -39,7 +39,7 @@
     {/if}
 
     {if isset($showInstallmentPopup) && $showInstallmentPopup}
-        {include './_partials/installmentPopup.tpl'}
+        {include './_partials/paypalBanner/installmentPopup.tpl'}
     {/if}
 
     {include './_partials/headerLogo.tpl'}
