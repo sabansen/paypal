@@ -169,6 +169,11 @@
   flex-basis: 70%;
 }
 
+[installment-popup] .modal-dialog {
+  position: relative;
+  top: 40%;
+}
+
 @media (max-width:768px) {
   .setup-blocks {
     flex-direction: column;

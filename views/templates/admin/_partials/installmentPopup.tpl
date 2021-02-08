@@ -26,7 +26,7 @@
 <div installment-popup class="modal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-md">
     <div class="modal-content">
-      <div class="h3 pp__flex pp__justify-content-center pp__mb-4">
+      <div class="h3 pp__flex pp__justify-content-center pp__my-5">
           {l s='Offer your customers payment in 4X' mod='paypal'}
       </div>
 
@@ -38,7 +38,7 @@
           {l s='Improve your conversion rate by showing 4x payment information to your customers.' mod='paypal'}
       </div>
 
-      <div class="pp__flex pp__justify-content-center pp__mb-2 pp__mt-4">
+      <div class="pp__flex pp__justify-content-center pp__mb-5 pp__mt-4">
         <a
                 class="btn btn-primary"
                 href="{if isset($installmentController)}{$installmentController}{/if}"
