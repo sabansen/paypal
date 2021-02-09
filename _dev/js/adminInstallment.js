@@ -34,6 +34,8 @@ var InstallmentSetting = {
       elem.addEventListener('change', this.checkConfigurations);
     });
 
+    document.querySelector('[name="PAYPAL_ENABLE_INSTALLMENT"]').addEventListener('change', this.updatedEnableConf);
+
     window.addEventListener('load', this.initBanner);
 
     document.querySelector('[name="PAYPAL_INSTALLMENT_COLOR"]').addEventListener('change', this.updateBannerColor)
@@ -50,6 +52,17 @@ var InstallmentSetting = {
     });
 
     InstallmentSetting.banner.initBanner();
+  },
+
+  updatedEnableConf() {
+    const installmentEnabled = document.querySelector('input[name="PAYPAL_ENABLE_INSTALLMENT"]');
+    const displayingSettings = document.querySelector('[installment-page-displaying-setting-container]');
+
+    if (installmentEnabled.checked) {
+      displayingSettings.querySelectorAll('input').forEach((el)=>{
+        el.checked = true;
+      });
+    }
   },
 
   checkConfigurations() {
