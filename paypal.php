@@ -202,6 +202,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         'displayAdminOrderTabContent',
         'displayOrderPreview',
         'displayNavFullWidth',
+        'actionLocalizationPageSave',
         ShortcutConfiguration::HOOK_REASSURANCE,
         ShortcutConfiguration::HOOK_AFTER_PRODUCT_ADDITIONAL_INFO,
         ShortcutConfiguration::HOOK_AFTER_PRODUCT_THUMBS,
@@ -1491,6 +1492,34 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
     }
 
+    public function hookActionLocalizationPageSave($params)
+    {
+        $idCountryDefault = @$params['form_data']['configuration']['default_country'];
+        $countryDefault = new Country((int)$idCountryDefault);
+
+        if (Validate::isLoadedObject($countryDefault) === false) {
+            return;
+        }
+
+        $installmentTab = \Tab::getInstanceFromClassName('AdminPaypalInstallment');
+
+        if (Validate::isLoadedObject($installmentTab) === false) {
+            return;
+        }
+
+        if (Tools::strtolower($countryDefault->iso_code) === 'fr') {
+            if ($installmentTab->active == false) {
+                $installmentTab->active = true;
+                $installmentTab->save();
+            }
+        } else {
+            if ($installmentTab->active == true) {
+                $installmentTab->active = false;
+                $installmentTab->save();
+            }
+        }
+    }
+
 
     public function hookActionOrderStatusUpdate(&$params)
     {
@@ -2081,7 +2110,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
         $hooksUnregistered = array();
 
         foreach ($this->hooks as $hookName) {
-            $hookName = Hook::getNameById(Hook::getIdByName($hookName));
+            $alias = Hook::getNameById(Hook::getIdByName($hookName));
+            $hookName = $alias ? $alias : $hookName;
 
             if (Hook::isModuleRegisteredOnHook($this, $hookName, $this->context->shop->id)) {
                 continue;
