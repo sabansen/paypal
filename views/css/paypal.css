@@ -2,7 +2,14 @@
 .paypal-bold{font-weight:700}
 .paypal-clear{clear:both}
 #paypal-wrapper .half{width:44%}
-#paypal-wrapper{font-size:1.1em;position:relative}
+#paypal-wrapper{
+    font-size:1.1em;
+    position:relative;
+    top: 50px;
+    background-color: #ffffff;
+    padding: 20px;
+    margin: 20px;
+}
 #paypal-wrapper ul li{text-align:left}
 #paypal-wrapper hr{border-top:1px solid #ccc!important;margin-bottom:0;margin-top:20px}
 #paypal-wrapper .toolbox{background:#fff2cf;border:1px solid #aaa;color:#000;display:none;font-size:10px;font-weight:400;left:730px;line-height:12px;padding:6px!important;position:absolute;text-transform:none;top:-10px!important;width:180px;z-index:100}
@@ -255,5 +262,25 @@ label span.description{display:block;}
 
 .size-l {
     font-size: 16px;
+}
+
+[paypal-nav-bar] {
+    background-color: #ffffff;
+    position: fixed;
+    left: 210px;
+    right: 0;
+    z-index: 2;
+}
+
+[paypal-nav-bar] li.active > a {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border-bottom: solid #2eacce;
+}
+
+#content {
+    background-color: #EFF1F2;
+    padding-left: 0;
+    padding-right: 0;
 }
 

@@ -671,6 +671,7 @@ class PayPal extends PaymentModule
         if (Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE') && Tools::usingSecureMode() == false) {
             Tools::redirect('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
         }
+
         if (Tools::getIsset('BRAINTREE_ENABLED')) {
             Configuration::updateValue('VZERO_ENABLED', 1);
         }
@@ -1422,7 +1423,7 @@ class PayPal extends PaymentModule
             } else {
                 $this->context->controller->addJquery();
                 $this->context->controller->addJQueryPlugin('fancybox');
-                $this->context->controller->addCSS(_MODULE_DIR_.$this->name.'/views/css/paypal.css');
+                $this->context->controller->addCSS(_PS_MODULE_DIR_.$this->name.'/views/css/paypal.css');
             }
 
             $this->context->smarty->assign(array(

@@ -365,6 +365,8 @@ $(document).ready(function () {
         $('#test_ssl_result').load(tlscurltest_url);
     });
 
+    window.paypalNavTabs = new PaypalNavTabs();
+
 });
 
 var PaypalSectionManager = {
@@ -408,4 +410,34 @@ var PaypalSectionManager = {
     showConfigurationSection: function () {
         this.show('[data-configuration-section]');
     }
+};
+
+var PaypalNavTabs = function(options) {
+    this.navBar = document.querySelector('[paypal-nav-bar]');
+
+    this.activeTab = this.navBar.querySelector('li.active');
+
+    this.tabs = document.querySelectorAll('[paypal-tab-content]');
+
+    this.updateContent = function() {
+        var tabContentId = this.activeTab.getAttribute('tab-content');
+
+        this.tabs.forEach(function(el) {
+            if (el.id == tabContentId) {
+                el.style.display = 'block';
+            } else {
+                el.style.display = 'none';
+            }
+        });
+    };
+
+    this.navBar.querySelectorAll('li').forEach(function(el) {
+        el.addEventListener('click', function(e) {
+            this.activeTab.classList.remove('active');
+            e.currentTarget.classList.add('active');
+            this.activeTab = e.currentTarget;
+            this.updateContent();
+        }.bind(this));
+    }.bind(this));
+
 };

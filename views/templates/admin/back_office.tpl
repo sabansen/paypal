@@ -26,6 +26,13 @@
 *}
 
 <div class="bootstrap">
+	<ul paypal-nav-bar class="nav nav-pills">
+		<li class="active" tab-content="general"><a href="#">{l s='General' mod='paypal'}</a></li>
+		<li tab-content="payment4x"><a href="#">{l s='Payment in 4x' mod='paypal'}</a></li>
+	</ul>
+</div>
+
+<div class="bootstrap">
 
 	{if $showPsCheckoutInfo}
 		<div class="alert alert-info ps-checkout-info">
@@ -86,35 +93,36 @@
 
 
 <div id="paypal-wrapper">
-	{if !empty($hss_errors)}
-        <div style="background-color: red; color: white; font-weight: bolder; padding: 5px; margin-top: 10px;">
-            {l s='Orders for following carts (id) could not be created because of email error' mod='paypal'}
-            {foreach from=$hss_errors item=hss}
-                <p><span style="background-color: black; padding: 5px;">{$hss.id_cart|escape:'htmlall':'UTF-8'} - {$hss.email|escape:'htmlall':'UTF-8'}</span></p>
-            {/foreach}
-            {l s='You must change the e-mail in the module configuration with the one displayed above' mod='paypal'}
-        </div>
-	{/if}
-	{* PayPal configuration page header *}
-	<div class="box half left">
-		<img src="{$moduleDir|addslashes}/views/img/logos/PP_Horizontal_rgb_2016.png" alt="" style="margin-bottom: -5px; max-height: 50px;" />
-		<p id="paypal-slogan"><span class="dark">{l s='Leader in' mod='paypal'}</span> <span class="light">{l s='online payments' mod='paypal'}</span></p>
-		<p>{l s='Easy, secure, fast payments for your buyers.' mod='paypal'}</p>
-	</div>
+	<div id="general" paypal-tab-content>
+		{if !empty($hss_errors)}
+			<div style="background-color: red; color: white; font-weight: bolder; padding: 5px; margin-top: 10px;">
+				{l s='Orders for following carts (id) could not be created because of email error' mod='paypal'}
+				{foreach from=$hss_errors item=hss}
+					<p><span style="background-color: black; padding: 5px;">{$hss.id_cart|escape:'htmlall':'UTF-8'} - {$hss.email|escape:'htmlall':'UTF-8'}</span></p>
+				{/foreach}
+				{l s='You must change the e-mail in the module configuration with the one displayed above' mod='paypal'}
+			</div>
+		{/if}
+		{* PayPal configuration page header *}
+		<div class="box half left">
+			<img src="{$moduleDir|addslashes}/views/img/logos/PP_Horizontal_rgb_2016.png" alt="" style="margin-bottom: -5px; max-height: 50px;" />
+			<p id="paypal-slogan"><span class="dark">{l s='Leader in' mod='paypal'}</span> <span class="light">{l s='online payments' mod='paypal'}</span></p>
+			<p>{l s='Easy, secure, fast payments for your buyers.' mod='paypal'}</p>
+		</div>
 
-	<div class="box half right">
-		<ul class="tick">
-            <li><span class="paypal-bold">{l s='Get more buyers' mod='paypal'}</span><br />{l s='300 million-plus PayPal accounts worldwide' mod='paypal'}</li>
-            <li><span class="paypal-bold">{l s='Access international buyers' mod='paypal'}</span><br />{l s='190 countries, 25 currencies' mod='paypal'}</li>
-            <li><span class="paypal-bold">{l s='Reassure your buyers' mod='paypal'}</span><br />{l s='Buyers don\'t need to share their private data' mod='paypal'}</li>
-            <li><span class="paypal-bold">{l s='Accept all major payment method' mod='paypal'}</span></li>
-        </ul>
-	</div>
+		<div class="box half right">
+			<ul class="tick">
+				<li><span class="paypal-bold">{l s='Get more buyers' mod='paypal'}</span><br />{l s='300 million-plus PayPal accounts worldwide' mod='paypal'}</li>
+				<li><span class="paypal-bold">{l s='Access international buyers' mod='paypal'}</span><br />{l s='190 countries, 25 currencies' mod='paypal'}</li>
+				<li><span class="paypal-bold">{l s='Reassure your buyers' mod='paypal'}</span><br />{l s='Buyers don\'t need to share their private data' mod='paypal'}</li>
+				<li><span class="paypal-bold">{l s='Accept all major payment method' mod='paypal'}</span></li>
+			</ul>
+		</div>
 
-	<div class="paypal-clear"></div>
+		<div class="paypal-clear"></div>
 
 
-	{if $PayPal_allowed_methods}
+		{if $PayPal_allowed_methods}
 		<div class="paypal-clear"></div><hr>
 
 		<form method="post" action="{$smarty.server.REQUEST_URI|escape:'htmlall':'UTF-8'}" id="paypal_configuration">
@@ -240,7 +248,7 @@
 						<br />
 
 						<a href="#" class="paypal-button" id="paypal-get-identification">
-						{l s='Get my PayPal identification info' mod='paypal'}<p class="toolbox">{l s='After clicking on the “Get my PayPal identification info” button, enter your login and password in the pop up, copy your PayPal identification info from the pop up and paste them is the below fields.' mod='paypal'}</p>
+							{l s='Get my PayPal identification info' mod='paypal'}<p class="toolbox">{l s='After clicking on the “Get my PayPal identification info” button, enter your login and password in the pop up, copy your PayPal identification info from the pop up and paste them is the below fields.' mod='paypal'}</p>
 						</a>
 
 						<br /><br />
@@ -294,7 +302,7 @@
 						<p class="merchant_id">
 							<label>{l s='Merchant ID' mod='paypal'}</label>
 							<input type="text" name="in_context_checkout_merchant_id" id="in_context_checkout_merchant_id" value="{if isset($PayPal_in_context_checkout_merchant_id) && $PayPal_in_context_checkout_merchant_id != ""}{$PayPal_in_context_checkout_merchant_id|escape:'htmlall':'UTF-8'}{/if}" />
-							<p class="description">{l s='You can find your merchant account ID under "Account options" in your PayPal account Settings' mod='paypal'}</p>
+						<p class="description">{l s='You can find your merchant account ID under "Account options" in your PayPal account Settings' mod='paypal'}</p>
 						</p>
 					</div>
 
@@ -388,9 +396,9 @@
 					<h3>{l s='Activating the test mode implies that' mod='paypal'} :</h3>
 					<ul>
 						<li>{l s='You won\'t be able to accept payment' mod='paypal'}</li>
-                        <li>{l s='You will need to come back to the PayPal module page in order to complete the Step 3 before going live.' mod='paypal'}</li>
-                        <li>{l s='You\'ll need to create an account on the PayPal sandbox site' mod='paypal'} (<a href="https://developer.paypal.com/" target="_blank">{l s='learn more' mod='paypal'}</a>)</li>
-                        <li>{l s='You\'ll need programming skills' mod='paypal'}</li>
+						<li>{l s='You will need to come back to the PayPal module page in order to complete the Step 3 before going live.' mod='paypal'}</li>
+						<li>{l s='You\'ll need to create an account on the PayPal sandbox site' mod='paypal'} (<a href="https://developer.paypal.com/" target="_blank">{l s='learn more' mod='paypal'}</a>)</li>
+						<li>{l s='You\'ll need programming skills' mod='paypal'}</li>
 					</ul>
 
 					<h4>{l s='Are you sure you want to activate the test mode ?' mod='paypal'}</h4>
@@ -402,14 +410,14 @@
 				</div>
 
 				{if isset($PayPal_save_success)}
-				<div class="box paypal-hide" id="paypal-save-success">
-					<h3>{l s='Congratulation !' mod='paypal'}</h3>
-					{if $PayPal_sandbox_mode == 0}
-					<p>{l s='You can now start accepting Payment  with PayPal.' mod='paypal'}</p>
-					{elseif  $PayPal_sandbox_mode == 1}
-					<p>{l s='You can now start testing PayPal solutions. Don\'t forget to comeback to this page and activate the live mode in order to start accepting payements.' mod='paypal'}</p>
-					{/if}
-				</div>
+					<div class="box paypal-hide" id="paypal-save-success">
+						<h3>{l s='Congratulation !' mod='paypal'}</h3>
+						{if $PayPal_sandbox_mode == 0}
+							<p>{l s='You can now start accepting Payment  with PayPal.' mod='paypal'}</p>
+						{elseif  $PayPal_sandbox_mode == 1}
+							<p>{l s='You can now start testing PayPal solutions. Don\'t forget to comeback to this page and activate the live mode in order to start accepting payements.' mod='paypal'}</p>
+						{/if}
+					</div>
 				{/if}
 
 				<div class="box paypal-hide" id="js-paypal-save-failure">
@@ -431,15 +439,20 @@
 
 		</form>
 
-    {else}
+		{else}
 		<div class="paypal-clear"></div><hr />
-			<div class="box">
-				<p>{l s='Your country is not available for this module please go on Prestashop addons to see the different possibilities.' mod='paypal'}</p>
-			</div>
-			<hr />
+		<div class="box">
+			<p>{l s='Your country is not available for this module please go on Prestashop addons to see the different possibilities.' mod='paypal'}</p>
 		</div>
+		<hr />
+	</div>
 
 	{/if}
+	</div>
+
+	<div id="payment4x" paypal-tab-content style="display: none">
+
+	</div>
 
 </div>
 <script>
