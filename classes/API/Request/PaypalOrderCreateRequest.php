@@ -241,10 +241,10 @@ class PaypalOrderCreateRequest extends RequestAbstract
         $cartSummary = $this->context->cart->getSummaryDetails();
         $items = $this->getItems($currency, true);
         $subTotalExcl = 0;
-        $shippingTotal = abs($this->method->formatPrice($cartSummary['total_shipping']));
+        $shippingTotal = $this->method->formatPrice(abs($cartSummary['total_shipping']));
         $subTotalTax = 0;
-        $discountTotal = abs($this->method->formatPrice($this->getDiscount()));
-        $handling = abs($this->getHandling($currency));
+        $discountTotal = $this->method->formatPrice(abs($this->getDiscount()));
+        $handling = $this->getHandling($currency);
 
         foreach ($items as $item) {
             $subTotalExcl += (float)$item['unit_amount']['value'] * (float)$item['quantity'];
@@ -429,7 +429,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
 
         foreach ($discounts as $discount) {
             if ($discount['value_real'] < 0) {
-                $handling += abs($this->method->formatPrice($discount['value_real']));
+                $handling += $this->method->formatPrice(abs($discount['value_real']));
             }
         }
 
