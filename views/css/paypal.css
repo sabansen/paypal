@@ -284,3 +284,112 @@ label span.description{display:block;}
     padding-right: 0;
 }
 
+.back-white {
+    background-color: white;
+}
+
+
+/*Switch toggle. Start*/
+
+.pp__switch-field {
+    display: flex;
+    overflow: hidden;
+}
+
+.pp__switch-field .pp__switch-input {
+    position: absolute !important;
+    clip: rect(0, 0, 0, 0);
+    height: 1px;
+    width: 1px;
+    border: 0;
+    overflow: hidden;
+}
+
+.pp__switch-field .pp__switch-label {
+    background-color: #e4e4e4;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 14px;
+    line-height: 1;
+    text-align: center;
+    padding: 8px 16px !important;
+    margin-right: -1px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
+    transition: all 0.1s ease-in-out;
+    text-shadow: none !important;
+}
+
+.pp__switch-field .pp__switch-label:hover {
+    cursor: pointer;
+}
+
+.pp__switch-field .pp__switch-input:checked + .pp__switch-label.off {
+    background-color: #e08f95;
+    box-shadow: none;
+    color: #ffffff;
+}
+
+.pp__switch-field .pp__switch-input:checked + .pp__switch-label.on {
+    background-color: #2eacce;
+    box-shadow: none;
+    color: #ffffff;
+}
+
+.pp__switch-field .pp__switch-label:first-of-type {
+    border-radius: 4px 0 0 4px;
+}
+
+.pp__switch-field .pp__switch-label:last-of-type {
+    border-radius: 0 4px 4px 0;
+}
+
+/* Switch toggle. End*/
+
+
+.paypal-form-group {
+    display: flex;
+    justify-content: space-between;
+}
+
+.paypal-form-group .label{
+    flex-basis: 25%;
+    text-align: end;
+}
+
+.paypal-form-group .configuration{
+    flex-basis: 70%;
+}
+
+.pp__flex-align-center {
+    align-items: center;
+}
+
+.pp_mb-10 {
+    margin-bottom: 10px;
+}
+
+.pp_mb-20 {
+    margin-bottom: 20px;
+}
+
+.widget-group {
+    display: flex;
+    width: 40%;
+}
+
+.widget-group .input-group-addon {
+    width: auto;
+}
+
+.installment-preview-wrap {
+    display: flex;
+    justify-content: space-between;
+}
+
+.preview-setting {
+    flex-basis: 25%;
+}
+
+.preview-container {
+    flex-basis: 70%;
+}

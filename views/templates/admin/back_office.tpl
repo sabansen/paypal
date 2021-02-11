@@ -452,6 +452,8 @@
 
 	<div id="payment4x" paypal-tab-content style="display: none">
 
+		{include file='./installmentSettings.tpl'}
+
 	</div>
 
 </div>
