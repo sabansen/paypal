@@ -34,7 +34,7 @@ use PaypalPPBTlib\Install\ModuleInstaller;
  * @param $module PayPal
  * @return bool
  */
-function upgrade_module_5_3_3($module)
+function upgrade_module_5_4_0($module)
 {
     if (Shop::isFeatureActive()) {
         foreach ($shops as $shop) {
