@@ -197,7 +197,6 @@ class PaypalOrderCreateRequest extends RequestAbstract
         }
 
         $items = [];
-        $products = $this->context->cart->getProductsWithSeparatedGifts();
         $products = $this->context->cart->getProducts();
 
         foreach ($products as $product) {
