@@ -52,5 +52,6 @@ function upgrade_module_5_3_3($module)
 
     $module->resetHooks();
     $installer = new ModuleInstaller($module);
+    $installer->uninstallModuleAdminControllers();
     return $installer->installAdminControllers();
 }
