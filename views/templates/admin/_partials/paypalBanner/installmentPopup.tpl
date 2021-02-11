@@ -43,7 +43,7 @@
                 class="btn btn-primary"
                 href="{if isset($installmentController)}{$installmentController}{/if}"
         >
-          {l s='Activer maintenant' mod='paypal'}
+          {l s='Enable now' mod='paypal'}
         </a>
       </div>
     </div>
