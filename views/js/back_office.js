@@ -484,7 +484,6 @@ var InstallmentSetting = {
         var installmentEnabled = document.querySelector('input[name="PAYPAL_ENABLE_INSTALLMENT"]');
         var displayingSettings = document.querySelector('[installment-page-displaying-setting-container]');
         var advancedOptions = document.querySelector('input[name="PAYPAL_ADVANCED_OPTIONS_INSTALLMENT"]');
-        var widgetCode = document.querySelector('input#installmentWidgetCode');
         var colorConf = document.querySelector('[name="PAYPAL_INSTALLMENT_COLOR"]');
         var clientId = document.querySelector('[name="PAYPAL_CLIENT_ID_INSTALLMENT"]');
 
@@ -499,10 +498,8 @@ var InstallmentSetting = {
         }
 
         if (advancedOptions.checked === false || installmentEnabled.checked === false) {
-            widgetCode.closest('.paypal-form-group').classList.add('hidden');
             colorConf.closest('.paypal-form-group').classList.add('hidden');
         } else {
-            widgetCode.closest('.paypal-form-group').classList.remove('hidden');
             colorConf.closest('.paypal-form-group').classList.remove('hidden');
         }
     },

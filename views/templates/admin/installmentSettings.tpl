@@ -164,31 +164,6 @@
 
         <div class="paypal-form-group pp__flex-align-center pp_mb-20">
             <div class="label">
-                {l s='Widget code' mod='paypal'}
-            </div>
-
-            <div class="configuration">
-                <div class="bootstrap widget-group">
-                    <input
-                            type="text"
-                            class="form-control"
-                            id="installmentWidgetCode"
-                            value="{literal}{widget name='paypal' action='banner4x'}{/literal}"
-                            readonly>
-
-                    <span
-                            class="input-group-addon"
-                            style="cursor: pointer"
-                            onclick="document.getElementById('installmentWidgetCode').select(); document.execCommand('copy')">
-                <i class="icon-copy"></i>
-                </span>
-                </div>
-
-            </div>
-        </div>
-
-        <div class="paypal-form-group pp__flex-align-center pp_mb-20">
-            <div class="label">
                 {l s='The styles for the home page and category pages' mod='paypal'}
             </div>
 
