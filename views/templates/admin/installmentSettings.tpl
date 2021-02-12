@@ -26,148 +26,206 @@
 *}
 
 <div paypal-installment-settings>
-    <div class="paypal-form-group pp__flex-align-center pp_mb-20">
-        <div class="label">
-            {l s='Enable the display of 4x banners' mod='paypal'}
-        </div>
 
-        <div class="configuration">
-            <div class="pp__switch-field">
-                <input class="pp__switch-input" type="radio" id="PAYPAL_ENABLE_INSTALLMENT_on" name="PAYPAL_ENABLE_INSTALLMENT" value="1" checked/>
-                <label for="PAYPAL_ENABLE_INSTALLMENT_on" class="pp__switch-label on">Yes</label>
-                <input class="pp__switch-input" type="radio" id="PAYPAL_ENABLE_INSTALLMENT_off" name="PAYPAL_ENABLE_INSTALLMENT" value="0" />
-                <label for="PAYPAL_ENABLE_INSTALLMENT_off" class="pp__switch-label off">No</label>
+    <form method="post" action="{$smarty.server.REQUEST_URI|escape:'htmlall':'UTF-8'}">
+        <div class="paypal-form-group pp__flex-align-center pp_mb-20">
+            <div class="label">
+                {l s='Enable the display of 4x banners' mod='paypal'}
+            </div>
+
+            <div class="configuration">
+                <div class="pp__switch-field">
+                    <input
+                            class="pp__switch-input"
+                            type="radio"
+                            id="PAYPAL_ENABLE_INSTALLMENT_on"
+                            name="PAYPAL_ENABLE_INSTALLMENT"
+                            value="1"
+                            {if isset($PAYPAL_ENABLE_INSTALLMENT) && $PAYPAL_ENABLE_INSTALLMENT == '1'}checked{/if}/>
+                    <label for="PAYPAL_ENABLE_INSTALLMENT_on" class="pp__switch-label on">Yes</label>
+                    <input
+                            class="pp__switch-input"
+                            type="radio"
+                            id="PAYPAL_ENABLE_INSTALLMENT_off"
+                            name="PAYPAL_ENABLE_INSTALLMENT"
+                            value="0"
+                            {if isset($PAYPAL_ENABLE_INSTALLMENT) && $PAYPAL_ENABLE_INSTALLMENT == '0'}checked{/if}/>
+                    <label for="PAYPAL_ENABLE_INSTALLMENT_off" class="pp__switch-label off">No</label>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="paypal-form-group pp_mb-20">
-        <div class="label">
+        <div class="paypal-form-group pp__flex-align-center pp_mb-20">
+            <div class="label">
+                {l s='Client ID' mod='paypal'}
+            </div>
 
+            <div class="configuration">
+                <div class="bootstrap" style="width: 40%">
+                    <input
+                            type="text"
+                            name="PAYPAL_CLIENT_ID_INSTALLMENT"
+                            {if isset($PAYPAL_CLIENT_ID_INSTALLMENT)}value="{$PAYPAL_CLIENT_ID_INSTALLMENT}"{/if}>
+                </div>
+            </div>
         </div>
 
-        <div class="configuration">
-            <div>
-                <div class="pp_mb-10">
-                    <input
-                            type="checkbox"
-                            id="PAYPAL_INSTALLMENT_HOME_PAGE"
-                            name="PAYPAL_INSTALLMENT_HOME_PAGE"
-                            value="1"
-                            {if isset($PAYPAL_INSTALLMENT_HOME_PAGE) && $PAYPAL_INSTALLMENT_HOME_PAGE}checked{/if}
-                    >
-                    <label for="PAYPAL_INSTALLMENT_HOME_PAGE">
-                        {l s='Home Page' mod='paypal'}
-                    </label>
-                </div>
+        <div class="paypal-form-group pp_mb-20">
+            <div class="label"></div>
 
-                <div class="pp_mb-10">
-                    <input
-                            type="checkbox"
-                            id="PAYPAL_INSTALLMENT_CATEGORY_PAGE"
-                            name="PAYPAL_INSTALLMENT_CATEGORY_PAGE"
-                            value="1"
-                            {if isset($PAYPAL_INSTALLMENT_CATEGORY_PAGE) && $PAYPAL_INSTALLMENT_CATEGORY_PAGE}checked{/if}
-                    >
-                    <label for="PAYPAL_INSTALLMENT_CATEGORY_PAGE">
-                        {l s='Category Page' mod='paypal'}
-                    </label>
-                </div>
-
-                <div class="pp_mb-10">
-                    <input
-                            type="checkbox"
-                            id="PAYPAL_INSTALLMENT_PRODUCT_PAGE"
-                            name="PAYPAL_INSTALLMENT_PRODUCT_PAGE"
-                            value="1"
-                            {if isset($PAYPAL_INSTALLMENT_PRODUCT_PAGE) && $PAYPAL_INSTALLMENT_PRODUCT_PAGE}checked{/if}
-                    >
-                    <label for="PAYPAL_INSTALLMENT_PRODUCT_PAGE">
-                        {l s='Product Page' mod='paypal'}
-                    </label>
-                </div>
-
+            <div class="configuration">
                 <div>
-                    <input
-                            type="checkbox"
-                            id="PAYPAL_INSTALLMENT_CART_PAGE"
-                            name="PAYPAL_INSTALLMENT_CART_PAGE"
-                            value="1"
-                            {if isset($PAYPAL_INSTALLMENT_CART_PAGE) && $PAYPAL_INSTALLMENT_CART_PAGE}checked{/if}
-                    >
-                    <label for="PAYPAL_INSTALLMENT_CART_PAGE">
-                        {l s='Cart/Checkout' mod='paypal'}
-                    </label>
+                    <div class="pp_mb-10">
+                        <input
+                                type="checkbox"
+                                id="PAYPAL_INSTALLMENT_HOME_PAGE"
+                                name="PAYPAL_INSTALLMENT_HOME_PAGE"
+                                value="1"
+                                {if isset($PAYPAL_INSTALLMENT_HOME_PAGE) && $PAYPAL_INSTALLMENT_HOME_PAGE}checked{/if}
+                        >
+                        <label for="PAYPAL_INSTALLMENT_HOME_PAGE">
+                            {l s='Home Page' mod='paypal'}
+                        </label>
+                    </div>
+
+                    <div class="pp_mb-10">
+                        <input
+                                type="checkbox"
+                                id="PAYPAL_INSTALLMENT_CATEGORY_PAGE"
+                                name="PAYPAL_INSTALLMENT_CATEGORY_PAGE"
+                                value="1"
+                                {if isset($PAYPAL_INSTALLMENT_CATEGORY_PAGE) && $PAYPAL_INSTALLMENT_CATEGORY_PAGE}checked{/if}
+                        >
+                        <label for="PAYPAL_INSTALLMENT_CATEGORY_PAGE">
+                            {l s='Category Page' mod='paypal'}
+                        </label>
+                    </div>
+
+                    <div class="pp_mb-10">
+                        <input
+                                type="checkbox"
+                                id="PAYPAL_INSTALLMENT_PRODUCT_PAGE"
+                                name="PAYPAL_INSTALLMENT_PRODUCT_PAGE"
+                                value="1"
+                                {if isset($PAYPAL_INSTALLMENT_PRODUCT_PAGE) && $PAYPAL_INSTALLMENT_PRODUCT_PAGE}checked{/if}
+                        >
+                        <label for="PAYPAL_INSTALLMENT_PRODUCT_PAGE">
+                            {l s='Product Page' mod='paypal'}
+                        </label>
+                    </div>
+
+                    <div>
+                        <input
+                                type="checkbox"
+                                id="PAYPAL_INSTALLMENT_CART_PAGE"
+                                name="PAYPAL_INSTALLMENT_CART_PAGE"
+                                value="1"
+                                {if isset($PAYPAL_INSTALLMENT_CART_PAGE) && $PAYPAL_INSTALLMENT_CART_PAGE}checked{/if}
+                        >
+                        <label for="PAYPAL_INSTALLMENT_CART_PAGE">
+                            {l s='Cart/Checkout' mod='paypal'}
+                        </label>
+                    </div>
+
                 </div>
-
             </div>
         </div>
-    </div>
 
-    <div class="paypal-form-group pp__flex-align-center pp_mb-20">
-        <div class="label">
-            {l s='Advanced options' mod='paypal'}
-        </div>
+        <div class="paypal-form-group pp__flex-align-center pp_mb-20">
+            <div class="label">
+                {l s='Advanced options' mod='paypal'}
+            </div>
 
-        <div class="configuration">
-            <div class="pp__switch-field">
-                <input class="pp__switch-input" type="radio" id="PAYPAL_ADVANCED_OPTIONS_INSTALLMENT_on" name="PAYPAL_ADVANCED_OPTIONS_INSTALLMENT" value="1" checked/>
-                <label for="PAYPAL_ADVANCED_OPTIONS_INSTALLMENT_on" class="pp__switch-label on">Yes</label>
-                <input class="pp__switch-input" type="radio" id="PAYPAL_ADVANCED_OPTIONS_INSTALLMENT_off" name="PAYPAL_ADVANCED_OPTIONS_INSTALLMENT" value="0" />
-                <label for="PAYPAL_ADVANCED_OPTIONS_INSTALLMENT_off" class="pp__switch-label off">No</label>
+            <div class="configuration">
+                <div class="pp__switch-field">
+                    <input
+                            class="pp__switch-input"
+                            type="radio"
+                            id="PAYPAL_ADVANCED_OPTIONS_INSTALLMENT_on"
+                            name="PAYPAL_ADVANCED_OPTIONS_INSTALLMENT"
+                            value="1"
+                            {if isset($PAYPAL_ADVANCED_OPTIONS_INSTALLMENT) && $PAYPAL_ADVANCED_OPTIONS_INSTALLMENT == '1'}checked{/if}/>
+                    <label for="PAYPAL_ADVANCED_OPTIONS_INSTALLMENT_on" class="pp__switch-label on">Yes</label>
+                    <input
+                            class="pp__switch-input"
+                            type="radio"
+                            id="PAYPAL_ADVANCED_OPTIONS_INSTALLMENT_off"
+                            name="PAYPAL_ADVANCED_OPTIONS_INSTALLMENT"
+                            value="0"
+                            {if isset($PAYPAL_ADVANCED_OPTIONS_INSTALLMENT) && $PAYPAL_ADVANCED_OPTIONS_INSTALLMENT == '0'}checked{/if}/>
+                    <label for="PAYPAL_ADVANCED_OPTIONS_INSTALLMENT_off" class="pp__switch-label off">No</label>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="paypal-form-group pp__flex-align-center pp_mb-20">
-        <div class="label">
-            {l s='Widget code' mod='paypal'}
-        </div>
+        <div class="paypal-form-group pp__flex-align-center pp_mb-20">
+            <div class="label">
+                {l s='Widget code' mod='paypal'}
+            </div>
 
-        <div class="configuration">
-            <div class="bootstrap widget-group">
-                <input
-                        type="text"
-                        class="form-control"
-                        id="installmentWidgetCode"
-                        value="{literal}{widget name='paypal' action='banner4x'}{/literal}"
-                        readonly>
+            <div class="configuration">
+                <div class="bootstrap widget-group">
+                    <input
+                            type="text"
+                            class="form-control"
+                            id="installmentWidgetCode"
+                            value="{literal}{widget name='paypal' action='banner4x'}{/literal}"
+                            readonly>
 
-                <span
-                        class="input-group-addon"
-                        style="cursor: pointer"
-                        onclick="document.getElementById('installmentWidgetCode').select(); document.execCommand('copy')">
+                    <span
+                            class="input-group-addon"
+                            style="cursor: pointer"
+                            onclick="document.getElementById('installmentWidgetCode').select(); document.execCommand('copy')">
                 <i class="icon-copy"></i>
                 </span>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="paypal-form-group pp__flex-align-center pp_mb-20">
+            <div class="label">
+                {l s='The styles for the home page and category pages' mod='paypal'}
             </div>
 
-        </div>
-    </div>
+            <div class="configuration">
+                <div class="installment-preview-wrap">
+                    <div class="bootstrap preview-setting">
+                        <select name="PAYPAL_INSTALLMENT_COLOR">
+                            {if isset($installmentColorOptions) && false === empty($installmentColorOptions)}
+                                {foreach from=$installmentColorOptions key=value item=title}
+                                    <option
+                                            value="{$value|escape:'htmlall':'utf8'}"
+                                            {if isset($PAYPAL_INSTALLMENT_COLOR) && $PAYPAL_INSTALLMENT_COLOR == $value}selected{/if}>
 
-    <div class="paypal-form-group pp__flex-align-center pp_mb-20">
-        <div class="label">
-            {l s='The styles for the home page and category pages' mod='paypal'}
-        </div>
+                                        {$title|escape:'htmlall':'utf8'}
+                                    </option>
+                                {/foreach}
+                            {/if}
+                        </select>
+                    </div>
 
-        <div class="configuration">
-            <div class="installment-preview-wrap">
-                <div class="bootstrap preview-setting">
-                    <select name="PAYPAL_INSTALLMENT_COLOR" data-type="">
-                        <option value="blue">blue</option>
-                        <option value="black" selected="">black</option>
-                        <option value="white">white</option>
-                        <option value="gray">gray</option>
-                        <option value="monochrome">monochrome</option>
-                        <option value="grayscale">grayscale</option>
-                    </select>
+                    <div class="preview-container">
+                        {if isset($paypalInstallmentBanner)}
+                            {$paypalInstallmentBanner nofilter} {* the var contain a html *}
+                        {/if}
+                    </div>
                 </div>
-                
-                <div class="preview-container">
-                    
-                </div>
+
+
             </div>
-            
+        </div>
+
+        <div class="pp-panel-footer bootstrap">
+            <button
+                    type="submit"
+                    class="btn btn-default pull-right"
+                    name="installmentSettingForm">
+                <i class="process-icon-save"></i>
+                {l s='Save' mod='paypal'}
+            </button>
 
         </div>
-    </div>
+    </form>
+
 </div>

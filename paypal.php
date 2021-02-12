@@ -41,6 +41,8 @@ include_once _PS_MODULE_DIR_.'paypal/classes/PaypalCapture.php';
 include_once _PS_MODULE_DIR_.'paypal/classes/AuthenticatePaymentMethods.php';
 include_once _PS_MODULE_DIR_.'paypal/classes/PaypalPlusPui.php';
 include_once _PS_MODULE_DIR_.'paypal/classes/Braintree.php';
+require_once _PS_MODULE_DIR_.'paypal/classes/InstallmentBanner/ConfigurationMap.php';
+require_once _PS_MODULE_DIR_.'paypal/classes/InstallmentBanner/BannerManager.php';
 
 define('WPS', 1); //Paypal Integral
 define('HSS', 2); //Paypal Integral Evolution
@@ -783,6 +785,30 @@ class PayPal extends PaymentModule
             'showPsCheckoutInfo' => $this->showPsCheckoutMessage(),
             'moduleDir' => _MODULE_DIR_ . $this->name,
         ));
+
+        // Tpl vars for Paypal installment banner. Start
+        $bannerManager = new BannerManager();
+        $this->context->smarty->assign([
+            ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT => Configuration::get(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT),
+            ConfigurationMap::ENABLE_INSTALLMENT => Configuration::get(ConfigurationMap::ENABLE_INSTALLMENT),
+            ConfigurationMap::COLOR => Configuration::get(ConfigurationMap::COLOR),
+            'installmentColorOptions' => [
+                ConfigurationMap::COLOR_BLUE => $this->l('blue'),
+                ConfigurationMap::COLOR_BLACK => $this->l('black'),
+                ConfigurationMap::COLOR_WHITE => $this->l('white'),
+                ConfigurationMap::COLOR_GRAY => $this->l('gray'),
+                ConfigurationMap::COLOR_MONOCHROME => $this->l('monochrome'),
+                ConfigurationMap::COLOR_GRAYSCALE => $this->l('grayscale'),
+            ],
+            ConfigurationMap::HOME_PAGE => Configuration::get(ConfigurationMap::HOME_PAGE),
+            ConfigurationMap::CATEGORY_PAGE => Configuration::get(ConfigurationMap::CATEGORY_PAGE),
+            ConfigurationMap::PRODUCT_PAGE => Configuration::get(ConfigurationMap::PRODUCT_PAGE),
+            ConfigurationMap::CART_PAGE => Configuration::get(ConfigurationMap::CART_PAGE),
+            ConfigurationMap::CLIENT_ID => Configuration::get(ConfigurationMap::CLIENT_ID),
+            'paypalInstallmentBanner' => $bannerManager->renderForHomePage()
+        ]);
+
+        // Tpl vars for Paypal installment banner. End
 
         MediaCore::addJsDef([
             'ajaxHandler' => $this->context->link->getAdminLink('AdminPaypalAjaxHandler')
@@ -1929,6 +1955,17 @@ class PayPal extends PaymentModule
                 $this->_html = $this->displayError(implode('<br />', $this->_errors)); // Not displayed at this time
                 $this->context->smarty->assign('PayPal_save_failure', true);
             }
+        }
+
+        if (Tools::isSubmit('installmentSettingForm')) {
+            Configuration::updateValue(ConfigurationMap::ENABLE_INSTALLMENT, Tools::getValue(ConfigurationMap::ENABLE_INSTALLMENT));
+            Configuration::updateValue(ConfigurationMap::CLIENT_ID, Tools::getValue(ConfigurationMap::CLIENT_ID));
+            Configuration::updateValue(ConfigurationMap::HOME_PAGE, Tools::getValue(ConfigurationMap::HOME_PAGE));
+            Configuration::updateValue(ConfigurationMap::CATEGORY_PAGE, Tools::getValue(ConfigurationMap::CATEGORY_PAGE));
+            Configuration::updateValue(ConfigurationMap::CART_PAGE, Tools::getValue(ConfigurationMap::CART_PAGE));
+            Configuration::updateValue(ConfigurationMap::PRODUCT_PAGE, Tools::getValue(ConfigurationMap::PRODUCT_PAGE));
+            Configuration::updateValue(ConfigurationMap::COLOR, Tools::getValue(ConfigurationMap::COLOR));
+            Configuration::updateValue(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT, Tools::getValue(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT));
         }
 
         return $this->loadLangDefault();

@@ -393,3 +393,10 @@ label span.description{display:block;}
 .preview-container {
     flex-basis: 70%;
 }
+
+.pp-panel-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px 0 0;
+    border-top: 1px solid #ddd;
+}
