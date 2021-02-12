@@ -105,7 +105,11 @@ class BannerManager
      */
     public function renderForHomePage()
     {
-        $colorGradient = ConfigurationMap::getColorGradient(Configuration::get(ConfigurationMap::COLOR));
+        if ((int)Configuration::get(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT)) {
+            $colorGradient = ConfigurationMap::getColorGradient(Configuration::get(ConfigurationMap::COLOR));
+        } else {
+            $colorGradient = ConfigurationMap::getColorGradient(ConfigurationMap::COLOR_BLUE);
+        }
 
         return $this->banner
             ->setPlacement('home')

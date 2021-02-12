@@ -67,7 +67,12 @@ class Banner
     protected function getJsVars()
     {
         $vars = [];
-        $vars['color'] = Configuration::get(ConfigurationMap::COLOR);
+        if ((int)Configuration::get(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT)) {
+            $vars['color'] = Configuration::get(ConfigurationMap::COLOR);
+        } else {
+            $vars['color'] = ConfigurationMap::COLOR_BLUE;
+        }
+
         $vars['placement'] = $this->getPlacement();
         $vars['layout'] = $this->getLayout();
 
