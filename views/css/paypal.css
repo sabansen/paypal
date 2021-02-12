@@ -400,3 +400,7 @@ label span.description{display:block;}
     padding: 20px 0 0;
     border-top: 1px solid #ddd;
 }
+
+.hidden {
+    display: none !important;
+}

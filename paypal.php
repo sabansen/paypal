@@ -43,6 +43,7 @@ include_once _PS_MODULE_DIR_.'paypal/classes/PaypalPlusPui.php';
 include_once _PS_MODULE_DIR_.'paypal/classes/Braintree.php';
 require_once _PS_MODULE_DIR_.'paypal/classes/InstallmentBanner/ConfigurationMap.php';
 require_once _PS_MODULE_DIR_.'paypal/classes/InstallmentBanner/BannerManager.php';
+require_once _PS_MODULE_DIR_.'paypal/classes/InstallmentBanner/Banner.php';
 
 define('WPS', 1); //Paypal Integral
 define('HSS', 2); //Paypal Integral Evolution
@@ -787,7 +788,7 @@ class PayPal extends PaymentModule
         ));
 
         // Tpl vars for Paypal installment banner. Start
-        $bannerManager = new BannerManager();
+        $banner = new Banner();
         $this->context->smarty->assign([
             ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT => Configuration::get(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT),
             ConfigurationMap::ENABLE_INSTALLMENT => Configuration::get(ConfigurationMap::ENABLE_INSTALLMENT),
@@ -805,7 +806,7 @@ class PayPal extends PaymentModule
             ConfigurationMap::PRODUCT_PAGE => Configuration::get(ConfigurationMap::PRODUCT_PAGE),
             ConfigurationMap::CART_PAGE => Configuration::get(ConfigurationMap::CART_PAGE),
             ConfigurationMap::CLIENT_ID => Configuration::get(ConfigurationMap::CLIENT_ID),
-            'paypalInstallmentBanner' => $bannerManager->renderForHomePage()
+            'paypalInstallmentBanner' => $banner->render()
         ]);
 
         // Tpl vars for Paypal installment banner. End

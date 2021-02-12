@@ -27,6 +27,7 @@
 
 $(document).ready(function () {
     var identificationButtonClicked = false;
+    InstallmentSetting.init();
 
     var jquery_version = $.fn.jquery.split('.');
 
@@ -440,4 +441,84 @@ var PaypalNavTabs = function(options) {
         }.bind(this));
     }.bind(this));
 
+};
+
+var InstallmentSetting = {
+    init: function() {
+        this.checkConfigurations();
+        this.initBanner();
+        document.querySelectorAll('form#pp_config_installment input').forEach((elem) => {
+            elem.addEventListener('change', this.checkConfigurations);
+        });
+
+        document.querySelector('[name="PAYPAL_ENABLE_INSTALLMENT"]').addEventListener('change', this.updatedEnableConf);
+
+        document.querySelector('[name="PAYPAL_INSTALLMENT_COLOR"]').addEventListener('change', this.updateBannerColor)
+    },
+
+    initBanner: function() {
+        var color = InstallmentSetting.getColorBanner();
+
+        InstallmentSetting.banner = new Banner({
+            container: '[paypal-banner-message]',
+            layout: 'flex',
+            placement: 'home',
+            color: color
+        });
+
+        InstallmentSetting.banner.initBanner();
+    },
+
+    updatedEnableConf: function() {
+        var installmentEnabled = document.querySelector('input[name="PAYPAL_ENABLE_INSTALLMENT"]');
+        var displayingSettings = document.querySelector('[installment-page-displaying-setting-container]');
+
+        if (installmentEnabled.checked) {
+            displayingSettings.querySelectorAll('input').forEach((el)=>{
+                el.checked = true;
+            });
+        }
+    },
+
+    checkConfigurations: function() {
+        var installmentEnabled = document.querySelector('input[name="PAYPAL_ENABLE_INSTALLMENT"]');
+        var displayingSettings = document.querySelector('[installment-page-displaying-setting-container]');
+        var advancedOptions = document.querySelector('input[name="PAYPAL_ADVANCED_OPTIONS_INSTALLMENT"]');
+        var widgetCode = document.querySelector('input#installmentWidgetCode');
+        var colorConf = document.querySelector('[name="PAYPAL_INSTALLMENT_COLOR"]');
+        var clientId = document.querySelector('[name="PAYPAL_CLIENT_ID_INSTALLMENT"]');
+
+        if (installmentEnabled.checked) {
+            displayingSettings.closest('.paypal-form-group').classList.remove('hidden');
+            advancedOptions.closest('.paypal-form-group').classList.remove('hidden');
+            clientId.closest('.paypal-form-group').classList.remove('hidden');
+        } else {
+            displayingSettings.closest('.paypal-form-group').classList.add('hidden');
+            advancedOptions.closest('.paypal-form-group').classList.add('hidden');
+            clientId.closest('.paypal-form-group').classList.add('hidden');
+        }
+
+        if (advancedOptions.checked === false || installmentEnabled.checked === false) {
+            widgetCode.closest('.paypal-form-group').classList.add('hidden');
+            colorConf.closest('.paypal-form-group').classList.add('hidden');
+        } else {
+            widgetCode.closest('.paypal-form-group').classList.remove('hidden');
+            colorConf.closest('.paypal-form-group').classList.remove('hidden');
+        }
+    },
+
+    updateBannerColor: function() {
+        InstallmentSetting.banner.color = InstallmentSetting.getColorBanner();
+        InstallmentSetting.banner.initBanner();
+    },
+
+    getColorBanner: function() {
+        var color = document.querySelector('[name="PAYPAL_INSTALLMENT_COLOR"]').value;
+
+        if (typeof color == 'undefined') {
+            return 'bleu';
+        }
+
+        return color;
+    }
 };

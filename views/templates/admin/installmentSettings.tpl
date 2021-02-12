@@ -27,7 +27,11 @@
 
 <div paypal-installment-settings>
 
-    <form method="post" action="{$smarty.server.REQUEST_URI|escape:'htmlall':'UTF-8'}">
+    <form
+            id="pp_config_installment"
+            method="post"
+            action="{$smarty.server.REQUEST_URI|escape:'htmlall':'UTF-8'}">
+
         <div class="paypal-form-group pp__flex-align-center pp_mb-20">
             <div class="label">
                 {l s='Enable the display of 4x banners' mod='paypal'}
@@ -74,7 +78,7 @@
             <div class="label"></div>
 
             <div class="configuration">
-                <div>
+                <div installment-page-displaying-setting-container>
                     <div class="pp_mb-10">
                         <input
                                 type="checkbox"
