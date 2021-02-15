@@ -46,7 +46,7 @@
   };
 
   Banner.prototype.initBanner = function() {
-      if (typeof paypal == 'undefined') {
+      if (typeof paypalMessages == 'undefined') {
           setTimeout(this.initBanner.bind(this), 200);
           return;
       }
@@ -75,7 +75,7 @@
           conf.style.color = this.color;
       }
 
-      paypal.Messages(conf).render(this.container);
+      paypalMessages.Messages(conf).render(this.container);
   };
 
   document.addEventListener('initPaypalBanner', Banner.init)

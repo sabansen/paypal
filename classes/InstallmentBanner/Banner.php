@@ -96,7 +96,10 @@ class Banner
             'client-id' => Configuration::get(ConfigurationMap::CLIENT_ID)
         ];
         $js = [
-            'paypal-lib' => 'https://www.paypal.com/sdk/js?' . http_build_query($query)
+            'paypal-lib' => [
+                'src' => 'https://www.paypal.com/sdk/js?' . http_build_query($query),
+                'data-namespace' => 'paypalMessages'
+            ]
         ];
 
         return $js;

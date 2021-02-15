@@ -1035,7 +1035,12 @@ class PayPal extends PaymentModule
     {
         $content = (!$this->useMobile()) ? $this->renderExpressCheckoutButton('product')
         : null;
-        return $content.$this->renderExpressCheckoutForm('product');
+        $bannerManager = new BannerManager();
+
+        if ($bannerManager->isBannerAvailable()) {
+            $content .= $bannerManager->renderForProductPage();
+        }
+        return $content;
     }
 
     public function hookActionOrderStatusPostUpdate($params)

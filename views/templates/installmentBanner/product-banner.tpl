@@ -42,8 +42,17 @@
         this.amount = quantity * productPrice;
     };
 
+    Banner.prototype.refresh = function() {
+        var amount = paypalBanner.amount;
+        this.updateAmount();
+
+        if (amount != this.amount) {
+            this.initBanner();
+        }
+    };
+
     window.addEventListener('load', function() {
-        var paypalBanner = new Banner({
+        window.paypalBanner = new Banner({
             layout: layout,
             placement: placement,
             container: '[paypal-banner-message]'
@@ -51,9 +60,10 @@
         paypalBanner.updateAmount();
         paypalBanner.initBanner();
 
-        prestashop.on('updatedProduct', function() {
-            paypalBanner.updateAmount();
-            paypalBanner.initBanner();
+        document.querySelector('.box-info-product').addEventListener('click', function() {
+            setTimeout(paypalBanner.refresh.bind(paypalBanner), 1000);
         });
+
+        document.querySelector('.box-info-product').addEventListener('change', paypalBanner.refresh.bind(paypalBanner));
     });
 </script>
