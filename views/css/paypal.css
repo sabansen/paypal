@@ -269,6 +269,7 @@ label span.description{display:block;}
     position: absolute;
     left: 210px;
     right: 0;
+    z-index: 9;
 }
 
 [paypal-nav-bar] li.active > a {
