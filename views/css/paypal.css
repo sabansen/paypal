@@ -266,10 +266,9 @@ label span.description{display:block;}
 
 [paypal-nav-bar] {
     background-color: #ffffff;
-    position: fixed;
+    position: absolute;
     left: 210px;
     right: 0;
-    z-index: 2;
 }
 
 [paypal-nav-bar] li.active > a {
