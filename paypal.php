@@ -1247,6 +1247,11 @@ class PayPal extends PaymentModule
 
     public function hookDisplayTop()
     {
+        if ($this->context->controller instanceof IndexController === false
+            && $this->context->controller instanceof CategoryController === false) {
+
+            return '';
+        }
         $bannerManager = new BannerManager();
 
         if ($bannerManager->isBannerAvailable()) {
@@ -1256,13 +1261,20 @@ class PayPal extends PaymentModule
 
     public function hookShoppingCartExtra()
     {
+        $content = '';
+        $bannerManager = new BannerManager();
+
+        if ($bannerManager->isBannerAvailable()) {
+            $content .= $bannerManager->renderForCartPage();
+        }
+
         if (!$this->active
             || (((int) Configuration::get('PAYPAL_PAYMENT_METHOD') == HSS) && !$this->context->getMobileDevice())
             || !Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT')
             || !in_array(ECS, $this->getPaymentMethods())
             || isset($this->context->cookie->express_checkout)
             || in_array(Configuration::get('PAYPAL_PAYMENT_METHOD'), array(PVZ, PPP))) {
-            return null;
+            return $content;
         }
 
         $values = array('en' => 'en_US', 'fr' => 'fr_FR', 'de' => 'de_DE');
@@ -1279,7 +1291,7 @@ class PayPal extends PaymentModule
             'include_form' => true,
             'template_dir' => dirname(__FILE__).'/views/templates/hook/'));
 
-        return $this->fetchTemplate('express_checkout_shortcut_button.tpl');
+        return $content . $this->fetchTemplate('express_checkout_shortcut_button.tpl');
     }
 
     public function hookPaymentReturn($params)
