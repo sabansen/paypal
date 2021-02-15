@@ -432,12 +432,19 @@ var PaypalNavTabs = function(options) {
         });
     };
 
+    this.active = function(tab) {
+        this.navBar.querySelectorAll('li').forEach(function(el) {
+            el.classList.remove('active');
+        });
+
+        tab.classList.add('active');
+        this.activeTab = tab;
+        this.updateContent();
+    };
+
     this.navBar.querySelectorAll('li').forEach(function(el) {
         el.addEventListener('click', function(e) {
-            this.activeTab.classList.remove('active');
-            e.currentTarget.classList.add('active');
-            this.activeTab = e.currentTarget;
-            this.updateContent();
+            this.active(e.currentTarget);
         }.bind(this));
     }.bind(this));
 

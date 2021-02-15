@@ -457,6 +457,10 @@
 	</div>
 
 </div>
+
+{if isset($showInstallmentPopup) && $showInstallmentPopup}
+	{include './installmentPopup.tpl'}
+{/if}
 <script>
 	var tlscurltest_url = '{$tls_link_ajax|addslashes}';
 </script>

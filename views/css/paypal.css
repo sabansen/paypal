@@ -404,3 +404,32 @@ label span.description{display:block;}
 .hidden {
     display: none !important;
 }
+
+.pp__flex {
+    display: flex !important;
+}
+
+.pp__justify-content-center {
+    justify-content: center !important;
+}
+
+.pp__my-5 {
+    margin: 25px 0 !important;
+}
+
+.pp__mb-2 {
+    margin-bottom: 10px !important;
+}
+
+.pp__mb-5 {
+    margin-bottom: 25px !important;
+}
+
+.pp__mt-4 {
+    margin-top: 20px !important;
+}
+
+[installment-popup] .modal-dialog {
+    position: relative;
+    top: 30%;
+}
