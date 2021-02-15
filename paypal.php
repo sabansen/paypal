@@ -161,7 +161,8 @@ class PayPal extends PaymentModule
             || !$this->registerHook('displayPDFInvoice')
             || !$this->registerHook('actionBeforeCartUpdateQty')
             || !$this->registerHook('actionOrderSlipAdd')
-            || !$this->registerHook('PDFInvoice')) {
+            || !$this->registerHook('PDFInvoice')
+            || !$this->registerHook('displayTop')) {
             return false;
         }
 
@@ -1241,6 +1242,15 @@ class PayPal extends PaymentModule
                 'logo' => $logo,
                 'form' => $this->fetchTemplate('paypal_plus_payment_eu.tpl'),
             );
+        }
+    }
+
+    public function hookDisplayTop()
+    {
+        $bannerManager = new BannerManager();
+
+        if ($bannerManager->isBannerAvailable()) {
+            return $bannerManager->renderForHomePage();
         }
     }
 

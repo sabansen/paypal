@@ -24,14 +24,12 @@
 *}
 
 <style>
-  [paypal-banner-message] > span {
-    margin: auto;
-  }
-
-  [paypal-banner-message] {
-    background-color: {$colorGradient};
-  }
+    [paypal-banner-message] span {
+        margin: auto;
+    }
 </style>
+
+<div class="clearfix"></div>
 
 {include file='./banner.tpl'}
 

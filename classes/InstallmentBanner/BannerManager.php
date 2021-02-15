@@ -105,16 +105,9 @@ class BannerManager
      */
     public function renderForHomePage()
     {
-        if ((int)Configuration::get(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT)) {
-            $colorGradient = ConfigurationMap::getColorGradient(Configuration::get(ConfigurationMap::COLOR));
-        } else {
-            $colorGradient = ConfigurationMap::getColorGradient(ConfigurationMap::COLOR_BLUE);
-        }
-
         return $this->banner
             ->setPlacement('home')
             ->setLayout('flex')
-            ->addTplVar('colorGradient', $colorGradient)
             ->setTemplate(_PS_MODULE_DIR_ . 'paypal/views/templates/installmentBanner/home-banner.tpl')
             ->render();
     }
