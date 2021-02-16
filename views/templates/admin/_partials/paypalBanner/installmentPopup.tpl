@@ -26,6 +26,11 @@
 <div installment-popup class="modal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-md">
     <div class="modal-content">
+      <div class="pp__pt-2 pp__pr-4">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
       <div class="h3 pp__flex pp__justify-content-center pp__my-5">
           {l s='Offer your customers payment in 4X' mod='paypal'}
       </div>
