@@ -1,5 +1,5 @@
 {*
-* 2007-2020 PayPal
+* 2007-2021 PayPal
 *
 * NOTICE OF LICENSE
 *
@@ -27,22 +27,30 @@
 
     {if isset($label) && $label}
         <div label>
-          <div class="pp__my-2">{$label|escape:'hmlall':'utf-8'}</div>
+          <div class="pp__my-2">{$label|escape:'htmlall':'UTF-8'}</div>
         </div>
     {/if}
 
   <div field>
-    <select
-            name="{if isset($name)}{$name}{/if}"
-            {if isset($configType)}data-type="{$configType}"{/if}>
+    <div select-wrap class="pp__flex">
+      <select
+              name="{if isset($name)}{$name}{/if}"
+              {if isset($configType)}data-type="{$configType}"{/if}>
 
-        {if isset($options) && false === empty($options)}
-            {foreach from=$options item=option}
-                {$option->render() nofilter}
-            {/foreach}
-        {/if}
+          {if isset($options) && false === empty($options)}
+              {foreach from=$options item=option}
+                  {$option->render() nofilter}
+              {/foreach}
+          {/if}
 
-    </select>
+      </select>
+
+      {if isset($hintSwitch) && $hintSwitch}
+          <div>
+            <span class="btn btn-default pp__ml-2" onclick="toggleHint(event)">?</span>
+          </div>
+      {/if}
+    </div>
 
     {if isset($afterSelectContent)}
         <div after-select-content>
@@ -51,5 +59,18 @@
     {/if}
   </div>
 </div>
+
+<script>
+  window.toggleHint = function (e) {
+      try {
+          var btn = e.target;
+          var hint = btn.closest('[field]').querySelector('[hint-wrap]');
+          hint.style.display = hint.style.display == 'none' ? 'block' : 'none';
+          btn.textContent = btn.textContent == '?' ? 'X' : '?';
+      } catch (exception) {
+          console.error(exception);
+      }
+  }
+</script>
 
 

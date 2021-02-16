@@ -1,27 +1,26 @@
 <?php
 /**
- * 2007-2020 PayPal
+ * 2007-2021 PayPal
  *
- *  NOTICE OF LICENSE
+ * NOTICE OF LICENSE
  *
- *  This source file is subject to the Academic Free License (AFL 3.0)
- *  that is bundled with this package in the file LICENSE.txt.
- *  It is also available through the world-wide-web at this URL:
- *  http://opensource.org/licenses/afl-3.0.php
- *  If you did not receive a copy of the license and are unable to
- *  obtain it through the world-wide-web, please send an email
- *  to license@prestashop.com so we can send you a copy immediately.
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
  *
- *  DISCLAIMER
+ * DISCLAIMER
  *
- *  Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- *  versions in the future. If you wish to customize PrestaShop for your
- *  needs please refer to http://www.prestashop.com for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 2007-2020 PayPal
- *  @author 202 ecommerce <tech@202-ecommerce.com>
- *  @copyright PayPal
- *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @author 2007-2021 PayPal
+ * @copyright PayPal
+ * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
 require_once _PS_MODULE_DIR_ . 'paypal/vendor/autoload.php';
@@ -190,7 +189,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             'type' => 'html',
             'label' => '',
             'name' => 'testName',
-            'html_content' => $this->module->displayInformation($this->l('In-Context has shown better conversion rate'), true, false, 'message-context'),
+            'html_content' => $this->module->displayAlert($this->l('In-Context has shown better conversion rate'), 'info', true, false, 'message-context icon-lightbulb'),
         );
 
         $this->fields_form['form']['form']['input'][] = array(
@@ -496,7 +495,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
             );
         }
 
-        if ($this->method != 'PPP' && Configuration::get('PAYPAL_API_INTENT') == 'authorization') {
+        if ($this->method != 'PPP' && Configuration::get('PAYPAL_API_INTENT') == 'authorize') {
             $inputs[] = array(
                 'type' => 'select',
                 'label' => $this->l('Payment accepted via BO (call PayPal to get the payment)'),
@@ -894,9 +893,10 @@ Shipping costs will be estimated on the base of the cart total and default carri
             $colorOptions,
             $this->l('Color'),
             $color,
-            ShortcutConfiguration::CONFIGURATION_TYPE_COLOR
+            ShortcutConfiguration::CONFIGURATION_TYPE_COLOR,
+            true
         );
-        $colorSelect->setAfterSelectContent(Context::getContext()->smarty->fetch(_PS_MODULE_DIR_ . 'paypal/views/templates/admin/_partials/form/colorDescriptions.tpl'));
+        $colorSelect->setAfterSelectContent(Context::getContext()->smarty->fetch($this->getTemplatePath() . '_partials/form/colorDescriptions.tpl'));
 
         $configurations[] = $colorSelect;
 

@@ -1,5 +1,5 @@
 {*
-* 2007-2020 PayPal
+* 2007-2021 PayPal
 *
 * NOTICE OF LICENSE
 *
@@ -17,7 +17,7 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-* @author 2007-2020 PayPal
+* @author 2007-2021 PayPal
  *  @author 202 ecommerce <tech@202-ecommerce.com>
   * @copyright PayPal
   * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
@@ -25,7 +25,7 @@
   *}
 
 <div class="block-preview-button-context pp__flex">
-	<div class="pp__py-2 pp__px-1">
+	<div config-block class="pp__py-2 pp__px-1">
 		<div class="pp__mb-2">
 			<input type="checkbox" {if isset($paypal_express_checkout_shortcut_cart) &&
 				$paypal_express_checkout_shortcut_cart}checked{/if} name="paypal_express_checkout_shortcut_cart" value="1"
@@ -46,7 +46,7 @@
 		<img src="{$moduleDir|addslashes}paypal/views/img/cart_page_button.png" class="img-responsive" alt="cart_page">
 	</div>
 
-	<div class="pp__py-2 pp__px-1">
+	<div config-block class="pp__py-2 pp__px-1">
 		<div class="pp__mb-2">
 			<input type="checkbox" {if isset($paypal_express_checkout_shortcut) &&
 				$paypal_express_checkout_shortcut}checked{/if} name="paypal_express_checkout_shortcut"
@@ -73,7 +73,7 @@
 		<img src="{$moduleDir|addslashes}paypal/views/img/product_page_button.png" alt="product_page_button">
 	</div>
 
-  <div class="pp__py-2 pp__px-1">
+  <div config-block class="pp__py-2 pp__px-1">
     <div class="pp__mb-2">
       <input type="checkbox" {if isset($paypal_express_checkout_shortcut_signup) &&
       $paypal_express_checkout_shortcut_signup}checked{/if} name="paypal_express_checkout_shortcut_signup"
@@ -94,7 +94,7 @@
   </div>
 </div>
 
-<div class="alert alert-info">
+<div class="alert alert-info icon-lightbulb">
 	<button type="button" class="close" data-dismiss="alert">×</button>
     {l s='PayPal shortcuts allow a faster checkout for your buyers. PayPal automatically provides you with the client\'s shipping and billing information.' mod='paypal'}
 </div>

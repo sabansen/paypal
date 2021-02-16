@@ -1,5 +1,5 @@
 {*
-* 2007-2020 PayPal
+* 2007-2021 PayPal
 *
 * NOTICE OF LICENSE
 *
@@ -17,16 +17,21 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author 2007-2020 PayPal
- *  @author 202 ecommerce <tech@202-ecommerce.com>
+*  @author 2007-2021 PayPal
 *  @copyright PayPal
 *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
 *
 *}
 
 <div class="alert alert-info">
+    {if isset($isSandbox) && $isSandbox}
+      <div>
+          {l s='Sandbox mode: all transactions will be fictitious.' mod='paypal'}
+      </div>
+    {/if}
+
     <div>
-        {{l s='You have to [b]finish your payment[/b] done with your PayPal account ' mod='paypal'}|paypalreplace nofilter} {if isset($paypalEmail)}{$paypalEmail|escape:'htmlall':'utf-8'}{/if}
+        {{l s='You have to [b]finish your payment[/b] done with your PayPal account ' mod='paypal'}|paypalreplace nofilter} {if isset($paypalEmail)}{$paypalEmail|escape:'htmlall':'UTF-8'}{/if}
     </div>
 
     <div>

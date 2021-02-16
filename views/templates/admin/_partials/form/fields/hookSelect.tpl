@@ -1,5 +1,5 @@
 {*
-* 2007-2020 PayPal
+* 2007-2021 PayPal
 *
 * NOTICE OF LICENSE
 *
@@ -32,7 +32,7 @@
                       value="{$hookName}"
                       {if isset($selectedHook) && $selectedHook === $hookName}selected{/if}
                       {if isset($hookData['preview'])}data-preview-image="{$hookData['preview']|addslashes}"{/if}>
-                  {if isset($hookData['desc'])}{$hookData['desc']|escape:'htmlall':'utf-8'}{/if}
+                  {if isset($hookData['desc'])}{$hookData['desc']|escape:'htmlall':'UTF-8'}{/if}
               </option>
             {/foreach}
         {/if}

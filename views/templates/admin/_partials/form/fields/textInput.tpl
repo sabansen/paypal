@@ -1,5 +1,5 @@
 {*
-* 2007-2020 PayPal
+* 2007-2021 PayPal
 *
 * NOTICE OF LICENSE
 *
@@ -40,7 +40,7 @@
 <div class="pp__flex pp__justify-content-center pp__mt-2">
   {if isset($label)}
       <em>
-          {$label|escape:'htmlall':'utf-8'}
+          {$label|escape:'htmlall':'UTF-8'}
       </em>
   {/if}
 </div>

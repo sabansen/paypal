@@ -1,5 +1,5 @@
 {*
-* 2007-2019 PrestaShop
+* 2007-2021 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -17,8 +17,7 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author 2007-2019 PayPal
- *  @author 202 ecommerce <tech@202-ecommerce.com>
+*  @author 2007-2021 PayPal
 *  @copyright PayPal
 *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
 *
@@ -26,9 +25,9 @@
 
 
 <div>
-  <b>{l s='PayPal Transaction ID' mod='paypal'}:</b> {if isset($log)}<a href="{$log->getLinkToTransaction()|addslashes}" target="_blank">{$log->id_transaction|escape:'html':'utf-8'}</a>{/if}
+  <b>{l s='PayPal Transaction ID' mod='paypal'}:</b> {if isset($log)}<a href="{$log->getLinkToTransaction()|addslashes}" target="_blank">{$log->id_transaction|escape:'html':'UTF-8'}</a>{/if}
 </div>
 
 <div>
-  <b>{l s='Last Logs Details' mod='paypal'}:</b> {if isset($log)}{$log->log|escape:'html':'utf-8'}{/if}
+  <b>{l s='Last Logs Details' mod='paypal'}:</b> {if isset($log)}{$log->log|escape:'html':'UTF-8'}{/if}
 </div>

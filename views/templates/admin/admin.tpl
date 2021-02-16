@@ -23,29 +23,39 @@
 *
 *}
 
+{if isset($isModeSandbox) && $isModeSandbox}
+  <style>
+    .page-head {
+      background-color: #2D489A !important;
+    }
 
-<div class="col-lg-9">
-    <p class="h3">
-        {l s='Environment:' mod='paypal'}
-        {if isset($sandbox) && $sandbox}
-            <b>{l s='Sandbox' mod='paypal'}</b>
-        {else}
-            <b>{l s='Production' mod='paypal'}</b>
-        {/if}
-    </p>
+    .bootstrap .page-head .toolbarBox .btn-toolbar .toolbar_btn i {
+      color: #fff !important;
+    }
 
-    <p>{l s='Production mode is the Live environment where you\'ll be able to collect your real payments' mod='paypal'}</p>
+    .bootstrap .page-head ul.breadcrumb {
+      color: #fff !important;
+    }
 
-    <p>
-        <button class="btn btn-default" id="switchEnvironmentMode">
-            {l s='Switch to' mod='paypal'}
-            {if isset($sandbox) && $sandbox}
-                {l s='Production mode' mod='paypal'}
-            {else}
-                {l s='Sandbox mode' mod='paypal'}
-            {/if}
-        </button>
-    </p>
-</div>
+    .bootstrap .page-head ul.page-breadcrumb li:before {
+      color: #fff !important;
+    }
 
+    .bootstrap .page-head ul.page-breadcrumb li a {
+      color: #fff !important;
+    }
+
+    .page-head .wrapper h1 {
+      color: #fff !important;
+    }
+
+    .bootstrap .page-head .toolbarBox .btn-toolbar .toolbar_btn {
+      color: #fff !important;
+    }
+
+
+  </style>
+{/if}
+
+{block name='content'}{/block}
 

@@ -1,27 +1,26 @@
 <?php
 /**
- * 2007-2020 PayPal
+ * 2007-2021 PayPal
  *
- *  NOTICE OF LICENSE
+ * NOTICE OF LICENSE
  *
- *  This source file is subject to the Academic Free License (AFL 3.0)
- *  that is bundled with this package in the file LICENSE.txt.
- *  It is also available through the world-wide-web at this URL:
- *  http://opensource.org/licenses/afl-3.0.php
- *  If you did not receive a copy of the license and are unable to
- *  obtain it through the world-wide-web, please send an email
- *  to license@prestashop.com so we can send you a copy immediately.
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
  *
- *  DISCLAIMER
+ * DISCLAIMER
  *
- *  Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- *  versions in the future. If you wish to customize PrestaShop for your
- *  needs please refer to http://www.prestashop.com for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 2007-2020 PayPal
- *  @author 202 ecommerce <tech@202-ecommerce.com>
- *  @copyright PayPal
- *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @author 2007-2021 PayPal
+ * @copyright PayPal
+ * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
 namespace PaypalAddons\classes;
@@ -62,9 +61,19 @@ class AdminPayPalController extends \ModuleAdminController
         }
     }
 
+    public function init()
+    {
+        if (\Tools::getValue('action') === 'set_sandbox_mode') {
+            \Configuration::updateValue('PAYPAL_SANDBOX', (int)\Tools::getValue('sandbox_mode'));
+        }
+
+        parent::init();
+    }
+
     public function initContent()
     {
         header('Clear-Site-Data: "cache"');
+        $method = AbstractMethodPaypal::load();
 
         if ((int)\Configuration::get('PAYPAL_SANDBOX') == 1) {
             $message = $this->module->l('Your PayPal account is currently configured to accept payments on Sandbox.', 'AdminPayPalController');
@@ -74,7 +83,6 @@ class AdminPayPalController extends \ModuleAdminController
         }
 
         if ((int)\Configuration::get('PAYPAL_NEED_CHECK_CREDENTIALS')) {
-            $method = AbstractMethodPaypal::load();
             $method->checkCredentials();
             \Configuration::updateValue('PAYPAL_NEED_CHECK_CREDENTIALS', 0);
         }
@@ -98,6 +106,7 @@ class AdminPayPalController extends \ModuleAdminController
             'showRestApiIntegrationMessage' => $this->isShowRestApiIntegrationMessage(),
             'psVersion' => _PS_VERSION_,
             'need_rounding' => $need_rounding,
+            'isModeSandbox' => $method->isSandbox()
         ]);
     }
 
@@ -349,5 +358,23 @@ class AdminPayPalController extends \ModuleAdminController
         }
 
         return false;
+    }
+
+    public function initPageHeaderToolbar()
+    {
+        $query = [
+            'token' => $this->token,
+            'action' => 'set_sandbox_mode',
+            'sandbox_mode' => \Configuration::get('PAYPAL_SANDBOX') ? 0 : 1
+        ];
+        $this->page_header_toolbar_btn['switch_sandbox'] = [
+            'desc' => $this->l('Sandbox mode', 'AdminPayPalController'),
+            'icon' => 'process-icon-toggle-' . (\Configuration::get('PAYPAL_SANDBOX') ? 'on' : 'off'),
+            'help' => $this->l('Sandbox mode is the test environment where you\'ll be not able to collect any real payments.', 'AdminPayPalController'),
+            'href' => self::$currentIndex . '?' . http_build_query($query)
+        ];
+
+        parent::initPageHeaderToolbar();
+        $this->context->smarty->clearAssign('help_link');
     }
 }

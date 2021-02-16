@@ -1,27 +1,26 @@
 <?php
 /**
- * 2007-2020 PayPal
+ * 2007-2021 PayPal
  *
- *  NOTICE OF LICENSE
+ * NOTICE OF LICENSE
  *
- *  This source file is subject to the Academic Free License (AFL 3.0)
- *  that is bundled with this package in the file LICENSE.txt.
- *  It is also available through the world-wide-web at this URL:
- *  http://opensource.org/licenses/afl-3.0.php
- *  If you did not receive a copy of the license and are unable to
- *  obtain it through the world-wide-web, please send an email
- *  to license@prestashop.com so we can send you a copy immediately.
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
  *
- *  DISCLAIMER
+ * DISCLAIMER
  *
- *  Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- *  versions in the future. If you wish to customize PrestaShop for your
- *  needs please refer to http://www.prestashop.com for more information.
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 2007-2020 PayPal
- *  @author 202 ecommerce <tech@202-ecommerce.com>
- *  @copyright PayPal
- *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @author 2007-2021 PayPal
+ * @copyright PayPal
+ * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
 namespace PaypalAddons\classes\API\Request;
@@ -40,6 +39,8 @@ class PaypalOrderCreateRequest extends RequestAbstract
     protected $items = [];
 
     protected $wrappings = [];
+
+    protected $products = [];
 
     public function execute()
     {
@@ -104,9 +105,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
     protected function buildRequestBody()
     {
         $currency = $this->getCurrency();
-        $productItmes = $this->getProductItems($currency);
-        $wrappingItems = $this->getWrappingItems($currency);
-        $items = array_merge($productItmes, $wrappingItems);
+        $items = $this->getItems($currency);
         $payer = $this->getPayer();
         $shippingInfo = $this->getShippingInfo();
 
@@ -173,14 +172,28 @@ class PaypalOrderCreateRequest extends RequestAbstract
         return $this->module->getPaymentCurrencyIso();
     }
 
+    protected function getItems($currency, $cache = false)
+    {
+        if ($cache && false === empty($this->items)) {
+            return $this->items;
+        }
+
+        $this->items = array_merge(
+            $this->getProductItems($currency, $cache),
+            $this->getWrappingItems($currency, $cache)
+        );
+
+        return $this->items;
+    }
+
     /**
      * @param $currency string Iso code
      * @return array
      */
     protected function getProductItems($currency, $cache = false)
     {
-        if ($cache && false === empty($this->items)) {
-            return $this->items;
+        if ($cache && false === empty($this->products)) {
+            return $this->products;
         }
 
         $items = [];
@@ -215,7 +228,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
             $items[] = $item;
         }
 
-        $this->items = $items;
+        $this->products = $items;
         return $items;
     }
 
@@ -226,13 +239,12 @@ class PaypalOrderCreateRequest extends RequestAbstract
     protected function getAmount($currency)
     {
         $cartSummary = $this->context->cart->getSummaryDetails();
-        $productItmes = $this->getProductItems($currency, true);
-        $wrappingItems = $this->getWrappingItems($currency, true);
-        $items = array_merge($productItmes, $wrappingItems);
+        $items = $this->getItems($currency, true);
         $subTotalExcl = 0;
-        $shippingTotal = $this->method->formatPrice($cartSummary['total_shipping']);
+        $shippingTotal = $this->method->formatPrice(abs($cartSummary['total_shipping']));
         $subTotalTax = 0;
-        $discountTotal = $this->method->formatPrice($cartSummary['total_discounts']);
+        $discountTotal = $this->method->formatPrice(abs($this->getDiscount()));
+        $handling = $this->getHandling($currency);
 
         foreach ($items as $item) {
             $subTotalExcl += (float)$item['unit_amount']['value'] * (float)$item['quantity'];
@@ -242,7 +254,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
         $subTotalExcl = $this->method->formatPrice($subTotalExcl, null, false);
         $subTotalTax = $this->method->formatPrice($subTotalTax, null, false);
         $totalOrder = $this->method->formatPrice(
-            $subTotalExcl + $subTotalTax + $shippingTotal - $discountTotal,
+            $subTotalExcl + $subTotalTax + $shippingTotal + $handling - $discountTotal,
             null,
             false
         );
@@ -267,6 +279,10 @@ class PaypalOrderCreateRequest extends RequestAbstract
                     'discount' => array(
                         'currency_code' => $currency,
                         'value' => $discountTotal
+                    ),
+                    'handling' => array(
+                        'currency_code' => $currency,
+                        'value' => $handling
                     )
                 ),
         );
@@ -400,5 +416,43 @@ class PaypalOrderCreateRequest extends RequestAbstract
         }
 
         return (bool) $this->method->getShortCut();
+    }
+
+    protected function getHandling($currency)
+    {
+        $handling = 0;
+        $discounts = $this->context->cart->getCartRules();
+
+        if (empty($discounts)) {
+            return $handling;
+        }
+
+        foreach ($discounts as $discount) {
+            if ($discount['value_real'] < 0) {
+                $handling += $this->method->formatPrice(abs($discount['value_real']));
+            }
+        }
+
+        return $handling;
+    }
+
+    /**
+     * @return float
+     */
+    protected function getDiscount()
+    {
+        $discountTotal = $this->context->cart->getOrderTotal(true, \Cart::ONLY_DISCOUNTS);
+        $summaryDetails = $this->context->cart->getSummaryDetails();
+        $gifts = isset($summaryDetails['gift_products']) ? $summaryDetails['gift_products'] : [];
+
+        if (is_array($gifts)) {
+            foreach ($gifts as $gift) {
+                if (isset($gift['price_with_reduction'])) {
+                    $discountTotal += $gift['price_with_reduction'];
+                }
+            }
+        }
+
+        return $discountTotal;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PayPal
+ * 2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  *  versions in the future. If you wish to customize PrestaShop for your
  *  needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 2007-2020 PayPal
+ *  @author 2007-2021 PayPal
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
@@ -500,3 +500,7 @@ $_MODULE['<{paypal}prestashop>payment_infos_d5958aa5d9b6c407a9e4168c7db271b0'] =
 $_MODULE['<{paypal}prestashop>shortcut-cart_dac2693baa5c5c9a5318609ed81c4f2a'] = 'Pague com PayPal';
 $_MODULE['<{paypal}prestashop>shortcut-product_dac2693baa5c5c9a5318609ed81c4f2a'] = 'Pague com PayPal';
 $_MODULE['<{paypal}prestashop>hookselect_cf7e0dec152058173716133deabf5343'] = 'Se alguns elementos adicionados através de outros módulos são exibidos no mesmo gancho, você pode gerenciar a posição do módulo PayPal através de [a @href1@]«Design – Posições»[/a].';
+$_MODULE['<{paypal}prestashop>paypal_e8fdd95502f3d9eef321833fe60aed0c'] = 'Modo Sandbox : todas as transacções serão fictícias';
+$_MODULE['<{paypal}prestashop>adminpaypalcontroller_b38308023e216ac4faf73789566556c2'] = 'Modo Sandbox : é o ambiente de teste onde não será possível recolher quaisquer pagamentos reais';
+$_MODULE['<{paypal}prestashop>messageforcustomerone_e8fdd95502f3d9eef321833fe60aed0c'] = 'Modo Sandbox : todas as transacções serão fictícias';
+$_MODULE['<{paypal}prestashop>messageforcustomertwo_e8fdd95502f3d9eef321833fe60aed0c'] = 'Modo Sandbox : todas as transacções serão fictícias';

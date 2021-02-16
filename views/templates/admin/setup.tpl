@@ -1,5 +1,5 @@
 {*
-* 2007-2020 PayPal
+* 2007-2021 PayPal
 *
 * NOTICE OF LICENSE
 *
@@ -17,58 +17,71 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author 2007-2020 PayPal
- *  @author 202 ecommerce <tech@202-ecommerce.com>
+*  @author 2007-2021 PayPal
 *  @copyright PayPal
 *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
 *
 *}
 
-{if $showPsCheckoutInfo}
-    {include './_partials/messages/prestashopCheckoutInfo.tpl'}
-{/if}
+{extends file='./admin.tpl'}
 
-{if $showRestApiIntegrationMessage}
-    {include './_partials/messages/restApiIntegrationMessage.tpl'}
-{/if}
+{block name='content'}
+    {if $showPsCheckoutInfo}
+        {include './_partials/messages/prestashopCheckoutInfo.tpl'}
+    {/if}
 
-{if isset($need_rounding) && $need_rounding}
-  {include './_partials/messages/roundingSettingsMessage.tpl'}
-{/if}
+    {if $showRestApiIntegrationMessage}
+        {include './_partials/messages/restApiIntegrationMessage.tpl'}
+    {/if}
 
-{include './_partials/headerLogo.tpl'}
+    {if isset($need_rounding) && $need_rounding}
+        {include './_partials/messages/roundingSettingsMessage.tpl'}
+    {/if}
 
-<div>
-    <div class="row pp__flex">
-        <div class="col-lg-8 stretchHeightForm pp__pb-4">
-            {if isset($formAccountSettings)}
-                {$formAccountSettings nofilter} {* the variable contains html code *}
+    {include './_partials/headerLogo.tpl'}
+
+  <div class="pp__flex setup-blocks">
+      {if isset($formAccountSettings)}
+        <div class="pp__flex-item-1 pp__mr-1 stretchHeightForm">
+            {if isset($country_iso) && in_array($country_iso, ['MX', 'BR', 'IN', 'JP'])}
+              <div>
+                  {$formAccountSettings nofilter}{* the variable contains html code *}
+              </div>
+
+              <div>
+                  {if isset($formPaymentSettings)}
+                    <div>
+                        {$formPaymentSettings nofilter}{* the variable contains html code *}
+                    </div>
+                  {/if}
+              </div>
+
+            {else}
+                {$formAccountSettings nofilter}{* the variable contains html code *}
             {/if}
 
         </div>
-        <div class="col-lg-4 pp__flex pp__flex_direction_column pp__justify-content-between stretchHeightForm pp__pb-4">
-            {if isset($formEnvironmentSettings)}
-                {$formEnvironmentSettings nofilter} {* the variable contains html code *}
-            {/if}
+      {/if}
 
-            <div class="status-block-container">
-                {if isset($formStatusTop)}
-                    {$formStatusTop nofilter} {* the variable contains html code *}
-                {/if}
+      {if isset($formEnvironmentSettings)}
+        <div class="pp__flex-item-1 pp__mr-1 stretchHeightForm">
+            {$formEnvironmentSettings nofilter}{* the variable contains html code *}
+        </div>
+      {/if}
+
+      {if isset($country_iso) === false || false === in_array($country_iso, ['MX', 'BR', 'IN', 'JP'])}
+          {if isset($formPaymentSettings)}
+            <div class="pp__flex-item-1 pp__mr-1 stretchHeightForm">
+                {$formPaymentSettings nofilter}{* the variable contains html code *}
             </div>
-        </div>
-    </div>
+          {/if}
+      {/if}
 
-    <div class="row pp__flex">
-        <div class="col-lg-8">
-            {if isset($formPaymentSettings)}
-                {$formPaymentSettings nofilter} {* the variable contains html code *}
-            {/if}
+      {if isset($formStatus)}
+        <div class="pp__flex-item-1 {if false === isset($country_iso) || false === in_array($country_iso, ['MX', 'BR', 'IN', 'JP'])}stretchHeightForm{/if}">
+            {$formStatus nofilter}{* the variable contains html code *}
         </div>
-        <div class="col-lg-4 stretchHeightForm pp__pb-4 status-block-container">
-            {if isset($formStatus)}
-                {$formStatus nofilter} {* the variable contains html code *}
-            {/if}
-        </div>
-    </div>
-</div>
+      {/if}
+  </div>
+{/block}
+

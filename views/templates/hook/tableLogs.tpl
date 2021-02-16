@@ -1,5 +1,5 @@
 {*
-* 2007-2020 PayPal
+* 2007-2021 PayPal
 *
 * NOTICE OF LICENSE
 *
@@ -17,8 +17,7 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author 2007-2020 PayPal
- *  @author 202 ecommerce <tech@202-ecommerce.com>
+*  @author 2007-2021 PayPal
 *  @copyright PayPal
 *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
 *
@@ -38,19 +37,19 @@
         {foreach from=$logs item=log}
             <tr>
                 <td>
-                    {$log->date_add|escape:'html':'utf-8'}
+                    {$log->date_add|escape:'html':'UTF-8'}
                 </td>
                 <td>
-                    {$log->getDateTransaction()|escape:'html':'utf-8'}
+                    {$log->getDateTransaction()|escape:'html':'UTF-8'}
                 </td>
                 <td>
-                    <a href="{$log->getLinkToTransaction()|addslashes}" target="_blank">{$log->id_transaction|escape:'html':'utf-8'}</a>
+                    <a href="{$log->getLinkToTransaction()|addslashes}" target="_blank">{$log->id_transaction|escape:'html':'UTF-8'}</a>
                 </td>
                 <td>
-                    {$log->tools|escape:'html':'utf-8'}
+                    {$log->tools|escape:'html':'UTF-8'}
                 </td>
                 <td>
-                    {$log->log|escape:'html':'utf-8'}
+                    {$log->log|escape:'html':'UTF-8'}
                 </td>
             </tr>
         {/foreach}

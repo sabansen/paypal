@@ -1,5 +1,5 @@
 {*
-* 2007-2020 PayPal
+* 2007-2021 PayPal
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2020 PayPal SA
+*  @copyright 2007-2021 PayPal SA
 *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
 *
 *}
@@ -33,7 +33,7 @@
 
             {foreach from=$hooks item=hookName}
                 <li class="pp__mb-0">
-                    {$hookName|escape:'htmlall':'utf-8'}
+                    {$hookName|escape:'htmlall':'UTF-8'}
                 </li>
             {/foreach}
 
