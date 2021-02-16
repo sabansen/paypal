@@ -33,7 +33,9 @@
   }
 </style>
 
-{include file='./banner.tpl'}
+<div style="padding: 5px 0">
+    {include file='./banner.tpl'}
+</div>
 
 <script>
     Banner.prototype.updateAmount = function() {
