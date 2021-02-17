@@ -181,8 +181,10 @@ If you choose to use widgets, you will be able to copy widget code and insert it
             ConfigurationMap::PRODUCT_PAGE => Configuration::get(ConfigurationMap::PRODUCT_PAGE),
             ConfigurationMap::HOME_PAGE => Configuration::get(ConfigurationMap::HOME_PAGE),
             ConfigurationMap::CATEGORY_PAGE => Configuration::get(ConfigurationMap::CATEGORY_PAGE),
-            ConfigurationMap::CART_PAGE => Configuration::get(ConfigurationMap::CART_PAGE)
+            ConfigurationMap::CART_PAGE => Configuration::get(ConfigurationMap::CART_PAGE),
+            ConfigurationMap::CHECKOUT_PAGE => Configuration::get(ConfigurationMap::CHECKOUT_PAGE)
         ]);
+
         return Context::getContext()->smarty->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/_partials/paypalBanner/installmentPageDisplayingSetting.tpl');
     }
 
