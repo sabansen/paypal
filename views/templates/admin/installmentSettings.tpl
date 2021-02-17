@@ -82,11 +82,45 @@
             </div>
 
             <div class="configuration">
-                <div class="bootstrap" style="width: 40%">
+                <div class="bootstrap pp__flex" style="width: 50%">
                     <input
                             type="text"
                             name="PAYPAL_CLIENT_ID_INSTALLMENT"
                             {if isset($PAYPAL_CLIENT_ID_INSTALLMENT)}value="{$PAYPAL_CLIENT_ID_INSTALLMENT}"{/if}>
+                    <div>
+                        <span class="btn btn-default pp__ml-2" onclick="toggleHint(event)">?</span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="paypal-form-group pp__flex-align-center pp_mb-20 paypal-hide" clientId-hint>
+            <div class="label">
+            </div>
+
+            <div class="configuration">
+                <div class="bootstrap">
+                    <div class="alert alert-info">
+                        {l s='In order to display the banner “Pay in 4x”, please create a REST App in order to get your ClientID :' mod='paypal'}
+                        <ul>
+                            <li>
+                                {l s='Access to ' mod='paypal'}
+                                <a href="https://developer.paypal.com/developer/applications/" target="_blank">
+                                    https://developer.paypal.com/developer/applications/
+                                </a>
+                            </li>
+                            <li>
+                                {l s='Log in or create a business account' mod='paypal'}
+                            </li>
+                            <li>
+                                {l s='Create a "REST API apps"' mod='paypal'}
+                            </li>
+                            <li>
+                                {l s='Copy/paste your "Client ID"' mod='paypal'}
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -225,3 +259,22 @@
     </form>
 
 </div>
+
+<script>
+    window.toggleHint = function (e) {
+        try {
+            var btn = e.target;
+            var hint = document.querySelector('[clientId-hint]');
+
+            if (hint.classList.contains('paypal-hide')) {
+                hint.classList.remove('paypal-hide');
+            } else {
+                hint.classList.add('paypal-hide');
+            }
+
+            btn.textContent = btn.textContent == '?' ? 'X' : '?';
+        } catch (exception) {
+            console.error(exception);
+        }
+    }
+</script>

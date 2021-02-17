@@ -55,7 +55,7 @@ label span.description{display:block;}
 #paypal_configuration > .box{margin-left:0;margin-right:0;padding-left:0;padding-right:0}
 #paypal-wrapper .left,#paypal-wrapper dl > *{float:left}
 #paypal-wrapper .right,.box ul.tick{float:right}
-.paypal-hide{display:none}
+.paypal-hide{display:none !important}
 #paypal-wrapper .merchant_id {
 	margin-top: 0px;
 }
