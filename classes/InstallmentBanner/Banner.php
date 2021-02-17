@@ -101,7 +101,10 @@ class Banner
         $method = AbstractMethodPaypal::load();
 
         $js = [
-            'paypal-lib' => $method->getUrlJsSdkLib()
+            'tot-paypal-sdk' => [
+                'src' => $method->getUrlJsSdkLib(),
+                'data-namespace' => 'totPaypalSdk'
+            ]
         ];
 
         return $js;
