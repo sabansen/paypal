@@ -23,6 +23,13 @@
 *
 *}
 
+<style>
+    [installment-container] {
+        display: flex;
+        justify-content: flex-end;
+    }
+</style>
+
 {include file='./banner.tpl'}
 
 <script>
