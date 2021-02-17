@@ -436,6 +436,10 @@ label span.description{display:block;}
     padding-bottom: 20px;
 }
 
+.pp__mb-3 {
+    margin-bottom: 15px;
+}
+
 [installment-popup] .modal-dialog {
     position: relative;
     top: 30%;

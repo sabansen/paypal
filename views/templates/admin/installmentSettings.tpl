@@ -30,12 +30,16 @@
         <img style="width: 135px" src="{$moduleDir|addslashes}/views/img/paypal.png">
     </div>
     <div class="pp__pl-5">
+        <div class="pp__mb-3">
+            {l s='Display the 4X PayPal Payment on your site' mod='paypal'}
+        </div>
+
         <div>
-            {l s='Display the 4X PayPal Payment on your site. Payment in 4X PayPal allows French consumers to pay in 4 equal installments. You can promote 4X PayPal Payment only if you are a merchant based in France, with a French website and standard PayPal integration.' mod='paypal'}
+            {l s='Payment in 4X PayPal allows French consumers to pay in 4 equal installments. You can promote 4X PayPal Payment only if you are a merchant based in France, with a French website and standard PayPal integration.' mod='paypal'}
             {l s='Merchants with the Vaulting tool (digital safe) or recurring payments / subscription integration, as well as those with certain activities (sale of digital goods / non-physical goods) are not eligible to promote 4X PayPal Payment . We will post messages on your site promoting 4X PayPal Payment. You cannot promote 4X PayPal Payment with any other content.' mod='paypal'}
         </div>
         <div>
-            <a href="https://www.paypal.com/fr/webapps/mpp/4x" target="_blank">
+            <a href="https://www.paypal.com/fr/business/buy-now-pay-later" target="_blank">
                 {l s='See more' mod='paypal'}
             </a>
         </div>
