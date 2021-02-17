@@ -164,9 +164,12 @@ If you choose to use widgets, you will be able to copy widget code and insert it
         $return &= Configuration::updateValue(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT, (int)Tools::getValue(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT));
         $return &= Configuration::updateValue(ConfigurationMap::PRODUCT_PAGE, (int)Tools::getValue(ConfigurationMap::PRODUCT_PAGE));
         $return &= Configuration::updateValue(ConfigurationMap::CART_PAGE, (int)Tools::getValue(ConfigurationMap::CART_PAGE));
+        $return &= Configuration::updateValue(ConfigurationMap::CHECKOUT_PAGE, Tools::getValue(ConfigurationMap::CHECKOUT_PAGE));
         $return &= Configuration::updateValue(ConfigurationMap::HOME_PAGE, (int)Tools::getValue(ConfigurationMap::HOME_PAGE));
         $return &= Configuration::updateValue(ConfigurationMap::CATEGORY_PAGE, (int)Tools::getValue(ConfigurationMap::CATEGORY_PAGE));
         $return &= Configuration::updateValue(ConfigurationMap::COLOR, Tools::getValue(ConfigurationMap::COLOR));
+
+        return $return;
     }
 
     /**

@@ -73,7 +73,20 @@
               {if isset($PAYPAL_INSTALLMENT_CART_PAGE) && $PAYPAL_INSTALLMENT_CART_PAGE}checked{/if}
       >
       <label for="PAYPAL_INSTALLMENT_CART_PAGE" class="control-label">
-          {l s='Cart/Checkout' mod='paypal'}
+          {l s='Cart' mod='paypal'}
+      </label>
+    </div>
+
+    <div class="form-group">
+      <input
+              type="checkbox"
+              id="PAYPAL_INSTALLMENT_CHECKOUT_PAGE"
+              name="PAYPAL_INSTALLMENT_CHECKOUT_PAGE"
+              value="1"
+              {if isset($PAYPAL_INSTALLMENT_CHECKOUT_PAGE) && $PAYPAL_INSTALLMENT_CHECKOUT_PAGE}checked{/if}
+      >
+      <label for="PAYPAL_INSTALLMENT_CHECKOUT_PAGE" class="control-label">
+          {l s='Checkout' mod='paypal'}
       </label>
     </div>
 
