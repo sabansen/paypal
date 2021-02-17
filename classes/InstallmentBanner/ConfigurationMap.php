@@ -67,4 +67,29 @@ class ConfigurationMap
 
         return isset($gradientMap[$color]) ? $gradientMap[$color] : $gradientMap[self::COLOR_BLUE];
     }
+
+    /**
+     * @return string
+     */
+    public static function getClientId()
+    {
+        if ((int) Configuration::get('PAYPAL_SANDBOX')) {
+            return (string)Configuration::get(self::CLIENT_ID . '_SANDBOX');
+        } else {
+            return (string)Configuration::get(self::CLIENT_ID . '_LIVE');
+        }
+    }
+
+    /**
+     * @param string $clientId
+     * @return bool
+     */
+    public static function setClientId($clientId)
+    {
+        if ((int) Configuration::get('PAYPAL_SANDBOX')) {
+            return Configuration::updateValue(self::CLIENT_ID . '_SANDBOX', $clientId);
+        } else {
+            return Configuration::updateValue(self::CLIENT_ID . '_LIVE', $clientId);
+        }
+    }
 }

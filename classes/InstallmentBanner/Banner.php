@@ -93,7 +93,7 @@ class Banner
     {
         $query = [
             'components' => 'messages',
-            'client-id' => Configuration::get(ConfigurationMap::CLIENT_ID)
+            'client-id' => ConfigurationMap::getClientId()
         ];
         $js = [
             'paypal-lib' => [
