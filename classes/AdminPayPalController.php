@@ -72,7 +72,7 @@ class AdminPayPalController extends \ModuleAdminController
 
     public function initContent()
     {
-        header('Clear-Site-Data: "cache"');
+        header('Cache-Control: max-age=0');
         $method = AbstractMethodPaypal::load();
 
         if ((int)\Configuration::get('PAYPAL_SANDBOX') == 1) {
