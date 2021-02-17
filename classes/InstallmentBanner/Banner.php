@@ -77,7 +77,7 @@ class Banner
         if ((int)Configuration::get(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT)) {
             $vars['color'] = Configuration::get(ConfigurationMap::COLOR);
         } else {
-            $vars['color'] = ConfigurationMap::COLOR_BLUE;
+            $vars['color'] = ConfigurationMap::COLOR_GRAY;
         }
 
         $vars['placement'] = $this->getPlacement();
