@@ -29,6 +29,7 @@
 function upgrade_module_3_16_0($module)
 {
     $module->registerHook('displayTop');
+    $module->registerHook('displayProductButtons');
 
     if (Shop::isFeatureActive()) {
         foreach (Shop::getShops() as $shop) {

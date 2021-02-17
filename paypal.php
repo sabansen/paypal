@@ -162,7 +162,8 @@ class PayPal extends PaymentModule
             || !$this->registerHook('actionBeforeCartUpdateQty')
             || !$this->registerHook('actionOrderSlipAdd')
             || !$this->registerHook('PDFInvoice')
-            || !$this->registerHook('displayTop')) {
+            || !$this->registerHook('displayTop')
+            || !$this->registerHook('displayProductButtons')) {
             return false;
         }
 
@@ -1038,11 +1039,19 @@ class PayPal extends PaymentModule
     {
         $content = (!$this->useMobile()) ? $this->renderExpressCheckoutButton('product')
         : null;
+
+        return $content;
+    }
+
+    public function hookDisplayProductButtons()
+    {
+        $content = '';
         $bannerManager = new BannerManager();
 
         if ($bannerManager->isBannerAvailable()) {
             $content .= $bannerManager->renderForProductPage();
         }
+
         return $content;
     }
 

@@ -24,13 +24,11 @@
 *}
 
 <style>
-  .product-quantity {
-    flex-wrap: wrap;
+
+  [installment-container] {
+    padding: 10px;
   }
 
-  .product-quantity [installment-container] {
-    flex-basis: 100%;
-  }
 </style>
 
 {include file='./banner.tpl'}
