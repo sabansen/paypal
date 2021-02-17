@@ -37,7 +37,7 @@ use PaypalPPBTlib\Install\ModuleInstaller;
 function upgrade_module_5_4_0($module)
 {
     if (Shop::isFeatureActive()) {
-        foreach ($shops as $shop) {
+        foreach (Shop::getShops() as $shop) {
             Configuration::updateValue(
                 'PAYPAL_SHOW_INSTALLMENT_POPUP',
                 1,
