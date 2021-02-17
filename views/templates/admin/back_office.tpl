@@ -463,4 +463,5 @@
 {/if}
 <script>
 	var tlscurltest_url = '{$tls_link_ajax|addslashes}';
+	var activeNavTab = '{$activeNavTab}';
 </script>

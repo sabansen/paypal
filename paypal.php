@@ -786,6 +786,7 @@ class PayPal extends PaymentModule
             'showWarningForBraintreeUsers' => $prestaBraintree->useToken() && Configuration::get('PAYPAL_BRAINTREE_ACCESS_TOKEN'),
             'showPsCheckoutInfo' => $this->showPsCheckoutMessage(),
             'moduleDir' => _MODULE_DIR_ . $this->name,
+            'activeNavTab' => Tools::isSubmit('installmentSettingForm') ? '[paypal-nav-bar] li[tab-content="payment4x"]' : '[paypal-nav-bar] li[tab-content="general"]'
         ));
 
         // Tpl vars for Paypal installment banner. Start

@@ -368,6 +368,13 @@ $(document).ready(function () {
 
     window.paypalNavTabs = new PaypalNavTabs();
 
+    if (typeof activeNavTab !== 'undefined') {
+        var tab = document.querySelector(activeNavTab);
+
+        if (typeof tab !== null) {
+            paypalNavTabs.active(tab);
+        }
+    }
 });
 
 var PaypalSectionManager = {
