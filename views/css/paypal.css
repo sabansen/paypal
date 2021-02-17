@@ -424,7 +424,23 @@ label span.description{display:block;}
     margin-top: 20px !important;
 }
 
+.pp__pr-4 {
+    padding-right: 20px;
+}
+
+.pp__pl-5 {
+    padding-left: 25px;
+}
+
+.pp__pb-4 {
+    padding-bottom: 20px;
+}
+
 [installment-popup] .modal-dialog {
     position: relative;
     top: 30%;
+}
+
+[installment-disclaimer] {
+    border-bottom: 1px solid #ddd;
 }
