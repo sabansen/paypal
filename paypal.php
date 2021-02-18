@@ -815,7 +815,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
             // Show Shortcut on signup page if need
             // if ps version is '1.7.6' and bigger than use native hook displayPersonalInformationTop
-            if ($this->isShowShortcut() && !$this->context->customer->isLogged()) {
+            if ($this->isShowShortcut() && !$this->context->customer->isLogged() && !$this->context->customer->is_guest) {
                 if (version_compare(_PS_VERSION_, '1.7.6', '<')
                     && ((bool)Configuration::get(ShortcutConfiguration::CUSTOMIZE_STYLE) === false || (int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_SIGNUP) == ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK)) {
                     $Shortcut = new ShortcutSignup();
