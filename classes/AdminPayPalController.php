@@ -65,6 +65,8 @@ class AdminPayPalController extends \ModuleAdminController
     {
         if (\Tools::getValue('action') === 'set_sandbox_mode') {
             \Configuration::updateValue('PAYPAL_SANDBOX', (int)\Tools::getValue('sandbox_mode'));
+            $methodObj = AbstractMethodPaypal::load($this->method);
+            $methodObj->isConfigured();
         }
 
         parent::init();
