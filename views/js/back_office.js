@@ -455,6 +455,8 @@ var PaypalNavTabs = function(options) {
         }.bind(this));
     }.bind(this));
 
+    // Nav bar should be at start of content. Start
+    document.getElementById('content').prepend(this.navBar.closest('.bootstrap'));
 };
 
 var InstallmentSetting = {
