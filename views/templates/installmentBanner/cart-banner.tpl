@@ -30,7 +30,8 @@
         layout: layout,
         amount: amount,
         placement: placement,
-        container: '[paypal-banner-message]'
+        container: '[paypal-banner-message]',
+        textAlign: 'center'
     });
     paypalBanner.initBanner();
 </script>

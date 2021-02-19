@@ -43,6 +43,8 @@
       this.color = typeof conf.color != 'undefined' ? conf.color : null;
 
       this.container = typeof conf.container != 'undefined' ? conf.container : null;
+
+      this.textAlign = typeof conf.textAlign != 'undefined' ? conf.textAlign : null;
   };
 
   Banner.prototype.initBanner = function() {
@@ -58,6 +60,12 @@
               ratio: '20x1'
           }
       };
+
+      if (this.textAlign) {
+          conf['style']['text'] = {
+              'align': this.textAlign
+          }
+      }
 
       if (this.placement) {
           conf.placement = this.placement;
