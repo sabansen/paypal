@@ -797,10 +797,10 @@ class PayPal extends PaymentModule
             ConfigurationMap::ENABLE_INSTALLMENT => Configuration::get(ConfigurationMap::ENABLE_INSTALLMENT),
             ConfigurationMap::COLOR => Configuration::get(ConfigurationMap::COLOR),
             'installmentColorOptions' => [
+                ConfigurationMap::COLOR_GRAY => $this->l('gray'),
                 ConfigurationMap::COLOR_BLUE => $this->l('blue'),
                 ConfigurationMap::COLOR_BLACK => $this->l('black'),
                 ConfigurationMap::COLOR_WHITE => $this->l('white'),
-                ConfigurationMap::COLOR_GRAY => $this->l('gray'),
                 ConfigurationMap::COLOR_MONOCHROME => $this->l('monochrome'),
                 ConfigurationMap::COLOR_GRAYSCALE => $this->l('grayscale'),
             ],
