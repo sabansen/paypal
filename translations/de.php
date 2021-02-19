@@ -2,25 +2,26 @@
 /**
  * 2007-2021 PayPal
  *
- * NOTICE OF LICENSE
+ *  NOTICE OF LICENSE
  *
- * This source file is subject to the Academic Free License (AFL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/afl-3.0.php
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
+ *  This source file is subject to the Academic Free License (AFL 3.0)
+ *  that is bundled with this package in the file LICENSE.txt.
+ *  It is also available through the world-wide-web at this URL:
+ *  http://opensource.org/licenses/afl-3.0.php
+ *  If you did not receive a copy of the license and are unable to
+ *  obtain it through the world-wide-web, please send an email
+ *  to license@prestashop.com so we can send you a copy immediately.
  *
- * DISCLAIMER
+ *  DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ *  Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ *  versions in the future. If you wish to customize PrestaShop for your
+ *  needs please refer to http://www.prestashop.com for more information.
  *
- * @author 2007-2021 PayPal
- * @copyright PayPal
- * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ *  @author 2007-2021 PayPal
+ *  @author 202 ecommerce <tech@202-ecommerce.com>
+ *  @copyright PayPal
+ *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
 global $_MODULE;
@@ -493,3 +494,7 @@ $_MODULE['<{paypal}prestashop>payment_infos_d5958aa5d9b6c407a9e4168c7db271b0'] =
 $_MODULE['<{paypal}prestashop>shortcut-cart_dac2693baa5c5c9a5318609ed81c4f2a'] = 'Bezahlen mit PayPal';
 $_MODULE['<{paypal}prestashop>shortcut-product_dac2693baa5c5c9a5318609ed81c4f2a'] = 'Bezahlen mit PayPal';
 $_MODULE['<{paypal}prestashop>hookselect_cf7e0dec152058173716133deabf5343'] = 'Wenn einige Elemente, die über andere Module hinzugefügt wurden, am selben Hook angezeigt werden, können Sie die Position des PayPal-Moduls über [a @href1@]«Design – Positionen»[/a] verwalten.  ';
+$_MODULE['<{paypal}prestashop>paypal_e8fdd95502f3d9eef321833fe60aed0c'] = 'Sandbox-Modus: Alle Transaktionen sind rein fiktiv';
+$_MODULE['<{paypal}prestashop>adminpaypalcontroller_b38308023e216ac4faf73789566556c2'] = 'Sandbox-Modus: dies ist die Testumgebung, in der Sie keine echten Zahlungen veranlassen können';
+$_MODULE['<{paypal}prestashop>messageforcustomerone_e8fdd95502f3d9eef321833fe60aed0c'] = 'Sandbox-Modus: Alle Transaktionen sind rein fiktiv';
+$_MODULE['<{paypal}prestashop>messageforcustomertwo_e8fdd95502f3d9eef321833fe60aed0c'] = 'Sandbox-Modus: Alle Transaktionen sind rein fiktiv';

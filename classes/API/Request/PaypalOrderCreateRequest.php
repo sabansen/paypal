@@ -40,6 +40,8 @@ class PaypalOrderCreateRequest extends RequestAbstract
 
     protected $wrappings = [];
 
+    protected $products = [];
+
     public function execute()
     {
         $response = new ResponseOrderCreate();
@@ -103,9 +105,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
     protected function buildRequestBody()
     {
         $currency = $this->getCurrency();
-        $productItmes = $this->getProductItems($currency);
-        $wrappingItems = $this->getWrappingItems($currency);
-        $items = array_merge($productItmes, $wrappingItems);
+        $items = $this->getItems($currency);
         $payer = $this->getPayer();
         $shippingInfo = $this->getShippingInfo();
 
@@ -172,19 +172,32 @@ class PaypalOrderCreateRequest extends RequestAbstract
         return $this->module->getPaymentCurrencyIso();
     }
 
+    protected function getItems($currency, $cache = false)
+    {
+        if ($cache && false === empty($this->items)) {
+            return $this->items;
+        }
+
+        $this->items = array_merge(
+            $this->getProductItems($currency, $cache),
+            $this->getWrappingItems($currency, $cache)
+        );
+
+        return $this->items;
+    }
+
     /**
      * @param $currency string Iso code
      * @return array
      */
     protected function getProductItems($currency, $cache = false)
     {
-        if ($cache && false === empty($this->items)) {
-            return $this->items;
+        if ($cache && false === empty($this->products)) {
+            return $this->products;
         }
 
         $items = [];
-        $cartSummary = $this->context->cart->getSummaryDetails();
-        $products = $cartSummary['products'];
+        $products = $this->context->cart->getProducts();
 
         foreach ($products as $product) {
             $item = [];
@@ -215,7 +228,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
             $items[] = $item;
         }
 
-        $this->items = $items;
+        $this->products = $items;
         return $items;
     }
 
@@ -226,13 +239,11 @@ class PaypalOrderCreateRequest extends RequestAbstract
     protected function getAmount($currency)
     {
         $cartSummary = $this->context->cart->getSummaryDetails();
-        $productItmes = $this->getProductItems($currency, true);
-        $wrappingItems = $this->getWrappingItems($currency, true);
-        $items = array_merge($productItmes, $wrappingItems);
+        $items = $this->getItems($currency, true);
         $subTotalExcl = 0;
-        $shippingTotal = $this->method->formatPrice($cartSummary['total_shipping']);
+        $shippingTotal = $this->method->formatPrice(abs($cartSummary['total_shipping']));
         $subTotalTax = 0;
-        $discountTotal = $this->method->formatPrice($cartSummary['total_discounts']);
+        $discountTotal = $this->method->formatPrice(abs($this->getDiscount()));
         $handling = $this->getHandling($currency);
 
         foreach ($items as $item) {
@@ -418,10 +429,30 @@ class PaypalOrderCreateRequest extends RequestAbstract
 
         foreach ($discounts as $discount) {
             if ($discount['value_real'] < 0) {
-                $handling += abs($this->method->formatPrice($discount['value_real']));
+                $handling += $this->method->formatPrice(abs($discount['value_real']));
             }
         }
 
         return $handling;
+    }
+
+    /**
+     * @return float
+     */
+    protected function getDiscount()
+    {
+        $discountTotal = $this->context->cart->getOrderTotal(true, \Cart::ONLY_DISCOUNTS);
+        $summaryDetails = $this->context->cart->getSummaryDetails();
+        $gifts = isset($summaryDetails['gift_products']) ? $summaryDetails['gift_products'] : [];
+
+        if (is_array($gifts)) {
+            foreach ($gifts as $gift) {
+                if (isset($gift['price_with_reduction'])) {
+                    $discountTotal += $gift['price_with_reduction'];
+                }
+            }
+        }
+
+        return $discountTotal;
     }
 }

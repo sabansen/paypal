@@ -65,6 +65,8 @@ class AdminPayPalController extends \ModuleAdminController
     {
         if (\Tools::getValue('action') === 'set_sandbox_mode') {
             \Configuration::updateValue('PAYPAL_SANDBOX', (int)\Tools::getValue('sandbox_mode'));
+            $methodObj = AbstractMethodPaypal::load($this->method);
+            $methodObj->isConfigured();
         }
 
         parent::init();
@@ -368,9 +370,9 @@ class AdminPayPalController extends \ModuleAdminController
             'sandbox_mode' => \Configuration::get('PAYPAL_SANDBOX') ? 0 : 1
         ];
         $this->page_header_toolbar_btn['switch_sandbox'] = [
-            'desc' => $this->trans('Sandbox mode', [], 'Modules.Paypal.Admin'),
+            'desc' => $this->l('Sandbox mode', 'AdminPayPalController'),
             'icon' => 'process-icon-toggle-' . (\Configuration::get('PAYPAL_SANDBOX') ? 'on' : 'off'),
-            'help' => $this->trans('Sandbox mode is the test environment where you\'ll be not able to collect any real payments.', [], 'Admin.Dashboard.Help'),
+            'help' => $this->l('Sandbox mode is the test environment where you\'ll be not able to collect any real payments.', 'AdminPayPalController'),
             'href' => self::$currentIndex . '?' . http_build_query($query)
         ];
 
