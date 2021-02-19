@@ -99,7 +99,7 @@
             </div>
         </div>
 
-        <div class="paypal-form-group pp__flex-align-center pp_mb-20 paypal-hide" clientId-hint>
+        <div class="paypal-form-group pp__flex-align-center pp_mb-20 hidden" clientId-hint>
             <div class="label">
             </div>
 
@@ -270,10 +270,10 @@
             var btn = e.target;
             var hint = document.querySelector('[clientId-hint]');
 
-            if (hint.classList.contains('paypal-hide')) {
-                hint.classList.remove('paypal-hide');
+            if (hint.classList.contains('hidden')) {
+                hint.classList.remove('hidden');
             } else {
-                hint.classList.add('paypal-hide');
+                hint.classList.add('hidden');
             }
 
             btn.textContent = btn.textContent == '?' ? 'X' : '?';
