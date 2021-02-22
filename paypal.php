@@ -810,7 +810,8 @@ class PayPal extends PaymentModule
             ConfigurationMap::CART_PAGE => Configuration::get(ConfigurationMap::CART_PAGE),
             ConfigurationMap::CLIENT_ID => ConfigurationMap::getClientId(),
             'paypalInstallmentBanner' => $banner->render(),
-            'showInstallmentPopup' => $this->isShowInstallmentPopup()
+            'showInstallmentPopup' => $this->isShowInstallmentPopup(),
+            'showInstallmentSetting' => $this->isShowInstallmentSetting()
         ]);
 
         // Tpl vars for Paypal installment banner. End
@@ -2826,6 +2827,23 @@ class PayPal extends PaymentModule
         return in_array($countryDefault->iso_code, $this->psCheckoutCountry) && ($notShowPsCheckout == false);
     }
 
+    /**
+     * @return bool
+     */
+    protected function isShowInstallmentSetting()
+    {
+        $countryDefault = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
+
+        if (Tools::strtolower($countryDefault->iso_code) !== 'fr') {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
     protected function isShowInstallmentPopup()
     {
         $countryDefault = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT', null, null, $this->context->shop->id));

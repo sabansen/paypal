@@ -28,7 +28,9 @@
 <div class="bootstrap">
 	<ul paypal-nav-bar class="nav nav-pills">
 		<li class="active" tab-content="general"><a href="#">{l s='General' mod='paypal'}</a></li>
-		<li tab-content="payment4x"><a href="#">{l s='Payment in 4x' mod='paypal'}</a></li>
+		{if isset($showInstallmentSetting) && $showInstallmentSetting}
+			<li tab-content="payment4x"><a href="#">{l s='Payment in 4x' mod='paypal'}</a></li>
+		{/if}
 	</ul>
 </div>
 
