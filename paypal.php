@@ -2828,7 +2828,6 @@ class PayPal extends PaymentModule
 
     protected function isShowInstallmentPopup()
     {
-        return true;
         $countryDefault = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT', null, null, $this->context->shop->id));
 
         if (Validate::isLoadedObject($countryDefault) === false) {
