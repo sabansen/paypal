@@ -440,6 +440,10 @@ label span.description{display:block;}
     margin-bottom: 15px;
 }
 
+.pp__pt-2 {
+    padding-top: 10px;
+}
+
 [installment-popup] .modal-dialog {
     position: relative;
     top: 30%;

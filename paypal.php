@@ -1481,6 +1481,8 @@ class PayPal extends PaymentModule
     {
         if ((strcmp(Tools::getValue('configure'), $this->name) === 0) ||
             (strcmp(Tools::getValue('module_name'), $this->name) === 0)) {
+            header('Clear-Site-Data: "cache"');
+
             if (version_compare(_PS_VERSION_, '1.5', '<')) {
                 $output = '<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/jquery-ui-1.8.10.custom.min.js"></script>
                     <script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/jquery.fancybox-1.3.4.js"></script>
@@ -2826,6 +2828,7 @@ class PayPal extends PaymentModule
 
     protected function isShowInstallmentPopup()
     {
+        return true;
         $countryDefault = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT', null, null, $this->context->shop->id));
 
         if (Validate::isLoadedObject($countryDefault) === false) {
