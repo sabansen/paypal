@@ -1041,7 +1041,7 @@ class PayPal extends PaymentModule
         $content = (!$this->useMobile()) ? $this->renderExpressCheckoutButton('product')
         : null;
 
-        return $content;
+        return $content.$this->renderExpressCheckoutForm('product');
     }
 
     public function hookDisplayProductButtons()
