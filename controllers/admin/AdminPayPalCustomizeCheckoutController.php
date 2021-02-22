@@ -681,6 +681,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
     {
         $this->context->smarty->assign('confName', 'productPageWidgetCode');
         $this->context->smarty->assign('widgetCode', '{widget name=\'paypal\' action=\'paymentshortcut\'}');
+        $this->context->smarty->assign('isShowDescription', true);
         return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/form/fields/widgetCode.tpl');
     }
 
@@ -757,6 +758,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
     {
         $this->context->smarty->assign('widgetCode', '{widget name=\'paypal\' action=\'paymentshortcut\'}');
         $this->context->smarty->assign('confName', 'cartPageWidgetCode');
+        $this->context->smarty->assign('isShowDescription', true);
         return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/form/fields/widgetCode.tpl');
     }
 
@@ -764,6 +766,7 @@ Shipping costs will be estimated on the base of the cart total and default carri
     {
         $this->context->smarty->assign('widgetCode', '{widget name=\'paypal\' action=\'paymentshortcut\'}');
         $this->context->smarty->assign('confName', 'signupPageWidgetCode');
+        $this->context->smarty->assign('isShowDescription', true);
         return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/form/fields/widgetCode.tpl');
     }
 
