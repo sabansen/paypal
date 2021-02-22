@@ -459,6 +459,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
             Configuration::updateValue('PAYPAL_PREVIOUS_VERSION', $this->version);
         }
 
+        Hook::exec('ActionLocalizationPageSave', [], $this->id);
+
         return true;
     }
 
@@ -1494,8 +1496,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
     public function hookActionLocalizationPageSave($params)
     {
-        $idCountryDefault = @$params['form_data']['configuration']['default_country'];
-        $countryDefault = new Country((int)$idCountryDefault);
+        $countryDefault = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
 
         if (Validate::isLoadedObject($countryDefault) === false) {
             return;
