@@ -82,7 +82,12 @@
 
         <div class="paypal-form-group pp__flex-align-center pp_mb-20">
             <div class="label">
-                {l s='Client ID' mod='paypal'}
+                {if isset($PayPal_sandbox_mode) && $PayPal_sandbox_mode}
+                    {l s='REST Client ID Sandbox' mod='paypal'}
+
+                {else}
+                    {l s='REST Client ID' mod='paypal'}
+                {/if}
             </div>
 
             <div class="configuration">
