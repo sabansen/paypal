@@ -28,7 +28,7 @@
     <img style="width: 135px" src="{$moduleDir|addslashes}paypal/views/img/paypal.png">
   </div>
   <div class="pp__pl-5">
-    <div class="pp__mb-3">
+    <div class="h4">
       {l s='Display the 4X PayPal Payment on your site' mod='paypal'}
     </div>
     <div>
