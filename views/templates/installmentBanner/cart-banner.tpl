@@ -30,8 +30,12 @@
         layout: layout,
         amount: amount,
         placement: placement,
-        container: '[paypal-banner-message]',
-        textAlign: 'center'
+        container: '[paypal-banner-message]'
     });
+
+    if (window.innerWidth > 576) {
+        paypalBanner.textAlign = 'center';
+    }
+
     paypalBanner.initBanner();
 </script>
