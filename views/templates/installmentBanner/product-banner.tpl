@@ -53,7 +53,8 @@
         window.paypalBanner = new Banner({
             layout: layout,
             placement: placement,
-            container: '[paypal-banner-message]'
+            container: '[paypal-banner-message]',
+            textAlign: 'center'
         });
         paypalBanner.updateAmount();
         paypalBanner.initBanner();
