@@ -163,7 +163,8 @@ class PayPal extends PaymentModule
             || !$this->registerHook('actionOrderSlipAdd')
             || !$this->registerHook('PDFInvoice')
             || !$this->registerHook('displayTop')
-            || !$this->registerHook('displayProductButtons')) {
+            || !$this->registerHook('displayProductButtons')
+            || !$this->registerHook('displayPaymentTop')) {
             return false;
         }
 
@@ -1269,6 +1270,15 @@ class PayPal extends PaymentModule
 
         if ($bannerManager->isBannerAvailable()) {
             return $bannerManager->renderForHomePage();
+        }
+    }
+
+    public function hookDisplayPaymentTop()
+    {
+        $bannerManager = new BannerManager();
+
+        if ($bannerManager->isBannerAvailable()) {
+            return $bannerManager->renderForCheckoutPage();
         }
     }
 

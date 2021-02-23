@@ -118,7 +118,7 @@ class BannerManager
     public function renderForCartPage()
     {
         return $this->banner
-            ->setPlacement('product')
+            ->setPlacement('cart')
             ->setLayout('text')
             ->setAmount($this->context->cart->getOrderTotal(true))
             ->setTemplate(_PS_MODULE_DIR_ . 'paypal/views/templates/installmentBanner/cart-banner.tpl')
@@ -131,10 +131,9 @@ class BannerManager
     public function renderForCheckoutPage()
     {
         return $this->banner
-            ->setPlacement('product')
+            ->setPlacement('payment')
             ->setLayout('text')
             ->setAmount($this->context->cart->getOrderTotal(true))
-            ->addJsVar('paypalInstallmentController', $this->context->link->getModuleLink('paypal', 'installment'))
             ->setTemplate(_PS_MODULE_DIR_ . 'paypal/views/templates/installmentBanner/checkout-banner.tpl')
             ->render();
     }

@@ -23,36 +23,15 @@
 *
 *}
 
-{include file='./cart-banner.tpl'}
+{include file='./banner.tpl'}
 
 <script>
-    window.addEventListener('load', function() {
-        var checkoutSummaryObserver = new MutationObserver(function(mutations) {
-            var url = new URL(paypalInstallmentController);
-            url.searchParams.append('ajax', '1');
-            url.searchParams.append('action', 'GetCartTotal');
-
-            fetch(url.toString())
-                .then(function(response) {
-                    return response.json();
-                })
-                .then(function(response) {
-                    if (typeof response.cartTotal == 'undefined') {
-                        return true;
-                    }
-
-                    paypalBanner.amount = response.cartTotal;
-                    paypalBanner.initBanner();
-                });
-        });
-
-        checkoutSummaryObserver.observe(
-            document.getElementById('js-checkout-summary').parentElement,
-            {
-                childList: true,
-                subtree: true
-            }
-        );
+    var paypalBanner = new Banner({
+        layout: layout,
+        amount: amount,
+        placement: placement,
+        container: '[paypal-banner-message]'
     });
-
+    paypalBanner.initBanner();
 </script>
+
