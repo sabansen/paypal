@@ -200,7 +200,7 @@
                                 {if isset($PAYPAL_INSTALLMENT_CHECKOUT_PAGE) && $PAYPAL_INSTALLMENT_CHECKOUT_PAGE}checked{/if}
                         >
                         <label for="PAYPAL_INSTALLMENT_CHECKOUT_PAGE">
-                            {l s='Checkout' mod='paypal'}
+                            {l s='Checkout (payment step)' mod='paypal'}
                         </label>
                     </div>
 

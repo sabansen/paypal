@@ -411,6 +411,7 @@ $_MODULE['<{paypal}prestashop>installmentsettings_cfe6e34a4c7f24aad32aa4299562f5
 $_MODULE['<{paypal}prestashop>installmentsettings_175103bab005a71c49c7ef675c1304cd'] = 'Pages Catégorie';
 $_MODULE['<{paypal}prestashop>installmentsettings_235e8d1a54ecddcf1d3ff533331ed416'] = 'Pages Produit';
 $_MODULE['<{paypal}prestashop>installmentsettings_a85eba4c6c699122b2bb1387ea4813ad'] = 'Panier';
+$_MODULE['<{paypal}prestashop>installmentsettings_69772c70b3ce0f7494fd07939c76c67f'] = 'Checkout (étape de paiement)';
 $_MODULE['<{paypal}prestashop>installmentsettings_ee2d3754b6e7f57898d9d8670f78ae71'] = 'Options avancées';
 $_MODULE['<{paypal}prestashop>installmentsettings_2cca02ce9a0a514bf0c7fd92b9ec8686'] = 'Styles pour la page d’accueil et pages catégories';
 $_MODULE['<{paypal}prestashop>installmentsettings_c9cc8cce247e49bae79f15173ce97354'] = 'Enregistrer';
