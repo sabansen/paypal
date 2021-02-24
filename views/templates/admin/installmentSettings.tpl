@@ -178,7 +178,7 @@
                         </label>
                     </div>
 
-                    <div>
+                    <div class="pp_mb-10">
                         <input
                                 type="checkbox"
                                 id="PAYPAL_INSTALLMENT_CART_PAGE"
@@ -187,7 +187,20 @@
                                 {if isset($PAYPAL_INSTALLMENT_CART_PAGE) && $PAYPAL_INSTALLMENT_CART_PAGE}checked{/if}
                         >
                         <label for="PAYPAL_INSTALLMENT_CART_PAGE">
-                            {l s='Cart/Checkout' mod='paypal'}
+                            {l s='Cart' mod='paypal'}
+                        </label>
+                    </div>
+
+                    <div>
+                        <input
+                                type="checkbox"
+                                id="PAYPAL_INSTALLMENT_CHECKOUT_PAGE"
+                                name="PAYPAL_INSTALLMENT_CHECKOUT_PAGE"
+                                value="1"
+                                {if isset($PAYPAL_INSTALLMENT_CHECKOUT_PAGE) && $PAYPAL_INSTALLMENT_CHECKOUT_PAGE}checked{/if}
+                        >
+                        <label for="PAYPAL_INSTALLMENT_CHECKOUT_PAGE">
+                            {l s='Checkout' mod='paypal'}
                         </label>
                     </div>
 

@@ -64,7 +64,7 @@ class BannerManager
         }
 
         if ($this->context->controller instanceof OrderController
-            && false === (bool)Configuration::get(ConfigurationMap::CART_PAGE)) {
+            && false === (bool)Configuration::get(ConfigurationMap::CHECKOUT_PAGE)) {
 
             return false;
         }
