@@ -36,8 +36,15 @@
 <script>
     Banner.prototype.updateAmount = function() {
         var quantity = parseFloat(document.querySelector('input[name="qty"]').value);
-        var productPrice = parseFloat(document.querySelector('[itemprop="price"]').getAttribute('content'));
-        this.amount = quantity * productPrice;
+        var price = 0;
+
+        if (typeof priceWithDiscountsDisplay !== 'undefined') {
+            price = priceWithDiscountsDisplay;
+        } else {
+            price = parseFloat(document.querySelector('[itemprop="price"]').getAttribute('content'));
+        }
+
+        this.amount = quantity * price;
     };
 
     Banner.prototype.refresh = function() {
