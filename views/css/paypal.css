@@ -452,3 +452,8 @@ label span.description{display:block;}
 [installment-disclaimer] {
     border-bottom: 1px solid #ddd;
 }
+
+.nav[paypal-nav-bar] li a{
+    font-size: 15px;
+    padding: 10px 40px;
+}
