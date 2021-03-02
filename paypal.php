@@ -1519,7 +1519,8 @@ class PayPal extends PaymentModule
         }
 
         if (Tools::getValue('controller') == "AdminOrders" && Tools::getValue('id_order')) {
-            Media::addJsDefL('chb_braintree_refund', $this->l('Refund PayPal'), null, false);
+            $repeat = false;
+            Media::addJsDefL('chb_braintree_refund', $this->l('Refund PayPal'), null, $repeat);
             $this->context->controller->addJS(_PS_MODULE_DIR_ . $this->name . '/views/js/bo_order.js');
         }
 
