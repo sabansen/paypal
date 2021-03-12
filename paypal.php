@@ -2124,6 +2124,24 @@ class PayPal extends \PaymentModule implements WidgetInterface
         return $hooksUnregistered;
     }
 
+    public function unregisterHook($hook_id, $shop_list = null)
+    {
+        try {
+            return parent::unregisterHook($hook_id, $shop_list);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function unregisterExceptions($hook_id, $shop_list = null)
+    {
+        try {
+            return parent::unregisterExceptions($hook_id, $shop_list);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public function resetHooks()
     {
         //Unregister module hooks
