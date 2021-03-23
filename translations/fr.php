@@ -533,3 +533,4 @@ $_MODULE['<{paypal}prestashop>installmentpopup_611c3c7ed877fc3071ab177ed36acbb6'
 $_MODULE['<{paypal}prestashop>installmentpopup_119879090c04004d26811acd3c1379c1'] = 'Améliorez votre taux de conversion en affichant des informations sur les paiements en 4x à vos clients.';
 $_MODULE['<{paypal}prestashop>installmentpopup_4d263aae337221a257777dd3e4efec32'] = 'Activer maintenant';
 $_MODULE['<{paypal}prestashop>forminstallment_7cfaf5cca3b31a24504dcfb68b800034'] = 'Par défaut, la bannière \"Paiement en 4x\" est affichée sur votre site web via le hook natif de PrestaShop. Si vous choisissez d\'utiliser les widgets PrestaShop, vous pourrez copier le code du widget et l\'ajouter au template à l\'emplacement souhaité.';
+$_MODULE['<{paypal}prestashop>paypal_fa46ea6f6f6623fdd7039b5f1a8f3940'] = 'Aucune action';
