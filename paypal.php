@@ -2201,7 +2201,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         $orderStatuses = array(
             array(
                 'id' => 0,
-                'name' => $this->l('Choose status')
+                'name' => $this->l('No action')
             )
         );
         $prestashopOrderStatuses = OrderState::getOrderStates($this->context->language->id);
