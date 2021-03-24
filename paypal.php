@@ -459,8 +459,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             Configuration::updateValue('PAYPAL_PREVIOUS_VERSION', $this->version);
         }
 
-        Hook::exec('ActionLocalizationPageSave', [], $this->id);
-
+        $this->hookActionLocalizationPageSave([]);
         return true;
     }
 
