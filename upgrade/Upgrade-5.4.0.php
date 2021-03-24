@@ -54,6 +54,6 @@ function upgrade_module_5_4_0($module)
     $installer = new ModuleInstaller($module);
     $installer->uninstallModuleAdminControllers();
     $installer->installAdminControllers();
-    Hook::exec('ActionLocalizationPageSave', [], $module->id);
+    $module->hookActionLocalizationPageSave([]);
     return true;
 }
