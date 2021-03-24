@@ -54,7 +54,6 @@
       }
 
       var conf = {
-          buyerCountry: "FR",
           currency: "EUR",
           style: {
               ratio: '20x1'
