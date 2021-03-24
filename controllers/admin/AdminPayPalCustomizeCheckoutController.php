@@ -195,8 +195,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
         $this->fields_form['form']['form']['input'][] = array(
             'type' => 'html',
             'label' => $this->l('PayPal Express Checkout Shortcut on'),
-            'hint' => $this->l('By default, PayPal shortcut is displayed directly on your cart page. In order to improve your customers’ experience, you can enable PayPal shortcuts on other pages of your shop : product pages or/and Sign up form on order page (on the first step of checkout).
-Shipping costs will be estimated on the base of the cart total and default carrier fees.'),
+            'hint' => $this->l('By default, PayPal shortcut is displayed directly on your cart page. In order to improve your customers’ experience, you can enable PayPal shortcuts on other pages of your shop : product pages or/and Sign up form on order page (on the first step of checkout). Shipping costs will be estimated on the base of the cart total and default carrier fees.'),
             'name' => '',
             'html_content' => $htmlContent
         );
