@@ -90,7 +90,7 @@ abstract class ShortcutAbstract
 
         $JSscripts['tot-paypal-sdk'] = [
             'src' => $this->method->getUrlJsSdkLib(),
-            'data-namespace' => 'totPaypalSdk'
+            'data-namespace' => 'totPaypalSdkButtons'
         ];
         $JSscripts['shortcut'] = [
             'src' => __PS_BASE_URI__ . 'modules/' . $this->module->name . '/views/js/shortcut.js?v=' . $this->module->version

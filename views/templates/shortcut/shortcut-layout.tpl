@@ -57,7 +57,7 @@
 {block name='init-button'}
   <script>
       function waitPaypalIsLoaded() {
-          if (typeof totPaypalSdk === 'undefined' || typeof Shortcut === 'undefined') {
+          if (typeof totPaypalSdkButtons === 'undefined' || typeof Shortcut === 'undefined') {
               setTimeout(waitPaypalIsLoaded, 200);
               return;
           }

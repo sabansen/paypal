@@ -39,13 +39,13 @@
         var selector = '[preview-button-container]{/literal}{if isset($shortcutID)}[data-id="{$shortcutID}"]{/if}{literal}';
 
         function waitPaypalIsLoaded() {
-          if (typeof totPaypalSdk === 'undefined') {
+          if (typeof totPaypalSdkButtons === 'undefined') {
               setTimeout(waitPaypalIsLoaded, 200);
               return;
           }
             document.querySelector(selector).style.width = btnStyle['width'] + 'px';
-            totPaypalSdk.Buttons({
-                fundingSource: totPaypalSdk.FUNDING.PAYPAL,
+            totPaypalSdkButtons.Buttons({
+                fundingSource: totPaypalSdkButtons.FUNDING.PAYPAL,
                 style: btnStyle
             }).render(document.querySelector(selector));
         }

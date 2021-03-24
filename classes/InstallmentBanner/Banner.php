@@ -98,11 +98,9 @@ class Banner
 
     protected function getJS()
     {
-        $method = AbstractMethodPaypal::load();
-
         $js = [
-            'tot-paypal-sdk' => [
-                'src' => $method->getUrlJsSdkLib(),
+            'tot-paypal-sdk-messages' => [
+                'src' => $this->getPaypalSdkLib(),
                 'data-namespace' => 'totPaypalSdk'
             ]
         ];
@@ -221,5 +219,16 @@ class Banner
 
         $this->tplVars[$name] = $value;
         return $this;
+    }
+
+    protected function getPaypalSdkLib()
+    {
+        $method = AbstractMethodPaypal::load();
+        $params = [
+            'client-id' => $method->getClientId(),
+            'components' => 'messages'
+        ];
+
+        return 'https://www.paypal.com/sdk/js?' . http_build_query($params);
     }
 }

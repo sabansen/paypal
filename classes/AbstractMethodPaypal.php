@@ -354,7 +354,7 @@ abstract class AbstractMethodPaypal extends AbstractMethod
             'intent' => \Tools::strtolower($this->getIntent()),
             'currency' => $paypal->getPaymentCurrencyIso(),
             'locale' => str_replace('-', '_', \Context::getContext()->language->locale),
-            'components' => 'messages,buttons'
+            'components' => 'buttons'
         ];
 
         return 'https://www.paypal.com/sdk/js?' . http_build_query($params);
