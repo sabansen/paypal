@@ -55,10 +55,14 @@ class Banner
     /** @var array*/
     protected $tplVars;
 
+    /** @var AbstractMethodPaypal*/
+    protected $method;
+
     public function __construct()
     {
         $this->module = Module::getInstanceByName('paypal');
         $this->setTemplate(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/installmentBanner/banner.tpl');
+        $this->method = AbstractMethodPaypal::load();
     }
 
     public function render()
@@ -101,7 +105,8 @@ class Banner
         $js = [
             'tot-paypal-sdk-messages' => [
                 'src' => $this->getPaypalSdkLib(),
-                'data-namespace' => 'totPaypalSdk'
+                'data-namespace' => 'totPaypalSdk',
+                'data-partner-attribution-id' => $this->method->getPaypalPartnerId()
             ]
         ];
 
@@ -223,9 +228,8 @@ class Banner
 
     protected function getPaypalSdkLib()
     {
-        $method = AbstractMethodPaypal::load();
         $params = [
-            'client-id' => $method->getClientId(),
+            'client-id' => $this->method->getClientId(),
             'components' => 'messages'
         ];
 
