@@ -57,6 +57,12 @@ class ConfigurationMap
 
     const COLOR_GRAYSCALE = 'grayscale';
 
+    const PAGE_TYPE_PRODUCT = 'product-details';
+
+    const PAGE_TYPE_CART = 'cart';
+
+    const PAGE_TYPE_CHECKOUT = 'checkout';
+
     public static function getColorGradient($color)
     {
         $gradientMap = [

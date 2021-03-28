@@ -58,6 +58,9 @@ class Banner
     /** @var AbstractMethodPaypal*/
     protected $method;
 
+    /** @var string*/
+    protected $pageTypeAttribute;
+
     public function __construct()
     {
         $this->module = Module::getInstanceByName('paypal');
@@ -106,7 +109,8 @@ class Banner
             'tot-paypal-sdk-messages' => [
                 'src' => $this->getPaypalSdkLib(),
                 'data-namespace' => 'totPaypalSdk',
-                'data-partner-attribution-id' => $this->method->getPaypalPartnerId()
+                'data-partner-attribution-id' => $this->method->getPaypalPartnerId(),
+                'data-page-type' => $this->getPageTypeAttribute()
             ]
         ];
 
@@ -226,6 +230,9 @@ class Banner
         return $this;
     }
 
+    /**
+     * @return string
+     */
     protected function getPaypalSdkLib()
     {
         $params = [
@@ -234,5 +241,25 @@ class Banner
         ];
 
         return 'https://www.paypal.com/sdk/js?' . http_build_query($params);
+    }
+
+    /**
+     * @return string
+     */
+    public function getPageTypeAttribute()
+    {
+        return (string) $this->pageTypeAttribute;
+    }
+
+    /**
+     * @return Banner
+     */
+    public function setPageTypeAttribute($pageTypeAttribute)
+    {
+        if (is_string($pageTypeAttribute)) {
+            $this->pageTypeAttribute = $pageTypeAttribute;
+        }
+
+        return $this;
     }
 }
