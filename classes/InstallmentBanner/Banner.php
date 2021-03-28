@@ -98,7 +98,8 @@ class Banner
         $js = [
             'paypal-lib' => [
                 'src' => 'https://www.paypal.com/sdk/js?' . http_build_query($query),
-                'data-namespace' => 'paypalMessages'
+                'data-namespace' => 'paypalMessages',
+                'data-partner-attribution-id' => $this->getPartnerAttributeID()
             ]
         ];
 
@@ -216,5 +217,13 @@ class Banner
 
         $this->tplVars[$name] = $value;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getPartnerAttributeID()
+    {
+        return (getenv('PLATEFORM') == 'PSREAD') ? 'PrestaShop_Cart_Ready_EC' : 'PRESTASHOP_Cart_SPB';
     }
 }
