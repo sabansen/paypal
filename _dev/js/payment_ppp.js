@@ -60,7 +60,7 @@ const doPatchPPP = () => {
   if (exec_ppp_payment) {
     exec_ppp_payment = false;
 
-    if (typeof $.fancybox.open == 'function') {
+    try {
       $.fancybox.open({
         content: `<div id="popup-ppp-waiting"><p>${waitingRedirectionMsg}</p></div>`,
         closeClick: false,
@@ -71,7 +71,7 @@ const doPatchPPP = () => {
           }
         },
       });
-    } else {
+    } catch (e) {
       document.querySelector('#payment-confirmation button').disabled = true;
     }
 
