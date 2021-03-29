@@ -60,7 +60,7 @@ const doPatchPPP = () => {
   if (exec_ppp_payment) {
     exec_ppp_payment = false;
 
-    if (typeof $.fancybox.open == 'function_test') {
+    if (typeof $.fancybox.open == 'function') {
       $.fancybox.open({
         content: `<div id="popup-ppp-waiting"><p>${waitingRedirectionMsg}</p></div>`,
         closeClick: false,
