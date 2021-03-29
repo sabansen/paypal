@@ -61,6 +61,7 @@ abstract class ShortcutAbstract
         $this->context->smarty->assign($this->getTplVars());
         $this->context->smarty->assign('JSvars', $this->getJSvars());
         $this->context->smarty->assign('JSscripts', $this->getJS());
+        $this->context->smarty->assign('moduleDir', _PS_MODULE_DIR_ . 'paypal');
         return $this->context->smarty->fetch($this->getTemplatePath());
     }
 

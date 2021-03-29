@@ -23,7 +23,7 @@
 *
 *}
 
-{extends file='./shortcut-layout.tpl'}
+{extends file = "{$moduleDir}/views/templates/shortcut/shortcut-layout.tpl"}
 
 {block name='content'}
   <div preview-button-container {if isset($shortcutID)} data-id="{$shortcutID}" {/if}></div>
