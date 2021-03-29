@@ -41,11 +41,16 @@ $(document).ready( () => {
   });
 
   // Show block with paypal payment benefits
-  let configs = getConfigPopup();
-  $('[data-paypal-info-popover]').popover({
-    placement: configs.popoverPlacement,
-    trigger: configs.popoverTrigger
-  });
+  try {
+    let configs = getConfigPopup();
+    $('[data-paypal-info-popover]').popover({
+      placement: configs.popoverPlacement,
+      trigger: configs.popoverTrigger
+    });
+  } catch (e) {
+    console.error(e);
+  }
+
 
   if ($(window).width() > 991) {
     hoverPopup();

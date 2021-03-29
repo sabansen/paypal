@@ -30,20 +30,28 @@
 </script>
 
 {if isset($JSscripts) && is_array($JSscripts) && false === empty($JSscripts)}
-    {foreach from=$JSscripts key=keyScript item=JSscriptAttributes}
-      <script>
-          var script = document.querySelector('script[data-key="{$keyScript}"]');
+  <script>
+    var scripts = Array();
+      {foreach from=$JSscripts key=keyScript item=JSscriptAttributes}
+        var script = document.querySelector('script[data-key="{$keyScript}"]');
 
-          if (null == script) {
-              var newScript = document.createElement('script');
-              {foreach from=$JSscriptAttributes key=attrName item=attrVal}
-              newScript.setAttribute('{$attrName}', '{$attrVal nofilter}');
-              {/foreach}
+        if (null == script) {
+            var newScript = document.createElement('script');
+            {foreach from=$JSscriptAttributes key=attrName item=attrVal}
+            newScript.setAttribute('{$attrName}', '{$attrVal nofilter}');
+            {/foreach}
 
-              newScript.setAttribute('data-key', '{$keyScript}');
-              document.body.appendChild(newScript);
-          }
-      </script>
-    {/foreach}
+            if (false === ('{$keyScript}'.search('jq-lib') === 0 && typeof jQuery === 'function')) {
+                newScript.setAttribute('data-key', '{$keyScript}');
+                scripts.push(newScript);
+            }
+        }
+      {/foreach}
+
+    scripts.forEach(function(scriptElement) {
+        document.body.appendChild(scriptElement);
+    })
+  </script>
+
 {/if}
 
