@@ -49,6 +49,10 @@ class Banner
     /** @var array*/
     protected $tplVars;
 
+    /** @var string*/
+    protected $pageTypeAttribute;
+
+
     public function __construct()
     {
         $this->module = Module::getInstanceByName('paypal');
@@ -99,7 +103,8 @@ class Banner
             'paypal-lib' => [
                 'src' => 'https://www.paypal.com/sdk/js?' . http_build_query($query),
                 'data-namespace' => 'paypalMessages',
-                'data-partner-attribution-id' => $this->getPartnerAttributeID()
+                'data-partner-attribution-id' => $this->getPartnerAttributeID(),
+                'data-page-type' => $this->getPageTypeAttribute()
             ]
         ];
 
@@ -225,5 +230,25 @@ class Banner
     protected function getPartnerAttributeID()
     {
         return (getenv('PLATEFORM') == 'PSREAD') ? 'PrestaShop_Cart_Ready_EC' : 'PRESTASHOP_Cart_SPB';
+    }
+
+    /**
+     * @return string
+     */
+    public function getPageTypeAttribute()
+    {
+        return (string) $this->pageTypeAttribute;
+    }
+
+    /**
+     * @return Banner
+     */
+    public function setPageTypeAttribute($pageTypeAttribute)
+    {
+        if (is_string($pageTypeAttribute)) {
+            $this->pageTypeAttribute = $pageTypeAttribute;
+        }
+
+        return $this;
     }
 }

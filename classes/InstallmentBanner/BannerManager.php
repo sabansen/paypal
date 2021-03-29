@@ -121,6 +121,7 @@ class BannerManager
             ->setPlacement('cart')
             ->setLayout('text')
             ->setAmount($this->context->cart->getOrderTotal(true))
+            ->setPageTypeAttribute(ConfigurationMap::PAGE_TYPE_CART)
             ->setTemplate(_PS_MODULE_DIR_ . 'paypal/views/templates/installmentBanner/cart-banner.tpl')
             ->render();
     }
@@ -134,6 +135,7 @@ class BannerManager
             ->setPlacement('payment')
             ->setLayout('text')
             ->setAmount($this->context->cart->getOrderTotal(true))
+            ->setPageTypeAttribute(ConfigurationMap::PAGE_TYPE_CHECKOUT)
             ->setTemplate(_PS_MODULE_DIR_ . 'paypal/views/templates/installmentBanner/checkout-banner.tpl')
             ->render();
     }
@@ -146,6 +148,7 @@ class BannerManager
         return $this->banner
             ->setPlacement('product')
             ->setLayout('text')
+            ->setPageTypeAttribute(ConfigurationMap::PAGE_TYPE_PRODUCT)
             ->setTemplate(_PS_MODULE_DIR_ . 'paypal/views/templates/installmentBanner/product-banner.tpl')
             ->render();
     }
