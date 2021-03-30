@@ -221,6 +221,11 @@ abstract class AbstractMethodPaypal extends AbstractMethod
             $amount += \Tools::getValue('partialRefundShippingCost');
         }
 
+        // For prestashop version > 1.7.7
+        if  ($refundData = \Tools::getValue('cancel_product')) {
+            $amount += floatval(str_replace(',', '.', $refundData['shipping_amount']));
+        }
+
         return $response = $this->paypalApiManager->getOrderPartialRefundRequest($paypalOrder, $amount)->execute();
     }
 
