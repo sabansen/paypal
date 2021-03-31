@@ -33,7 +33,16 @@ class AdminPayPalLogsController extends AdminPayPalProcessLoggerController
             \Configuration::updateValue('PAYPAL_SANDBOX', (int)\Tools::getValue('sandbox_mode'));
         }
 
+        $this->page_header_toolbar_title = $this->l('Logs');
+
         parent::init();
+    }
+
+    public function processFilter()
+    {
+        if (Tools::isSubmit('submitFilter' . $this->list_id)) {
+            return parent::processFilter();
+        }
 
         $isWriteCookie = false;
 
@@ -47,6 +56,8 @@ class AdminPayPalLogsController extends AdminPayPalProcessLoggerController
         if ($isWriteCookie) {
             $this->context->cookie->write();
         }
+
+        $this->_filter = sprintf(' AND a.`sandbox` = %d ', (int)\Configuration::get('PAYPAL_SANDBOX'));
     }
 
     public function initContent()
