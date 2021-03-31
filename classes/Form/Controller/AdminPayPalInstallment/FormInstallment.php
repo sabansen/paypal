@@ -33,6 +33,7 @@ use \Configuration;
 use PaypalAddons\classes\InstallmentBanner\Banner;
 use \Tools;
 use \Context;
+use Country;
 use PaypalAddons\classes\Form\Field\Select;
 use PaypalAddons\classes\Form\Field\SelectOption;
 use PaypalAddons\classes\InstallmentBanner\ConfigurationMap;
@@ -222,7 +223,9 @@ class FormInstallment implements FormInterface
 
     protected function getDisclaimerHtml()
     {
+        $isoCountryDefault = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
         return Context::getContext()->smarty
+            ->assign('isoCountryDefault', strtolower($isoCountryDefault))
             ->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/_partials/paypalBanner/installmentDisclaimer.tpl');
     }
 }

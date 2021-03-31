@@ -76,4 +76,25 @@ class ConfigurationMap
 
         return isset($gradientMap[$color]) ? $gradientMap[$color] : $gradientMap[self::COLOR_BLUE];
     }
+
+    /**
+     * @return array
+     */
+    public static function getAllowedCountries()
+    {
+        return ['fr', 'de', 'gb', 'us'];
+    }
+
+    public static function getLanguageCurrencyMap()
+    {
+        return [
+            ['fr' => 'eur'],
+            ['de' => 'eur'],
+            ['gb' => 'gbp'],
+            ['en' => 'gbp'],
+            ['gb' => 'usd'],
+            ['en' => 'usd']
+        ];
+    }
 }
+

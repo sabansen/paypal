@@ -1130,8 +1130,10 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
         if (Validate::isLoadedObject($countryDefault) && Tools::strtolower($countryDefault->iso_code) === 'fr') {
             if ((int)Configuration::get(InstallmentConfiguration::ENABLE_INSTALLMENT)) {
-                if (Tools::strtolower($this->context->language->iso_code) === 'fr') {
-                    if (Tools::strtolower($this->context->currency->iso_code) === 'eur') {
+                foreach (InstallmentConfiguration::getLanguageCurrencyMap() as $langCurrency) {
+                    $isoLang = strtolower($this->context->language->iso_code);
+                    $isoCurrency = strtolower($this->context->currency->iso_code);
+                    if (isset($langCurrency[$isoLang]) && $langCurrency[$isoLang] == $isoCurrency) {
                         return false;
                     }
                 }
@@ -1507,7 +1509,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             return;
         }
 
-        if (Tools::strtolower($countryDefault->iso_code) === 'fr') {
+        if (in_array(Tools::strtolower($countryDefault->iso_code), InstallmentConfiguration::getAllowedCountries())) {
             if ($installmentTab->active == false) {
                 $installmentTab->active = true;
                 $installmentTab->save();
