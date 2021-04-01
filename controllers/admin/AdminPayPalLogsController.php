@@ -34,6 +34,7 @@ class AdminPayPalLogsController extends AdminPayPalProcessLoggerController
         }
 
         $this->page_header_toolbar_title = $this->l('Logs');
+        $this->filter = true;
 
         parent::init();
     }
