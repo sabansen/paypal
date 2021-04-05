@@ -180,8 +180,8 @@ class PaypalOrderCreateRequest extends RequestAbstractMB
         $countryCustomer = new Country($addressCustomer->id_country);
         $payerInfo = new PayerInfo();
         $payerInfo->setEmail($customer->email);
-        $payerInfo->setFirstName($customer->firstname);
-        $payerInfo->setLastName($customer->lastname);
+        $payerInfo->setFirstName($this->formatter->formatPaypalString($customer->firstname));
+        $payerInfo->setLastName($this->formatter->formatPaypalString($customer->lastname));
 
         if ($countryCustomer->iso_code == 'BR') {
             $payerTaxId = str_replace(array('.', '-', '/'), '', $addressCustomer->vat_number);
@@ -200,14 +200,14 @@ class PaypalOrderCreateRequest extends RequestAbstractMB
         $addressCustomer = new Address(Context::getContext()->cart->id_address_delivery);
         $payerShippingAddress = new ShippingAddress();
         $payerShippingAddress->setCountryCode(Tools::strtoupper(Country::getIsoById($addressCustomer->id_country)));
-        $payerShippingAddress->setCity($addressCustomer->city);
-        $payerShippingAddress->setLine1($addressCustomer->address1);
+        $payerShippingAddress->setCity($this->formatter->formatPaypalString($addressCustomer->city));
+        $payerShippingAddress->setLine1($this->formatter->formatPaypalString($addressCustomer->address1));
         $payerShippingAddress->setPostalCode($addressCustomer->postcode);
-        $payerShippingAddress->setRecipientName(implode(" ", array($addressCustomer->firstname, $addressCustomer->lastname)));
+        $payerShippingAddress->setRecipientName($this->formatter->formatPaypalString(implode(" ", array($addressCustomer->firstname, $addressCustomer->lastname))));
 
         if ((int)$addressCustomer->id_state) {
             $state = new State($addressCustomer->id_state);
-            $payerShippingAddress->setState(Tools::strtoupper($state->iso_code));
+            $payerShippingAddress->setState($this->formatter->formatPaypalString(Tools::strtoupper($state->iso_code)));
         }
 
         return $payerShippingAddress;
@@ -230,7 +230,7 @@ class PaypalOrderCreateRequest extends RequestAbstractMB
         foreach ($products as $product) {
             $product['product_tax'] = $this->method->formatPrice($this->method->formatPrice($product['price_wt']) - $this->method->formatPrice($product['price']));
             $item = new Item();
-            $item->setName(Tools::substr($product['name'], 0, 126))
+            $item->setName($this->formatter->formatPaypalString($product['name']))
                 ->setCurrency($currency)
                 ->setDescription(isset($product['attributes']) ? $product['attributes'] : '')
                 ->setQuantity($product['quantity'])

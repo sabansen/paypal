@@ -26,6 +26,7 @@
 namespace PaypalAddons\classes\API\Request;
 
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\services\FormatterPaypal;
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
 
 abstract class RequestAbstract implements RequestInteface
@@ -42,12 +43,16 @@ abstract class RequestAbstract implements RequestInteface
     /** @var \Module*/
     protected $module;
 
+    /** @var FormatterPaypal*/
+    protected $formatter;
+
     public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method)
     {
         $this->client = $client;
         $this->method = $method;
         $this->context = \Context::getContext();
         $this->module = \Module::getInstanceByName($method->name);
+        $this->formatter = new FormatterPaypal();
     }
 
     /**
