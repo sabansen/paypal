@@ -201,16 +201,22 @@ class FormInstallment implements FormInterface
 
     protected function getBannerStyleSection()
     {
+        $isoCountryDefault = strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
+        $colorOptions = [
+            new SelectOption(ConfigurationMap::COLOR_GRAY, $this->module->l('gray', $this->className)),
+            new SelectOption(ConfigurationMap::COLOR_BLUE, $this->module->l('blue', $this->className)),
+            new SelectOption(ConfigurationMap::COLOR_BLACK, $this->module->l('black', $this->className)),
+            new SelectOption(ConfigurationMap::COLOR_WHITE, $this->module->l('white', $this->className))
+        ];
+
+        if ($isoCountryDefault !== 'de') {
+            $colorOptions[] = new SelectOption(ConfigurationMap::COLOR_MONOCHROME, $this->module->l('monochrome', $this->className));
+            $colorOptions[] = new SelectOption(ConfigurationMap::COLOR_GRAYSCALE, $this->module->l('grayscale', $this->className));
+        }
+
         $colorSelect = new Select(
             ConfigurationMap::COLOR,
-            [
-                new SelectOption(ConfigurationMap::COLOR_GRAY, $this->module->l('gray', $this->className)),
-                new SelectOption(ConfigurationMap::COLOR_BLUE, $this->module->l('blue', $this->className)),
-                new SelectOption(ConfigurationMap::COLOR_BLACK, $this->module->l('black', $this->className)),
-                new SelectOption(ConfigurationMap::COLOR_WHITE, $this->module->l('white', $this->className)),
-                new SelectOption(ConfigurationMap::COLOR_MONOCHROME, $this->module->l('monochrome', $this->className)),
-                new SelectOption(ConfigurationMap::COLOR_GRAYSCALE, $this->module->l('grayscale', $this->className)),
-            ],
+            $colorOptions,
             null,
             Configuration::get(ConfigurationMap::COLOR, null, null, null, ConfigurationMap::COLOR_GRAY)
         );
