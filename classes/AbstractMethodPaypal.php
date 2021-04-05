@@ -214,7 +214,7 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         $amount = 0;
 
         foreach ($params['productList'] as $product) {
-            $amount += $product['amount'];
+            $amount += \Tools::ps_round($product['amount'], PayPal::getPrecision());
         }
 
         if (\Tools::getValue('partialRefundShippingCost')) {

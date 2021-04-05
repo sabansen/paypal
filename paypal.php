@@ -1770,6 +1770,15 @@ class PayPal extends \PaymentModule implements WidgetInterface
         return $response;
     }
 
+    public static function getPrecision()
+    {
+        if (version_compare(_PS_VERSION_, '1.7.7', '<')) {
+            return _PS_PRICE_DISPLAY_PRECISION_;
+        } else {
+            return Context::getContext()->getComputingPrecision();
+        }
+    }
+
     /**
      * Get decimal correspondent to payment currency
      * @return integer Number of decimal
@@ -1783,11 +1792,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $isoCurrency = $paypal->getPaymentCurrencyIso();
         }
 
-        if (version_compare(_PS_VERSION_, '1.7.7', '<')) {
-            $precision = _PS_PRICE_DISPLAY_PRECISION_;
-        } else {
-            $precision = Context::getContext()->getComputingPrecision();
-        }
+        $precision = self::getPrecision();
 
         if (in_array($isoCurrency, $currency_wt_decimal) || ($precision == 0)) {
             return (int)0;
