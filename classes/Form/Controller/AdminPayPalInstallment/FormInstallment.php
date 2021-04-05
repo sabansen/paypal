@@ -124,7 +124,7 @@ class FormInstallment implements FormInterface
                     'type' => 'html',
                     'html_content' => $this->getBannerStyleSection(),
                     'name' => '',
-                    'label' => $this->module->l('The styles for the home page and category pages', $this->className),
+                    'label' => $this->module->l('Home page and category page styles', $this->className),
                 )
             ),
             'submit' => array(
