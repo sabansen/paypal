@@ -45,11 +45,17 @@ class BannerManager
      */
     public function isBannerAvailable()
     {
-        if (strtolower($this->context->currency->iso_code) != 'eur') {
-            return false;
+        $badLanguageCurrencyContext = true;
+
+        foreach (ConfigurationMap::getLanguageCurrencyMap() as $langCurrency) {
+            $isoLang = strtolower($this->context->language->iso_code);
+            $isoCurrency = strtolower($this->context->currency->iso_code);
+            if (isset($langCurrency[$isoLang]) && $langCurrency[$isoLang] == $isoCurrency) {
+                $badLanguageCurrencyContext = false;
+            }
         }
 
-        if (strtolower($this->context->language->iso_code) != 'fr') {
+        if ($badLanguageCurrencyContext) {
             return false;
         }
 
@@ -84,16 +90,6 @@ class BannerManager
         if ($this->context->controller instanceof CategoryController
             && false === (bool)Configuration::get(ConfigurationMap::CATEGORY_PAGE)) {
 
-            return false;
-        }
-
-        $isoCountryDefault = Country::getIsoById((int)Configuration::get(
-            'PS_COUNTRY_DEFAULT',
-            null,
-            null,
-            $this->context->shop->id));
-
-        if (strtolower($isoCountryDefault) != 'fr') {
             return false;
         }
 

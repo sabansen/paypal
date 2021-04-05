@@ -54,7 +54,6 @@
       }
 
       var conf = {
-          currency: "EUR",
           style: {
               ratio: '20x1'
           }

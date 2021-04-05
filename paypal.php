@@ -793,18 +793,24 @@ class PayPal extends PaymentModule
 
         // Tpl vars for Paypal installment banner. Start
         $banner = new Banner();
+        $isoCountryDefault = strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
+        $installmentColorOptions = [
+            ConfigurationMap::COLOR_GRAY => $this->l('gray'),
+            ConfigurationMap::COLOR_BLUE => $this->l('blue'),
+            ConfigurationMap::COLOR_BLACK => $this->l('black'),
+            ConfigurationMap::COLOR_WHITE => $this->l('white')
+        ];
+
+        if (false === ($isoCountryDefault === 'de')) {
+            $installmentColorOptions[ConfigurationMap::COLOR_MONOCHROME] = $this->l('monochrome');
+            $installmentColorOptions[ConfigurationMap::COLOR_GRAYSCALE] = $this->l('grayscale');
+        }
+
         $this->context->smarty->assign([
             ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT => Configuration::get(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT),
             ConfigurationMap::ENABLE_INSTALLMENT => Configuration::get(ConfigurationMap::ENABLE_INSTALLMENT),
             ConfigurationMap::COLOR => Configuration::get(ConfigurationMap::COLOR),
-            'installmentColorOptions' => [
-                ConfigurationMap::COLOR_GRAY => $this->l('gray'),
-                ConfigurationMap::COLOR_BLUE => $this->l('blue'),
-                ConfigurationMap::COLOR_BLACK => $this->l('black'),
-                ConfigurationMap::COLOR_WHITE => $this->l('white'),
-                ConfigurationMap::COLOR_MONOCHROME => $this->l('monochrome'),
-                ConfigurationMap::COLOR_GRAYSCALE => $this->l('grayscale'),
-            ],
+            'installmentColorOptions' => $installmentColorOptions,
             ConfigurationMap::HOME_PAGE => Configuration::get(ConfigurationMap::HOME_PAGE),
             ConfigurationMap::CATEGORY_PAGE => Configuration::get(ConfigurationMap::CATEGORY_PAGE),
             ConfigurationMap::PRODUCT_PAGE => Configuration::get(ConfigurationMap::PRODUCT_PAGE),
@@ -813,7 +819,8 @@ class PayPal extends PaymentModule
             ConfigurationMap::CLIENT_ID => ConfigurationMap::getClientId(),
             'paypalInstallmentBanner' => $banner->render(),
             'showInstallmentPopup' => $this->isShowInstallmentPopup(),
-            'showInstallmentSetting' => $this->isShowInstallmentSetting()
+            'showInstallmentSetting' => $this->isShowInstallmentSetting(),
+            'isoCountryDefault' => $isoCountryDefault
         ]);
 
         // Tpl vars for Paypal installment banner. End
@@ -2847,11 +2854,11 @@ class PayPal extends PaymentModule
     {
         $countryDefault = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
 
-        if (Tools::strtolower($countryDefault->iso_code) !== 'fr') {
-            return false;
+        if (in_array(Tools::strtolower($countryDefault->iso_code), ConfigurationMap::getAllowedCountries())) {
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     /**

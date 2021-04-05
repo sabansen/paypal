@@ -100,4 +100,24 @@ class ConfigurationMap
             return Configuration::updateValue(self::CLIENT_ID . '_LIVE', $clientId);
         }
     }
+
+    /**
+     * @return array
+     */
+    public static function getAllowedCountries()
+    {
+        return ['fr', 'de', 'gb', 'us'];
+    }
+
+    public static function getLanguageCurrencyMap()
+    {
+        return [
+            ['fr' => 'eur'],
+            ['de' => 'eur'],
+            ['gb' => 'gbp'],
+            ['en' => 'gbp'],
+            ['gb' => 'usd'],
+            ['en' => 'usd']
+        ];
+    }
 }

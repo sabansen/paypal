@@ -103,10 +103,13 @@ class Banner
             'paypal-lib' => [
                 'src' => 'https://www.paypal.com/sdk/js?' . http_build_query($query),
                 'data-namespace' => 'paypalMessages',
-                'data-partner-attribution-id' => $this->getPartnerAttributeID(),
                 'data-page-type' => $this->getPageTypeAttribute()
             ]
         ];
+
+        if (false === defined('_PS_ADMIN_DIR_')) {
+            $js['paypal-lib']['data-partner-attribution-id'] = $this->getPartnerAttributeID();
+        }
 
         return $js;
     }
