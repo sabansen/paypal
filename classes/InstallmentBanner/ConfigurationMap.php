@@ -26,6 +26,8 @@
 
 namespace PaypalAddons\classes\InstallmentBanner;
 
+use Country;
+use Configuration;
 
 class ConfigurationMap
 {
@@ -73,6 +75,11 @@ class ConfigurationMap
             self::COLOR_GRAYSCALE => '#ffffff',
             self::COLOR_GRAY => '#ebecee'
         ];
+        $isoCountryDefault = strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
+
+        if ($isoCountryDefault === 'de') {
+            $gradientMap[self::COLOR_BLACK] = '#2c2e2f';
+        }
 
         return isset($gradientMap[$color]) ? $gradientMap[$color] : $gradientMap[self::COLOR_BLUE];
     }
