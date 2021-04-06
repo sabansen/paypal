@@ -103,6 +103,16 @@ class BannerManager
             return false;
         }
 
+        $isoCountryDefault = Country::getIsoById((int)Configuration::get(
+            'PS_COUNTRY_DEFAULT',
+            null,
+            null,
+            $this->context->shop->id));
+
+        if (false === in_array(strtolower($isoCountryDefault), ConfigurationMap::getAllowedCountries())) {
+            return false;
+        }
+
         return true;
     }
 
