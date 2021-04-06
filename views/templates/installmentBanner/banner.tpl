@@ -89,6 +89,4 @@
 
       totPaypalSdk.Messages(conf).render(this.container);
   };
-
-  document.addEventListener('initPaypalBanner', Banner.initBanner())
 </script>
