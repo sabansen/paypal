@@ -24,8 +24,9 @@
 *}
 
 <!-- Start shortcut. Module Paypal -->
+{include file = "{$psPaypalDir}/views/templates/_partials/javascript.tpl" assign=javascriptBlock}
 {block name='head'}
-  {include file = "{$psPaypalDir}/views/templates/_partials/javascript.tpl"}
+  {$javascriptBlock nofilter}
 {/block}
 
 {block name='content'}{/block}

@@ -23,7 +23,7 @@
 *
 *}
 
-{extends file = "{$psPaypalDir}/views/templates/shortcut/shortcut-layout.tpl"}
+{extends file = "./shortcut-layout.tpl"}
 
 {block name='content'}
   <div preview-button-container {if isset($shortcutID)} data-id="{$shortcutID}" {/if}></div>
