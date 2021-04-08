@@ -124,7 +124,7 @@ class BannerManager
         if ((int)Configuration::get(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT)) {
             $color = Configuration::get(ConfigurationMap::COLOR);
         } else {
-            $color = Configuration::get(ConfigurationMap::COLOR_GRAY);
+            $color = ConfigurationMap::COLOR_GRAY;
         }
 
         $colorGradient = ConfigurationMap::getColorGradient($color);
