@@ -58,6 +58,7 @@ class FormInstallment implements FormInterface
      */
     public function getFields()
     {
+        $isoCountryDefault = strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
         $fields = array(
             'legend' => array(
                 'title' => $this->module->l('Settings', $this->className),
@@ -73,7 +74,7 @@ class FormInstallment implements FormInterface
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->module->l('Enable the display of 4x banners', $this->className),
+                    'label' => $isoCountryDefault == 'gb' ? $this->module->l('Enable the display of 3x banners', $this->className) : $this->module->l('Enable the display of 4x banners', $this->className),
                     'name' => ConfigurationMap::ENABLE_INSTALLMENT,
                     'is_bool' => true,
                     'values' => array(
