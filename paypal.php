@@ -1510,10 +1510,25 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
 
         if (in_array(Tools::strtolower($countryDefault->iso_code), InstallmentConfiguration::getAllowedCountries())) {
-            if ($installmentTab->active == false) {
-                $installmentTab->active = true;
-                $installmentTab->save();
+            foreach (Language::getLanguages() as $language) {
+                if (Tools::strtolower($countryDefault->iso_code) === 'gb') {
+                    if (Tools::strtolower($language['iso_code']) === 'fr') {
+                        $installmentTab->name[$language['id_lang']] = 'Paiement en 3x';
+                    } else {
+                        $installmentTab->name[$language['id_lang']] = 'Payment in 3x';
+                    }
+                } else {
+                    if (Tools::strtolower($language['iso_code']) === 'fr') {
+                        $installmentTab->name[$language['id_lang']] = 'Paiement en 4x';
+                    } else {
+                        $installmentTab->name[$language['id_lang']] = 'Payment in 4x';
+                    }
+                }
+
             }
+
+            $installmentTab->active = true;
+            $installmentTab->save();
         } else {
             if ($installmentTab->active == true) {
                 $installmentTab->active = false;
