@@ -44,6 +44,7 @@ include_once _PS_MODULE_DIR_.'paypal/classes/Braintree.php';
 require_once _PS_MODULE_DIR_.'paypal/classes/InstallmentBanner/ConfigurationMap.php';
 require_once _PS_MODULE_DIR_.'paypal/classes/InstallmentBanner/BannerManager.php';
 require_once _PS_MODULE_DIR_.'paypal/classes/InstallmentBanner/Banner.php';
+require_once _PS_MODULE_DIR_.'paypal/express_checkout/ExpressCheckout.php';
 
 define('WPS', 1); //Paypal Integral
 define('HSS', 2); //Paypal Integral Evolution
@@ -1536,6 +1537,12 @@ class PayPal extends PaymentModule
 
     public function renderExpressCheckoutButton($type)
     {
+        $expressCheckout = new ExpressCheckout();
+
+        if ($expressCheckout->isConfigured() === false) {
+            return '';
+        }
+
         if ((!Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT'))) {
             return '';
         }
@@ -1912,6 +1919,7 @@ class PayPal extends PaymentModule
             if (Tools::getValue('paypal_country_only')) {
                 Configuration::updateValue('PAYPAL_COUNTRY_DEFAULT', (int) Tools::getValue('paypal_country_only'));
             } elseif ($this->_preProcess()) {
+                $expressCheckout = new ExpressCheckout();
                 if ((int) Tools::getValue('paypal_payment_method') == 5) {
                     $refresh_webprofile = Configuration::get('PAYPAL_PLUS_CLIENT_ID') != Tools::getValue('client_id')
                         || Configuration::get('PAYPAL_PLUS_SECRET') != Tools::getValue('secret')
@@ -1925,15 +1933,16 @@ class PayPal extends PaymentModule
 
                 Configuration::updateValue('PAYPAL_BUSINESS', (int) Tools::getValue('business'));
                 Configuration::updateValue('PAYPAL_PAYMENT_METHOD', (int) Tools::getValue('paypal_payment_method'));
-                Configuration::updateValue('PAYPAL_API_USER', trim(Tools::getValue('api_username')));
-                Configuration::updateValue('PAYPAL_API_PASSWORD', trim(Tools::getValue('api_password')));
-                Configuration::updateValue('PAYPAL_API_SIGNATURE', trim(Tools::getValue('api_signature')));
+                $expressCheckout->setApiUser(trim(Tools::getValue('api_username')));
+                $expressCheckout->setApiPassword(trim(Tools::getValue('api_password')));
+                $expressCheckout->setApiSignature(trim(Tools::getValue('api_signature')));
                 Configuration::updateValue('PAYPAL_BUSINESS_ACCOUNT', trim(Tools::getValue('api_business_account')));
                 Configuration::updateValue('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT', (int) Tools::getValue('express_checkout_shortcut'));
-                Configuration::updateValue('PAYPAL_IN_CONTEXT_CHECKOUT_M_ID', Tools::getValue('in_context_checkout_merchant_id'));
+                $expressCheckout->setApiMerchantId(trim(Tools::getValue('in_context_checkout_merchant_id')));
 
                 $sandbox = (int)Configuration::get('PAYPAL_SANDBOX');
                 $switch_sandbox = false;
+                $expressCheckout->checkCredentials();
 
                 Configuration::updateValue('PAYPAL_SANDBOX', (int) Tools::getValue('sandbox_mode'));
                 Configuration::updateValue('PAYPAL_CAPTURE', (int) Tools::getValue('payment_capture'));
