@@ -224,7 +224,6 @@ class FormInstallment implements FormInterface
 
         return Context::getContext()->smarty
             ->assign('colorSelect', $colorSelect)
-            ->assign('banner', new Banner())
             ->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/_partials/paypalBanner/bannerStyleSection.tpl');
     }
 

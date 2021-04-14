@@ -31,6 +31,7 @@ use PaypalAddons\classes\AbstractMethodPaypal;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use PaypalAddons\classes\Form\FormInterface;
 use PaypalAddons\classes\Form\Controller\AdminPayPalInstallment\FormInstallment;
+use PaypalAddons\classes\InstallmentBanner\Banner;
 
 class AdminPayPalInstallmentController extends AdminPayPalController
 {
@@ -69,6 +70,17 @@ class AdminPayPalInstallmentController extends AdminPayPalController
     public function saveForm()
     {
         return $this->forms['formInstallment']->save();
+    }
+
+    public function displayAjaxGetBanner()
+    {
+        $jsonResponse = new JsonResponse();
+        $banner = new Banner();
+        $jsonResponse->setData([
+            'success' => true,
+            'content' => $banner->render()
+        ]);
+        return $jsonResponse->send();
     }
 
 }

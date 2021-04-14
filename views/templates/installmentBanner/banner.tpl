@@ -32,7 +32,7 @@
 </div>
 
 <script>
-  var Banner = function (conf) {
+  window.Banner = function (conf) {
 
       this.placement = typeof conf.placement != 'undefined' ? conf.placement : null;
 
