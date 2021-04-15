@@ -32,10 +32,16 @@ $(document).ready( () => {
       let dataPaypalInfo = $(`#payment-option-${i}-additional-information [data-paypal-info]`);
 
       if (dataPaypalInfo.length > 0) {
-        dataPaypalInfo.find('[data-paypal-info-popover]').attr('data-content', document.querySelector('[data-pp-info]').outerHTML);
+        let info = document.querySelector('[data-pp-info]');
+
+        if (info instanceof Element) {
+          dataPaypalInfo.find('[data-paypal-info-popover]').attr('data-content', info.outerHTML);
+          info.remove();
+        }
+
         dataPaypalInfo.insertAfter($(`#payment-option-${i}-container label`));
         dataPaypalInfo.show();
-        document.querySelector('[data-pp-info]').remove();
+
       }
     }
   });
