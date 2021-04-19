@@ -829,10 +829,13 @@ class PayPal extends PaymentModule
         MediaCore::addJsDef([
             'ajaxHandler' => $this->context->link->getAdminLink('AdminPaypalAjaxHandler')
         ]);
-        $hss_errors = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'paypal_hss_email_error`');
-        $this->context->smarty->assign(array(
-            'hss_errors' => $hss_errors
-        ));
+
+        if ((int)Configuration::get('PAYPAL_PAYMENT_METHOD') === HSS) {
+            $hss_errors = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'paypal_hss_email_error`');
+            $this->context->smarty->assign(array(
+                'hss_errors' => $hss_errors
+            ));
+        }
 
         $this->getTranslations();
 
