@@ -1303,30 +1303,7 @@ class PayPal extends PaymentModule
             $content .= $bannerManager->renderForCartPage();
         }
 
-        if (!$this->active
-            || (((int) Configuration::get('PAYPAL_PAYMENT_METHOD') == HSS) && !$this->context->getMobileDevice())
-            || !Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT')
-            || !in_array(ECS, $this->getPaymentMethods())
-            || isset($this->context->cookie->express_checkout)
-            || in_array(Configuration::get('PAYPAL_PAYMENT_METHOD'), array(PVZ, PPP))) {
-            return $content;
-        }
-
-        $values = array('en' => 'en_US', 'fr' => 'fr_FR', 'de' => 'de_DE');
-        $paypal_logos = $this->paypal_logos->getLogos();
-
-        $this->context->smarty->assign(array(
-            'PayPal_payment_type' => 'cart',
-            'paypal_express_checkout_shortcut_logo' => isset($paypal_logos['ExpressCheckoutShortcutButton'])
-            ? $paypal_logos['ExpressCheckoutShortcutButton'] : false,
-            'PayPal_current_page' => $this->getCurrentUrl(),
-            'PayPal_lang_code' => (isset($values[$this->context->language->iso_code])
-                ? $values[$this->context->language->iso_code] : 'en_US'),
-            'PayPal_tracking_code' => $this->getTrackingCode((int) Configuration::get('PAYPAL_PAYMENT_METHOD')),
-            'include_form' => true,
-            'template_dir' => dirname(__FILE__).'/views/templates/hook/'));
-
-        return $content . $this->fetchTemplate('express_checkout_shortcut_button.tpl');
+        return $content . $this->renderExpressCheckoutButton('cart');
     }
 
     public function hookPaymentReturn($params)
