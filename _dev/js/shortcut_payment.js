@@ -26,9 +26,10 @@
 $(document).ready( ()=> {
   if ($('section#checkout-payment-step').hasClass('js-current-step')) {
     let el = $(`input[data-module-name="${paypalCheckedMethod}"]`);
-    $('.payment-options div').hide();
+
     if (el.length > 0) {
       el.click();
+      $('.payment-options div').hide();
       $('.payment-options').append(scPaypalCheckedMsg);
     }
   }
