@@ -23,24 +23,9 @@
 *
 *}
 
-<style>
-  [paypal-banner-message] > span {
-    margin: auto;
-  }
-
-  [paypal-banner-message] {
-    background-color: {$colorGradient};
-  }
-
-  {if isset($linearGradient)}
-    [paypal-banner-message] {
-      background: {$linearGradient};
-    }
-  {/if}
-
-</style>
-
-{include file='./banner.tpl'}
+<div class="container">
+    {include file='./banner.tpl'}
+</div>
 
 <script>
     var paypalBanner = new Banner({

@@ -121,23 +121,9 @@ class BannerManager
      */
     public function renderForHomePage()
     {
-        if ((int)Configuration::get(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT)) {
-            $color = Configuration::get(ConfigurationMap::COLOR);
-        } else {
-            $color = ConfigurationMap::COLOR_GRAY;
-        }
-
-        $colorGradient = ConfigurationMap::getColorGradient($color);
-        $isoCountryDefault = strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
-
-        if ($isoCountryDefault === 'de' && $color === ConfigurationMap::COLOR_BLUE) {
-            $this->banner->addTplVar('linearGradient', 'linear-gradient(to right, #023188 0%, #023188 50%, #0085cb 51%, #0085cb 100%)');
-        }
-
         return $this->banner
             ->setPlacement('home')
             ->setLayout('flex')
-            ->addTplVar('colorGradient', $colorGradient)
             ->setTemplate(_PS_MODULE_DIR_ . 'paypal/views/templates/installmentBanner/home-banner.tpl')
             ->render();
     }
