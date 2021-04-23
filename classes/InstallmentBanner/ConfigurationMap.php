@@ -100,9 +100,7 @@ class ConfigurationMap
             ['gb' => 'gbp'],
             ['en' => 'gbp'],
             ['gb' => 'usd'],
-            ['en' => 'usd'],
-            ['gb' => 'aud'],
-            ['en' => 'aud']
+            ['en' => 'usd']
         ];
     }
 }
