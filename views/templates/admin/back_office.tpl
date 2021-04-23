@@ -29,7 +29,16 @@
 	<ul paypal-nav-bar class="nav nav-pills">
 		<li class="active" tab-content="general"><a href="#">{l s='General' mod='paypal'}</a></li>
 		{if isset($showInstallmentSetting) && $showInstallmentSetting}
-			<li tab-content="payment4x"><a href="#">{l s='Payment in 4x' mod='paypal'}</a></li>
+			<li tab-content="payment4x">
+				<a href="#">
+					{if isset($isoCountryDefault) && $isoCountryDefault == 'gb'}
+						{l s='Payment in 3x' mod='paypal'}
+					{else}
+						{l s='Payment in 4x' mod='paypal'}
+					{/if}
+
+				</a>
+			</li>
 		{/if}
 	</ul>
 </div>

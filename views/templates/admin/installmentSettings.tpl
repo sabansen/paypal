@@ -83,7 +83,12 @@
 
         <div class="paypal-form-group pp__flex-align-center pp_mb-20">
             <div class="label">
-                {l s='Enable the display of 4x banners' mod='paypal'}
+                {if isset($isoCountryDefault) && $isoCountryDefault === 'gb'}
+                    {l s='Enable the display of 3x banners' mod='paypal'}
+                {else}
+                    {l s='Enable the display of 4x banners' mod='paypal'}
+                {/if}
+
             </div>
 
             <div class="configuration">
