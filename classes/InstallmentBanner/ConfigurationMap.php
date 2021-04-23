@@ -89,7 +89,7 @@ class ConfigurationMap
      */
     public static function getAllowedCountries()
     {
-        return ['fr', 'de', 'gb', 'us', 'au'];
+        return ['fr', 'de', 'gb', 'us'];
     }
 
     public static function getLanguageCurrencyMap()
