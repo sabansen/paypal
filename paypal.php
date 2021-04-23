@@ -1180,6 +1180,12 @@ class PayPal extends PaymentModule
             $this->getTranslations();
             return $return_braintree.$this->fetchTemplate('integral_evolution_payment.tpl');
         } elseif ($method == WPS || $method == ECS) {
+            $expressCheckout = new ExpressCheckout();
+
+            if ($expressCheckout->isConfigured() === false) {
+                return '';
+            }
+
             $this->getTranslations();
             $this->context->smarty->assign(array(
                 'PayPal_integral' => WPS,
