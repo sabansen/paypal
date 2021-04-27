@@ -109,7 +109,8 @@ class Banner
             'tot-paypal-sdk-messages' => [
                 'src' => $this->getPaypalSdkLib(),
                 'data-namespace' => 'totPaypalSdk',
-                'data-page-type' => $this->getPageTypeAttribute()
+                'data-page-type' => $this->getPageTypeAttribute(),
+                'enable-funding' => 'paylater'
             ]
         ];
 
