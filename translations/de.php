@@ -502,6 +502,7 @@ $_MODULE['<{paypal}prestashop>paypal_fa46ea6f6f6623fdd7039b5f1a8f3940'] = 'Keine
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_7e4ed5efc0f056eb2b36609af35177d3'] = 'Sandbox-Modus';
 $_MODULE['<{paypal}prestashop>paypalordercreaterequest_2605fbb693837be42d0cd0e701cb5aa3'] = 'Handhabung';
 $_MODULE['<{paypal}prestashop>forminstallment_f4f70727dc34561dfde1a3c529b6205c'] = 'Einstellungen';
+$_MODULE['<{paypal}prestashop>forminstallment_12cd357e7240fc5d8bd9884dec5c3a38'] = 'Aktivieren Sie die Anzeige von 3x-Bannern';
 $_MODULE['<{paypal}prestashop>forminstallment_638e1f70e3be66cd373e5b7e98b80bec'] = 'Aktivieren Sie die Anzeige von 4x-Bannern';
 $_MODULE['<{paypal}prestashop>forminstallment_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Aktiviert';
 $_MODULE['<{paypal}prestashop>forminstallment_b9f5c797ebbf55adccdd8539a65a0241'] = 'Deaktiviert';

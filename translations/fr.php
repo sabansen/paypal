@@ -542,3 +542,4 @@ $_MODULE['<{paypal}prestashop>adminpaypallogscontroller_b38308023e216ac4faf73789
 $_MODULE['<{paypal}prestashop>installmentdisclaimer_1b139287ea9bd54f5252e7868dae1f40'] = 'Afficher le paiement PayPal 3X sur votre site';
 $_MODULE['<{paypal}prestashop>installmentdisclaimer_b0a144a9a1cbd31bbc841d2656e20e51'] = 'Affichez des messages de paiement ultérieur sur votre site pour des offres telles que le paiement en 3, qui permet aux clients de payer en 3 mensualités sans intérêt.';
 $_MODULE['<{paypal}prestashop>installmentdisclaimer_fbbbfb2dd1598fbc34d42a4d662bdb52'] = 'Nous afficherons des messages sur votre site pour promouvoir cette fonction pour vous. Vous ne pouvez pas promouvoir les offres de paiement ultérieur avec tout autre contenu, marketing ou matériel.';
+$_MODULE['<{paypal}prestashop>forminstallment_12cd357e7240fc5d8bd9884dec5c3a38'] = 'Activer l\'affichage des bannières 3x';
