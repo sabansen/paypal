@@ -279,6 +279,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             'name' => array(
                 'en' => 'Payment in 4x',
                 'fr' => 'Paiement en 4x',
+                'de' => 'Zahlung in 4x'
             ),
             'class_name' => 'AdminPayPalInstallment',
             'parent_class_name' => 'AdminPayPalConfiguration',
@@ -1516,16 +1517,28 @@ class PayPal extends \PaymentModule implements WidgetInterface
         if (in_array(Tools::strtolower($countryDefault->iso_code), InstallmentConfiguration::getAllowedCountries())) {
             foreach (Language::getLanguages() as $language) {
                 if (Tools::strtolower($countryDefault->iso_code) === 'gb') {
-                    if (Tools::strtolower($language['iso_code']) === 'fr') {
-                        $installmentTab->name[$language['id_lang']] = 'Paiement en 3x';
-                    } else {
-                        $installmentTab->name[$language['id_lang']] = 'Payment in 3x';
+                    switch(Tools::strtolower($language['iso_code'])) {
+                        case 'fr':
+                            $installmentTab->name[$language['id_lang']] = 'Paiement en 3x';
+                            break;
+                        case 'de':
+                            $installmentTab->name[$language['id_lang']] = 'Zahlung in 3x';
+                            break;
+                        default:
+                            $installmentTab->name[$language['id_lang']] = 'Payment in 3x';
+                            break;
                     }
                 } else {
-                    if (Tools::strtolower($language['iso_code']) === 'fr') {
-                        $installmentTab->name[$language['id_lang']] = 'Paiement en 4x';
-                    } else {
-                        $installmentTab->name[$language['id_lang']] = 'Payment in 4x';
+                    switch(Tools::strtolower($language['iso_code'])) {
+                        case 'fr':
+                            $installmentTab->name[$language['id_lang']] = 'Paiement en 4x';
+                            break;
+                        case 'de':
+                            $installmentTab->name[$language['id_lang']] = 'Zahlung in 4x';
+                            break;
+                        default:
+                            $installmentTab->name[$language['id_lang']] = 'Payment in 4x';
+                            break;
                     }
                 }
 
