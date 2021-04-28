@@ -527,7 +527,7 @@ $_MODULE['<{paypal}prestashop>installmentpagedisplayingsetting_cfe6e34a4c7f24aad
 $_MODULE['<{paypal}prestashop>installmentpagedisplayingsetting_175103bab005a71c49c7ef675c1304cd'] = 'Page des catégories';
 $_MODULE['<{paypal}prestashop>installmentpagedisplayingsetting_235e8d1a54ecddcf1d3ff533331ed416'] = 'Page produit';
 $_MODULE['<{paypal}prestashop>installmentpagedisplayingsetting_a85eba4c6c699122b2bb1387ea4813ad'] = 'Panier';
-$_MODULE['<{paypal}prestashop>installmentpagedisplayingsetting_6ff063fbc860a79759a7369ac32cee22'] = 'Caisse';
+$_MODULE['<{paypal}prestashop>installmentpagedisplayingsetting_6ff063fbc860a79759a7369ac32cee22'] = 'Checkout ';
 $_MODULE['<{paypal}prestashop>installmentpopup_9e091c37835dd133ef649311ba561408'] = 'Proposez à vos clients de payer en 4 fois';
 $_MODULE['<{paypal}prestashop>installmentpopup_611c3c7ed877fc3071ab177ed36acbb6'] = 'Vos clients peuvent désormais payer en 4 fois avec PayPal !';
 $_MODULE['<{paypal}prestashop>installmentpopup_119879090c04004d26811acd3c1379c1'] = 'Améliorez votre taux de conversion en montrant les informations de paiement en 4X à vos clients.';
