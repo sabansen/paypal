@@ -329,9 +329,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
         )
     );
 
-
-
-
     public function __construct()
     {
         $this->name = 'paypal';
@@ -592,7 +589,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
     public function hookDisplayProductActions($params)
     {
         $content = '';
-        $bannerManager = new BannerManager();
+        $bannerManager = $this->getBannerManager();
 
         if ($bannerManager->isBannerAvailable()) {
             $content .= $bannerManager->renderForProductPage();
@@ -638,8 +635,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             'sourcePage' => ShortcutConfiguration::SOURCE_PAGE_CART,
             'hook' => ShortcutConfiguration::HOOK_EXPRESS_CHECKOUT
         ]);
-
-        $bannerManager = new BannerManager();
+        $bannerManager = $this->getBannerManager();
 
         if ($bannerManager->isBannerAvailable()) {
             $returnContent .= $bannerManager->renderForCartPage();
@@ -664,7 +660,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
     {
         if ($this->context->controller instanceof IndexController
             || $this->context->controller instanceof CategoryController) {
-            $bannerManager = new BannerManager();
+            $bannerManager = $this->getBannerManager();
 
             if ($bannerManager->isBannerAvailable()) {
                 return $bannerManager->renderForHomePage();
@@ -1004,7 +1000,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
     {
         if ($this->context->controller instanceof ProductController) {
             $content = '';
-            $bannerManager = new BannerManager();
+            $bannerManager = $this->getBannerManager();
 
             if ($bannerManager->isBannerAvailable() && version_compare(_PS_VERSION_, '1.7.6', '<')) {
                 $content .= $bannerManager->renderForProductPage();
@@ -1024,7 +1020,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
 
         if ($this->context->controller instanceof OrderController) {
-            $bannerManager = new BannerManager();
+            $bannerManager = $this->getBannerManager();
 
             if ($bannerManager->isBannerAvailable()) {
                 return $bannerManager->renderForCheckoutPage();
@@ -1131,18 +1127,10 @@ class PayPal extends \PaymentModule implements WidgetInterface
      */
     public function needConvert()
     {
-        $countryDefault = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT', null, null, $this->context->shop->id));
+        $bannerManager = $this->getBannerManager();
 
-        if (Validate::isLoadedObject($countryDefault) && Tools::strtolower($countryDefault->iso_code) === 'fr') {
-            if ((int)Configuration::get(InstallmentConfiguration::ENABLE_INSTALLMENT)) {
-                foreach (InstallmentConfiguration::getLanguageCurrencyMap() as $langCurrency) {
-                    $isoLang = strtolower($this->context->language->iso_code);
-                    $isoCurrency = strtolower($this->context->currency->iso_code);
-                    if (isset($langCurrency[$isoLang]) && $langCurrency[$isoLang] == $isoCurrency) {
-                        return false;
-                    }
-                }
-            }
+        if ($bannerManager->isEligibleConf() && $bannerManager->isEligibleContext()) {
+            return false;
         }
 
         $currency_mode = Currency::getPaymentCurrenciesSpecial($this->id);
@@ -2359,5 +2347,13 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
 
         return new DummyWidget($this, $configuration);
+    }
+
+    /**
+     * @return BannerManager
+     */
+    public function getBannerManager()
+    {
+        return new BannerManager();
     }
 }

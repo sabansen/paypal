@@ -103,5 +103,16 @@ class ConfigurationMap
             ['en' => 'usd']
         ];
     }
+
+    public static function getPageConfMap()
+    {
+        return [
+            'OrderController' => self::CHECKOUT_PAGE,
+            'CartController' => self::CART_PAGE,
+            'ProductController' => self::PRODUCT_PAGE,
+            'IndexController' => self::HOME_PAGE,
+            'CategoryController' => self::CATEGORY_PAGE
+        ];
+    }
 }
 
