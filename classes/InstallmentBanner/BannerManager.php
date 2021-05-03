@@ -77,6 +77,8 @@ class BannerManager
                 return true;
             }
         }
+
+        return false;
     }
 
     /**
