@@ -1127,12 +1127,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
      */
     public function needConvert()
     {
-        $bannerManager = $this->getBannerManager();
-
-        if ($bannerManager->isEligibleConf() && $bannerManager->isEligibleContext()) {
-            return false;
-        }
-
         $currency_mode = Currency::getPaymentCurrenciesSpecial($this->id);
         $mode_id = $currency_mode['id_currency'];
         if ($mode_id == -2) {
