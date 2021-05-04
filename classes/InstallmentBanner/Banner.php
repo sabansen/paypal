@@ -109,10 +109,14 @@ class Banner
             'tot-paypal-sdk-messages' => [
                 'src' => $this->getPaypalSdkLib(),
                 'data-namespace' => 'totPaypalSdk',
-                'data-partner-attribution-id' => $this->method->getPaypalPartnerId(),
-                'data-page-type' => $this->getPageTypeAttribute()
+                'data-page-type' => $this->getPageTypeAttribute(),
+                'enable-funding' => 'paylater'
             ]
         ];
+
+        if (false === defined('_PS_ADMIN_DIR_')) {
+            $js['tot-paypal-sdk-messages']['data-partner-attribution-id'] = $this->method->getPaypalPartnerId();
+        }
 
         return $js;
     }

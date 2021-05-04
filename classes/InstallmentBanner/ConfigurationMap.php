@@ -26,6 +26,8 @@
 
 namespace PaypalAddons\classes\InstallmentBanner;
 
+use Country;
+use Configuration;
 
 class ConfigurationMap
 {
@@ -73,7 +75,44 @@ class ConfigurationMap
             self::COLOR_GRAYSCALE => '#ffffff',
             self::COLOR_GRAY => '#ebecee'
         ];
+        $isoCountryDefault = strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
+
+        if ($isoCountryDefault === 'de') {
+            $gradientMap[self::COLOR_BLACK] = '#2c2e2f';
+        }
 
         return isset($gradientMap[$color]) ? $gradientMap[$color] : $gradientMap[self::COLOR_BLUE];
     }
+
+    /**
+     * @return array
+     */
+    public static function getAllowedCountries()
+    {
+        return ['fr', 'de', 'gb', 'us'];
+    }
+
+    public static function getLanguageCurrencyMap()
+    {
+        return [
+            ['fr' => 'eur'],
+            ['de' => 'eur'],
+            ['gb' => 'gbp'],
+            ['en' => 'gbp'],
+            ['gb' => 'usd'],
+            ['en' => 'usd']
+        ];
+    }
+
+    public static function getPageConfMap()
+    {
+        return [
+            'OrderController' => self::CHECKOUT_PAGE,
+            'CartController' => self::CART_PAGE,
+            'ProductController' => self::PRODUCT_PAGE,
+            'IndexController' => self::HOME_PAGE,
+            'CategoryController' => self::CATEGORY_PAGE
+        ];
+    }
 }
+

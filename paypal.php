@@ -279,6 +279,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             'name' => array(
                 'en' => 'Payment in 4x',
                 'fr' => 'Paiement en 4x',
+                'de' => 'Zahlung in 4x'
             ),
             'class_name' => 'AdminPayPalInstallment',
             'parent_class_name' => 'AdminPayPalConfiguration',
@@ -327,9 +328,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
             'visible' => false,
         )
     );
-
-
-
 
     public function __construct()
     {
@@ -591,7 +589,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
     public function hookDisplayProductActions($params)
     {
         $content = '';
-        $bannerManager = new BannerManager();
+        $bannerManager = $this->getBannerManager();
 
         if ($bannerManager->isBannerAvailable()) {
             $content .= $bannerManager->renderForProductPage();
@@ -637,8 +635,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             'sourcePage' => ShortcutConfiguration::SOURCE_PAGE_CART,
             'hook' => ShortcutConfiguration::HOOK_EXPRESS_CHECKOUT
         ]);
-
-        $bannerManager = new BannerManager();
+        $bannerManager = $this->getBannerManager();
 
         if ($bannerManager->isBannerAvailable()) {
             $returnContent .= $bannerManager->renderForCartPage();
@@ -663,7 +660,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
     {
         if ($this->context->controller instanceof IndexController
             || $this->context->controller instanceof CategoryController) {
-            $bannerManager = new BannerManager();
+            $bannerManager = $this->getBannerManager();
 
             if ($bannerManager->isBannerAvailable()) {
                 return $bannerManager->renderForHomePage();
@@ -819,7 +816,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
         $paymentOptions[] = $paymentOption;
 
-        if ((Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART')) && isset($this->context->cookie->paypal_ecs)) {
+        if ((Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART') || Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_SIGNUP')) && isset($this->context->cookie->paypal_ecs)) {
             $paymentOption = new PaymentOption();
             $action_text = $this->l('Pay with paypal express checkout');
             $paymentOption->setCallToActionText($action_text);
@@ -855,7 +852,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             }
 
             $this->context->controller->registerJavascript($this->name . '-paypal-info', 'modules/' . $this->name . '/views/js/paypal-info.js');
-            $resources[] = '/modules/' . $this->name . '/views/js/paypal-info.js';
+            $resources[] = _MODULE_DIR_ . $this->name . '/views/js/paypal-info.js';
 
             // Show Shortcut on signup page if need
             // if ps version is '1.7.6' and bigger than use native hook displayPersonalInformationTop
@@ -872,7 +869,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             if ((Configuration::get(ShortcutConfiguration::SHOW_ON_PRODUCT_PAGE) || Configuration::get(ShortcutConfiguration::SHOW_ON_CART_PAGE) || Configuration::get(ShortcutConfiguration::SHOW_ON_SIGNUP_STEP))
                 && (isset($this->context->cookie->paypal_ecs) || isset($this->context->cookie->paypal_pSc))) {
                 $this->context->controller->registerJavascript($this->name . '-paypal-ec-sc', 'modules/' . $this->name . '/views/js/shortcut_payment.js');
-                $resources[] = '/modules/' . $this->name . '/views/js/shortcut_payment.js' . '?v=' . $this->version;
+                $resources[] = _MODULE_DIR_ . $this->name . '/views/js/shortcut_payment.js' . '?v=' . $this->version;
                 if (isset($this->context->cookie->paypal_ecs)) {
                     Media::addJsDef(array(
                         'paypalCheckedMethod' => 'express_checkout_schortcut',
@@ -909,7 +906,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 ));
                 $this->context->controller->registerJavascript($this->name . '-paypal-checkout', 'https://www.paypalobjects.com/api/checkout.min.js', array('server' => 'remote'));
                 $this->context->controller->registerJavascript($this->name . '-paypal-checkout-in-context', 'modules/' . $this->name . '/views/js/ec_in_context.js');
-                $resources[] = '/modules/' . $this->name . '/views/js/ec_in_context.js' . '?v=' . $this->version;
+                $resources[] = _MODULE_DIR_ . $this->name . '/views/js/ec_in_context.js' . '?v=' . $this->version;
                 $resources[] = 'https://www.paypalobjects.com/api/checkout.min.js' . '?v=' . $this->version;
             }
             if ($this->paypal_method == 'PPP') {
@@ -917,7 +914,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 $this->context->controller->registerJavascript($this->name . '-plus-minjs', 'https://www.paypalobjects.com/webstatic/ppplus/ppplus.min.js', array('server' => 'remote'));
                 $this->context->controller->registerJavascript($this->name . '-plus-payment-js', 'modules/' . $this->name . '/views/js/payment_ppp.js');
                 $this->context->controller->addJqueryPlugin('fancybox');
-                $resources[] = '/modules/' . $this->name . '/views/js/payment_ppp.js' . '?v=' . $this->version;
+                $resources[] = _MODULE_DIR_ . $this->name . '/views/js/payment_ppp.js' . '?v=' . $this->version;
                 $resources[] = 'https://www.paypalobjects.com/webstatic/ppplus/ppplus.min.js' . '?v=' . $this->version;
             }
 
@@ -925,7 +922,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 $method->assignJSvarsPaypalMB();
                 $this->context->controller->registerJavascript($this->name . '-plusdcc-minjs', 'https://www.paypalobjects.com/webstatic/ppplusdcc/ppplusdcc.min.js', array('server' => 'remote'));
                 $this->context->controller->registerJavascript($this->name . '-mb-payment-js', 'modules/' . $this->name . '/views/js/payment_mb.js');
-                $resources[] = '/modules/' . $this->name . '/views/js/payment_mb.js' . '?v=' . $this->version;
+                $resources[] = _MODULE_DIR_ . $this->name . '/views/js/payment_mb.js' . '?v=' . $this->version;
                 $resources[] = 'https://www.paypalobjects.com/webstatic/ppplusdcc/ppplusdcc.min.js' . '?v=' . $this->version;
             }
         } elseif (Tools::getValue('controller') == "cart") {
@@ -1003,7 +1000,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
     {
         if ($this->context->controller instanceof ProductController) {
             $content = '';
-            $bannerManager = new BannerManager();
+            $bannerManager = $this->getBannerManager();
 
             if ($bannerManager->isBannerAvailable() && version_compare(_PS_VERSION_, '1.7.6', '<')) {
                 $content .= $bannerManager->renderForProductPage();
@@ -1023,7 +1020,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
 
         if ($this->context->controller instanceof OrderController) {
-            $bannerManager = new BannerManager();
+            $bannerManager = $this->getBannerManager();
 
             if ($bannerManager->isBannerAvailable()) {
                 return $bannerManager->renderForCheckoutPage();
@@ -1073,6 +1070,10 @@ class PayPal extends \PaymentModule implements WidgetInterface
             }
 
             if ($data['sourcePage'] == ShortcutConfiguration::SOURCE_PAGE_CART) {
+                if ($this->context->cart->hasProducts() === false || $this->context->cart->checkQuantities() === false) {
+                    return '';
+                }
+
                 if (Configuration::get(ShortcutConfiguration::CUSTOMIZE_STYLE)
                     && (int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_CART)
                     !== ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK) {
@@ -1126,18 +1127,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
      */
     public function needConvert()
     {
-        $countryDefault = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT', null, null, $this->context->shop->id));
-
-        if (Validate::isLoadedObject($countryDefault) && Tools::strtolower($countryDefault->iso_code) === 'fr') {
-            if ((int)Configuration::get(InstallmentConfiguration::ENABLE_INSTALLMENT)) {
-                if (Tools::strtolower($this->context->language->iso_code) === 'fr') {
-                    if (Tools::strtolower($this->context->currency->iso_code) === 'eur') {
-                        return false;
-                    }
-                }
-            }
-        }
-
         $currency_mode = Currency::getPaymentCurrenciesSpecial($this->id);
         $mode_id = $currency_mode['id_currency'];
         if ($mode_id == -2) {
@@ -1507,11 +1496,38 @@ class PayPal extends \PaymentModule implements WidgetInterface
             return;
         }
 
-        if (Tools::strtolower($countryDefault->iso_code) === 'fr') {
-            if ($installmentTab->active == false) {
-                $installmentTab->active = true;
-                $installmentTab->save();
+        if (in_array(Tools::strtolower($countryDefault->iso_code), InstallmentConfiguration::getAllowedCountries())) {
+            foreach (Language::getLanguages() as $language) {
+                if (Tools::strtolower($countryDefault->iso_code) === 'gb') {
+                    switch(Tools::strtolower($language['iso_code'])) {
+                        case 'fr':
+                            $installmentTab->name[$language['id_lang']] = 'Paiement en 3x';
+                            break;
+                        case 'de':
+                            $installmentTab->name[$language['id_lang']] = 'Zahlung in 3x';
+                            break;
+                        default:
+                            $installmentTab->name[$language['id_lang']] = 'Payment in 3x';
+                            break;
+                    }
+                } else {
+                    switch(Tools::strtolower($language['iso_code'])) {
+                        case 'fr':
+                            $installmentTab->name[$language['id_lang']] = 'Paiement en 4x';
+                            break;
+                        case 'de':
+                            $installmentTab->name[$language['id_lang']] = 'Zahlung in 4x';
+                            break;
+                        default:
+                            $installmentTab->name[$language['id_lang']] = 'Payment in 4x';
+                            break;
+                    }
+                }
+
             }
+
+            $installmentTab->active = true;
+            $installmentTab->save();
         } else {
             if ($installmentTab->active == true) {
                 $installmentTab->active = false;
@@ -1768,6 +1784,15 @@ class PayPal extends \PaymentModule implements WidgetInterface
         return $response;
     }
 
+    public static function getPrecision()
+    {
+        if (version_compare(_PS_VERSION_, '1.7.7', '<')) {
+            return _PS_PRICE_DISPLAY_PRECISION_;
+        } else {
+            return Context::getContext()->getComputingPrecision();
+        }
+    }
+
     /**
      * Get decimal correspondent to payment currency
      * @return integer Number of decimal
@@ -1781,11 +1806,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $isoCurrency = $paypal->getPaymentCurrencyIso();
         }
 
-        if (version_compare(_PS_VERSION_, '1.7.7', '<')) {
-            $precision = _PS_PRICE_DISPLAY_PRECISION_;
-        } else {
-            $precision = Context::getContext()->getComputingPrecision();
-        }
+        $precision = self::getPrecision();
 
         if (in_array($isoCurrency, $currency_wt_decimal) || ($precision == 0)) {
             return (int)0;
@@ -2110,8 +2131,13 @@ class PayPal extends \PaymentModule implements WidgetInterface
         $hooksUnregistered = array();
 
         foreach ($this->hooks as $hookName) {
-            $alias = Hook::getNameById(Hook::getIdByName($hookName));
-            $hookName = $alias ? $alias : $hookName;
+            $alias = '';
+
+            try {
+                $alias = Hook::getNameById(Hook::getIdByName($hookName));
+            } catch (Exception $e) {}
+
+            $hookName = empty($alias) ? $hookName : $alias;
 
             if (Hook::isModuleRegisteredOnHook($this, $hookName, $this->context->shop->id)) {
                 continue;
@@ -2320,5 +2346,13 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
 
         return new DummyWidget($this, $configuration);
+    }
+
+    /**
+     * @return BannerManager
+     */
+    public function getBannerManager()
+    {
+        return new BannerManager();
     }
 }

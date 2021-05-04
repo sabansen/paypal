@@ -30,9 +30,5 @@
     {/if}
   </div>
 
-  <div installment-preview-container>
-    {if isset($banner)}
-        {$banner->render() nofilter}
-    {/if}
-  </div>
+  <div installment-preview-container></div>
 </div>

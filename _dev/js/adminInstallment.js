@@ -36,22 +36,53 @@ var InstallmentSetting = {
 
     document.querySelector('[name="PAYPAL_ENABLE_INSTALLMENT"]').addEventListener('change', this.updatedEnableConf);
 
-    window.addEventListener('load', this.initBanner);
-
     document.querySelector('[name="PAYPAL_INSTALLMENT_COLOR"]').addEventListener('change', this.updateBannerColor)
   },
 
   initBanner() {
-    const color = InstallmentSetting.getColorBanner();
+    if (typeof Banner != 'undefined' && InstallmentSetting.banner instanceof Banner) {
+      return;
+    }
 
-    InstallmentSetting.banner = new Banner({
-      container: '[paypal-banner-message]',
-      layout: 'flex',
-      placement: 'home',
-      color: color
+    InstallmentSetting.loadBanner()
+      .then(() => {
+        const color = InstallmentSetting.getColorBanner();
+
+        InstallmentSetting.banner = new Banner({
+          container: '[paypal-banner-message]',
+          layout: 'flex',
+          placement: 'home',
+          color: color
+        });
+
+        InstallmentSetting.banner.initBanner();
+      });
+  },
+
+  loadBanner() {
+    return new Promise((resolve, reject) => {
+      if (typeof Banner != 'undefined') {
+        resolve();
+      }
+
+      const url = new URL(location.href);
+      url.searchParams.append('ajax', 1);
+      url.searchParams.append('action', 'GetBanner');
+
+      fetch(url.toString())
+        .then((response) => {
+          return response.json();
+        })
+        .then((response) => {
+          if (response.success) {
+            document.querySelector('[installment-preview-container]').innerHTML = response.content;
+            document.querySelectorAll('[installment-preview-container] script').forEach((script) => {
+              eval(script.innerHTML);
+            });
+            resolve();
+          }
+        })
     });
-
-    InstallmentSetting.banner.initBanner();
   },
 
   updatedEnableConf() {
@@ -75,6 +106,7 @@ var InstallmentSetting = {
     if (installmentEnabled.checked) {
       displayingSettings.style.display = 'block';
       Tools.showConfiguration(advancedOptions.getAttribute('name'));
+      InstallmentSetting.initBanner();
     } else {
       displayingSettings.style.display = 'none';
       Tools.hideConfiguration(advancedOptions.getAttribute('name'));

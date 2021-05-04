@@ -116,7 +116,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
                 [
                     'amount' => $this->getAmount($currency),
                     'items' => $items,
-                    'custom_id' => $this->getCustomId()
+                    'custom_id' => $this->formatter->formatPaypalString($this->getCustomId())
                 ],
             ],
         ];
@@ -144,8 +144,8 @@ class PaypalOrderCreateRequest extends RequestAbstract
         }
 
         $payer['name'] = [
-            'given_name' => $this->context->customer->firstname,
-            'surname' => $this->context->customer->lastname
+            'given_name' => $this->formatter->formatPaypalString($this->context->customer->firstname),
+            'surname' => $this->formatter->formatPaypalString($this->context->customer->lastname)
         ];
         $payer['email'] = $this->context->customer->email;
 
@@ -213,7 +213,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
                 $product['name'] .= ' Ref: ' . $product['reference'];
             }
 
-            $item['name'] = \Tools::substr($product['name'], 0, 126);
+            $item['name'] = $this->formatter->formatPaypalString($product['name']);
             $item['sku'] = $product['id_product'];
             $item['unit_amount'] = [
                 'currency_code' => $currency,
@@ -334,7 +334,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
             'shipping_preference' => 'SET_PROVIDED_ADDRESS',
             'return_url' => $this->method->getReturnUrl(),
             'cancel_url' => $this->method->getCancelUrl(),
-            'brand_name' => $this->getBrandName(),
+            'brand_name' => $this->formatter->formatPaypalString($this->getBrandName()),
             'user_action' => 'PAY_NOW'
         ];
 
@@ -373,11 +373,11 @@ class PaypalOrderCreateRequest extends RequestAbstract
         $country = new \Country($address->id_country);
 
         $addressArray = [
-            'address_line_1' => $address->address1,
-            'address_line_2' => $address->address2,
+            'address_line_1' => $this->formatter->formatPaypalString($address->address1),
+            'address_line_2' => $this->formatter->formatPaypalString($address->address2),
             'postal_code' => $address->postcode,
             'country_code' => \Tools::strtoupper($country->iso_code),
-            'admin_area_2' => $address->city,
+            'admin_area_2' => $this->formatter->formatPaypalString($address->city),
         ];
 
         if ($address->id_state) {

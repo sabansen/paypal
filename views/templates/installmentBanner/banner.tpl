@@ -32,7 +32,7 @@
 </div>
 
 <script>
-  var Banner = function (conf) {
+  window.Banner = function (conf) {
 
       this.placement = typeof conf.placement != 'undefined' ? conf.placement : null;
 
@@ -45,6 +45,8 @@
       this.container = typeof conf.container != 'undefined' ? conf.container : null;
 
       this.textAlign = typeof conf.textAlign != 'undefined' ? conf.textAlign : null;
+
+      this.currency = typeof conf.currency != 'undefined' ? conf.currency : null;
   };
 
   Banner.prototype.initBanner = function() {
@@ -54,11 +56,14 @@
       }
 
       var conf = {
-          currency: "EUR",
           style: {
               ratio: '20x1'
           }
       };
+
+      if (this.currency) {
+          conf['currency'] = this.currency;
+      }
 
       if (this.textAlign) {
           conf['style']['text'] = {
@@ -84,6 +89,4 @@
 
       totPaypalSdk.Messages(conf).render(this.container);
   };
-
-  document.addEventListener('initPaypalBanner', Banner.init)
 </script>

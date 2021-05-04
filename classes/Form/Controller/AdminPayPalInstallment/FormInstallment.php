@@ -33,6 +33,7 @@ use \Configuration;
 use PaypalAddons\classes\InstallmentBanner\Banner;
 use \Tools;
 use \Context;
+use Country;
 use PaypalAddons\classes\Form\Field\Select;
 use PaypalAddons\classes\Form\Field\SelectOption;
 use PaypalAddons\classes\InstallmentBanner\ConfigurationMap;
@@ -57,6 +58,7 @@ class FormInstallment implements FormInterface
      */
     public function getFields()
     {
+        $isoCountryDefault = strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
         $fields = array(
             'legend' => array(
                 'title' => $this->module->l('Settings', $this->className),
@@ -72,7 +74,7 @@ class FormInstallment implements FormInterface
                 ),
                 array(
                     'type' => 'switch',
-                    'label' => $this->module->l('Enable the display of 4x banners', $this->className),
+                    'label' => $isoCountryDefault == 'gb' ? $this->module->l('Enable the display of 3x banners', $this->className) : $this->module->l('Enable the display of 4x banners', $this->className),
                     'name' => ConfigurationMap::ENABLE_INSTALLMENT,
                     'is_bool' => true,
                     'values' => array(
@@ -123,7 +125,7 @@ class FormInstallment implements FormInterface
                     'type' => 'html',
                     'html_content' => $this->getBannerStyleSection(),
                     'name' => '',
-                    'label' => $this->module->l('The styles for the home page and category pages', $this->className),
+                    'label' => $this->module->l('Home page and category page styles', $this->className),
                 )
             ),
             'submit' => array(
@@ -200,29 +202,36 @@ class FormInstallment implements FormInterface
 
     protected function getBannerStyleSection()
     {
+        $isoCountryDefault = strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
+        $colorOptions = [
+            new SelectOption(ConfigurationMap::COLOR_GRAY, $this->module->l('gray', $this->className)),
+            new SelectOption(ConfigurationMap::COLOR_BLUE, $this->module->l('blue', $this->className)),
+            new SelectOption(ConfigurationMap::COLOR_BLACK, $this->module->l('black', $this->className)),
+            new SelectOption(ConfigurationMap::COLOR_WHITE, $this->module->l('white', $this->className))
+        ];
+
+        if ($isoCountryDefault !== 'de') {
+            $colorOptions[] = new SelectOption(ConfigurationMap::COLOR_MONOCHROME, $this->module->l('monochrome', $this->className));
+            $colorOptions[] = new SelectOption(ConfigurationMap::COLOR_GRAYSCALE, $this->module->l('grayscale', $this->className));
+        }
+
         $colorSelect = new Select(
             ConfigurationMap::COLOR,
-            [
-                new SelectOption(ConfigurationMap::COLOR_GRAY, $this->module->l('gray', $this->className)),
-                new SelectOption(ConfigurationMap::COLOR_BLUE, $this->module->l('blue', $this->className)),
-                new SelectOption(ConfigurationMap::COLOR_BLACK, $this->module->l('black', $this->className)),
-                new SelectOption(ConfigurationMap::COLOR_WHITE, $this->module->l('white', $this->className)),
-                new SelectOption(ConfigurationMap::COLOR_MONOCHROME, $this->module->l('monochrome', $this->className)),
-                new SelectOption(ConfigurationMap::COLOR_GRAYSCALE, $this->module->l('grayscale', $this->className)),
-            ],
+            $colorOptions,
             null,
             Configuration::get(ConfigurationMap::COLOR, null, null, null, ConfigurationMap::COLOR_GRAY)
         );
 
         return Context::getContext()->smarty
             ->assign('colorSelect', $colorSelect)
-            ->assign('banner', new Banner())
             ->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/_partials/paypalBanner/bannerStyleSection.tpl');
     }
 
     protected function getDisclaimerHtml()
     {
+        $isoCountryDefault = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
         return Context::getContext()->smarty
+            ->assign('isoCountryDefault', strtolower($isoCountryDefault))
             ->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/_partials/paypalBanner/installmentDisclaimer.tpl');
     }
 }

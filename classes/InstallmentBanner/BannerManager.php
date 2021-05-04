@@ -53,47 +53,40 @@ class BannerManager
     /**
      * @return bool
      */
-    public function isBannerAvailable()
+    public function isEligibleContext()
     {
-        if (strtolower($this->context->currency->iso_code) != 'eur') {
-            return false;
+        $isoLang = strtolower($this->context->language->iso_code);
+        $isoCurrency = strtolower($this->context->currency->iso_code);
+
+        foreach (ConfigurationMap::getLanguageCurrencyMap() as $langCurrency) {
+            if (isset($langCurrency[$isoLang]) && $langCurrency[$isoLang] == $isoCurrency) {
+                return true;
+            }
         }
 
-        if (strtolower($this->context->language->iso_code) != 'fr') {
-            return false;
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEligiblePage()
+    {
+        foreach (ConfigurationMap::getPageConfMap() as $page => $conf) {
+            if (is_a($this->context->controller, $page) && (int)Configuration::get($conf)) {
+                return true;
+            }
         }
 
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEligibleConf()
+    {
         if (false === (bool)Configuration::get(ConfigurationMap::ENABLE_INSTALLMENT)) {
-            return false;
-        }
-
-        if ($this->context->controller instanceof CartController
-            && false === (bool)Configuration::get(ConfigurationMap::CART_PAGE)) {
-
-            return false;
-        }
-
-        if ($this->context->controller instanceof OrderController
-            && false === (bool)Configuration::get(ConfigurationMap::CHECKOUT_PAGE)) {
-
-            return false;
-        }
-
-        if ($this->context->controller instanceof ProductController
-            && false === (bool)Configuration::get(ConfigurationMap::PRODUCT_PAGE)) {
-
-            return false;
-        }
-
-        if ($this->context->controller instanceof IndexController
-            && false === (bool)Configuration::get(ConfigurationMap::HOME_PAGE)) {
-
-            return false;
-        }
-
-        if ($this->context->controller instanceof CategoryController
-            && false === (bool)Configuration::get(ConfigurationMap::CATEGORY_PAGE)) {
-
             return false;
         }
 
@@ -103,7 +96,27 @@ class BannerManager
             null,
             $this->context->shop->id));
 
-        if (strtolower($isoCountryDefault) != 'fr') {
+        if (false === in_array(strtolower($isoCountryDefault), ConfigurationMap::getAllowedCountries())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBannerAvailable()
+    {
+        if ($this->isEligibleConf() === false) {
+            return false;
+        }
+
+        if ($this->isEligibleContext() === false) {
+            return false;
+        }
+
+        if ($this->isEligiblePage() === false) {
             return false;
         }
 
@@ -115,16 +128,9 @@ class BannerManager
      */
     public function renderForHomePage()
     {
-        if ((int)Configuration::get(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT)) {
-            $colorGradient = ConfigurationMap::getColorGradient(Configuration::get(ConfigurationMap::COLOR));
-        } else {
-            $colorGradient = ConfigurationMap::getColorGradient(ConfigurationMap::COLOR_GRAY);
-        }
-
         return $this->banner
             ->setPlacement('home')
             ->setLayout('flex')
-            ->addTplVar('colorGradient', $colorGradient)
             ->setTemplate(_PS_MODULE_DIR_ . 'paypal/views/templates/installmentBanner/home-banner.tpl')
             ->render();
     }

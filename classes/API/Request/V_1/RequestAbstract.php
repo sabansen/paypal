@@ -29,15 +29,20 @@ use PayPal\Rest\ApiContext;
 use PayPal\Auth\OAuthTokenCredential;
 use PaypalAddons\classes\API\Request\RequestInteface;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\services\FormatterPaypal;
 
 abstract class RequestAbstract implements RequestInteface
 {
     /** @var AbstractMethodPaypal*/
     protected $method;
 
+    /** @var FormatterPaypal*/
+    protected $formatter;
+
     public function __construct(AbstractMethodPaypal $method)
     {
         $this->method = $method;
+        $this->formatter = new FormatterPaypal();
     }
 
     /**
