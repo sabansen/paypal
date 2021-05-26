@@ -375,7 +375,7 @@ abstract class AbstractMethodPaypal extends AbstractMethod
      * @param int $sourcePage
      * @return string
      */
-    public function renderExpressCheckoutShortCut($sourcePage)
+    public function renderExpressCheckoutShortCut($sourcePage, $isWidget=false)
     {
         if ($sourcePage === ShortcutConfiguration::SOURCE_PAGE_PRODUCT) {
             $Shortcut = new ShortcutProduct(
@@ -386,6 +386,7 @@ abstract class AbstractMethodPaypal extends AbstractMethod
             $Shortcut = new ShortcutCart();
         } elseif ($sourcePage === ShortcutConfiguration::SOURCE_PAGE_SIGNUP) {
             $Shortcut = new ShortcutSignup();
+            $Shortcut->setIsWidget($isWidget);
         } else {
             return '';
         }

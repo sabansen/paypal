@@ -1118,7 +1118,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             return '';
         }
 
-        return $method->renderExpressCheckoutShortCut($data['sourcePage']);
+        return $method->renderExpressCheckoutShortCut($data['sourcePage'], (isset($data['isWidget']) ? $data['isWidget'] : false));
     }
 
     /**

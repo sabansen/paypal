@@ -54,6 +54,6 @@ class ShortcutWidget extends AbstractWidget
             return '';
         }
 
-        return $this->module->displayShortcutButton(['sourcePage' => $sourcePage]);
+        return $this->module->displayShortcutButton(['sourcePage' => $sourcePage, 'isWidget' => true]);
     }
 }

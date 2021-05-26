@@ -29,8 +29,21 @@ use Configuration;
 
 class ShortcutSignup extends ShortcutCart
 {
+    /** @var bool*/
+    protected $isWidget;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->setIsWidget(false);
+    }
+
     protected function getTemplatePath()
     {
+        if ($this->isWidget()) {
+            return parent::getTemplatePath();
+        }
+
         return 'module:paypal/views/templates/shortcut/shortcut-signup.tpl';
     }
 
@@ -55,5 +68,23 @@ class ShortcutSignup extends ShortcutCart
         }
 
         return $styleSetting;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isWidget()
+    {
+        return $this->isWidget;
+    }
+
+    /**
+     * @param bool $isWidget
+     * @return ShortcutSignup
+     */
+    public function setIsWidget($isWidget)
+    {
+        $this->isWidget = $isWidget;
+        return $this;
     }
 }
