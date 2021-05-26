@@ -1485,6 +1485,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
     public function hookActionLocalizationPageSave($params)
     {
         $countryDefault = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
+        $method = AbstractMethodPaypal::load();
 
         if (Validate::isLoadedObject($countryDefault) === false) {
             return;
@@ -1496,7 +1497,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             return;
         }
 
-        if (in_array(Tools::strtolower($countryDefault->iso_code), InstallmentConfiguration::getAllowedCountries())) {
+        if (in_array(Tools::strtolower($countryDefault->iso_code), InstallmentConfiguration::getAllowedCountries()) && $method->isConfigured()) {
             foreach (Language::getLanguages() as $language) {
                 if (Tools::strtolower($countryDefault->iso_code) === 'gb') {
                     switch(Tools::strtolower($language['iso_code'])) {
