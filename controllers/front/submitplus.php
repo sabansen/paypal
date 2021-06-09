@@ -61,7 +61,6 @@ class PayPalSubmitplusModuleFrontController extends ModuleFrontController
     {
 
         parent::initContent();
-
         $paypal = new PayPal();
 
         $this->id_module = (int) Tools::getValue('id_module');
@@ -176,12 +175,11 @@ class PayPalSubmitplusModuleFrontController extends ModuleFrontController
             die();
         }
 
-        $id_cart = Tools::getValue('id_cart');
         $payerID = Tools::getValue('payerID');
         $paymentId = Tools::getValue('paymentId');
         $submit = Tools::getValue('submit');
 
-        if ((!empty($id_cart) && (($this->context->cart instanceof Cart == false) || ($this->context->cart->id == $id_cart))) &&
+        if (!empty($this->id_cart) &&
             !empty($payerID) &&
             !empty($paymentId) &&
             !empty($submit)
