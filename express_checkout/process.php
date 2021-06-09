@@ -262,7 +262,7 @@ class PaypalExpressCheckout extends Paypal
     {
         // Required field
         $fields['RETURNURL'] = PayPal::getShopDomainSsl(true, true)._MODULE_DIR_.$this->name.'/express_checkout/payment.php';
-        $fields['NOSHIPPING'] = '1';
+        $fields['NOSHIPPING'] = '0';
         $fields['BUTTONSOURCE'] = $this->getTrackingCode((int) Configuration::get('PAYPAL_PAYMENT_METHOD'));
 
         // Products
@@ -286,7 +286,7 @@ class PaypalExpressCheckout extends Paypal
         if ($id_address && method_exists($this->context->cart, 'isVirtualCart') && !$this->context->cart->isVirtualCart()) {
             $this->setShippingAddress($fields, $id_address);
         } else {
-            $fields['NOSHIPPING'] = '0';
+            $fields['NOSHIPPING'] = '1';
         }
 
         foreach ($fields as &$field) {
