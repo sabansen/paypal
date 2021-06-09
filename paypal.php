@@ -1070,7 +1070,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             }
 
             if ($data['sourcePage'] == ShortcutConfiguration::SOURCE_PAGE_CART) {
-                if ($this->context->cart->hasProducts() === false || $this->context->cart->checkQuantities() === false) {
+                if ($this->context->cart->nbProducts() == 0 || $this->context->cart->checkQuantities() === false) {
                     return '';
                 }
 
