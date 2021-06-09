@@ -313,7 +313,7 @@
 						<p class="merchant_id">
 							<label>{l s='Merchant ID' mod='paypal'}</label>
 							<input type="text" name="in_context_checkout_merchant_id" id="in_context_checkout_merchant_id" value="{if isset($PayPal_in_context_checkout_merchant_id) && $PayPal_in_context_checkout_merchant_id != ""}{$PayPal_in_context_checkout_merchant_id|escape:'htmlall':'UTF-8'}{/if}" />
-						<p class="description">{l s='You can find your merchant account ID under "Account options" in your PayPal account Settings' mod='paypal'}</p>
+						<p class="description">{l s='You can find your merchant account ID under "Account options" > "Business information" > "PayPal merchant ID" in your PayPal account Settings' mod='paypal'}</p>
 						</p>
 					</div>
 

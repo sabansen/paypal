@@ -415,3 +415,4 @@ $_MODULE['<{paypal}prestashop>installmentsettings_69772c70b3ce0f7494fd07939c76c6
 $_MODULE['<{paypal}prestashop>installmentsettings_ee2d3754b6e7f57898d9d8670f78ae71'] = 'Options avancées';
 $_MODULE['<{paypal}prestashop>installmentsettings_2cca02ce9a0a514bf0c7fd92b9ec8686'] = 'Styles pour la page d’accueil et pages catégories';
 $_MODULE['<{paypal}prestashop>installmentsettings_c9cc8cce247e49bae79f15173ce97354'] = 'Enregistrer';
+$_MODULE['<{paypal}prestashop>back_office_63bcf82f55380ac090b680f338d8dfe7'] = 'Vous pouvez trouvez votre account ID dans l\'onglet \"Account options\" > \"Business information\" > \"PayPal merchant ID\" dans les configurations de votre compte PayPal';
