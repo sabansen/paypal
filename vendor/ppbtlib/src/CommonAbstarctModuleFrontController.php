@@ -83,11 +83,11 @@ abstract class CommonAbstarctModuleFrontController extends ModuleFrontController
             ProcessLoggerHandler::openLogger();
             ProcessLoggerHandler::logError(
                 $message,
+                isset($this->transaction_detail['transaction_id']) ? $this->transaction_detail['transaction_id'] : null,
                 null,
-                isset($this->transaction_detail['payment_tool']) && $this->transaction_detail['payment_tool']  ? $this->transaction_detail['payment_tool'] : 'Paypal',
                 \Context::getContext()->cart->id,
                 \Context::getContext()->shop->id,
-                isset($this->transaction_detail['transaction_id']) ? $this->transaction_detail['transaction_id'] : null,
+                isset($this->transaction_detail['payment_tool']) && $this->transaction_detail['payment_tool']  ? $this->transaction_detail['payment_tool'] : 'Paypal',
                 (int)\Configuration::get('PAYPAL_SANDBOX'),
                 isset($this->transaction_detail['date_transaction']) ? $this->transaction_detail['date_transaction'] : null
             );
