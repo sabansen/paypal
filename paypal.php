@@ -2324,7 +2324,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
     public function getIdProductAttributeByIdAttributes($idProduct, $idAttributes, $findBest = false)
     {
-        if (version_compare(_PS_VERSION_, '1.7.3.1', '<')) {
+        if (version_compare(_PS_VERSION_, '1.7.3.4.0', '<')) {
             return Product::getIdProductAttributesByIdAttributes($idProduct, $idAttributes, $findBest);
         } else {
             return Product::getIdProductAttributeByIdAttributes($idProduct, $idAttributes, $findBest);
