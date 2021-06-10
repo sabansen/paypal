@@ -44,7 +44,7 @@ abstract class CommonAbstarctModuleFrontController extends ModuleFrontController
     public $redirectUrl;
 
     /** @var  array An array of error information : error_msg, error_code, msg_long. */
-    public $errors;
+    public $_errors;
 
     /** @var  array An array of transaction information : method, currency, transaction_id, payment_status, payment_method, id_payment, capture, payment_tool, date_transaction. */
     public $transaction_detail = array();
@@ -63,26 +63,26 @@ abstract class CommonAbstarctModuleFrontController extends ModuleFrontController
             }
         }
 
-        if (empty($this->errors) == false) {
+        if (empty($this->_errors) == false) {
             $message = '';
-            if (isset($this->errors['error_code'])) {
-                $message .= 'Error code: ' . $this->errors['error_code'] . ';';
+            if (isset($this->_errors['error_code'])) {
+                $message .= 'Error code: ' . $this->_errors['error_code'] . ';';
             }
 
-            if (isset($this->errors['logger_msg'])) {
-                $message .= 'Short message: ' . $this->errors['logger_msg'] . ';';
+            if (isset($this->_errors['logger_msg'])) {
+                $message .= 'Short message: ' . $this->_errors['logger_msg'] . ';';
             } else {
-                if (isset($this->errors['error_msg']) && $this->errors['error_msg']) {
-                    $message .= 'Short message: ' . $this->errors['error_msg'] . ';';
+                if (isset($this->_errors['error_msg']) && $this->_errors['error_msg']) {
+                    $message .= 'Short message: ' . $this->_errors['error_msg'] . ';';
                 }
-                if (isset($this->errors['msg_long']) && $this->errors['msg_long']) {
-                    $message .= 'Long message: ' . $this->errors['msg_long'] . ';';
+                if (isset($this->_errors['msg_long']) && $this->_errors['msg_long']) {
+                    $message .= 'Long message: ' . $this->_errors['msg_long'] . ';';
                 }
             }
 
             ProcessLoggerHandler::openLogger();
             ProcessLoggerHandler::logError(
-                $message,
+                empty($message) ? json_encode($this->_errors) : $message,
                 isset($this->transaction_detail['transaction_id']) ? $this->transaction_detail['transaction_id'] : null,
                 null,
                 \Context::getContext()->cart->id,
