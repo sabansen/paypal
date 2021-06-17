@@ -144,6 +144,10 @@ class PayPal extends PaymentModule
         } else {
             $this->checkMobileNeeds();
         }
+
+        if (false == Validate::isLoadedObject($this->context->cart)) {
+            $this->context->cart = new Cart((int)$this->context->cookie->id_cart);
+        }
     }
 
     public function install()
