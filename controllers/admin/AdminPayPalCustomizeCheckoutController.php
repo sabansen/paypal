@@ -27,6 +27,7 @@ require_once _PS_MODULE_DIR_ . 'paypal/vendor/autoload.php';
 
 use PaypalAddons\classes\AdminPayPalController;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\Constants\WebHookConf;
 use PaypalAddons\classes\Shortcut\Form\Definition\CustomizeButtonStyleSectionDefinition;
 use PaypalAddons\classes\Form\Field\InputChain;
 use PaypalAddons\classes\Form\Field\Select;
@@ -66,6 +67,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             'paypal_os_canceled',
             'paypal_os_accepted',
             'paypal_os_capture_canceled',
+            WebHookConf::ENABLE,
             ShortcutConfiguration::CUSTOMIZE_STYLE,
             ShortcutConfiguration::DISPLAY_MODE_PRODUCT,
             ShortcutConfiguration::PRODUCT_PAGE_HOOK,
@@ -521,6 +523,26 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
                 )
             );
         }
+
+        $inputs[] = array(
+            'type' => 'switch',
+            'label' => $this->l('Enable event notifications'),
+            'name' => WebHookConf::ENABLE,
+            'hint' => $this->l('Event notifications allow you to automatically update the order status on PrestaShop once the status of transaction on PayPal is changed.'),
+            'is_bool' => true,
+            'values' => array(
+                array(
+                    'id' => WebHookConf::ENABLE . '_on',
+                    'value' => 1,
+                    'label' => $this->l('Enabled'),
+                ),
+                array(
+                    'id' => WebHookConf::ENABLE . '_off',
+                    'value' => 0,
+                    'label' => $this->l('Disabled'),
+                )
+            ),
+        );
 
         $inputs = array_merge($inputs, $inputsMethod);
 
