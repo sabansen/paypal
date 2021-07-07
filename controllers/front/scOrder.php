@@ -62,26 +62,26 @@ class PaypalScOrderModuleFrontController extends PaypalAbstarctModuleFrontContro
             $info = $this->method->getInfo();
             $this->prepareOrder($info);
 
-            if (!empty($this->errors)) {
+            if (!empty($this->_errors)) {
                 return;
             }
         } catch (PayPal\Exception\PPConnectionException $e) {
-            $this->errors['error_msg'] = $paypal->l('Error connecting to ', pathinfo(__FILE__)['filename']) . $e->getUrl();
+            $this->_errors['error_msg'] = $paypal->l('Error connecting to ', pathinfo(__FILE__)['filename']) . $e->getUrl();
         } catch (PayPal\Exception\PPMissingCredentialException $e) {
-            $this->errors['error_msg'] = $e->errorMessage();
+            $this->_errors['error_msg'] = $e->errorMessage();
         } catch (PayPal\Exception\PPConfigurationException $e) {
-            $this->errors['error_msg'] = $paypal->l('Invalid configuration. Please check your configuration file', pathinfo(__FILE__)['filename']);
+            $this->_errors['error_msg'] = $paypal->l('Invalid configuration. Please check your configuration file', pathinfo(__FILE__)['filename']);
         } catch (PaypalAddons\classes\PaypalException $e) {
-            $this->errors['error_code'] = $e->getCode();
-            $this->errors['error_msg'] = $e->getMessage();
-            $this->errors['msg_long'] = $e->getMessageLong();
+            $this->_errors['error_code'] = $e->getCode();
+            $this->_errors['error_msg'] = $e->getMessage();
+            $this->_errors['msg_long'] = $e->getMessageLong();
         } catch (Exception $e) {
-            $this->errors['error_code'] = $e->getCode();
-            $this->errors['error_msg'] = $e->getMessage();
+            $this->_errors['error_code'] = $e->getCode();
+            $this->_errors['error_msg'] = $e->getMessage();
         }
 
-        if (!empty($this->errors)) {
-            $this->redirectUrl = Context::getContext()->link->getModuleLink($this->name, 'error', $this->errors);
+        if (!empty($this->_errors)) {
+            $this->redirectUrl = Context::getContext()->link->getModuleLink($this->name, 'error', $this->_errors);
         }
     }
 
@@ -199,7 +199,7 @@ class PaypalScOrderModuleFrontController extends PaypalAbstarctModuleFrontContro
                     'id_state' => $orderAddress->id_state
                 );
 
-                $this->errors[] = $validationMessage;
+                $this->_errors[] = $validationMessage;
                 $url = Context::getContext()->link->getPageLink('order', null, null, $vars);
                 $this->redirectUrl = $url;
                 return;
@@ -224,7 +224,7 @@ class PaypalScOrderModuleFrontController extends PaypalAbstarctModuleFrontContro
                 'editAddress' => 'delivery'
             );
 
-            $this->errors[] = $this->l('Your address is incomplete, please update it.');
+            $this->_errors[] = $this->l('Your address is incomplete, please update it.');
             $url = Context::getContext()->link->getPageLink('order', null, null, $vars);
             $this->redirectUrl = $url;
             return;

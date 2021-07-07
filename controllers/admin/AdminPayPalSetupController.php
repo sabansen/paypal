@@ -64,6 +64,22 @@ class AdminPayPalSetupController extends AdminPayPalController
         if (Tools::getValue('useWithoutBraintree')) {
             Configuration::updateValue('PAYPAL_USE_WITHOUT_BRAINTREE', 1);
         }
+
+
+        // Don't show somes tabs if a module is not configured
+        $method = AbstractMethodPaypal::load();
+        $isShowTabs = $method->isConfigured();
+
+        foreach (['AdminPayPalCustomizeCheckout', 'AdminPayPalLogs'] as $adminController) {
+            $tab = Tab::getInstanceFromClassName($adminController);
+            if ($isShowTabs != $tab->active) {
+                $tab->active = $isShowTabs;
+                $tab->save();
+            }
+        }
+
+        // Activate/Disactivate AdminPaypalInstallment tab
+        $this->module->hookActionLocalizationPageSave([]);
     }
 
     public function initContent()

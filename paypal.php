@@ -1070,7 +1070,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             }
 
             if ($data['sourcePage'] == ShortcutConfiguration::SOURCE_PAGE_CART) {
-                if ($this->context->cart->hasProducts() === false || $this->context->cart->checkQuantities() === false) {
+                if ($this->context->cart->nbProducts() == 0 || $this->context->cart->checkQuantities() === false) {
                     return '';
                 }
 
@@ -1118,7 +1118,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             return '';
         }
 
-        return $method->renderExpressCheckoutShortCut($data['sourcePage']);
+        return $method->renderExpressCheckoutShortCut($data['sourcePage'], (isset($data['isWidget']) ? $data['isWidget'] : false));
     }
 
     /**
@@ -1485,6 +1485,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
     public function hookActionLocalizationPageSave($params)
     {
         $countryDefault = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
+        $method = AbstractMethodPaypal::load();
 
         if (Validate::isLoadedObject($countryDefault) === false) {
             return;
@@ -1496,7 +1497,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             return;
         }
 
-        if (in_array(Tools::strtolower($countryDefault->iso_code), InstallmentConfiguration::getAllowedCountries())) {
+        if (in_array(Tools::strtolower($countryDefault->iso_code), InstallmentConfiguration::getAllowedCountries()) && $method->isConfigured()) {
             foreach (Language::getLanguages() as $language) {
                 if (Tools::strtolower($countryDefault->iso_code) === 'gb') {
                     switch(Tools::strtolower($language['iso_code'])) {
@@ -2323,7 +2324,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
     public function getIdProductAttributeByIdAttributes($idProduct, $idAttributes, $findBest = false)
     {
-        if (version_compare(_PS_VERSION_, '1.7.3.1', '<')) {
+        if (version_compare(_PS_VERSION_, '1.7.3.4.0', '<')) {
             return Product::getIdProductAttributesByIdAttributes($idProduct, $idAttributes, $findBest);
         } else {
             return Product::getIdProductAttributeByIdAttributes($idProduct, $idAttributes, $findBest);

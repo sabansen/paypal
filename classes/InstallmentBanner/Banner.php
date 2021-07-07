@@ -115,7 +115,7 @@ class Banner
         ];
 
         if (false === defined('_PS_ADMIN_DIR_')) {
-            $js['tot-paypal-sdk-messages']['data-partner-attribution-id'] = $this->method->getPaypalPartnerId();
+            $js['tot-paypal-sdk-messages']['data-partner-attribution-id'] = $this->getPartnerId();
         }
 
         return $js;
@@ -265,5 +265,10 @@ class Banner
         }
 
         return $this;
+    }
+
+    public function getPartnerId()
+    {
+        return 'PRESTASHOP_Cart_SPB';
     }
 }

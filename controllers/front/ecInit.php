@@ -58,25 +58,25 @@ class PaypalEcInitModuleFrontController extends PaypalAbstarctModuleFrontControl
                 $this->redirectUrl = $url;
             }
         } catch (PayPal\Exception\PPConnectionException $e) {
-            $this->errors['error_msg'] = $this->module->l('Error connecting to ', pathinfo(__FILE__)['filename']) . $e->getUrl();
+            $this->_errors['error_msg'] = $this->module->l('Error connecting to ', pathinfo(__FILE__)['filename']) . $e->getUrl();
         } catch (PayPal\Exception\PPMissingCredentialException $e) {
-            $this->errors['error_msg'] = $e->errorMessage();
+            $this->_errors['error_msg'] = $e->errorMessage();
         } catch (PayPal\Exception\PPConfigurationException $e) {
-            $this->errors['error_msg'] = $this->module->l('Invalid configuration. Please check your configuration file', pathinfo(__FILE__)['filename']);
+            $this->_errors['error_msg'] = $this->module->l('Invalid configuration. Please check your configuration file', pathinfo(__FILE__)['filename']);
         } catch (PaypalAddons\classes\PaypalException $e) {
-            $this->errors['error_code'] = $e->getCode();
-            $this->errors['error_msg'] = $e->getMessage();
-            $this->errors['msg_long'] = $e->getMessageLong();
+            $this->_errors['error_code'] = $e->getCode();
+            $this->_errors['error_msg'] = $e->getMessage();
+            $this->_errors['msg_long'] = $e->getMessageLong();
         } catch (Exception $e) {
-            $this->errors['error_code'] = $e->getCode();
-            $this->errors['error_msg'] = $e->getMessage();
+            $this->_errors['error_code'] = $e->getCode();
+            $this->_errors['error_msg'] = $e->getMessage();
         }
 
-        if (!empty($this->errors)) {
+        if (!empty($this->_errors)) {
             if ($this->values['getToken']) {
-                $this->jsonValues = array('success' => false, 'redirect_link' => Context::getContext()->link->getModuleLink($this->name, 'error', $this->errors));
+                $this->jsonValues = array('success' => false, 'redirect_link' => Context::getContext()->link->getModuleLink($this->name, 'error', $this->_errors));
             } else {
-                $this->redirectUrl = Context::getContext()->link->getModuleLink($this->name, 'error', $this->errors);
+                $this->redirectUrl = Context::getContext()->link->getModuleLink($this->name, 'error', $this->_errors);
             }
         }
     }

@@ -58,25 +58,25 @@ class PaypalMbValidationModuleFrontController extends PaypalAbstarctModuleFrontC
             $this->redirectUrl = 'index.php?controller=order-confirmation&id_cart='.$cart->id.'&id_module='.$paypal->id.'&id_order='.$paypal->currentOrder.'&key='.$customer->secure_key;
         } catch (PayPal\Exception\PayPalConnectionException $e) {
             $decoded_message = Tools::jsonDecode($e->getData());
-            $this->errors['error_code'] = $e->getCode();
-            $this->errors['error_msg'] = $decoded_message->message;
-            $this->errors['msg_long'] = $decoded_message->name;
+            $this->_errors['error_code'] = $e->getCode();
+            $this->_errors['error_msg'] = $decoded_message->message;
+            $this->_errors['msg_long'] = $decoded_message->name;
             if (!empty($decoded_message->details)) {
-                $this->errors['msg_long'] .= ' - '.$decoded_message->details[0]->issue;
+                $this->_errors['msg_long'] .= ' - '.$decoded_message->details[0]->issue;
             }
         } catch (PayPal\Exception\PayPalInvalidCredentialException $e) {
-            $this->errors['error_msg'] = $e->errorMessage();
+            $this->_errors['error_msg'] = $e->errorMessage();
         } catch (PayPal\Exception\PayPalMissingCredentialException $e) {
-            $this->errors['error_msg'] = $paypal->l('Invalid configuration. Please check your configuration file.', pathinfo(__FILE__)['filename']);
+            $this->_errors['error_msg'] = $paypal->l('Invalid configuration. Please check your configuration file.', pathinfo(__FILE__)['filename']);
         } catch (Exception $e) {
-            $this->errors['error_code'] = $e->getCode();
-            $this->errors['error_msg'] = $e->getMessage();
+            $this->_errors['error_code'] = $e->getCode();
+            $this->_errors['error_msg'] = $e->getMessage();
         } finally {
             $this->transaction_detail = $this->method->getDetailsTransaction();
         }
 
-        if (!empty($this->errors)) {
-            $this->redirectUrl = Context::getContext()->link->getModuleLink($this->name, 'error', $this->errors);
+        if (!empty($this->_errors)) {
+            $this->redirectUrl = Context::getContext()->link->getModuleLink($this->name, 'error', $this->_errors);
         }
     }
 

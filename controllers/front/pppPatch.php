@@ -45,13 +45,13 @@ class PaypalPppPatchModuleFrontController extends PaypalAbstarctModuleFrontContr
                     $this->jsonValues = array('success' => $resultPath->isSuccess());
                     Context::getContext()->cookie->__unset('paypal_plus_payment');
                 } else {
-                    $this->errors['error_msg'] = $resultPath->getError()->getMessage();
-                    $this->jsonValues = array('success' => false, 'redirect_link' => Context::getContext()->link->getModuleLink($this->name, 'error', $this->errors));
+                    $this->_errors['error_msg'] = $resultPath->getError()->getMessage();
+                    $this->jsonValues = array('success' => false, 'redirect_link' => Context::getContext()->link->getModuleLink($this->name, 'error', $this->_errors));
                 }
             } catch (Exception $e) {
-                $this->errors['error_code'] = $e->getCode();
-                $this->errors['error_msg'] = $e->getMessage();
-                $this->jsonValues = array('success' => false, 'redirect_link' => Context::getContext()->link->getModuleLink($this->name, 'error', $this->errors));
+                $this->_errors['error_code'] = $e->getCode();
+                $this->_errors['error_msg'] = $e->getMessage();
+                $this->jsonValues = array('success' => false, 'redirect_link' => Context::getContext()->link->getModuleLink($this->name, 'error', $this->_errors));
             }
         }
     }

@@ -71,7 +71,7 @@ class ShortcutPreview extends ShortcutAbstract
 
     protected function getTemplatePath()
     {
-        return _PS_MODULE_DIR_ . 'paypal/views/templates/shortcut/shortcut-preview.tpl';
+        return 'extends:'._PS_MODULE_DIR_ . 'paypal/views/templates/shortcut/shortcut-layout.tpl|'._PS_MODULE_DIR_ . 'paypal/views/templates/shortcut/shortcut-preview.tpl';
     }
 
     protected function getJS()

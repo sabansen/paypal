@@ -61,18 +61,18 @@ class PaypalEcValidationModuleFrontController extends PaypalAbstarctModuleFrontC
             $customer = new Customer($cart->id_customer);
             $this->redirectUrl = 'index.php?controller=order-confirmation&id_cart='.$cart->id.'&id_module='.$paypal->id.'&id_order='.$paypal->currentOrder.'&key='.$customer->secure_key;
         } catch (PayPal\Exception\PPConnectionException $e) {
-            $this->errors['error_msg'] = $paypal->l('Error connecting to ', pathinfo(__FILE__)['filename']) . $e->getUrl();
+            $this->_errors['error_msg'] = $paypal->l('Error connecting to ', pathinfo(__FILE__)['filename']) . $e->getUrl();
         } catch (PayPal\Exception\PPMissingCredentialException $e) {
-            $this->errors['error_msg'] = $e->errorMessage();
+            $this->_errors['error_msg'] = $e->errorMessage();
         } catch (PayPal\Exception\PPConfigurationException $e) {
-            $this->errors['error_msg'] = $paypal->l('Invalid configuration. Please check your configuration file', pathinfo(__FILE__)['filename']);
+            $this->_errors['error_msg'] = $paypal->l('Invalid configuration. Please check your configuration file', pathinfo(__FILE__)['filename']);
         } catch (PaypalAddons\classes\PaypalException $e) {
-            $this->errors['error_code'] = $e->getCode();
-            $this->errors['error_msg'] = $e->getMessage();
-            $this->errors['msg_long'] = $e->getMessageLong();
+            $this->_errors['error_code'] = $e->getCode();
+            $this->_errors['error_msg'] = $e->getMessage();
+            $this->_errors['msg_long'] = $e->getMessageLong();
         } catch (Exception $e) {
-            $this->errors['error_code'] = $e->getCode();
-            $this->errors['error_msg'] = $e->getMessage();
+            $this->_errors['error_code'] = $e->getCode();
+            $this->_errors['error_msg'] = $e->getMessage();
         } finally {
             $this->transaction_detail = $method_ec->getDetailsTransaction();
         }
@@ -81,11 +81,11 @@ class PaypalEcValidationModuleFrontController extends PaypalAbstarctModuleFrontC
         Context::getContext()->cookie->__unset('paypal_ecs');
         Context::getContext()->cookie->__unset('paypal_ecs_email');
 
-        if (!empty($this->errors)) {
-            if ($this->errors['error_code'] == 10486) {
+        if (!empty($this->_errors)) {
+            if ($this->_errors['error_code'] == 10486) {
                 $this->redirectUrl = $method_ec->redirectToAPI('SetExpressCheckout');
             } else {
-                $this->redirectUrl = Context::getContext()->link->getModuleLink($this->name, 'error', $this->errors);
+                $this->redirectUrl = Context::getContext()->link->getModuleLink($this->name, 'error', $this->_errors);
             }
         }
     }
