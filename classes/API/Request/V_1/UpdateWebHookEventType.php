@@ -27,6 +27,8 @@
 namespace PaypalAddons\classes\API\Request\V_1;
 
 
+use PayPal\Api\Patch;
+use PayPal\Api\PatchRequest;
 use PayPal\Api\Webhook;
 use PayPal\Api\WebhookEventType;
 use PaypalAddons\classes\AbstractMethodPaypal;
@@ -38,29 +40,33 @@ use Symfony\Component\VarDumper\VarDumper;
 use Context;
 use Exception;
 
-class CreateWebHook extends RequestAbstract
+class UpdateWebHookEventType extends RequestAbstract
 {
+    /** @var Webhook*/
+    protected $webhook;
+
+    /**
+     * @param AbstractMethodPaypal
+     * @param Webhook
+     */
+    public function __construct(AbstractMethodPaypal $method, Webhook $webhook)
+    {
+        parent::__construct($method);
+
+        $this->setWebhook($webhook);
+    }
+
     public function execute()
     {
         $response = new Response();
-        $webHook = new Webhook();
-        $eventTypes = [];
-
-        foreach (WebHookType::getAll() as $type) {
-            $eventTypes[] = new WebhookEventType(json_encode([
-                'name' => $type
-            ]));
-        }
-
-        $webHook->setEventTypes($eventTypes);
-        $webHook->setUrl($this->getWebhookHandlerUrl());
 
         try {
-            $result = $webHook->create($this->getApiContext());
+            $result = $this->webhook->update($this->getPatchRequest(), $this->getApiContext());
             $response
                 ->setSuccess(true)
                 ->setData($result);
         } catch (Exception $e) {
+            VarDumper::dump($e); die;
             $error = new Error();
             $error
                 ->setErrorCode($e->getCode())
@@ -73,8 +79,33 @@ class CreateWebHook extends RequestAbstract
         return $response;
     }
 
-    public function getWebhookHandlerUrl()
+    /** */
+    public function setWebhook(Webhook $webhook)
     {
-        return (new WebhookHandlerUrl())->get();
+        $this->webhook = $webhook;
+        return $this;
+    }
+
+    protected function getPatchRequest()
+    {
+        $patchRequest = new PatchRequest();
+        $patch = new Patch();
+        $eventTypes = [];
+
+        foreach (WebHookType::getAll() as $type) {
+            $eventType = new \stdClass();
+            $eventType->name = $type;
+            $eventTypes[] = $eventType;
+        }
+
+
+        $patch
+            ->setOp('replace')
+            ->setPath('/event_types')
+            ->setValue($eventTypes);
+
+        $patchRequest->addPatch($patch);
+
+        return $patchRequest;
     }
 }
