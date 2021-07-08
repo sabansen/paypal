@@ -36,6 +36,7 @@ use PaypalAddons\classes\Form\Field\TextInput;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Shortcut\ShortcutPreview;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use PaypalAddons\classes\Webhook\CreateWebhook;
 
 class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
 {
@@ -639,6 +640,13 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
                             if ((int) $value < 150) {
                                 $value = 150;
                                 $this->advancedFormErrors['signup'] = $this->l($wrongWidthMsg);
+                            }
+
+                            break;
+                        case WebHookConf::ENABLE:
+                            if ($value) {
+                                $response = (new CreateWebhook())->execute();
+                                $value = (int)$response->isSuccess();
                             }
 
                             break;

@@ -38,7 +38,7 @@ use Symfony\Component\VarDumper\VarDumper;
 use Context;
 use Exception;
 
-class CreateWebHook extends RequestAbstract
+class CreateWebHookRequest extends RequestAbstract
 {
     public function execute()
     {
@@ -52,10 +52,9 @@ class CreateWebHook extends RequestAbstract
             ]));
         }
 
-        $webHook->setEventTypes($eventTypes);
-        $webHook->setUrl($this->getWebhookHandlerUrl());
-
         try {
+            $webHook->setEventTypes($eventTypes);
+            $webHook->setUrl($this->getWebhookHandlerUrl());
             $result = $webHook->create($this->getApiContext());
             $response
                 ->setSuccess(true)

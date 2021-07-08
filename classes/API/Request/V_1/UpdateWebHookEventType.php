@@ -66,7 +66,6 @@ class UpdateWebHookEventType extends RequestAbstract
                 ->setSuccess(true)
                 ->setData($result);
         } catch (Exception $e) {
-            VarDumper::dump($e); die;
             $error = new Error();
             $error
                 ->setErrorCode($e->getCode())

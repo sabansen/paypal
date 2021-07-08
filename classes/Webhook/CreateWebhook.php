@@ -28,12 +28,12 @@ namespace PaypalAddons\classes\Webhook;
 
 
 use PaypalAddons\classes\AbstractMethodPaypal;
-use PaypalAddons\classes\API\Request\V_1\CreateWebHook;
+use PaypalAddons\classes\API\Request\V_1\CreateWebHookRequest;
 use PaypalAddons\classes\API\Request\V_1\GetWebHooks;
 use PaypalAddons\classes\API\Request\V_1\UpdateWebHookEventType;
 use Symfony\Component\VarDumper\VarDumper;
 
-class NewWebhook
+class CreateWebhook
 {
     /** @var AbstractMethodPaypal*/
     protected $method;
@@ -49,11 +49,11 @@ class NewWebhook
         $response = (new GetWebHooks($method))->execute();
 
         if ($response->isSuccess() == false) {
-            return (new CreateWebHook($method))->execute();
+            return (new CreateWebHookRequest($method))->execute();
         }
 
         if (empty($response->getData())) {
-            return (new CreateWebHook($method))->execute();
+            return (new CreateWebHookRequest($method))->execute();
         }
 
         $webhookHandler = (new WebhookHandlerUrl())->get();
@@ -65,7 +65,7 @@ class NewWebhook
             }
         }
 
-        return (new CreateWebHook($method))->execute();
+        return (new CreateWebHookRequest($method))->execute();
     }
 
     public function getMethod()
