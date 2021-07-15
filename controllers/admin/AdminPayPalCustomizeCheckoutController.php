@@ -647,6 +647,13 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
                             if ($value) {
                                 $response = (new CreateWebhook())->execute();
                                 $value = (int)$response->isSuccess();
+
+                                if (false == $value) {
+                                    $msg = $this->l('An error occurred while creating the webhook. This feature has been automatically disabled.');
+                                    $msg .= $this->l('Please enbale it via the “Experience” tab-> “Advanced mode”-> “Enable event notifications”.');
+                                    $msg .= $this->l('If the problem persists please contact our support service.');
+                                    $this->errors[] = $msg;
+                                }
                             }
 
                             break;
