@@ -29,6 +29,7 @@ if (!defined('_PS_VERSION_')) {
 
 include_once(_PS_MODULE_DIR_ . 'paypal/vendor/autoload.php');
 
+use PaypalAddons\classes\Constants\WebHookConf;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Shortcut\ShortcutSignup;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerExtension;
@@ -404,7 +405,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
             'PAYPAL_OS_PROCESSING' => (int)Configuration::get('PAYPAL_OS_WAITING'),
             'PAYPAL_OS_VALIDATION_ERROR' => (int)Configuration::get('PS_OS_CANCELED'),
             'PAYPAL_OS_REFUNDED_PAYPAL' => (int)Configuration::get('PS_OS_REFUND'),
-            'PAYPAL_NOT_SHOW_PS_CHECKOUT' => json_encode([$this->version, 0])
+            'PAYPAL_NOT_SHOW_PS_CHECKOUT' => json_encode([$this->version, 0]),
+            WebHookConf::ENABLE => 1
         );
     }
 
