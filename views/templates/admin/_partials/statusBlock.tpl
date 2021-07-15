@@ -66,6 +66,17 @@
             {/if}
             {l s='You must connect your PayPal account' mod='paypal'}
         </li>
+
+        {if isset($showWebhookState) && $showWebhookState}
+          <li>
+              {if isset($webhookState) && $webhookState}
+                <i class="icon-check text-success"></i>
+              {else}
+                <i class="icon-remove text-danger"></i>
+              {/if}
+              {if isset($webhookStateMsg)}{$webhookStateMsg|escape:'htmlall':'utf-8'}{/if}
+          </li>
+        {/if}
     </ul>
 </div>
 

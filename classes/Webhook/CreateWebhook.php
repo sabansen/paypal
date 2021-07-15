@@ -31,6 +31,7 @@ use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Request\V_1\CreateWebHookRequest;
 use PaypalAddons\classes\API\Request\V_1\GetWebHooks;
 use PaypalAddons\classes\API\Request\V_1\UpdateWebHookEventType;
+use PaypalAddons\classes\API\Response\Response;
 use Symfony\Component\VarDumper\VarDumper;
 
 class CreateWebhook
@@ -38,11 +39,18 @@ class CreateWebhook
     /** @var AbstractMethodPaypal*/
     protected $method;
 
+    /** @var bool if webhook exists it will be updated ou not*/
+    protected $update = true;
+
     public function __construct($method = null)
     {
         $this->setMethod($method);
     }
 
+    /**
+     * Check if webhook exists and create new if not
+     * @return Response
+     */
     public function execute()
     {
         $method = $this->getMethod();
@@ -61,13 +69,22 @@ class CreateWebhook
         /** @var Webhook $webhook*/
         foreach ($response->getData() as $webhook) {
             if ($webhook->getUrl() == $webhookHandler) {
-                return (new UpdateWebHookEventType($method, $webhook))->execute();
+                if ($this->getUpdate()) {
+                    return (new UpdateWebHookEventType($method, $webhook))->execute();
+                }
+
+                return (new Response())
+                    ->setSuccess(true)
+                    ->setData($webhook);
             }
         }
 
         return (new CreateWebHookRequest($method))->execute();
     }
 
+    /**
+     * @return AbstractMethodPaypal
+     */
     public function getMethod()
     {
         if ($this->method instanceof AbstractMethodPaypal) {
@@ -77,6 +94,9 @@ class CreateWebhook
         return AbstractMethodPaypal::load();
     }
 
+    /**
+     * @return self
+     */
     public function setMethod($method)
     {
         if ($method instanceof AbstractMethodPaypal) {
@@ -84,5 +104,22 @@ class CreateWebhook
         }
 
         return $this;
+    }
+
+    /**
+     * @return self
+     */
+    public function setUpdate($update)
+    {
+        $this->update = (bool)$update;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getUpdate()
+    {
+        return $this->update;
     }
 }

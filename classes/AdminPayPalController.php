@@ -27,6 +27,9 @@ namespace PaypalAddons\classes;
 
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Onboarding\PaypalGetCredentials;
+use PaypalAddons\classes\Webhook\CreateWebhook;
+use PaypalAddons\classes\Webhook\WebhookHandlerUrl;
+use PaypalAddons\classes\Webhook\WebhookOption;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -174,9 +177,21 @@ class AdminPayPalController extends \ModuleAdminController
             $response['success'] = false;
             $response['message'][] = $this->module->l('Tls verification failed.', 'AdminPayPalController').' '.$tls_check['error_message'];
         }
+
+        if ($this->getWebhookOption()->isEnable()) {
+            $webhookCheck = $this->_checkWebhook();
+
+            if ($webhookCheck['state'] == false) {
+                $response['success'] = false;
+                $response['message'][] = $webhookCheck['message'];
+            }
+
+        }
+
         if ($response['success']) {
             $response['message'][] = $this->module->l('Your shop configuration is OK. You can start configuring your PayPal module.', 'AdminPayPalController');
         }
+
         return $response;
     }
 
@@ -379,5 +394,67 @@ class AdminPayPalController extends \ModuleAdminController
 
         parent::initPageHeaderToolbar();
         $this->context->smarty->clearAssign('help_link');
+    }
+
+    /**
+     * @return WebhookOption
+     */
+    protected function getWebhookOption()
+    {
+        return new WebhookOption();
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isWebhookHandlerAvailable()
+    {
+        // todo: to implement
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isWebhookCreated()
+    {
+        $response = (new CreateWebhook(AbstractMethodPaypal::load()))
+            ->setUpdate(false)
+            ->execute();
+
+        return $response->isSuccess();
+    }
+
+    /**
+     * @return string
+     */
+    protected function getWebhookHandler()
+    {
+        return (new WebhookHandlerUrl())->get();
+    }
+
+    protected function _checkWebhook()
+    {
+        $return = [
+            'state' => true,
+            'message' => $this->l('PayPal event notifications are enabled with success.', get_class($this))
+        ];
+
+        if (false == $this->isWebhookHandlerAvailable()) {
+            $return['state'] = false;
+            // todo: to validate message
+            $return['message'] = sprintf(
+                $this->l('Webhook handler %s is not available', get_class($this)),
+                $this->getWebhookHandler()
+            );
+        }
+
+        if ($return['state'] && !$this->isWebhookCreated()) {
+            $return['state'] = false;
+            // todo: to validate message
+            $return['message'] = $this->l('Webhook is not created', get_class($this));
+        }
+
+        return $return;
     }
 }
