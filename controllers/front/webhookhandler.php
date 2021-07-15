@@ -24,25 +24,23 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
-namespace PaypalAddons\classes\Webhook;
 
-use Context;
+use PaypalAddons\classes\Constants\WebhookHandler;
 
-class WebhookHandlerUrl
+/**
+ * Class PaypalAbstarctModuleFrontController
+ */
+class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFrontController
 {
-    public function get()
+    public function run()
     {
-        return Context::getContext()->link->getModuleLink('paypal', 'webhookhandler');
+        if ($this->isCheckAvailability()) {
+            header("HTTP/1.1 " . WebhookHandler::STATUS_AVAILABLE); die;
+        }
     }
 
-    public function getCheckAvailabilityUrl()
+    protected function isCheckAvailability()
     {
-        return Context::getContext()->link->getModuleLink(
-            'paypal',
-            'webhookhandler',
-            [
-                'checkAvailability' => 1
-            ]
-        );
+        return (bool)Tools::isSubmit('checkAvailability');
     }
 }

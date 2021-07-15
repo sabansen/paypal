@@ -28,6 +28,7 @@ namespace PaypalAddons\classes;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Onboarding\PaypalGetCredentials;
 use PaypalAddons\classes\Webhook\CreateWebhook;
+use PaypalAddons\classes\Webhook\WebhookAvailability;
 use PaypalAddons\classes\Webhook\WebhookHandlerUrl;
 use PaypalAddons\classes\Webhook\WebhookOption;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
@@ -407,15 +408,6 @@ class AdminPayPalController extends \ModuleAdminController
     /**
      * @return bool
      */
-    protected function isWebhookHandlerAvailable()
-    {
-        // todo: to implement
-        return false;
-    }
-
-    /**
-     * @return bool
-     */
     protected function isWebhookCreated()
     {
         $response = (new CreateWebhook(AbstractMethodPaypal::load()))
@@ -440,7 +432,9 @@ class AdminPayPalController extends \ModuleAdminController
             'message' => $this->l('PayPal event notifications are enabled with success.', get_class($this))
         ];
 
-        if (false == $this->isWebhookHandlerAvailable()) {
+        $webhookAvailable = $this->getWebhookAvalability()->check();
+
+        if ($webhookAvailable->isSuccess() == false) {
             $return['state'] = false;
             // todo: to validate message
             $return['message'] = sprintf(
@@ -451,10 +445,14 @@ class AdminPayPalController extends \ModuleAdminController
 
         if ($return['state'] && !$this->isWebhookCreated()) {
             $return['state'] = false;
-            // todo: to validate message
-            $return['message'] = $this->l('Webhook is not created', get_class($this));
+            $return['message'] = $this->l('PayPal webhooks can not be enabled. The webhook listener was not created. Webhooks are not used by the module until the moment the problem will be fixed. Please try to refresh the page and click on "check requirements" again.', get_class($this));
         }
 
         return $return;
+    }
+
+    protected function getWebhookAvalability()
+    {
+        return new WebhookAvailability();
     }
 }

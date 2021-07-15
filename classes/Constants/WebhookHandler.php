@@ -24,25 +24,9 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
-namespace PaypalAddons\classes\Webhook;
+namespace PaypalAddons\classes\Constants;
 
-use Context;
-
-class WebhookHandlerUrl
+class WebhookHandler
 {
-    public function get()
-    {
-        return Context::getContext()->link->getModuleLink('paypal', 'webhookhandler');
-    }
-
-    public function getCheckAvailabilityUrl()
-    {
-        return Context::getContext()->link->getModuleLink(
-            'paypal',
-            'webhookhandler',
-            [
-                'checkAvailability' => 1
-            ]
-        );
-    }
+    const STATUS_AVAILABLE = 202;
 }
