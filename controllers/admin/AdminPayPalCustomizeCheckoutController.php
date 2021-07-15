@@ -527,9 +527,9 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
 
         $inputs[] = array(
             'type' => 'switch',
-            'label' => $this->l('Enable event notifications'),
+            'label' => $this->l('Enable PayPal webhooks'),
             'name' => WebHookConf::ENABLE,
-            'hint' => $this->l('Event notifications allow you to automatically update the order status on PrestaShop once the status of transaction on PayPal is changed.'),
+            'hint' => $this->l('PayPal webhooks allow you to automatically update the order status on PrestaShop once the status of transaction on PayPal is changed.'),
             'is_bool' => true,
             'values' => array(
                 array(
