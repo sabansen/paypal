@@ -27,6 +27,7 @@
 namespace PaypalAddons\classes\Webhook;
 
 
+use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\Response;
 use PaypalAddons\classes\Constants\WebhookHandler;
 use Symfony\Component\VarDumper\VarDumper;
@@ -49,6 +50,12 @@ class WebhookAvailability
 
         if ($info['http_code'] == WebhookHandler::STATUS_AVAILABLE) {
             return $response->setSuccess(true);
+        }
+
+        if ($errorMsg = curl_error($curl)) {
+            $error = new Error();
+            $error->setMessage($errorMsg);
+            $response->setError($error);
         }
 
         return $response->setSuccess(false);

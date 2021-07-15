@@ -29,4 +29,6 @@ namespace PaypalAddons\classes\Constants;
 class WebHookConf
 {
     const ENABLE = 'PAYPAL_ENABLE_WEBHOOK';
+
+    const AVAILABLE = 'PAYPAL_WEBHOOK_AVAILABLE';
 }

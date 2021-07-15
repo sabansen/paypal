@@ -27,6 +27,7 @@ namespace PaypalAddons\classes;
 
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Onboarding\PaypalGetCredentials;
+use PaypalAddons\classes\Constants\WebHookConf;
 use PaypalAddons\classes\Webhook\CreateWebhook;
 use PaypalAddons\classes\Webhook\WebhookAvailability;
 use PaypalAddons\classes\Webhook\WebhookHandlerUrl;
@@ -436,10 +437,9 @@ class AdminPayPalController extends \ModuleAdminController
 
         if ($webhookAvailable->isSuccess() == false) {
             $return['state'] = false;
-            // todo: to validate message
             $return['message'] = sprintf(
-                $this->l('Webhook handler %s is not available', get_class($this)),
-                $this->getWebhookHandler()
+                $this->l('PayPal webhooks can not be enabled. The reason of the error [%s] : maintenance mode enabled / unknown, please contact support team. Webhooks are not used by the module until the moment the problem will be fixed. Refresh the page to check the status again.', get_class($this)),
+                (string)$webhookAvailable->getError()->getMessage()
             );
         }
 
@@ -448,6 +448,7 @@ class AdminPayPalController extends \ModuleAdminController
             $return['message'] = $this->l('PayPal webhooks can not be enabled. The webhook listener was not created. Webhooks are not used by the module until the moment the problem will be fixed. Please try to refresh the page and click on "check requirements" again.', get_class($this));
         }
 
+        \Configuration::updateValue(WebHookConf::AVAILABLE, (int)$return['state']);
         return $return;
     }
 
