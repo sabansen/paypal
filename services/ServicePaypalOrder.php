@@ -39,7 +39,7 @@ class ServicePaypalOrder
      * @param $idStatus integer id of the order status
      * @return bool
      */
-    public function setOrderStatus($paypalOrder, $idStatus)
+    public function setOrderStatus($paypalOrder, $idStatus, $checkHistory = true)
     {
         $psOrders = $this->getPsOrders($paypalOrder);
 
@@ -49,8 +49,14 @@ class ServicePaypalOrder
 
         /* @var $psOrder \Order*/
         foreach ($psOrders as $psOrder) {
-            if (empty($psOrder->getHistory(\Context::getContext()->language->id, $idStatus)) == false) {
-                continue;
+            if ($checkHistory) {
+                if (empty($psOrder->getHistory(\Context::getContext()->language->id, $idStatus)) == false) {
+                    continue;
+                }
+            } else {
+                if ($psOrder->current_state == $idStatus) {
+                    continue;
+                }
             }
 
             if (in_array($idStatus, array((int)\Configuration::get('PS_OS_REFUND'), (int)\Configuration::get('PAYPAL_OS_REFUNDED_PAYPAL')))) {
