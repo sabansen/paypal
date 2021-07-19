@@ -30,7 +30,9 @@ use Configuration;
 use MethodEC;
 use MethodMB;
 use MethodPPP;
+use PayPal\Api\WebhookEventType;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\Constants\WebHookType;
 
 class StatusMapping
 {
@@ -137,5 +139,34 @@ class StatusMapping
     public function isModeSale()
     {
         return (bool)Configuration::get('PAYPAL_API_INTENT') == 'sale';
+    }
+
+    /**
+     * @param string $eventType
+     * @return int
+     */
+    public function getPsOrderStatusByEventType($eventType)
+    {
+        $orderStatus = 0;
+
+        switch ($eventType) {
+            case WebHookType::CAPTURE_COMPLETED:
+                $orderStatus = $this->getAcceptedStatus();
+                break;
+            case WebHookType::CAPTURE_REFUNDED:
+                $orderStatus = $this->getRefundStatus();
+                break;
+            case WebHookType::CAPTURE_REVERSED:
+                $orderStatus = $this->getRefundStatus();
+                break;
+            case WebHookType::CAPTURE_DENIED:
+                $orderStatus = $this->getCanceledStatus();
+                break;
+            case WebHookType::AUTHORIZATION_VOIDED:
+                $orderStatus = $this->getCanceledStatus();
+                break;
+        }
+
+        return $orderStatus;
     }
 }

@@ -30,8 +30,6 @@ use PaypalAddons\classes\Webhook\RequestValidator;
 use PaypalAddons\services\StatusMapping;
 use PaypalAddons\services\ServicePaypalOrder;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
-use Configuration;
-use Tools;
 
 /**
  * Class PaypalAbstarctModuleFrontController
@@ -40,6 +38,9 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
 {
     /** @var ServicePaypalOrder*/
     protected $servicePaypalOrder;
+
+    /** @var array*/
+    protected $requestData;
 
     public function __construct()
     {
@@ -55,7 +56,7 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
 
         try {
             if ($this->requestIsValid()) {
-                if ($this->handleIpn(Tools::getAllValues())) {
+                if ($this->handleIpn($this->getRequestData())) {
                     header("HTTP/1.1 200 OK");
                 } else {
                     header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
@@ -92,7 +93,8 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
      */
     protected function requestIsValid()
     {
-        return (new RequestValidator())->validate($_POST);
+        // todo: to implement
+        return true;
     }
 
     /**
@@ -105,18 +107,17 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
             return true;
         }
 
-        $logResponse = array(
-            'payment_status' => isset($data['payment_status']) ? $data['payment_status'] : null,
-            'ipn_track_id' => isset($data['ipn_track_id']) ? $data['ipn_track_id'] : null
-        );
-
-        if ($data['payment_status'] == 'Refunded' && isset($data['parent_txn_id'])) {
-            $transactionRef = $data['parent_txn_id'];
-        } else {
-            $transactionRef = $data['txn_id'];
+        if (false == isset($data['resource'])) {
+            return false;
         }
 
-        $paypalOrder = $this->servicePaypalOrder->getPaypalOrderByTransaction($transactionRef);
+        $logResponse = array(
+            'event_type' => $this->eventType($data),
+            'ipn_track_id' => $this->getIpnId($data)
+        );
+
+        $transaction = $this->getTransactionRef($data['resource']);
+        $paypalOrder = $this->servicePaypalOrder->getPaypalOrderByTransaction($transaction);
 
         if (Validate::isLoadedObject($paypalOrder) == false) {
             return false;
@@ -128,7 +129,7 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
         foreach ($orders as $order) {
             ProcessLoggerHandler::logInfo(
                 'Webhook event : ' . $this->jsonEncode($logResponse),
-                $data['txn_id'],
+                $transaction,
                 $order->id,
                 $order->id_cart,
                 null,
@@ -138,7 +139,7 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
         }
         ProcessLoggerHandler::closeLogger();
 
-        $psOrderStatus = $this->getPsOrderStatus($data['payment_status']);
+        $psOrderStatus = $this->getPsOrderStatus($data);
 
         if ($psOrderStatus > 0) {
             $this->servicePaypalOrder->setOrderStatus($paypalOrder, $psOrderStatus, false);
@@ -147,14 +148,82 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
         return true;
     }
 
-    protected function alreadyHandled(array $data)
+    protected function alreadyHandled($data)
     {
         //todo: to implement
         return false;
     }
 
-    protected function getPsOrderStatus($transactionStatus)
+    protected function getPsOrderStatus($data)
     {
-        return (new StatusMapping())->getPsOrderStatusByTransaction($transactionStatus);
+        return (new StatusMapping())->getPsOrderStatusByEventType($this->eventType($data));
+    }
+
+    protected function getRequestData()
+    {
+        if (false == empty($this->requestData)) {
+            return $this->requestData;
+        }
+
+        $this->requestData = json_decode(file_get_contents('php://input'), true);
+        return $this->requestData;
+    }
+
+    /**
+     * @param mixed $data
+     * @return string
+     */
+    protected function eventType($data)
+    {
+        return isset($data['event_type']) ? (string)$data['event_type'] : '';
+    }
+
+    /**
+     * @param mixed
+     * @return string
+     */
+    protected function getTransactionRef($data)
+    {
+        if (false == isset($data['resource'])) {
+            return '';
+        }
+
+        return isset($data['resource']['id']) ? (string)$data['resource']['id'] : '';
+    }
+
+    /**
+     * @param mixed $data
+     * @return string
+     */
+    protected function getIpnId($data)
+    {
+        return isset($data['id']) ? $data['id'] : '';
+    }
+
+    /**
+     * @param $value mixed
+     * @return string
+     */
+    public function jsonEncode($value)
+    {
+        $result = json_encode($value);
+
+        if (json_last_error() == JSON_ERROR_UTF8) {
+            $result = json_encode($this->utf8ize($value));
+        }
+
+        return $result;
+    }
+
+    public function utf8ize($mixed)
+    {
+        if (is_array($mixed)) {
+            foreach ($mixed as $key => $value) {
+                $mixed[$key] = $this->utf8ize($value);
+            }
+        } else if (is_string($mixed)) {
+            return utf8_encode($mixed);
+        }
+        return $mixed;
     }
 }
