@@ -32,7 +32,7 @@ use PayPal\Api\PatchRequest;
 use PayPal\Api\Webhook;
 use PayPal\Api\WebhookEventType;
 use PaypalAddons\classes\AbstractMethodPaypal;
-use PaypalAddons\classes\API\Response\Error;
+use PaypalAddons\classes\API\Response\Error  as PaypalError;
 use PaypalAddons\classes\API\Response\Response;
 use PaypalAddons\classes\Constants\WebHookType;
 use PaypalAddons\classes\Webhook\WebhookHandlerUrl;
@@ -66,7 +66,7 @@ class UpdateWebHookEventType extends RequestAbstract
                 ->setSuccess(true)
                 ->setData($result);
         } catch (Exception $e) {
-            $error = new Error();
+            $error = new PaypalError();
             $error
                 ->setErrorCode($e->getCode())
                 ->setMessage($e->getMessage());

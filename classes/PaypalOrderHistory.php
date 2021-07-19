@@ -24,42 +24,36 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
-namespace PaypalAddons\classes\API\Request\V_1;
-
-
-use PayPal\Api\Webhook;
-use PaypalAddons\classes\API\Response\Error as PaypalError;
-use PaypalAddons\classes\API\Response\Response;
-use Symfony\Component\VarDumper\VarDumper;
-
-class GetWebHooks extends RequestAbstract
+/**
+ * Class PaypalIpn.
+ */
+class PaypalOrderHistory extends ObjectModel
 {
+    /** @var int*/
+    public $status;
 
-    public function execute()
-    {
-        $response = $this->getResponse();
+    /** @var bool*/
+    public $completed;
 
-        try {
-            $webHookList = Webhook::getAll($this->getApiContext());
-            $response
-                ->setSuccess(true)
-                ->setData($webHookList->webhooks);
-        } catch (\Exception $e) {
-            $error = new PaypalError();
-            $error
-                ->setMessage($e->getMessage())
-                ->setErrorCode($e->getCode());
+    /* @var string creation date*/
+    public $date_add;
 
-            $response
-                ->setSuccess(false)
-                ->setError($error);
-        }
+    /* @var string creation date*/
+    public $date_upd;
 
-        return $response;
-    }
-
-    protected function getResponse()
-    {
-        return new Response();
-    }
+    /**
+     * @see ObjectModel::$definition
+     */
+    public static $definition = array(
+        'table' => 'paypal_order_history',
+        'primary' => 'id_paypal_order_history',
+        'multilang' => false,
+        'fields' => array(
+            'status' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+            '$completed' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
+            'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
+        ),
+        'collation' => 'utf8_general_ci'
+    );
 }
