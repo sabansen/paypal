@@ -26,6 +26,7 @@
 
 
 use PaypalAddons\classes\Constants\WebhookHandler;
+use PaypalAddons\classes\Constants\WebHookType;
 use PaypalAddons\classes\Webhook\RequestValidator;
 use PaypalAddons\services\StatusMapping;
 use PaypalAddons\services\ServicePaypalOrder;
@@ -188,6 +189,14 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
             return '';
         }
 
+        if ($this->eventType($data) == WebHookType::CAPTURE_REFUNDED) {
+            foreach ($data['resource']['links'] as $link) {
+                if ($link['rel'] == 'up') {
+                    return $this->getTransactionFromHref($link['href']);
+                }
+            }
+        }
+
         return isset($data['resource']['id']) ? (string)$data['resource']['id'] : '';
     }
 
@@ -225,5 +234,15 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
             return utf8_encode($mixed);
         }
         return $mixed;
+    }
+
+    /**
+     * @param string $href
+     * @return string
+     */
+    protected function getTransactionFromHref($href)
+    {
+        $tmp = explode('/', $href);
+        return (string)array_pop($tmp);
     }
 }
