@@ -27,7 +27,7 @@
 
 use PaypalAddons\classes\Constants\WebhookHandler;
 use PaypalAddons\classes\Webhook\RequestValidator;
-use PaypalAddons\classes\Webhook\StatusMapping;
+use PaypalAddons\services\StatusMapping;
 use PaypalAddons\services\ServicePaypalOrder;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use Configuration;

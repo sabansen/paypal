@@ -525,6 +525,8 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             );
         }
 
+        $inputs = array_merge($inputs, $inputsMethod);
+
         $inputs[] = array(
             'type' => 'switch',
             'label' => $this->l('Enable PayPal webhooks'),
@@ -544,8 +546,6 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
                 )
             ),
         );
-
-        $inputs = array_merge($inputs, $inputsMethod);
 
         $this->fields_form['form']['form'] = array(
             'legend' => array(

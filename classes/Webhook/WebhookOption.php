@@ -38,7 +38,7 @@ class WebhookOption
      */
     public function isEnable()
     {
-        return Configuration::get(WebHookConf::ENABLE);
+        return (bool)Configuration::get(WebHookConf::ENABLE);
     }
 
     /**
@@ -57,5 +57,13 @@ class WebhookOption
     {
         Configuration::updateValue(WebHookConf::ENABLE, 0);
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAvailable()
+    {
+        return (bool)Configuration::get(WebHookConf::AVAILABLE);
     }
 }

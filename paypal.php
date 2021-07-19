@@ -32,6 +32,8 @@ include_once(_PS_MODULE_DIR_ . 'paypal/vendor/autoload.php');
 use PaypalAddons\classes\Constants\WebHookConf;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Shortcut\ShortcutSignup;
+use PaypalAddons\classes\Webhook\WebhookOption;
+use PaypalAddons\services\StatusMapping;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerExtension;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 use PaypalPPBTlib\Install\ModuleInstaller;
@@ -1539,6 +1541,14 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
     }
 
+    /**
+     * @return StatusMapping
+     */
+    protected function getStatusMapping()
+    {
+        return new StatusMapping();
+    }
+
 
     public function hookActionOrderStatusUpdate(&$params)
     {
@@ -1551,17 +1561,16 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
         $method = AbstractMethodPaypal::load($orderPayPal->method);
 
-        if ((int)Configuration::get('PAYPAL_CUSTOMIZE_ORDER_STATUS')) {
-            $osCanceled = Configuration::get('PAYPAL_API_INTENT') == 'sale' ? (int)Configuration::get('PAYPAL_OS_CANCELED') : (int)Configuration::get('PAYPAL_OS_CAPTURE_CANCELED');
-        } else {
-            $osCanceled = (int)Configuration::get('PS_OS_CANCELED');
-        }
-
-        $osRefunded = (int)Configuration::get('PAYPAL_CUSTOMIZE_ORDER_STATUS') ? (int)Configuration::get('PAYPAL_OS_REFUNDED') : (int)Configuration::get('PS_OS_REFUND');
-        $osPaymentAccepted = (int)Configuration::get('PAYPAL_CUSTOMIZE_ORDER_STATUS') ? (int)Configuration::get('PAYPAL_OS_ACCEPTED') : (int)Configuration::get('PS_OS_PAYMENT');
+        $osCanceled = $this->getStatusMapping()->getCanceledStatus($method);
+        $osRefunded = $this->getStatusMapping()->getRefundStatus($method);
+        $osPaymentAccepted = $this->getStatusMapping()->getAcceptedStatus($method);
 
         if ($params['newOrderStatus']->id == $osCanceled) {
             if ($this->context->controller instanceof PaypalIpnModuleFrontController) {
+                return true;
+            }
+
+            if ($this->context->controller instanceof PaypalWebhookhandlerModuleFrontController) {
                 return true;
             }
 
@@ -1631,6 +1640,10 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
         if ($params['newOrderStatus']->id == $osRefunded) {
             if ($this->context->controller instanceof PaypalIpnModuleFrontController) {
+                return true;
+            }
+
+            if ($this->context->controller instanceof PaypalWebhookhandlerModuleFrontController) {
                 return true;
             }
 
@@ -1739,6 +1752,12 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 );
                 ProcessLoggerHandler::closeLogger();
                 Tools::redirect($_SERVER['HTTP_REFERER'] . '&error_capture=1');
+            }
+        }
+
+        if ($this->context->controller instanceof AdminOrdersController) {
+            if ($this->getWebhookOption()->isEnable() && $this->getWebhookOption()->isAvailable()) {
+                Tools::redirect($_SERVER['HTTP_REFERER'] . '&wait_webhook=1');
             }
         }
     }
@@ -2357,5 +2376,10 @@ class PayPal extends \PaymentModule implements WidgetInterface
     public function getBannerManager()
     {
         return new BannerManager();
+    }
+
+    public function getWebhookOption()
+    {
+        return new WebhookOption();
     }
 }
