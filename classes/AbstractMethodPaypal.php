@@ -39,6 +39,8 @@ use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Shortcut\ShortcutProduct;
 use PaypalAddons\classes\Shortcut\ShortcutCart;
 use PaypalAddons\classes\Shortcut\ShortcutSignup;
+use PaypalAddons\classes\Webhook\WebhookOption;
+use PaypalAddons\services\StatusMapping;
 use PaypalPPBTlib\AbstractMethod;
 use Symfony\Component\VarDumper\VarDumper;
 use Tools;
@@ -483,6 +485,28 @@ abstract class AbstractMethodPaypal extends AbstractMethod
     protected function isCorrectCart(\Cart $cart, $paymentId)
     {
         return $this->getCartTrace() == $this->buildCartTrace($cart, $paymentId);
+    }
+
+    /**
+     * @return int id of the order status
+     **/
+    public function getOrderStatus()
+    {
+        if ($this->getWebhookOption()->isEnable() && $this->getWebhookOption()->isAvailable()) {
+            return $this->getStatusMapping()->getWaitValidationStatus();
+        }
+
+        return $this->getStatusMapping()->getAcceptedStatus();
+    }
+
+    protected function getWebhookOption()
+    {
+        return new WebhookOption();
+    }
+
+    protected function getStatusMapping()
+    {
+        return new StatusMapping();
     }
 
     /** @return  string*/

@@ -146,28 +146,6 @@ class MethodEC extends AbstractMethodPaypal
         return false;
     }
 
-    /**
-     * @return int id of the order status
-     **/
-    public function getOrderStatus()
-    {
-        if ((int)Configuration::get('PAYPAL_CUSTOMIZE_ORDER_STATUS')) {
-            if (Configuration::get('PAYPAL_API_INTENT') == "sale") {
-                $orderStatus = (int)Configuration::get('PAYPAL_OS_ACCEPTED_TWO');
-            } else {
-                $orderStatus = (int)Configuration::get('PAYPAL_OS_WAITING_VALIDATION');
-            }
-        } else {
-            if (Configuration::get('PAYPAL_API_INTENT') == "sale") {
-                $orderStatus = (int)Configuration::get('PS_OS_PAYMENT');
-            } else {
-                $orderStatus = (int)Configuration::get('PAYPAL_OS_WAITING');
-            }
-        }
-
-        return $orderStatus;
-    }
-
     public function getDateTransaction()
     {
         $dateServer = new DateTime();

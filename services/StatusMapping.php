@@ -65,21 +65,9 @@ class StatusMapping
         return $orderStatus;
     }
 
-    public function getAcceptedStatus($method = null)
+    public function getAcceptedStatus()
     {
-        if (is_null($method)) {
-            $method = AbstractMethodPaypal::load();
-        }
-
         if ($this->isCustomize()) {
-            if ($method instanceof MethodEC) {
-                if ($this->isModeSale()) {
-                    return (int)Configuration::get('PAYPAL_OS_ACCEPTED_TWO');
-                }
-
-                return (int)Configuration::get('PAYPAL_OS_ACCEPTED');
-            }
-
             return (int)Configuration::get('PAYPAL_OS_ACCEPTED_TWO');
         }
 
@@ -129,6 +117,15 @@ class StatusMapping
         }
 
         return (int)Configuration::get('PS_OS_CANCELED');
+    }
+
+    public function getWaitValidationStatus()
+    {
+        if ($this->isCustomize()) {
+            return (int)Configuration::get('PAYPAL_OS_WAITING_VALIDATION');;
+        }
+
+        return (int)Configuration::get('PAYPAL_OS_WAITING');;
     }
 
     public function isCustomize()

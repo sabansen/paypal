@@ -1563,7 +1563,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
         $osCanceled = $this->getStatusMapping()->getCanceledStatus($method);
         $osRefunded = $this->getStatusMapping()->getRefundStatus($method);
-        $osPaymentAccepted = $this->getStatusMapping()->getAcceptedStatus($method);
+        $osPaymentAccepted = $this->getStatusMapping()->getAcceptedStatus();
 
         if ($params['newOrderStatus']->id == $osCanceled) {
             if ($this->context->controller instanceof PaypalIpnModuleFrontController) {

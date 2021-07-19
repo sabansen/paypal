@@ -119,17 +119,6 @@ class MethodPPP extends AbstractMethodPaypal
     {
     }
 
-    public function getOrderStatus()
-    {
-        if ((int)Configuration::get('PAYPAL_CUSTOMIZE_ORDER_STATUS')) {
-            $orderStatus = (int)Configuration::get('PAYPAL_OS_ACCEPTED_TWO');
-        } else {
-            $orderStatus = (int)Configuration::get('PS_OS_PAYMENT');
-        }
-
-        return $orderStatus;
-    }
-
     /**
      * @see AbstractMethodPaypal::confirmCapture()
      */

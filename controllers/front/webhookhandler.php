@@ -28,6 +28,7 @@
 use PaypalAddons\classes\Constants\WebhookHandler;
 use PaypalAddons\classes\Constants\WebHookType;
 use PaypalAddons\classes\Webhook\RequestValidator;
+use PaypalAddons\services\ContainerService;
 use PaypalAddons\services\StatusMapping;
 use PaypalAddons\services\ServicePaypalOrder;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
@@ -48,6 +49,7 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
         parent::__construct();
 
         $this->servicePaypalOrder = new ServicePaypalOrder();
+        $this->initContainer();
     }
     public function run()
     {
@@ -70,7 +72,7 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
             ProcessLoggerHandler::openLogger();
             ProcessLoggerHandler::logError(
                 $message,
-                Tools::getValue('txn_id') ? Tools::getValue('txn_id') : null,
+                $this->getTransactionRef($this->getRequestData()),
                 null,
                 null,
                 null,
@@ -112,12 +114,14 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
             return false;
         }
 
-        $logResponse = array(
-            'event_type' => $this->eventType($data),
-            'ipn_track_id' => $this->getIpnId($data)
-        );
+        $msg = 'Webhook event : ' . $this->jsonEncode([
+                'event_type' => $this->eventType($data),
+                'webhook_id' => $this->getWebhookId($data),
+                'data' => $data
+            ]);
+        $msg = Tools::substr($msg, 0, 999);
 
-        $transaction = $this->getTransactionRef($data['resource']);
+        $transaction = $this->getTransactionRef($data);
         $paypalOrder = $this->servicePaypalOrder->getPaypalOrderByTransaction($transaction);
 
         if (Validate::isLoadedObject($paypalOrder) == false) {
@@ -129,7 +133,7 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
         ProcessLoggerHandler::openLogger();
         foreach ($orders as $order) {
             ProcessLoggerHandler::logInfo(
-                'Webhook event : ' . $this->jsonEncode($logResponse),
+                $msg,
                 $transaction,
                 $order->id,
                 $order->id_cart,
@@ -204,7 +208,7 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
      * @param mixed $data
      * @return string
      */
-    protected function getIpnId($data)
+    protected function getWebhookId($data)
     {
         return isset($data['id']) ? $data['id'] : '';
     }
@@ -244,5 +248,10 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
     {
         $tmp = explode('/', $href);
         return (string)array_pop($tmp);
+    }
+
+    protected function initContainer()
+    {
+        $this->container = ContainerService::init();
     }
 }
