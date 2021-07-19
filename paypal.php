@@ -171,7 +171,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
         'PaypalCapture',
         'PaypalOrder',
         'PaypalVaulting',
-        'PaypalIpn'
+        'PaypalIpn',
+        'PaypalWebhook',
     );
 
     /**
