@@ -25,6 +25,8 @@
 
 namespace PaypalAddons\services;
 
+use Db;
+use DbQuery;
 use PrestaShopBundle\Security\Admin\Employee;
 
 require_once dirname(__FILE__) . '/../classes/PaypalOrder.php';
@@ -88,10 +90,24 @@ class ServicePaypalOrder
      */
     public function getPaypalOrderByTransaction($transactionId)
     {
-        $collection = new \PrestaShopCollection('PaypalOrder');
-        $collection->where('id_transaction', '=', $transactionId);
+        $query = (new DbQuery())
+            ->select('po.id_paypal_order')
+            ->from('paypal_order', 'po')
+            ->leftJoin('paypal_capture', 'pc', 'po.id_paypal_order = pc.id_paypal_order')
+            ->where(implode(
+                ' OR ',
+                [
+                    'po.id_transaction = "' . pSQL($transactionId).'"',
+                    'pc.id_capture = "' . pSQL($transactionId).'"'
+                ])
+            );
+        $idPaypalOrder = (int)Db::getInstance()->getValue($query);
 
-        return $collection->getFirst();
+        if ($idPaypalOrder) {
+            return new \PaypalOrder($idPaypalOrder);
+        }
+
+        return false;
     }
 
     /**

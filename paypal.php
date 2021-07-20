@@ -1560,6 +1560,10 @@ class PayPal extends \PaymentModule implements WidgetInterface
             return false;
         }
 
+        if ($this->context->controller instanceof PaypalWebhookhandlerModuleFrontController) {
+            return true;
+        }
+
         $method = AbstractMethodPaypal::load($orderPayPal->method);
 
         $osCanceled = $this->getStatusMapping()->getCanceledStatus($method);
@@ -1568,10 +1572,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
         if ($params['newOrderStatus']->id == $osCanceled) {
             if ($this->context->controller instanceof PaypalIpnModuleFrontController) {
-                return true;
-            }
-
-            if ($this->context->controller instanceof PaypalWebhookhandlerModuleFrontController) {
                 return true;
             }
 
@@ -1641,10 +1641,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
         if ($params['newOrderStatus']->id == $osRefunded) {
             if ($this->context->controller instanceof PaypalIpnModuleFrontController) {
-                return true;
-            }
-
-            if ($this->context->controller instanceof PaypalWebhookhandlerModuleFrontController) {
                 return true;
             }
 

@@ -59,7 +59,7 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
 
         try {
             if ($this->requestIsValid()) {
-                if ($this->handleIpn($this->getRequestData())) {
+                if ($this->handleWebhook($this->getRequestData())) {
                     header("HTTP/1.1 200 OK");
                 } else {
                     header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
@@ -101,10 +101,10 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
     }
 
     /**
-     * @param $data array Ipn message data
+     * @param $data array webevent data
      * @return bool
      */
-    protected function handleIpn($data)
+    protected function handleWebhook($data)
     {
         if ($this->alreadyHandled($data)) {
             return true;
@@ -151,6 +151,18 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
         $paypalWebhook->event_type = $this->eventType($data);
         $paypalWebhook->data = $this->jsonEncode($data);
         $paypalWebhook->save();
+
+        if ($this->isCaptureAuthorization($data)) {
+            $capture = PaypalCapture::loadByOrderPayPalId($paypalOrder->id);
+
+            if (Validate::isLoadedObject($capture)) {
+                $capture->id_capture = $data['resource']['id'];
+                $capture->result = $data['resource']['status'];
+                $capture->capture_amount = $this->getAmount($data);
+                $capture->save();
+            }
+        }
+
 
         if ($psOrderStatus > 0) {
             $this->servicePaypalOrder->setOrderStatus($paypalOrder, $psOrderStatus, false);
@@ -205,6 +217,10 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
     {
         if (false == isset($data['resource'])) {
             return '';
+        }
+
+        if ($this->isCaptureAuthorization($data)) {
+            return $this->getAuthorizationId($data);
         }
 
         if ($this->eventType($data) == WebHookType::CAPTURE_REFUNDED) {
@@ -267,5 +283,44 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
     protected function initContainer()
     {
         $this->container = ContainerService::init();
+    }
+
+    /**
+     * @param mixed $data
+     * @return bool
+     */
+    protected function isCaptureAuthorization($data)
+    {
+        try {
+            return (bool) $this->getAuthorizationId($data);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * @param mixed $data
+     * @return string
+     */
+    protected function getAuthorizationId($data)
+    {
+        try {
+            return $data['resource']['supplementary_data']['related_ids']['authorization_id'];
+        } catch (Exception $e) {
+            return '';
+        }
+    }
+
+    /**
+     * @param mixed $data
+     * @return float
+     */
+    protected function getAmount($data)
+    {
+        try {
+            return (float)$data['resource']['amount']['value'];
+        } catch (Exception $e) {
+            return 0;
+        }
     }
 }
