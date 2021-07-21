@@ -125,17 +125,7 @@ class ServicePaypalOrder
 
     public function waitForWebhook(\PaypalOrder $paypalOrder)
     {
-        $query = (new DbQuery())
-            ->select('id_paypal_webhook')
-            ->from(\PaypalWebhook::$definition['table'])
-            ->where('id_paypal_order = ' . (int)$paypalOrder->id)
-            ->where('id_webhook IS NULL OR id_webhook = ""');
-
-        try {
-            return (bool)Db::getInstance()->getValue($query);
-        } catch (Exception $e) {
-            return false;
-        }
-
+        $pendingWebhooks = (new WebhookService())->getPendingWebhooks($paypalOrder);
+        return empty($pendingWebhooks) == false;
     }
 }

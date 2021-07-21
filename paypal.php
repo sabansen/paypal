@@ -1329,9 +1329,20 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
 
         if ($this->getPaypalOrderService()->waitForWebhook($paypal_order)) {
-            $paypal_msg .= $this->displayInformation(
-                $this->l('A request has been sent to PayPal. The order status will be updated after confirmation from PayPal. Please reload the page to check if the status is updated.')
-            );
+            //Webhooks that wait more 1 hour
+            $webhooks = $this->getWebhookService()->getPendingWebhooks($paypal_order, 1);
+
+            if (empty($webhooks)) {
+                $paypal_msg .= $this->displayInformation(
+                    $this->l('A request has been sent to PayPal. The order status will be updated after confirmation from PayPal. Please reload the page to check if the status is updated.')
+                );
+            } else {
+                $paypal_msg .= $this->displayError(
+                    $this->l('Event notification has not been received yet. Please check if your website has a correct SSL certificate (https) and htaccess or maintenance mode are not enabled.')
+                );
+            }
+
+
         }
 
         if ($paypal_order->method == 'BT' && (Module::isInstalled('braintreeofficial') == false)) {

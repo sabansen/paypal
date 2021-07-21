@@ -58,4 +58,42 @@ class WebhookService
 
         return $webhook;
     }
+
+    /**
+     * @param \PaypalOrder $paypalOrder
+     * @return \PaypalWebhook[]
+     */
+    public function getPendingWebhooks(\PaypalOrder $paypalOrder, $delay = null)
+    {
+        $webhooks = [];
+        $query = (new DbQuery())
+            ->from(\PaypalWebhook::$definition['table'])
+            ->where('id_paypal_order = ' . (int)$paypalOrder->id)
+            ->where('id_webhook IS NULL OR id_webhook = ""');
+
+        if (false == is_null($delay)) {
+            $query->where(sprintf('date_add < DATE_SUB(NOW, INTERVAL %d HOUR)', (int)$delay));
+        }
+
+        try {
+            $result = Db::getInstance()->executeS($query);
+        } catch (Exception $e) {
+            return $webhooks;
+        }
+
+
+        if (empty($result)) {
+            return $webhooks;
+        }
+
+        foreach ($result as $row) {
+            try {
+                $webhook = new \PaypalWebhook();
+                $webhook->hydrate($row);
+                $webhooks[] = $webhook;
+            } catch (Exception $e) {}
+        }
+
+        return $webhooks;
+    }
 }
