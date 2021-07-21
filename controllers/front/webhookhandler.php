@@ -27,8 +27,10 @@
 
 use PaypalAddons\classes\Constants\WebhookHandler;
 use PaypalAddons\classes\Constants\WebHookType;
+use PaypalAddons\classes\Exception\RefundCalculationException;
 use PaypalAddons\classes\Webhook\RequestValidator;
 use PaypalAddons\services\ContainerService;
+use PaypalAddons\services\PaymentTotalAmount;
 use PaypalAddons\services\StatusMapping;
 use PaypalAddons\services\ServicePaypalOrder;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
@@ -185,9 +187,41 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
         }
     }
 
+    /**
+     * @param mixed $data
+     * @return int
+     */
     protected function getPsOrderStatus($data)
     {
-        return (new StatusMapping())->getPsOrderStatusByEventType($this->eventType($data));
+        $eventType = $this->eventType($data);
+
+        if ($eventType == WebHookType::CAPTURE_REFUNDED) {
+            $paymentTotal = $this->getPaymentTotal($data);
+
+            if ($paymentTotal > 0) {
+                return 0;
+            }
+        }
+
+        return (new StatusMapping())->getPsOrderStatusByEventType($eventType);
+    }
+
+    /**
+     * @param mixed $data
+     * @return float
+     * @throws RefundCalculationException
+     */
+    protected function getPaymentTotal($data)
+    {
+        $transaction = $this->getTransactionRef($data);
+        $paypalOrder = $this->servicePaypalOrder->getPaypalOrderByTransaction($transaction);
+
+        return $this->getPaymentTotalAmountService()->get($paypalOrder);
+    }
+
+    protected function getPaymentTotalAmountService()
+    {
+        return new PaymentTotalAmount();
     }
 
     protected function getRequestData()

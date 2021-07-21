@@ -30,6 +30,7 @@ use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\ResponseOrderRefund;
 use PaypalAddons\classes\Exception\OrderFullyRefundedException;
 use PaypalAddons\classes\Exception\RefundCalculationException;
+use PaypalAddons\services\PaymentTotalAmount;
 use PaypalAddons\services\ServicePaypalOrder;
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
 use PayPalCheckoutSdk\Payments\CapturesRefundRequest;
@@ -125,33 +126,13 @@ class PaypalOrderRefundRequest extends RequestAbstract
      */
     protected function getAmount()
     {
-        $total = 0;
-        $totalRefund = 0;
+        $amount = $this->getPaymentTotalAmountService()->get($this->paypalOrder);
 
-        try {
-            $order = $this->method->getInfo($this->paypalOrder->id_payment);
-            $payments = $order->getData()->result->purchase_units[0]->payments;
-
-            if (isset($payments->captures)) {
-                foreach ($payments->captures as $capture) {
-                    $total += $capture->amount->value;
-                }
-            }
-
-            if (isset($payments->refunds)) {
-                foreach ($payments->refunds as $refund) {
-                    $totalRefund += $refund->amount->value;
-                }
-            }
-        } catch (\Exception $e) {
-            throw new RefundCalculationException($e->getMessage());
-        }
-
-        if ($total == $totalRefund) {
+        if ($amount == 0) {
             throw new OrderFullyRefundedException();
         }
 
-        $refundValue = $this->method->formatPrice(($total - $totalRefund), $this->paypalOrder->currency);
+        $refundValue = $this->method->formatPrice($amount, $this->paypalOrder->currency);
 
         $amount = [
             'currency_code' => $this->paypalOrder->currency,
@@ -173,5 +154,13 @@ class PaypalOrderRefundRequest extends RequestAbstract
         }
 
         return $idResource;
+    }
+
+    /**
+     * @return PaymentTotalAmount
+     */
+    protected function getPaymentTotalAmountService()
+    {
+        return new PaymentTotalAmount();
     }
 }
