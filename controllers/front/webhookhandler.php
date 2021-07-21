@@ -147,12 +147,6 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
         ProcessLoggerHandler::closeLogger();
 
         $psOrderStatus = $this->getPsOrderStatus($data);
-        $paypalWebhook = new PaypalWebhook();
-        $paypalWebhook->id_paypal_order = $paypalOrder->id;
-        $paypalWebhook->id_webhook = $this->getWebhookId($data);
-        $paypalWebhook->event_type = $this->eventType($data);
-        $paypalWebhook->data = $this->jsonEncode($data);
-        $paypalWebhook->save();
 
         if ($this->isCaptureAuthorization($data)) {
             $capture = PaypalCapture::loadByOrderPayPalId($paypalOrder->id);
@@ -169,6 +163,13 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
         if ($psOrderStatus > 0) {
             $this->servicePaypalOrder->setOrderStatus($paypalOrder, $psOrderStatus, false);
         }
+
+        $paypalWebhook = new PaypalWebhook();
+        $paypalWebhook->id_paypal_order = $paypalOrder->id;
+        $paypalWebhook->id_webhook = $this->getWebhookId($data);
+        $paypalWebhook->event_type = $this->eventType($data);
+        $paypalWebhook->data = $this->jsonEncode($data);
+        $paypalWebhook->save();
 
         return true;
     }
