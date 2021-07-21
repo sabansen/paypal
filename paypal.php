@@ -33,7 +33,9 @@ use PaypalAddons\classes\Constants\WebHookConf;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Shortcut\ShortcutSignup;
 use PaypalAddons\classes\Webhook\WebhookOption;
+use PaypalAddons\services\ServicePaypalOrder;
 use PaypalAddons\services\StatusMapping;
+use PaypalAddons\services\WebhookService;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerExtension;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 use PaypalPPBTlib\Install\ModuleInstaller;
@@ -1326,6 +1328,12 @@ class PayPal extends \PaymentModule implements WidgetInterface
             return false;
         }
 
+        if ($this->getPaypalOrderService()->waitForWebhook($paypal_order)) {
+            $paypal_msg .= $this->displayInformation(
+                $this->l('A request has been sent to PayPal. The order status will be updated after confirmation from PayPal. Please reload the page to check if the status is updated.')
+            );
+        }
+
         if ($paypal_order->method == 'BT' && (Module::isInstalled('braintreeofficial') == false)) {
             $tmpMessage = "<p class='paypal-warning'>";
             $tmpMessage .= $this->l('This order has been paid via Braintree payment solution provided by PayPal module prior v5.0. ') . "</br>";
@@ -1754,9 +1762,21 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
         if ($this->context->controller instanceof AdminOrdersController) {
             if ($this->getWebhookOption()->isEnable() && $this->getWebhookOption()->isAvailable()) {
-                Tools::redirect($_SERVER['HTTP_REFERER'] . '&wait_webhook=1');
+                try {
+                    $this->getWebhookService()->createForOrder($orderPayPal);
+                } catch (Exception $e) {}
+
+                Tools::redirect($_SERVER['HTTP_REFERER']);
             }
         }
+    }
+
+    /**
+     * @return WebhookService
+     */
+    public function getWebhookService()
+    {
+        return new WebhookService();
     }
 
     /**
@@ -2378,5 +2398,10 @@ class PayPal extends \PaymentModule implements WidgetInterface
     public function getWebhookOption()
     {
         return new WebhookOption();
+    }
+
+    protected function getPaypalOrderService()
+    {
+        return new ServicePaypalOrder();
     }
 }

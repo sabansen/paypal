@@ -33,6 +33,7 @@ use PaypalAddons\services\ContainerService;
 use PaypalAddons\services\PaymentTotalAmount;
 use PaypalAddons\services\StatusMapping;
 use PaypalAddons\services\ServicePaypalOrder;
+use PaypalAddons\services\WebhookService;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 
 /**
@@ -164,11 +165,11 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
             $this->servicePaypalOrder->setOrderStatus($paypalOrder, $psOrderStatus, false);
         }
 
-        $paypalWebhook = new PaypalWebhook();
-        $paypalWebhook->id_paypal_order = $paypalOrder->id;
+        $paypalWebhook = $this->getWebhookService()->createForOrder($paypalOrder);
         $paypalWebhook->id_webhook = $this->getWebhookId($data);
         $paypalWebhook->event_type = $this->eventType($data);
         $paypalWebhook->data = $this->jsonEncode($data);
+        $paypalWebhook->date_completed = date(PaypalWebhook::DATE_FORMAT);
         $paypalWebhook->save();
 
         return true;
@@ -357,5 +358,10 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
         } catch (Exception $e) {
             return 0;
         }
+    }
+
+    protected function getWebhookService()
+    {
+        return new WebhookService();
     }
 }

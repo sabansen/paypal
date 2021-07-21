@@ -29,6 +29,8 @@
  */
 class PaypalWebhook extends ObjectModel
 {
+    const DATE_FORMAT = 'Y-m-d H:i:s';
+
     /** @var int*/
     public $id_paypal_order;
 
@@ -44,6 +46,9 @@ class PaypalWebhook extends ObjectModel
     /* @var string creation date*/
     public $date_add;
 
+    /* @var string date*/
+    public $date_completed;
+
     /**
      * @see ObjectModel::$definition
      */
@@ -57,6 +62,7 @@ class PaypalWebhook extends ObjectModel
             'event_type' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
             'data' => array('type' => self::TYPE_HTML, 'validate' => 'isString'),
             'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
+            'date_completed' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat')
         ),
         'collation' => 'utf8_general_ci'
     );

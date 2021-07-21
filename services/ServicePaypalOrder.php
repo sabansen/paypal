@@ -27,6 +27,7 @@ namespace PaypalAddons\services;
 
 use Db;
 use DbQuery;
+use Exception;
 use PrestaShopBundle\Security\Admin\Employee;
 
 require_once dirname(__FILE__) . '/../classes/PaypalOrder.php';
@@ -120,5 +121,21 @@ class ServicePaypalOrder
         $collection->where('id_cart', '=', $paypalOrder->id_cart);
 
         return $collection->getResults();
+    }
+
+    public function waitForWebhook(\PaypalOrder $paypalOrder)
+    {
+        $query = (new DbQuery())
+            ->select('id_paypal_webhook')
+            ->from(\PaypalWebhook::$definition['table'])
+            ->where('id_paypal_order = ' . (int)$paypalOrder->id)
+            ->where('id_webhook IS NULL OR id_webhook = ""');
+
+        try {
+            return (bool)Db::getInstance()->getValue($query);
+        } catch (Exception $e) {
+            return false;
+        }
+
     }
 }
