@@ -34,7 +34,7 @@ use PaypalPPBTlib\Install\ModuleInstaller;
  * @param $module PayPal
  * @return bool
  */
-function upgrade_module_5_4_5($module)
+function upgrade_module_5_5_0($module)
 {
     $installer = new ModuleInstaller($module);
     $installer->installObjectModels();
