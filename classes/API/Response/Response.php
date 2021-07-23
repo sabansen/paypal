@@ -46,7 +46,11 @@ class Response
 
     public function getError()
     {
-        return $this->error;
+        if ($this->error instanceof Error) {
+            return $this->error;
+        }
+
+        return new Error();
     }
 
     public function setSuccess($success)
