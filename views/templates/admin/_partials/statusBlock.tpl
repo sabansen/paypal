@@ -50,7 +50,7 @@
         <li>
             {if isset($tlsVersion) && $tlsVersion['status']}
                 <i class="icon-check text-success"></i>
-                {l s='The PHP cURL extension must be enabled on your server. Please contact your hosting provider for more information.' mod='paypal'}
+                {l s='The PHP cURL extension must be enabled on your server.' mod='paypal'}
             {elseif isset($tlsVersion) && $tlsVersion['status'] == false}
                 <i class="icon-remove text-danger"></i>
                 {l s='The PHP cURL extension must be enabled on your server. Please contact your hosting provider for more information.' mod='paypal'} {$tlsVersion['error_message']}
