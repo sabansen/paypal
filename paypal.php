@@ -1769,15 +1769,21 @@ class PayPal extends \PaymentModule implements WidgetInterface
             }
         }
 
-        if ($this->context->controller instanceof AdminOrdersController) {
-            if ($this->getWebhookOption()->isEnable() && $this->getWebhookOption()->isAvailable()) {
-                try {
-                    $this->getWebhookService()->createForOrder($orderPayPal);
-                } catch (Exception $e) {}
+        if ($this->getWebhookOption()->isEnable() && $this->getWebhookOption()->isAvailable()) {
+            try {
+                $this->getWebhookService()->createForOrder($orderPayPal);
+            } catch (Exception $e) {}
 
+            if ($this->context->controller instanceof AdminOrdersController) {
                 Tools::redirect($_SERVER['HTTP_REFERER']);
             }
+
+            throw new \PaypalAddons\classes\PaypalException(
+                0,
+                $this->l('A request has been sent to PayPal. The order status will be updated after confirmation from PayPal. Please reload the page to check if the status is updated.')
+            );
         }
+
     }
 
     /**
