@@ -56,6 +56,8 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
     }
     public function run()
     {
+        parent::init();
+
         if ($this->isCheckAvailability()) {
             header("HTTP/1.1 " . WebhookHandler::STATUS_AVAILABLE); die;
         }
@@ -363,5 +365,14 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
     protected function getWebhookService()
     {
         return new WebhookService();
+    }
+
+    protected static function isInWhitelistForGeolocation()
+    {
+        return true;
+    }
+
+    protected function displayMaintenancePage()
+    {
     }
 }
