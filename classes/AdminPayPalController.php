@@ -445,7 +445,7 @@ class AdminPayPalController extends \ModuleAdminController
 
         if ($return['state'] && !$this->isWebhookCreated()) {
             $return['state'] = false;
-            $return['message'] = $this->l('PayPal webhooks can not be enabled. The webhook listener was not created. Webhooks are not used by the module until the moment the problem will be fixed. Please try to refresh the page and click on "check requirements" again.', get_class($this));
+            $return['message'] = $this->l('PayPal webhooks can not be enabled. The webhook listener was not created. Webhooks are not used by the module until the moment the problem will be fixed. Please try to refresh the page and click on \'check requirements\' again.', get_class($this));
         }
 
         \Configuration::updateValue(WebHookConf::AVAILABLE, (int)$return['state']);
