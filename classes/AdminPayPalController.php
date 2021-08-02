@@ -437,9 +437,8 @@ class AdminPayPalController extends \ModuleAdminController
 
         if ($webhookAvailable->isSuccess() == false) {
             $return['state'] = false;
-            $return['message'] = sprintf(
-                $this->l('PayPal webhooks can not be enabled. The reason of the error [%s] : maintenance mode enabled / unknown, please contact support team. Webhooks are not used by the module until the moment the problem will be fixed. Refresh the page to check the status again.', get_class($this)),
-                (string)$webhookAvailable->getError()->getMessage()
+            $return['message'] = $this->context->smarty->fetch(
+                $this->getTemplatePath() . '_partials/messages/webhookhandler_not_available.tpl'
             );
         }
 

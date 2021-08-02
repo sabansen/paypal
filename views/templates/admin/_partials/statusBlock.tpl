@@ -68,13 +68,13 @@
         </li>
 
         {if isset($showWebhookState) && $showWebhookState}
-          <li>
+          <li class="pp__flex">
               {if isset($webhookState) && $webhookState}
                 <i class="icon-check text-success"></i>
               {else}
                 <i class="icon-remove text-danger"></i>
               {/if}
-              {if isset($webhookStateMsg)}{$webhookStateMsg|escape:'htmlall':'utf-8'}{/if}
+              {if isset($webhookStateMsg)}{$webhookStateMsg nofilter}{/if}
           </li>
         {/if}
     </ul>

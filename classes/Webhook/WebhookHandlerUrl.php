@@ -32,17 +32,23 @@ class WebhookHandlerUrl
 {
     public function get()
     {
-        return Context::getContext()->link->getModuleLink('paypal', 'webhookhandler');
+        $url = Context::getContext()->link->getModuleLink('paypal', 'webhookhandler');
+        $url = str_replace('http://', 'https://', $url);
+
+        return $url;
     }
 
     public function getCheckAvailabilityUrl()
     {
-        return Context::getContext()->link->getModuleLink(
+        $url = Context::getContext()->link->getModuleLink(
             'paypal',
             'webhookhandler',
             [
                 'checkAvailability' => 1
             ]
         );
+        $url = str_replace('http://', 'https://', $url);
+
+        return $url;
     }
 }
