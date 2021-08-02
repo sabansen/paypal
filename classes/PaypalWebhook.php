@@ -43,6 +43,9 @@ class PaypalWebhook extends ObjectModel
     /* @var string */
     public $data;
 
+    /** @var int*/
+    public $id_state;
+
     /* @var string creation date*/
     public $date_add;
 
@@ -61,6 +64,7 @@ class PaypalWebhook extends ObjectModel
             'id_webhook' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
             'event_type' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
             'data' => array('type' => self::TYPE_HTML, 'validate' => 'isString'),
+            'id_state' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
             'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
             'date_completed' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat')
         ),

@@ -38,7 +38,7 @@ class WebhookService
      * @return \PaypalWebhook
      * @throws \PrestaShopException
      */
-    public function createForOrder(\PaypalOrder $paypalOrder)
+    public function createForOrder(\PaypalOrder $paypalOrder, $idState = 0)
     {
         $query = (new DbQuery())
             ->select('id_paypal_webhook')
@@ -49,11 +49,13 @@ class WebhookService
         $idPaypalWebhook = (int)Db::getInstance()->getValue($query);
 
         if ($idPaypalWebhook) {
-            return new \PaypalWebhook($idPaypalWebhook);
+            $webhook = new \PaypalWebhook($idPaypalWebhook);
+        } else {
+            $webhook = new \PaypalWebhook();
         }
 
-        $webhook = new \PaypalWebhook();
         $webhook->id_paypal_order = (int)$paypalOrder->id;
+        $webhook->id_state = $idState;
         $webhook->save();
 
         return $webhook;
@@ -72,7 +74,7 @@ class WebhookService
             ->where('id_webhook IS NULL OR id_webhook = ""');
 
         if (false == is_null($delay)) {
-            $query->where(sprintf('date_add < DATE_SUB(NOW, INTERVAL %d HOUR)', (int)$delay));
+            $query->where(sprintf('date_add < DATE_SUB(NOW(), INTERVAL %d HOUR)', (int)$delay));
         }
 
         try {

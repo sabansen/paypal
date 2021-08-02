@@ -1328,21 +1328,24 @@ class PayPal extends \PaymentModule implements WidgetInterface
             return false;
         }
 
-        if ($this->getPaypalOrderService()->waitForWebhook($paypal_order)) {
-            //Webhooks that wait more 1 hour
-            $webhooks = $this->getWebhookService()->getPendingWebhooks($paypal_order, 1);
+        //Webhooks that wait more 1 hour
+        $oldPendingWebhooks = $this->getWebhookService()->getPendingWebhooks($paypal_order, 1);
+        $pendingWebhooks = $this->getWebhookService()->getPendingWebhooks($paypal_order);
 
-            if (empty($webhooks)) {
+        if (false == empty($oldPendingWebhooks)) {
+            $paypal_msg .= $this->displayError(
+                $this->l('Event notification has not been received yet. Please check if your website has a correct SSL certificate (https) and htaccess or maintenance mode are not enabled.')
+            );
+        } elseif (false == empty($pendingWebhooks)) {
+            foreach ($pendingWebhooks as $webhook) {
+                $orderState = new OrderState($webhook->id_state, $this->context->language->id);
                 $paypal_msg .= $this->displayInformation(
-                    $this->l('A request has been sent to PayPal. The order status will be updated after confirmation from PayPal. Please reload the page to check if the status is updated.')
-                );
-            } else {
-                $paypal_msg .= $this->displayError(
-                    $this->l('Event notification has not been received yet. Please check if your website has a correct SSL certificate (https) and htaccess or maintenance mode are not enabled.')
+                    sprintf(
+                        $this->l('A request has been sent to PayPal. The order status \'%s\' will be applied after confirmation from PayPal.'),
+                        $orderState->name ? $orderState->name : ''
+                    )
                 );
             }
-
-
         }
 
         if ($paypal_order->method == 'BT' && (Module::isInstalled('braintreeofficial') == false)) {
@@ -1771,7 +1774,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
         if ($this->getWebhookOption()->isEnable() && $this->getWebhookOption()->isAvailable()) {
             try {
-                $this->getWebhookService()->createForOrder($orderPayPal);
+                $this->getWebhookService()->createForOrder($orderPayPal, $params['newOrderStatus']->id);
             } catch (Exception $e) {}
 
             if ($this->context->controller instanceof AdminOrdersController) {
