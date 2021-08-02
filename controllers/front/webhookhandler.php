@@ -69,6 +69,19 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
                 } else {
                     header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
                 }
+            } else {
+                ProcessLoggerHandler::openLogger();
+                ProcessLoggerHandler::logError(
+                    Tools::substr('Invalid webhook event. Data: ' . $this->getRequest(),0, 999) ,
+                    $this->getTransactionRef($this->getRequestData()),
+                    null,
+                    null,
+                    null,
+                    null,
+                    (int)Configuration::get('PAYPAL_SANDBOX'),
+                    null
+                );
+                ProcessLoggerHandler::closeLogger();
             }
         } catch (\Exception $e) {
             $message = 'Error code: ' . $e->getCode() . '.';
@@ -101,8 +114,7 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
      */
     protected function requestIsValid()
     {
-        // todo: to implement
-        return true;
+        return (new RequestValidator())->isValidWebhookEvent(getallheaders(), $this->getRequest());
     }
 
     /**
@@ -234,8 +246,13 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
             return $this->requestData;
         }
 
-        $this->requestData = json_decode(file_get_contents('php://input'), true);
+        $this->requestData = json_decode($this->getRequest(), true);
         return $this->requestData;
+    }
+
+    protected function getRequest()
+    {
+        return file_get_contents('php://input');
     }
 
     /**

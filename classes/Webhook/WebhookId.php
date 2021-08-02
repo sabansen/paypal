@@ -26,44 +26,48 @@
 
 namespace PaypalAddons\classes\Webhook;
 
-
+use Configuration;
 use PaypalAddons\classes\AbstractMethodPaypal;
-use PaypalAddons\classes\API\Request\V_1\ValidateWebhookEventRequest;
 
-class RequestValidator
+class WebhookId
 {
-    public function validateIPN($data)
-    {
-        $curl = curl_init($this->getIpnPaypalListener() . '?cmd=_notify-validate&' . http_build_query($data));
-        curl_setopt($curl, CURLOPT_HEADER, 0);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_TIMEOUT, 90);
-        $response = curl_exec($curl);
+    /** @var AbstractMethodPaypal*/
+    protected $method;
 
-        return trim($response) == 'VERIFIED';
+    public function __construct(AbstractMethodPaypal $method)
+    {
+        $this->method = $method;
     }
 
     /**
      * @return string
      */
-    protected function getIpnPaypalListener()
+    public function get()
     {
-        return (new IpnPaypalListener())->get();
+        return Configuration::get(
+            $this->getConfName(),
+            null,
+            null,
+            null,
+            ''
+        );
     }
 
     /**
-     * @param array $headers
-     * @param string $request
-     * @return bool
+     * @param string $id
+     * @return self
      */
-    public function isValidWebhookEvent($headers, $request)
+    public function update($id)
     {
-        $validateRequest = new ValidateWebhookEventRequest(
-            AbstractMethodPaypal::load(),
-            $headers,
-            $request
-        );
+        Configuration::updateValue($this->getConfName(), (string)$id);
+        return $this;
+    }
 
-        return $validateRequest->execute()->isSuccess();
+    /**
+     * @return string
+     */
+    public function getConfName()
+    {
+        return $this->method->isSandbox() ? 'PAYPAL_WEBHOOK_ID_SANDBOX' : 'PAYPAL_WEBHOOK_ID';
     }
 }
