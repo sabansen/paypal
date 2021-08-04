@@ -1346,7 +1346,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
         if (false == empty($oldPendingWebhooks)) {
             $paypal_msg .= $this->displayError(
-                $this->l('Event notification has not been received yet. Please check if your website has a correct SSL certificate (https) and htaccess or maintenance mode are not enabled.')
+                $this->l('Event notification has not been received yet. Please check if your website has a correct SSL certificate (https) or htaccess are not enabled.')
             );
         } elseif (false == empty($pendingWebhooks)) {
             foreach ($pendingWebhooks as $webhook) {
