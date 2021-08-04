@@ -30,6 +30,7 @@ if (!defined('_PS_VERSION_')) {
 include_once(_PS_MODULE_DIR_ . 'paypal/vendor/autoload.php');
 
 use PaypalAddons\classes\Constants\WebHookConf;
+use PaypalAddons\classes\PaypalPaymentMode;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Shortcut\ShortcutSignup;
 use PaypalAddons\classes\Webhook\WebhookOption;
@@ -1278,6 +1279,17 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 $paypal_capture = new PaypalCapture();
                 $paypal_capture->id_paypal_order = $paypal_order->id;
                 $paypal_capture->save();
+            }
+
+            if ($this->getWebhookOption()->isEnable() && $this->getWebhookOption()->isAvailable()) {
+                if (PaypalPaymentMode::isSale()) {
+                    $this
+                        ->getWebhookService()
+                        ->createForOrder(
+                            $paypal_order,
+                            $this->getStatusMapping()->getAcceptedStatus()
+                        );
+                }
             }
         }
     }

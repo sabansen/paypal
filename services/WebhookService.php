@@ -74,7 +74,13 @@ class WebhookService
             ->where('id_webhook IS NULL OR id_webhook = ""');
 
         if (false == is_null($delay)) {
-            $query->where(sprintf('date_add < DATE_SUB(NOW(), INTERVAL %d HOUR)', (int)$delay));
+            $query->where(
+                sprintf(
+                    'date_add < DATE_SUB(STR_TO_DATE(\'%s\', GET_FORMAT(DATETIME,\'ISO\')), INTERVAL %d HOUR)',
+                    date(\PaypalWebhook::DATE_FORMAT),
+                    (int)$delay
+                )
+            );
         }
 
         try {
