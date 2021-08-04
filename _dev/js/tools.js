@@ -36,7 +36,7 @@ export const Tools = {
   hideConfiguration(name) {
     let selector = `[name="${name}"]`;
     let configuration = $(selector);
-    let formGroup = configuration.closest('.col-lg-9').closest('.form-group');
+    let formGroup = configuration.closest('.form-group');
 
     formGroup.hide();
   },
@@ -44,7 +44,7 @@ export const Tools = {
   showConfiguration(name) {
     let selector = `[name="${name}"]`;
     let configuration = $(selector);
-    let formGroup = configuration.closest('.col-lg-9').closest('.form-group');
+    let formGroup = configuration.closest('.form-group');
 
     formGroup.show();
   },
