@@ -34,6 +34,7 @@ use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Response\Error as PaypalError;
 use PaypalAddons\classes\API\Response\Response;
 use PaypalAddons\classes\Webhook\WebhookId;
+use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use Symfony\Component\VarDumper\VarDumper;
 
 class ValidateWebhookEventRequest extends RequestAbstract
@@ -53,7 +54,7 @@ class ValidateWebhookEventRequest extends RequestAbstract
     {
         parent::__construct($method);
 
-        $this->headers = $headers;
+        $this->headers = array_change_key_case($headers, CASE_UPPER);
         $this->request = $request;
     }
 
