@@ -1535,11 +1535,13 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
     public function getMessageFromRefundResponse(PaypalAddons\classes\API\Response\ResponseOrderRefund $response)
     {
+        $message = '';
+
         if ($this->getWebhookOption()->isEnable() && $this->getWebhookOption()->isAvailable()) {
-            return $this->l('The refund request has been sent with success. Waiting for a webhook message.');
+            $message .= $this->l('The refund request has been sent with success. Waiting for a webhook message.');
         }
 
-        return $response->getMessage();
+        return $message .= $response->getMessage();
     }
 
     public function hookActionOrderStatusPostUpdate(&$params)
