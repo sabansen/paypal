@@ -82,9 +82,28 @@ class ValidateWebhookEventRequest extends RequestAbstract
 
             $response->setData($execute);
         } catch (\Exception $e) {
+            $message = implode(
+                '; ',
+                [
+                    'Message: ' . $e->getMessage(),
+                    'File: ' . $e->getFile(),
+                    'Line: ' . $e->getLine()
+                ]
+            );
+            ProcessLoggerHandler::openLogger();
+            ProcessLoggerHandler::logError(
+                '' . $response->getError()->getMessage(),
+                null,
+                null,
+                null,
+                null,
+                null,
+                $this->method->isSandbox()
+            );
+            ProcessLoggerHandler::closeLogger();
             $error = new PaypalError();
             $error
-                ->setMessage($e->getMessage())
+                ->setMessage($message)
                 ->setErrorCode($e->getCode());
 
             $response
