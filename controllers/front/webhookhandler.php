@@ -62,6 +62,10 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
             header("HTTP/1.1 " . WebhookHandler::STATUS_AVAILABLE); die;
         }
 
+        if (false == ($this->module->getWebhookOption()->isEnable() && $this->module->getWebhookOption()->isAvailable())) {
+            return;
+        }
+
         try {
             if ($this->requestIsValid()) {
                 if ($this->handleWebhook($this->getRequestData())) {
@@ -154,7 +158,7 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
                 $transaction,
                 $order->id,
                 $order->id_cart,
-                null,
+                $order->id_shop,
                 'PayPal',
                 (int)Configuration::get('PAYPAL_SANDBOX')
             );
