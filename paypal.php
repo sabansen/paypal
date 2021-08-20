@@ -1507,7 +1507,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
                 ProcessLoggerHandler::openLogger();
                 ProcessLoggerHandler::logInfo(
-                    $refundResponse->getMessage(),
+                    $this->getMessageFromRefundResponse($refundResponse),
                     $refundResponse->getIdTransaction(),
                     $paypalOrder->id_order,
                     $paypalOrder->id_cart,
@@ -1531,6 +1531,15 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 ProcessLoggerHandler::closeLogger();
             }
         }
+    }
+
+    public function getMessageFromRefundResponse(PaypalAddons\classes\API\Response\ResponseOrderRefund $response)
+    {
+        if ($this->getWebhookOption()->isEnable() && $this->getWebhookOption()->isAvailable()) {
+            return $this->l('The refund request has been sent with success. Waiting for a webhook message.');
+        }
+
+        return $response->getMessage();
     }
 
     public function hookActionOrderStatusPostUpdate(&$params)
@@ -1722,7 +1731,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
                 ProcessLoggerHandler::openLogger();
                 ProcessLoggerHandler::logInfo(
-                    $refundResponse->getMessage(),
+                    $this->getMessageFromRefundResponse($refundResponse),
                     $refundResponse->getIdTransaction(),
                     $orderPayPal->id_order,
                     $orderPayPal->id_cart,
