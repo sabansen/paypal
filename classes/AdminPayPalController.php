@@ -430,7 +430,7 @@ class AdminPayPalController extends \ModuleAdminController
     {
         $return = [
             'state' => true,
-            'message' => $this->l('PayPal event notifications are enabled with success.', get_class($this))
+            'message' => $this->l('PayPal webhooks are enabled with success.', get_class($this))
         ];
 
         $webhookAvailable = $this->getWebhookAvalability()->check();
