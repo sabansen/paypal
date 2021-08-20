@@ -45,6 +45,10 @@ class CreateWebhook
 
     public function __construct($method = null)
     {
+        if (is_null($method)) {
+            $method = AbstractMethodPaypal::load();
+        }
+
         $this->setMethod($method);
     }
 
