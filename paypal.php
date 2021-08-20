@@ -1430,8 +1430,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $paypal_msg .= $this->displayWarning($tmpMessage);
         }
 
-        if (isset($_SESSION['paypal_partial_refund_successsful']) && $_SESSION['paypal_partial_refund_successsful']) {
-            unset($_SESSION['paypal_partial_refund_successsful']);
+        if (isset($_SESSION['paypal_partial_refund_successful']) && $_SESSION['paypal_partial_refund_successful']) {
+            unset($_SESSION['paypal_partial_refund_successful']);
             $tmpMessage = '<p class="paypal-warning">';
             $tmpMessage .= $this->l('A refund request has been sent to PayPal.');
             $tmpMessage .= '</p>';
@@ -1495,7 +1495,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
                         session_start();
                     }
 
-                    $_SESSION['paypal_partial_refund_successsful'] = true;
+                    $_SESSION['paypal_partial_refund_successful'] = true;
                 }
 
                 if (Validate::isLoadedObject($capture) && $capture->id_capture) {
