@@ -1430,6 +1430,14 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $paypal_msg .= $this->displayWarning($tmpMessage);
         }
 
+        if (isset($_SESSION['paypal_partial_refund_successsful']) && $_SESSION['paypal_partial_refund_successsful']) {
+            unset($_SESSION['paypal_partial_refund_successsful']);
+            $tmpMessage = '<p class="paypal-warning">';
+            $tmpMessage .= $this->l('A refund request has been sent to PayPal.');
+            $tmpMessage .= '</p>';
+            $paypal_msg .= $this->displayWarning($tmpMessage);
+        }
+
         $paypal_msg .= "</div>";
 
         return $paypal_msg . $this->display(__FILE__, 'views/templates/hook/paypal_order.tpl');
@@ -1482,6 +1490,14 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $refundResponse = $method->partialRefund($params);
 
             if ($refundResponse->isSuccess()) {
+                if ($this->getWebhookOption()->isEnable() && $this->getWebhookOption()->isAvailable()) {
+                    if (session_status() == PHP_SESSION_NONE) {
+                        session_start();
+                    }
+
+                    $_SESSION['paypal_partial_refund_successsful'] = true;
+                }
+
                 if (Validate::isLoadedObject($capture) && $capture->id_capture) {
                     $capture->result = 'refunded';
                     $capture->save();
