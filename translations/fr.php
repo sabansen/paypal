@@ -505,6 +505,7 @@ $_MODULE['<{paypal}prestashop>messageforcustomerone_e8fdd95502f3d9eef321833fe60a
 $_MODULE['<{paypal}prestashop>messageforcustomertwo_e8fdd95502f3d9eef321833fe60aed0c'] = 'Mode Sandbox: Toutes les transactions seront fictives';
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_7e4ed5efc0f056eb2b36609af35177d3'] = 'Mode « bac à sable »';
 $_MODULE['<{paypal}prestashop>paypalordercreaterequest_2605fbb693837be42d0cd0e701cb5aa3'] = 'Traitement de';
+$_MODULE['<{paypal}prestashop>forminstallment_a731897be50d002773a0ee7fc7a62c3e'] = 'Informez vos clients de l’option de payer en 4x PayPal en affichant des bannières sur votre site.';
 $_MODULE['<{paypal}prestashop>forminstallment_f4f70727dc34561dfde1a3c529b6205c'] = 'Paramètres';
 $_MODULE['<{paypal}prestashop>forminstallment_638e1f70e3be66cd373e5b7e98b80bec'] = 'Activer l\'affichage des bannières 4x';
 $_MODULE['<{paypal}prestashop>forminstallment_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Activé';

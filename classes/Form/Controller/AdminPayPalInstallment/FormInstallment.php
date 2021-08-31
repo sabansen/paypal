@@ -77,6 +77,7 @@ class FormInstallment implements FormInterface
                     'label' => $isoCountryDefault == 'gb' ? $this->module->l('Enable the display of 3x banners', $this->className) : $this->module->l('Enable the display of 4x banners', $this->className),
                     'name' => ConfigurationMap::ENABLE_INSTALLMENT,
                     'is_bool' => true,
+                    'hint' => $this->module->l('Let your customers know about the option \'Pay 4x PayPal\' by displaying banners on your site.', $this->className),
                     'values' => array(
                         array(
                             'id' => ConfigurationMap::ENABLE_INSTALLMENT . '_on',
