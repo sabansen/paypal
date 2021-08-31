@@ -74,6 +74,24 @@ class FormInstallment implements FormInterface
                 ),
                 array(
                     'type' => 'switch',
+                    'label' => $isoCountryDefault == 'gb' ? $this->module->l('Enable \'Pay in 3x\' in your checkout', $this->className) : $this->module->l('Enable \'Pay in 4x\' in your checkout', $this->className),
+                    'name' => ConfigurationMap::ENABLE_BNPL,
+                    'is_bool' => true,
+                    'values' => array(
+                        array(
+                            'id' => ConfigurationMap::ENABLE_BNPL . '_on',
+                            'value' => 1,
+                            'label' => $this->module->l('Enabled', $this->className),
+                        ),
+                        array(
+                            'id' => ConfigurationMap::ENABLE_BNPL . '_off',
+                            'value' => 0,
+                            'label' => $this->module->l('Disabled', $this->className),
+                        )
+                    ),
+                ),
+                array(
+                    'type' => 'switch',
                     'label' => $isoCountryDefault == 'gb' ? $this->module->l('Enable the display of 3x banners', $this->className) : $this->module->l('Enable the display of 4x banners', $this->className),
                     'name' => ConfigurationMap::ENABLE_INSTALLMENT,
                     'is_bool' => true,
@@ -146,7 +164,8 @@ class FormInstallment implements FormInterface
     {
         return [
             ConfigurationMap::ENABLE_INSTALLMENT => (int)Configuration::get(ConfigurationMap::ENABLE_INSTALLMENT),
-            ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT => (int)Configuration::get(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT)
+            ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT => (int)Configuration::get(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT),
+            ConfigurationMap::ENABLE_BNPL => (int)Configuration::get(ConfigurationMap::ENABLE_BNPL)
         ];
     }
 
@@ -169,6 +188,7 @@ class FormInstallment implements FormInterface
         $return &= Configuration::updateValue(ConfigurationMap::HOME_PAGE, (int)Tools::getValue(ConfigurationMap::HOME_PAGE));
         $return &= Configuration::updateValue(ConfigurationMap::CATEGORY_PAGE, (int)Tools::getValue(ConfigurationMap::CATEGORY_PAGE));
         $return &= Configuration::updateValue(ConfigurationMap::COLOR, Tools::getValue(ConfigurationMap::COLOR));
+        $return &= Configuration::updateValue(ConfigurationMap::ENABLE_BNPL, (int)Tools::getValue(ConfigurationMap::ENABLE_BNPL));
 
         return $return;
     }
