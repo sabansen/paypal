@@ -43,6 +43,7 @@ const config = {
     'js/payment_ppp': './_dev/js/payment_ppp.js',
     'js/shortcut_payment': './_dev/js/shortcut_payment.js',
     'js/shortcut': './_dev/js/shortcut.js',
+    'js/bnpl': './_dev/js/bnpl.js',
     'js/adminSetup': './_dev/js/adminSetup.js',
     'js/adminCheckout': './_dev/js/adminCheckout.js',
     'js/helpAdmin': './_dev/js/helpAdmin.js',
