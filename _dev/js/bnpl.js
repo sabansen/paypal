@@ -73,8 +73,8 @@ const BNPL = {
 
   initButton() {
 
-    totPaypalSdkButtons.Buttons({
-      fundingSource: totPaypalSdkButtons.FUNDING.PAYLATER,
+    totPaypalBnplSdkButtons.Buttons({
+      fundingSource: totPaypalBnplSdkButtons.FUNDING.PAYLATER,
 
       style: {
         label: 'pay',

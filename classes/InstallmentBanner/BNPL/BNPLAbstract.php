@@ -85,9 +85,10 @@ abstract class BNPLAbstract
     {
         $JSscripts = [];
 
-        $JSscripts['tot-paypal-sdk'] = [
+        $JSscripts['tot-paypal-bnpl-sdk'] = [
             'src' => $this->method->getUrlJsSdkLib(),
-            'data-namespace' => 'totPaypalSdkButtons'
+            'data-namespace' => 'totPaypalBnplSdkButtons',
+            'enable-funding' => 'paylater'
         ];
         $JSscripts['bnpl'] = [
             'src' => __PS_BASE_URI__ . 'modules/' . $this->module->name . '/views/js/bnpl.js?v=' . $this->module->version

@@ -36,7 +36,7 @@
 {block name='init-button'}
   <script>
       function waitPaypalSDKIsLoaded() {
-          if (typeof totPaypalSdkButtons === 'undefined' || typeof BNPL === 'undefined') {
+          if (typeof totPaypalBnplSdkButtons === 'undefined' || typeof BNPL === 'undefined') {
               setTimeout(waitPaypalSDKIsLoaded, 200);
               // console.log('here');
               return;
