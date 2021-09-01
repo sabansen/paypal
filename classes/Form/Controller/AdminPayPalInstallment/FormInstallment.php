@@ -91,6 +91,12 @@ class FormInstallment implements FormInterface
                     ),
                 ),
                 array(
+                    'type' => 'html',
+                    'html_content' => $this->getHtmlBnplPageDisplayingSetting(),
+                    'name' => '',
+                    'label' => $isoCountryDefault == 'gb' ? $this->module->l('\'Pay in 3x\' is active on', $this->className) : $this->module->l('\'Pay in 4x\' is active on', $this->className),
+                ),
+                array(
                     'type' => 'switch',
                     'label' => $isoCountryDefault == 'gb' ? $this->module->l('Enable the display of 3x banners', $this->className) : $this->module->l('Enable the display of 4x banners', $this->className),
                     'name' => ConfigurationMap::ENABLE_INSTALLMENT,
@@ -188,9 +194,28 @@ class FormInstallment implements FormInterface
         $return &= Configuration::updateValue(ConfigurationMap::HOME_PAGE, (int)Tools::getValue(ConfigurationMap::HOME_PAGE));
         $return &= Configuration::updateValue(ConfigurationMap::CATEGORY_PAGE, (int)Tools::getValue(ConfigurationMap::CATEGORY_PAGE));
         $return &= Configuration::updateValue(ConfigurationMap::COLOR, Tools::getValue(ConfigurationMap::COLOR));
+
+        // BNPL configurations
         $return &= Configuration::updateValue(ConfigurationMap::ENABLE_BNPL, (int)Tools::getValue(ConfigurationMap::ENABLE_BNPL));
+        $return &= Configuration::updateValue(ConfigurationMap::BNPL_CHECKOUT_PAGE, (int)Tools::getValue(ConfigurationMap::BNPL_CHECKOUT_PAGE));
+        $return &= Configuration::updateValue(ConfigurationMap::BNPL_CART_PAGE, (int)Tools::getValue(ConfigurationMap::BNPL_CART_PAGE));
+        $return &= Configuration::updateValue(ConfigurationMap::BNPL_PRODUCT_PAGE, (int)Tools::getValue(ConfigurationMap::BNPL_PRODUCT_PAGE));
 
         return $return;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getHtmlBnplPageDisplayingSetting()
+    {
+        Context::getContext()->smarty->assign([
+            ConfigurationMap::BNPL_PRODUCT_PAGE => Configuration::get(ConfigurationMap::BNPL_PRODUCT_PAGE),
+            ConfigurationMap::BNPL_CART_PAGE => Configuration::get(ConfigurationMap::BNPL_CART_PAGE),
+            ConfigurationMap::BNPL_CHECKOUT_PAGE => Configuration::get(ConfigurationMap::BNPL_CHECKOUT_PAGE)
+        ]);
+
+        return Context::getContext()->smarty->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/_partials/paypalBanner/bnplPageDisplayingSetting.tpl');
     }
 
     /**
