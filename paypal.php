@@ -29,6 +29,11 @@ if (!defined('_PS_VERSION_')) {
 
 include_once(_PS_MODULE_DIR_ . 'paypal/vendor/autoload.php');
 
+use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLCart;
+use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLDummy;
+use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLOption;
+use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLProduct;
+use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLSignup;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Shortcut\ShortcutSignup;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerExtension;
@@ -1034,6 +1039,79 @@ class PayPal extends \PaymentModule implements WidgetInterface
      * @param array $data
      * @return string
      */
+    public function renderBnpl($data)
+    {
+        $bnplOption = new BNPLOption();
+        $bnpl = new BNPLDummy();
+        $isoCountryDefault = Country::getIsoById((int)Configuration::get(
+            'PS_COUNTRY_DEFAULT',
+            null,
+            null,
+            $this->context->shop->id));
+
+        if (strtolower($isoCountryDefault) != 'fr') {
+            return '';
+        }
+
+        if ($bnplOption->isEnable() == false) {
+            return '';
+        }
+
+        if (strtolower($this->context->currency->iso_code) != 'eur') {
+            return '';
+        }
+
+        if (strtolower($this->context->language->iso_code) != 'fr') {
+            return '';
+        }
+
+        if ($data['sourcePage'] == ShortcutConfiguration::SOURCE_PAGE_CART) {
+            if ($bnplOption->displayOnCart() == false) {
+                return '';
+            }
+
+            if ($this->context->cart->nbProducts() == 0 || $this->context->cart->checkQuantities() === false) {
+                return '';
+            }
+
+            $bnpl = new BNPLCart();
+        }
+
+        if ($data['sourcePage'] == ShortcutConfiguration::SOURCE_PAGE_PRODUCT) {
+            if ($bnplOption->displayOnProduct() == false) {
+                return '';
+            }
+
+            $bnpl = new BNPLProduct((int)Tools::getValue('id_product'));
+        }
+
+        if ($data['sourcePage'] == ShortcutConfiguration::SOURCE_PAGE_SIGNUP) {
+            if ($bnplOption->displayOnSignup() == false) {
+                return '';
+            }
+
+            $bnpl = new BNPLSignup();
+        }
+
+        if ($this->paypal_method == 'MB') {
+            $methodType = 'EC';
+        } else {
+            $methodType = $this->paypal_method;
+        }
+
+        $method = AbstractMethodPaypal::load($methodType);
+
+        if ($method->isConfigured() == false) {
+            return '';
+        }
+
+        return $bnpl->render();
+    }
+
+    /**
+     * @param array $data
+     * @return string
+     */
     public function displayShortcutButton($data)
     {
         if ($this->isShowShortcut() === false) {
@@ -1118,7 +1196,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             return '';
         }
 
-        return $method->renderExpressCheckoutShortCut($data['sourcePage'], (isset($data['isWidget']) ? $data['isWidget'] : false));
+        return $method->renderExpressCheckoutShortCut($data['sourcePage'], (isset($data['isWidget']) ? $data['isWidget'] : false)) . $this->renderBnpl($data);
     }
 
     /**

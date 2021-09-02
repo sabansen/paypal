@@ -65,6 +65,14 @@ class ConfigurationMap
 
     const PAGE_TYPE_CHECKOUT = 'checkout';
 
+    const ENABLE_BNPL = 'PAYPAL_ENABLE_BNPL';
+
+    const BNPL_PRODUCT_PAGE = 'PAYPAL_BNPL_PRODUCT_PAGE';
+
+    const BNPL_CART_PAGE = 'PAYPAL_BNPL_CART_PAGE';
+
+    const BNPL_CHECKOUT_PAGE = 'PAYPAL_BNPL_CHECKOUT_PAGE';
+
     public static function getColorGradient($color)
     {
         $gradientMap = [
