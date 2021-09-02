@@ -865,7 +865,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 if (version_compare(_PS_VERSION_, '1.7.6', '<')
                     && ((bool)Configuration::get(ShortcutConfiguration::CUSTOMIZE_STYLE) === false || (int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_SIGNUP) == ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK)) {
                     $Shortcut = new ShortcutSignup();
-                    $returnContent .= $Shortcut->render();
+                    $returnContent .= $Shortcut->render() . $this->renderBnpl(['sourcePage' => ShortcutConfiguration::SOURCE_PAGE_SIGNUP]);
                 }
                 $returnContent .= $this->context->smarty->fetch('module:paypal/views/templates/front/prefetch.tpl');
                 return $returnContent;
