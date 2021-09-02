@@ -1043,16 +1043,25 @@ class PayPal extends \PaymentModule implements WidgetInterface
     {
         $bnplOption = new BNPLOption();
         $bnpl = new BNPLDummy();
+        $isoCountryDefault = Country::getIsoById((int)Configuration::get(
+            'PS_COUNTRY_DEFAULT',
+            null,
+            null,
+            $this->context->shop->id));
+
+        if (strtolower($isoCountryDefault) != 'fr') {
+            return '';
+        }
 
         if ($bnplOption->isEnable() == false) {
             return '';
         }
 
-        if ($this->getBannerManager()->isEligibleContext() == false) {
+        if (strtolower($this->context->currency->iso_code) != 'eur') {
             return '';
         }
 
-        if ($this->getBannerManager()->isEligibleCountry() == false) {
+        if (strtolower($this->context->language->iso_code) != 'fr') {
             return '';
         }
 
