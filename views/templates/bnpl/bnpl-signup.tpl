@@ -23,16 +23,16 @@
 *
 *}
 
-{extends 'module:paypal/views/templates/shortcut/shortcut-cart.tpl'}
+{extends 'module:paypal/views/templates/bnpl/bnpl-cart.tpl'}
 
 {block name='content'}
-  <div paypal-shortcut-signup style="display: flex;">
+  <div paypal-bnpl-signup style="display: flex;">
       {$smarty.block.parent}
   </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-        var shortcut = document.querySelector('[paypal-shortcut-signup]');
+        var shortcut = document.querySelector('[paypal-bnpl-signup]');
         var signupForm = document.querySelector('#checkout-personal-information-step .content');
 
         signupForm.insertBefore(shortcut, signupForm.childNodes[0]);
