@@ -84,11 +84,15 @@ abstract class BNPLAbstract
     protected function getJS()
     {
         $JSscripts = [];
+        $srcLib = $this->method->getUrlJsSdkLib() . '&enable-funding=paylater';
+
+        if ($this->method->isSandbox()) {
+            $srcLib .= '&buyer-country=FR';
+        }
 
         $JSscripts['tot-paypal-bnpl-sdk'] = [
-            'src' => $this->method->getUrlJsSdkLib(),
-            'data-namespace' => 'totPaypalBnplSdkButtons',
-            'enable-funding' => 'paylater'
+            'src' => $srcLib,
+            'data-namespace' => 'totPaypalBnplSdkButtons'
         ];
         $JSscripts['bnpl'] = [
             'src' => __PS_BASE_URI__ . 'modules/' . $this->module->name . '/views/js/bnpl.js?v=' . $this->module->version

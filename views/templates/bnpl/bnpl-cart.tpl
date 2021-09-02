@@ -27,24 +27,24 @@
 
 {block name='content'}
   <style>
-    [data-container-express-checkout] {
+    [data-container-bnpl] {
       margin: 10px 0;
       display: flex;
       justify-content: center;
     }
 
-    .cart-grid-body [data-container-express-checkout] {
+    .cart-grid-body [data-container-bnpl] {
       justify-content: flex-end;
     }
 
     @media (max-width: 575px) {
-      [data-container-express-checkout] {
+      [data-container-bnpl] {
         justify-content: flex-start;
       }
     }
   </style>
 
-  <div data-container-express-checkout data-paypal-bnpl-source-page="cart">
+  <div data-container-bnpl data-paypal-bnpl-source-page="cart">
     <form data-paypal-bnpl-payment-form-cart class="paypal_payment_form" action="{$action_url|escape:'htmlall':'UTF-8'}" title="{l s='Pay with PayPal' mod='paypal'}" method="post" data-ajax="false">
       <input type="hidden" name="express_checkout" value="{$PayPal_payment_type|escape:'htmlall':'UTF-8'}"/>
       <input type="hidden" name="current_shop_url" data-paypal-url-page value="" />

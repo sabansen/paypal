@@ -48,7 +48,7 @@ const BNPL = {
   },
 
   updateInfo() {
-    this.page = $('[data-container-express-checkout]').data('paypal-bnpl-source-page');
+    this.page = $('[data-container-bnpl]').data('paypal-bnpl-source-page');
     this.button = document.querySelector('[paypal-bnpl-button-container]');
 
     if (this.page == 'product') {
