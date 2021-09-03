@@ -436,6 +436,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             return false;
         }
 
+        $this->registerHooks();
         $this->moduleConfigs['PAYPAL_OS_WAITING_VALIDATION'] = (int)Configuration::get('PAYPAL_OS_WAITING');
         $this->moduleConfigs['PAYPAL_OS_PROCESSING'] = (int)Configuration::get('PAYPAL_OS_WAITING');
         $shops = Shop::getShops();
@@ -2469,5 +2470,21 @@ class PayPal extends \PaymentModule implements WidgetInterface
     protected function getPaypalOrderService()
     {
         return new ServicePaypalOrder();
+    }
+
+    public function registerHooks()
+    {
+        $result = true;
+        $hooksUnregistered = $this->getHooksUnregistered();
+
+        if (empty($hooksUnregistered)) {
+            return $result;
+        }
+
+        foreach ($hooksUnregistered as $hookName) {
+            $result &= $this->registerHook($hookName);
+        }
+
+        return $result;
     }
 }
