@@ -50,7 +50,7 @@
       <input type="hidden" name="current_shop_url" data-paypal-url-page value="" />
       <input type="hidden" id="source_page" name="source_page" value="product">
     </form>
-    <div paypal-bnpl-button-container></div>
+    <div paypal-bnpl-button-container style="max-width: 200px"></div>
   </div>
   <div class="clearfix"></div>
 {/block}
