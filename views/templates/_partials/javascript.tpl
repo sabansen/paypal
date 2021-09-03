@@ -31,8 +31,9 @@
 
 {if isset($JSscripts) && is_array($JSscripts) && false === empty($JSscripts)}
   <script>
-    var scripts = Array();
-      {foreach from=$JSscripts key=keyScript item=JSscriptAttributes}
+    window.addEventListener('DOMContentLoaded', function(){
+        var scripts = Array();
+        {foreach from=$JSscripts key=keyScript item=JSscriptAttributes}
         var script = document.querySelector('script[data-key="{$keyScript}"]');
 
         if (null == script) {
@@ -46,11 +47,13 @@
                 scripts.push(newScript);
             }
         }
-      {/foreach}
+        {/foreach}
 
-    scripts.forEach(function(scriptElement) {
-        document.body.appendChild(scriptElement);
-    })
+        scripts.forEach(function(scriptElement) {
+            document.body.appendChild(scriptElement);
+        })
+    });
+
   </script>
 
 {/if}
