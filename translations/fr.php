@@ -544,3 +544,6 @@ $_MODULE['<{paypal}prestashop>installmentdisclaimer_1b139287ea9bd54f5252e7868dae
 $_MODULE['<{paypal}prestashop>installmentdisclaimer_b0a144a9a1cbd31bbc841d2656e20e51'] = 'Affichez des messages de paiement ultérieur sur votre site pour des offres telles que le paiement en 3, qui permet aux clients de payer en 3 mensualités sans intérêt.';
 $_MODULE['<{paypal}prestashop>installmentdisclaimer_fbbbfb2dd1598fbc34d42a4d662bdb52'] = 'Nous afficherons des messages sur votre site pour promouvoir cette fonction pour vous. Vous ne pouvez pas promouvoir les offres de paiement ultérieur avec tout autre contenu, marketing ou matériel.';
 $_MODULE['<{paypal}prestashop>forminstallment_12cd357e7240fc5d8bd9884dec5c3a38'] = 'Activer l\'affichage des bannières 3x';
+$_MODULE['<{paypal}prestashop>bnplpagedisplayingsetting_468a21d1076328f1b4cd946b72e2d5cd'] = 'Page Panier';
+$_MODULE['<{paypal}prestashop>bnplpagedisplayingsetting_0fcaf0531dd6d6a53f7bde67adafd035'] = 'Page Produit';
+$_MODULE['<{paypal}prestashop>bnplpagedisplayingsetting_b29281296165d65c9c816c2ed17e5109'] = 'Étape d\'inscription au checkout';

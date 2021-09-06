@@ -47,7 +47,7 @@
               {if isset($PAYPAL_BNPL_PRODUCT_PAGE) && $PAYPAL_BNPL_PRODUCT_PAGE}checked{/if}
       >
       <label for="PAYPAL_BNPL_PRODUCT_PAGE" class="control-label">
-          {l s='Product Page' mod='paypal'}
+          {l s='Product Pages' mod='paypal'}
       </label>
     </div>
 
@@ -60,7 +60,7 @@
               {if isset($PAYPAL_BNPL_CHECKOUT_PAGE) && $PAYPAL_BNPL_CHECKOUT_PAGE}checked{/if}
       >
       <label for="PAYPAL_BNPL_CHECKOUT_PAGE" class="control-label">
-          {l s='Checkout Page' mod='paypal'}
+          {l s='Sign up step in checkout' mod='paypal'}
       </label>
     </div>
 

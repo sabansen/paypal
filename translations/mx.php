@@ -542,3 +542,6 @@ $_MODULE['<{paypal}prestashop>installmentpopup_9e091c37835dd133ef649311ba561408'
 $_MODULE['<{paypal}prestashop>installmentpopup_611c3c7ed877fc3071ab177ed36acbb6'] = '¡Ahora sus clientes pueden pagar en 4 cuotas con PayPal!';
 $_MODULE['<{paypal}prestashop>installmentpopup_119879090c04004d26811acd3c1379c1'] = 'Mejore su tasa de conversión mostrando la información de pago 4x a sus clientes.';
 $_MODULE['<{paypal}prestashop>installmentpopup_4d263aae337221a257777dd3e4efec32'] = 'Habilitar ahora';
+$_MODULE['<{paypal}prestashop>bnplpagedisplayingsetting_468a21d1076328f1b4cd946b72e2d5cd'] = 'Página de carro de compras:';
+$_MODULE['<{paypal}prestashop>bnplpagedisplayingsetting_0fcaf0531dd6d6a53f7bde67adafd035'] = 'Páginas de productos';
+$_MODULE['<{paypal}prestashop>bnplpagedisplayingsetting_b29281296165d65c9c816c2ed17e5109'] = 'Regístrese paso a paso en la caja';

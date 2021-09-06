@@ -542,3 +542,6 @@ $_MODULE['<{paypal}prestashop>installmentpopup_9e091c37835dd133ef649311ba561408'
 $_MODULE['<{paypal}prestashop>installmentpopup_611c3c7ed877fc3071ab177ed36acbb6'] = 'Nu kunnen uw klanten betalen in 4 termijnen met PayPal!';
 $_MODULE['<{paypal}prestashop>installmentpopup_119879090c04004d26811acd3c1379c1'] = 'Verbeter uw conversie door 4x betalingsinformatie aan uw klanten te tonen.';
 $_MODULE['<{paypal}prestashop>installmentpopup_4d263aae337221a257777dd3e4efec32'] = 'Nu inschakelen';
+$_MODULE['<{paypal}prestashop>bnplpagedisplayingsetting_468a21d1076328f1b4cd946b72e2d5cd'] = 'Winkelwagen pagina';
+$_MODULE['<{paypal}prestashop>bnplpagedisplayingsetting_0fcaf0531dd6d6a53f7bde67adafd035'] = 'Product pagina\'s';
+$_MODULE['<{paypal}prestashop>bnplpagedisplayingsetting_b29281296165d65c9c816c2ed17e5109'] = 'Aanmelden stap in de kassa';
