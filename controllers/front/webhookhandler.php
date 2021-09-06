@@ -183,7 +183,7 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
             $this->servicePaypalOrder->setOrderStatus($paypalOrder, $psOrderStatus, false);
         }
 
-        $paypalWebhook = $this->getWebhookService()->createForOrder($paypalOrder);
+        $paypalWebhook = $this->getWebhookService()->createForOrder($paypalOrder, $psOrderStatus);
         $paypalWebhook->id_webhook = $this->getWebhookId($data);
         $paypalWebhook->event_type = $this->eventType($data);
         $paypalWebhook->data = $this->jsonEncode($data);

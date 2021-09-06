@@ -46,6 +46,10 @@ class WebhookService
             ->where('id_paypal_order = ' . (int)$paypalOrder->id)
             ->where('id_webhook IS NULL OR id_webhook = ""');
 
+        if ($idState) {
+            $query->where('id_state = ' . (int)$idState);
+        }
+
         $idPaypalWebhook = (int)Db::getInstance()->getValue($query);
 
         if ($idPaypalWebhook) {
