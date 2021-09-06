@@ -28,19 +28,6 @@
     <div class="form-group">
       <input
               type="checkbox"
-              id="PAYPAL_BNPL_PRODUCT_PAGE"
-              name="PAYPAL_BNPL_PRODUCT_PAGE"
-              value="1"
-              {if isset($PAYPAL_BNPL_PRODUCT_PAGE) && $PAYPAL_BNPL_PRODUCT_PAGE}checked{/if}
-      >
-      <label for="PAYPAL_BNPL_PRODUCT_PAGE" class="control-label">
-          {l s='Product Page' mod='paypal'}
-      </label>
-    </div>
-
-    <div class="form-group">
-      <input
-              type="checkbox"
               id="PAYPAL_BNPL_CART_PAGE"
               name="PAYPAL_BNPL_CART_PAGE"
               value="1"
@@ -48,6 +35,19 @@
       >
       <label for="PAYPAL_BNPL_CART_PAGE" class="control-label">
           {l s='Cart Page' mod='paypal'}
+      </label>
+    </div>
+
+    <div class="form-group">
+      <input
+              type="checkbox"
+              id="PAYPAL_BNPL_PRODUCT_PAGE"
+              name="PAYPAL_BNPL_PRODUCT_PAGE"
+              value="1"
+              {if isset($PAYPAL_BNPL_PRODUCT_PAGE) && $PAYPAL_BNPL_PRODUCT_PAGE}checked{/if}
+      >
+      <label for="PAYPAL_BNPL_PRODUCT_PAGE" class="control-label">
+          {l s='Product Page' mod='paypal'}
       </label>
     </div>
 
