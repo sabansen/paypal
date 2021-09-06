@@ -45,9 +45,17 @@ function upgrade_module_5_4_5($module)
                 null,
                 (int)$shop['id_shop']
             );
+            Configuration::updateValue(
+                \PaypalAddons\classes\InstallmentBanner\ConfigurationMap::BNPL_CART_PAGE,
+                1,
+                false,
+                null,
+                (int)$shop['id_shop']
+            );
         }
     } else {
         Configuration::updateValue(\PaypalAddons\classes\InstallmentBanner\ConfigurationMap::ENABLE_BNPL, 1);
+        Configuration::updateValue(\PaypalAddons\classes\InstallmentBanner\ConfigurationMap::BNPL_CART_PAGE, 1);
     }
     return true;
 }
