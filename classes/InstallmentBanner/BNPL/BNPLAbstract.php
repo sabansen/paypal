@@ -92,13 +92,19 @@ abstract class BNPLAbstract
 
         $JSscripts['tot-paypal-bnpl-sdk'] = [
             'src' => $srcLib,
-            'data-namespace' => 'totPaypalBnplSdkButtons'
+            'data-namespace' => 'totPaypalBnplSdkButtons',
+            'data-partner-attribution-id' => $this->getPartnerId()
         ];
         $JSscripts['bnpl'] = [
             'src' => __PS_BASE_URI__ . 'modules/' . $this->module->name . '/views/js/bnpl.js?v=' . $this->module->version
         ];
 
         return $JSscripts;
+    }
+
+    public function getPartnerId()
+    {
+        return 'PRESTASHOP_Cart_SPB';
     }
 
     /**
