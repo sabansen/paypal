@@ -413,6 +413,14 @@ class PayPal extends \PaymentModule implements WidgetInterface
             \PaypalAddons\classes\InstallmentBanner\ConfigurationMap::ENABLE_BNPL => 1,
             \PaypalAddons\classes\InstallmentBanner\ConfigurationMap::BNPL_CART_PAGE => 1,
         );
+
+        if (version_compare(_PS_VERSION_, '1.7.6', '<')) {
+            $this->moduleConfigs[ShortcutConfiguration::PRODUCT_PAGE_HOOK] = ShortcutConfiguration::HOOK_REASSURANCE;
+        } else {
+            $this->moduleConfigs[ShortcutConfiguration::PRODUCT_PAGE_HOOK] = ShortcutConfiguration::HOOK_PRODUCT_ACTIONS;
+        }
+
+        $this->moduleConfigs[ShortcutConfiguration::CART_PAGE_HOOK] = ShortcutConfiguration::HOOK_EXPRESS_CHECKOUT;
     }
 
     public function install()
