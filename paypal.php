@@ -1500,13 +1500,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
                     $_SESSION['paypal_partial_refund_successful'] = true;
                 }
 
-                if (Validate::isLoadedObject($capture) && $capture->id_capture) {
-                    $capture->result = 'refunded';
-                    $capture->save();
-                }
-                $paypalOrder->payment_status = 'refunded';
-                $paypalOrder->save();
-
                 ProcessLoggerHandler::openLogger();
                 ProcessLoggerHandler::logInfo(
                     $this->getMessageFromRefundResponse($refundResponse),
