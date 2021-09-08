@@ -29,6 +29,7 @@ use PaypalAddons\classes\Constants\WebhookHandler;
 use PaypalAddons\classes\Constants\WebHookType;
 use PaypalAddons\classes\Exception\RefundCalculationException;
 use PaypalAddons\classes\Webhook\RequestValidator;
+use PaypalAddons\services\ActualizeTotalPaid;
 use PaypalAddons\services\ContainerService;
 use PaypalAddons\services\PaymentTotalAmount;
 use PaypalAddons\services\StatusMapping;
@@ -167,6 +168,10 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
 
         $psOrderStatus = $this->getPsOrderStatus($data);
 
+        if ($psOrderStatus > 0) {
+            $this->servicePaypalOrder->setOrderStatus($paypalOrder, $psOrderStatus, false);
+        }
+
         if ($this->isCaptureAuthorization($data)) {
             $capture = PaypalCapture::loadByOrderPayPalId($paypalOrder->id);
 
@@ -176,11 +181,10 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
                 $capture->capture_amount = $this->getAmount($data);
                 $capture->save();
             }
-        }
 
-
-        if ($psOrderStatus > 0) {
-            $this->servicePaypalOrder->setOrderStatus($paypalOrder, $psOrderStatus, false);
+            $webhookEvent = new \PayPal\Api\WebhookEvent();
+            $webhookEvent->fromArray($data);
+            $this->actualizeOrder($paypalOrder, $webhookEvent);
         }
 
         $paypalWebhook = $this->getWebhookService()->createForOrder($paypalOrder, $psOrderStatus);
@@ -395,5 +399,33 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
 
     protected function displayMaintenancePage()
     {
+    }
+
+    protected function actualizeOrder(PaypalOrder $paypalOrder, \PayPal\Api\WebhookEvent $webhookEvent)
+    {
+        $orders = $this->servicePaypalOrder->getPsOrders($paypalOrder);
+
+        if (count($orders) > 1) {
+            // todo: implement
+            return;
+        }
+
+        $order = array_shift($orders);
+
+        try {
+            $totalPaid = $webhookEvent->resource->amount->value;
+        } catch (Exception $e) {
+            return;
+        }
+
+        $this->getActualizeTotalPaid()->actualize($order, $totalPaid);
+    }
+
+    /**
+     * @return ActualizeTotalPaid
+     */
+    protected function getActualizeTotalPaid()
+    {
+        return new ActualizeTotalPaid();
     }
 }
