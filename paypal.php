@@ -1382,7 +1382,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $tmpMessage .= "</p>";
             $paypal_msg .= $this->displayWarning($tmpMessage);
         }
-        if (Tools::getValue('not_payed_capture')) {
+        if (isset($_SESSION['not_payed_capture']) && $_SESSION['not_payed_capture']) {
+            unset($_SESSION['not_payed_capture']);
             $paypal_msg .= $this->displayWarning(
                 '<p class="paypal-warning">' . $this->l('You can\'t refund order as it hasn\'t be paid yet.') . '</p>'
             );
@@ -1717,7 +1718,12 @@ class PayPal extends \PaymentModule implements WidgetInterface
                     $orderPayPal->sandbox
                 );
                 ProcessLoggerHandler::closeLogger();
-                Tools::redirect($_SERVER['HTTP_REFERER'] . '&not_payed_capture=1');
+                if (session_status() == PHP_SESSION_NONE) {
+                    session_start();
+                }
+
+                $_SESSION['not_payed_capture'] = true;
+                Tools::redirect($_SERVER['HTTP_REFERER']);
             }
 
             /** @var \PaypalAddons\classes\API\Response\ResponseOrderRefund*/
