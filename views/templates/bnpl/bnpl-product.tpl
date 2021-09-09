@@ -37,7 +37,7 @@
   </style>
 
   <div data-container-bnpl data-paypal-bnpl-source-page="product" style="float:right; margin: 10px 40px 0 0;">
-    <form data-paypal-bnpl-payment-form-cart class="paypal_payment_form" action="{$action_url|escape:'htmlall':'UTF-8'}" title="{l s='Pay with PayPal' mod='paypal'}" method="post" data-ajax="false">
+    <form data-paypal-bnpl-payment-form-cart class="paypal_payment_form" action="{$action_url|escape:'htmlall':'UTF-8'}" method="post" data-ajax="false">
       <input
               type="hidden"
               name="id_product"

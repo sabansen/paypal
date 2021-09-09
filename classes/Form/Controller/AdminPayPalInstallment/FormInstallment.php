@@ -59,100 +59,110 @@ class FormInstallment implements FormInterface
     public function getFields()
     {
         $isoCountryDefault = strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
+        $input = [];
+        $input[] = array(
+            'type' => 'html',
+            'html_content' => $this->getDisclaimerHtml(),
+            'name' => '',
+            'col' => 12,
+            'label' => '',
+        );
+
+        if ($isoCountryDefault == 'fr') {
+            $input[] = array(
+                'type' => 'switch',
+                'label' => $isoCountryDefault == 'gb' ? $this->module->l('Enable \'Pay in 3x\' in your checkout', $this->className) : $this->module->l('Enable \'Pay in 4x\' in your checkout', $this->className),
+                'name' => ConfigurationMap::ENABLE_BNPL,
+                'is_bool' => true,
+                'values' => array(
+                    array(
+                        'id' => ConfigurationMap::ENABLE_BNPL . '_on',
+                        'value' => 1,
+                        'label' => $this->module->l('Enabled', $this->className),
+                    ),
+                    array(
+                        'id' => ConfigurationMap::ENABLE_BNPL . '_off',
+                        'value' => 0,
+                        'label' => $this->module->l('Disabled', $this->className),
+                    )
+                ),
+            );
+
+            $input[] = array(
+                'type' => 'html',
+                'html_content' => $this->getHtmlBnplPageDisplayingSetting(),
+                'name' => '',
+                'label' => $isoCountryDefault == 'gb' ? $this->module->l('\'Pay in 3x\' is active on', $this->className) : $this->module->l('\'Pay in 4x\' is active on', $this->className),
+            );
+        }
+
+        $input[] = array(
+            'type' => 'switch',
+            'label' => $isoCountryDefault == 'gb' ? $this->module->l('Enable the display of 3x banners', $this->className) : $this->module->l('Enable the display of 4x banners', $this->className),
+            'name' => ConfigurationMap::ENABLE_INSTALLMENT,
+            'is_bool' => true,
+            'hint' => $this->module->l('Let your customers know about the option \'Pay 4x PayPal\' by displaying banners on your site.', $this->className),
+            'values' => array(
+                array(
+                    'id' => ConfigurationMap::ENABLE_INSTALLMENT . '_on',
+                    'value' => 1,
+                    'label' => $this->module->l('Enabled', $this->className),
+                ),
+                array(
+                    'id' => ConfigurationMap::ENABLE_INSTALLMENT . '_off',
+                    'value' => 0,
+                    'label' => $this->module->l('Disabled', $this->className),
+                )
+            ),
+        );
+
+        $input[] = array(
+            'type' => 'html',
+            'html_content' => $this->getHtmlBlockPageDisplayingSetting(),
+            'name' => '',
+            'label' => '',
+        );
+
+        $input[] = array(
+            'type' => 'switch',
+            'label' => $this->module->l('Advanced options', $this->className),
+            'name' => ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT,
+            'is_bool' => true,
+            'values' => array(
+                array(
+                    'id' => ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT . '_on',
+                    'value' => 1,
+                    'label' => $this->module->l('Enabled', $this->className),
+                ),
+                array(
+                    'id' => ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT . '_off',
+                    'value' => 0,
+                    'label' => $this->module->l('Disabled', $this->className),
+                )
+            ),
+        );
+
+        $input[] = array(
+            'type' => 'html',
+            'label' => $this->module->l('Widget code', $this->className),
+            'hint' => $this->module->l('By default, PayPal 4x banner is displayed on your web site via PrestaShop native hook. If you choose to use widgets, you will be able to copy widget code and insert it wherever you want in the web site template.', $this->className),
+            'name' => '',
+            'html_content' => $this->getWidgetField()
+        );
+
+        $input[] = array(
+            'type' => 'html',
+            'html_content' => $this->getBannerStyleSection(),
+            'name' => '',
+            'label' => $this->module->l('Home page and category page styles', $this->className),
+        );
+
         $fields = array(
             'legend' => array(
                 'title' => $this->module->l('Settings', $this->className),
                 'icon' => 'icon-cogs',
             ),
-            'input' => array(
-                array(
-                    'type' => 'html',
-                    'html_content' => $this->getDisclaimerHtml(),
-                    'name' => '',
-                    'col' => 12,
-                    'label' => '',
-                ),
-                array(
-                    'type' => 'switch',
-                    'label' => $isoCountryDefault == 'gb' ? $this->module->l('Enable \'Pay in 3x\' in your checkout', $this->className) : $this->module->l('Enable \'Pay in 4x\' in your checkout', $this->className),
-                    'name' => ConfigurationMap::ENABLE_BNPL,
-                    'is_bool' => true,
-                    'values' => array(
-                        array(
-                            'id' => ConfigurationMap::ENABLE_BNPL . '_on',
-                            'value' => 1,
-                            'label' => $this->module->l('Enabled', $this->className),
-                        ),
-                        array(
-                            'id' => ConfigurationMap::ENABLE_BNPL . '_off',
-                            'value' => 0,
-                            'label' => $this->module->l('Disabled', $this->className),
-                        )
-                    ),
-                ),
-                array(
-                    'type' => 'html',
-                    'html_content' => $this->getHtmlBnplPageDisplayingSetting(),
-                    'name' => '',
-                    'label' => $isoCountryDefault == 'gb' ? $this->module->l('\'Pay in 3x\' is active on', $this->className) : $this->module->l('\'Pay in 4x\' is active on', $this->className),
-                ),
-                array(
-                    'type' => 'switch',
-                    'label' => $isoCountryDefault == 'gb' ? $this->module->l('Enable the display of 3x banners', $this->className) : $this->module->l('Enable the display of 4x banners', $this->className),
-                    'name' => ConfigurationMap::ENABLE_INSTALLMENT,
-                    'is_bool' => true,
-                    'hint' => $this->module->l('Let your customers know about the option \'Pay 4x PayPal\' by displaying banners on your site.', $this->className),
-                    'values' => array(
-                        array(
-                            'id' => ConfigurationMap::ENABLE_INSTALLMENT . '_on',
-                            'value' => 1,
-                            'label' => $this->module->l('Enabled', $this->className),
-                        ),
-                        array(
-                            'id' => ConfigurationMap::ENABLE_INSTALLMENT . '_off',
-                            'value' => 0,
-                            'label' => $this->module->l('Disabled', $this->className),
-                        )
-                    ),
-                ),
-                array(
-                    'type' => 'html',
-                    'html_content' => $this->getHtmlBlockPageDisplayingSetting(),
-                    'name' => '',
-                    'label' => '',
-                ),
-                array(
-                    'type' => 'switch',
-                    'label' => $this->module->l('Advanced options', $this->className),
-                    'name' => ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT,
-                    'is_bool' => true,
-                    'values' => array(
-                        array(
-                            'id' => ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT . '_on',
-                            'value' => 1,
-                            'label' => $this->module->l('Enabled', $this->className),
-                        ),
-                        array(
-                            'id' => ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT . '_off',
-                            'value' => 0,
-                            'label' => $this->module->l('Disabled', $this->className),
-                        )
-                    ),
-                ),
-                array(
-                    'type' => 'html',
-                    'label' => $this->module->l('Widget code', $this->className),
-                    'hint' => $this->module->l('By default, PayPal 4x banner is displayed on your web site via PrestaShop native hook. If you choose to use widgets, you will be able to copy widget code and insert it wherever you want in the web site template.', $this->className),
-                    'name' => '',
-                    'html_content' => $this->getWidgetField()
-                ),
-                array(
-                    'type' => 'html',
-                    'html_content' => $this->getBannerStyleSection(),
-                    'name' => '',
-                    'label' => $this->module->l('Home page and category page styles', $this->className),
-                )
-            ),
+            'input' => $input,
             'submit' => array(
                 'title' => $this->module->l('Save', $this->className),
                 'class' => 'btn btn-default pull-right button',
