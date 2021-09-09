@@ -122,11 +122,14 @@ var InstallmentSetting = {
       Tools.showConfiguration(colorConf.getAttribute('name'));
     }
 
-    if (bnplEnabled.checked) {
-      bnplDisplayingSetting.closest('.form-group').style.display = 'block';
-    } else {
-      bnplDisplayingSetting.closest('.form-group').style.display = 'none';
+    if (bnplEnabled instanceof Element) {
+      if (bnplEnabled.checked) {
+        bnplDisplayingSetting.closest('.form-group').style.display = 'block';
+      } else {
+        bnplDisplayingSetting.closest('.form-group').style.display = 'none';
+      }
     }
+
   },
 
   updateBannerColor() {
