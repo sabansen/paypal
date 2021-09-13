@@ -122,5 +122,19 @@ class ConfigurationMap
             'CategoryController' => self::CATEGORY_PAGE
         ];
     }
+
+    public static function getBnplColorMapping()
+    {
+        //todo: validate mapping
+        return [
+            'gray' => 'white',
+            'monochrome' => 'white',
+            'grayscale' => 'white',
+            'white' => 'white',
+            'blue' => 'blue',
+            'black' => 'black',
+            'gold' => 'gold'
+        ];
+    }
 }
 

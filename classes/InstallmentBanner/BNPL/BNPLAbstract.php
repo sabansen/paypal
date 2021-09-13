@@ -26,10 +26,12 @@
 
 namespace PaypalAddons\classes\InstallmentBanner\BNPL;
 
+use Configuration;
 use Context;
 use Media;
 use Module;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\InstallmentBanner\ConfigurationMap;
 use Symfony\Component\VarDumper\VarDumper;
 
 abstract class BNPLAbstract
@@ -74,6 +76,7 @@ abstract class BNPLAbstract
         $JSvars = [];
         $JSvars['sc_init_url'] = $this->context->link->getModuleLink($this->module->name, 'ScInit', array(), true);
         $JSvars['scOrderUrl'] = $this->context->link->getModuleLink($this->module->name, 'scOrder', array(), true);
+        $JSvars['bnplColor'] = $this->getColor();
 
         return $JSvars;
     }
@@ -153,5 +156,18 @@ abstract class BNPLAbstract
     {
         $this->id = $id;
         return $this;
+    }
+
+    /** @return string*/
+    public function getColor()
+    {
+        if ((int)Configuration::get(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT)) {
+            $bannerColor = Configuration::get(ConfigurationMap::COLOR);
+        } else {
+            $bannerColor = ConfigurationMap::COLOR_GRAY;
+        }
+
+
+        return isset(ConfigurationMap::getBnplColorMapping()[$bannerColor]) ? ConfigurationMap::getBnplColorMapping()[$bannerColor] : 'white';
     }
 }

@@ -40,6 +40,8 @@ const BNPL = {
 
   controllerScOrder: scOrderUrl,
 
+  color: null,
+
   init() {
     this.updateInfo();
     prestashop.on('updatedProduct', function(e, xhr, settings) {
@@ -78,7 +80,8 @@ const BNPL = {
 
       style: {
         label: 'pay',
-        height: 35
+        height: 35,
+        color: BNPL.getColor()
       },
 
       createOrder: function(data, actions) {
@@ -90,6 +93,18 @@ const BNPL = {
       },
 
     }).render(this.button);
+  },
+
+  getColor() {
+    if (BNPL.color) {
+      return BNPL.color;
+    }
+
+    return 'white';
+  },
+
+  setColor(color) {
+    BNPL.color = color;
   },
 
   sendData(data) {

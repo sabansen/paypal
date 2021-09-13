@@ -43,6 +43,11 @@
           }
 
           BNPL.init();
+
+          if (typeof bnplColor != 'undefined') {
+              BNPL.setColor(bnplColor);
+          }
+
           BNPL.initButton();
       }
 
