@@ -31,28 +31,39 @@
 
 {if isset($JSscripts) && is_array($JSscripts) && false === empty($JSscripts)}
   <script>
-    window.addEventListener('DOMContentLoaded', function(){
-        var scripts = Array();
-        {foreach from=$JSscripts key=keyScript item=JSscriptAttributes}
-        var script = document.querySelector('script[data-key="{$keyScript}"]');
+      function init() {
+          if (document.body instanceof Element) {
+              addScripts();
+          } else {
+              document.addEventListener('DOMContentLoaded', function () {
+                  addScripts();
+              })
+          }
 
-        if (null == script) {
-            var newScript = document.createElement('script');
-            {foreach from=$JSscriptAttributes key=attrName item=attrVal}
-            newScript.setAttribute('{$attrName}', '{$attrVal nofilter}');
-            {/foreach}
+          function addScripts() {
+              var scripts = Array();
+              {foreach from=$JSscripts key=keyScript item=JSscriptAttributes}
+              var script = document.querySelector('script[data-key="{$keyScript}"]');
 
-            if (false === ('{$keyScript}'.search('jq-lib') === 0 && typeof jQuery === 'function')) {
-                newScript.setAttribute('data-key', '{$keyScript}');
-                scripts.push(newScript);
-            }
-        }
-        {/foreach}
+              if (null == script) {
+                  var newScript = document.createElement('script');
+                  {foreach from=$JSscriptAttributes key=attrName item=attrVal}
+                  newScript.setAttribute('{$attrName}', '{$attrVal nofilter}');
+                  {/foreach}
 
-        scripts.forEach(function(scriptElement) {
-            document.body.appendChild(scriptElement);
-        })
-    });
+                  if (false === ('{$keyScript}'.search('jq-lib') === 0 && typeof jQuery === 'function')) {
+                      newScript.setAttribute('data-key', '{$keyScript}');
+                      scripts.push(newScript);
+                  }
+              }
+              {/foreach}
+
+              scripts.forEach(function (scriptElement) {
+                  document.body.appendChild(scriptElement);
+              })
+          };
+      };
+      init();
 
   </script>
 
