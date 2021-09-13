@@ -328,29 +328,38 @@ class AdminPayPalController extends \ModuleAdminController
 
     public function displayAjaxUpdateRoundingSettings()
     {
-        \Configuration::updateValue(
-            'PS_ROUND_TYPE',
-            '1',
-            false,
-            null,
-            (int) $this->context->shop->id
-        );
+        if (\Shop::getContext() == \Shop::CONTEXT_ALL) {
+            $idShops = array_column(\Shop::getShops(), 'id_shop');
+            $idShops[] = null;
+        } else {
+            $idShops = [$this->context->shop->id];
+        }
 
-        \Configuration::updateValue(
-            'PS_PRICE_ROUND_MODE',
-            '2',
-            false,
-            null,
-            (int) $this->context->shop->id
-        );
+        foreach ($idShops as $idShop) {
+            \Configuration::updateValue(
+                'PS_ROUND_TYPE',
+                '1',
+                false,
+                null,
+                $idShop
+            );
 
-        \Configuration::updateValue(
-            'PS_PRICE_DISPLAY_PRECISION',
-            '2',
-            false,
-            null,
-            (int) $this->context->shop->id
-        );
+            \Configuration::updateValue(
+                'PS_PRICE_ROUND_MODE',
+                '2',
+                false,
+                null,
+                $idShop
+            );
+
+            \Configuration::updateValue(
+                'PS_PRICE_DISPLAY_PRECISION',
+                '2',
+                false,
+                null,
+                $idShop
+            );
+        }
 
         $message = $this->module->l('Settings updated. Your rounding settings are compatible with PayPal!', 'AdminPayPalController');
 
