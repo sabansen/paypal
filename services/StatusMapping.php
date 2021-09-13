@@ -135,7 +135,7 @@ class StatusMapping
 
     public function isModeSale()
     {
-        return (bool)Configuration::get('PAYPAL_API_INTENT') == 'sale';
+        return Configuration::get('PAYPAL_API_INTENT') == 'sale';
     }
 
     /**

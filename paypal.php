@@ -1361,6 +1361,12 @@ class PayPal extends \PaymentModule implements WidgetInterface
             }
         }
 
+        if ($order->current_state == $this->getStatusMapping()->getWaitValidationStatus() && false == $this->getStatusMapping()->isModeSale()) {
+            $paypal_msg .= $this->displayInformation(
+                $this->l('This order has been created in Authorize mode, so you customer was not charged yet. Set \'Payment accepted status\' in order to confirm the order and to capture it or \'Cancelled\' if you want to cancel it.')
+            );
+        }
+
         if ($paypal_order->method == 'BT' && (Module::isInstalled('braintreeofficial') == false)) {
             $tmpMessage = "<p class='paypal-warning'>";
             $tmpMessage .= $this->l('This order has been paid via Braintree payment solution provided by PayPal module prior v5.0. ') . "</br>";

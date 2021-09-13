@@ -496,6 +496,10 @@ abstract class AbstractMethodPaypal extends AbstractMethod
             return $this->getStatusMapping()->getWaitValidationStatus();
         }
 
+        if ($this->getStatusMapping()->isModeSale() == false) {
+            return $this->getStatusMapping()->getWaitValidationStatus();
+        }
+
         return $this->getStatusMapping()->getAcceptedStatus();
     }
 
