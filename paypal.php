@@ -34,6 +34,7 @@ use PaypalAddons\classes\PaypalPaymentMode;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Shortcut\ShortcutSignup;
 use PaypalAddons\classes\Webhook\WebhookOption;
+use PaypalAddons\services\PaymentRefundAmount;
 use PaypalAddons\services\ServicePaypalOrder;
 use PaypalAddons\services\StatusMapping;
 use PaypalAddons\services\WebhookService;
@@ -1344,6 +1345,18 @@ class PayPal extends \PaymentModule implements WidgetInterface
         //Webhooks that wait more 1 hour
         $oldPendingWebhooks = $this->getWebhookService()->getPendingWebhooks($paypal_order, 1);
         $pendingWebhooks = $this->getWebhookService()->getPendingWebhooks($paypal_order);
+        $totalRefunded = $this->getTotalRefunded($paypal_order);
+        $totalPaid = $order->getTotalPaid();
+
+        if ($totalRefunded > 0 && $totalRefunded < $totalPaid) {
+            $paypal_msg .= $this->displayInformation(
+                sprintf(
+                    $this->l('A partial refund has been issued : %.2f refunded instead of %.2f'),
+                    $totalRefunded,
+                    $totalPaid
+                )
+            );
+        }
 
         if (false == empty($oldPendingWebhooks)) {
             $paypal_msg .= $this->displayError(
@@ -2491,5 +2504,34 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
 
         return $result;
+    }
+
+    /**
+     * @param PaypalOrder $paypalOrder
+     * @return float
+     */
+    public function getTotalRefunded(PaypalOrder $paypalOrder)
+    {
+        $webhookOption = $this->getWebhookOption();
+        $paymentRefundAmount = $this->getPaymentRefundAmount();
+
+        if ($webhookOption->isEnable() && $webhookOption->isAvailable()) {
+            return $paymentRefundAmount->calculateReceivedWebhookEvent($paypalOrder);
+        }
+
+        try {
+            return $paymentRefundAmount->calculateTotalRefunded($paypalOrder);
+        } catch (Exception $e) {
+            return 0;
+        }
+
+    }
+
+    /**
+     * @return PaymentRefundAmount
+     */
+    public function getPaymentRefundAmount()
+    {
+        return new PaymentRefundAmount();
     }
 }
