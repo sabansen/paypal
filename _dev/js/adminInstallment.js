@@ -102,6 +102,8 @@ var InstallmentSetting = {
     const advancedOptions = document.querySelector('input[name="PAYPAL_ADVANCED_OPTIONS_INSTALLMENT"]');
     const widgetCode = document.querySelector('input[name="installmentWidgetCode"]');
     const colorConf = document.querySelector('[name="PAYPAL_INSTALLMENT_COLOR"]');
+    const bnplEnabled = document.querySelector('input[name="PAYPAL_ENABLE_BNPL"]');
+    const bnplDisplayingSetting = document.querySelector('[bnpl-page-displaying-setting-container]');
 
     if (installmentEnabled.checked) {
       displayingSettings.style.display = 'block';
@@ -119,6 +121,15 @@ var InstallmentSetting = {
       Tools.showConfiguration(widgetCode.getAttribute('name'));
       Tools.showConfiguration(colorConf.getAttribute('name'));
     }
+
+    if (bnplEnabled instanceof Element) {
+      if (bnplEnabled.checked) {
+        bnplDisplayingSetting.closest('.form-group').style.display = 'block';
+      } else {
+        bnplDisplayingSetting.closest('.form-group').style.display = 'none';
+      }
+    }
+
   },
 
   updateBannerColor() {

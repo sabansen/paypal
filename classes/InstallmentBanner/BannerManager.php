@@ -90,6 +90,15 @@ class BannerManager
             return false;
         }
 
+        if (false === $this->isEligibleCountry()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function isEligibleCountry()
+    {
         $isoCountryDefault = Country::getIsoById((int)Configuration::get(
             'PS_COUNTRY_DEFAULT',
             null,

@@ -29,9 +29,9 @@
     <property name="src-dir" value="${basedir}" />
     <property name="TARGETNAME" value="paypal" />
     <property name="TARGETBRANCH" value="${env.GIT_BRANCH}" />
-    <property name="TARGETVERSION" value="5.4.4" />
+    <property name="TARGETVERSION" value="5.4.5" />
     <property name="PHPVERSION" value="5.6" />
-    <property name="PSVERSION" value="1.7.5.x" />
+    <property name="PSVERSION" value="1.7.5.2" />
 
     <target name="build" depends="build-common,package-zip,psvalidator,tot-testing" />
 

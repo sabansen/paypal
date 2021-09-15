@@ -40,7 +40,17 @@
 <script>
     Banner.prototype.updateAmount = function() {
         var quantity = parseFloat(document.querySelector('input[name="qty"]').value);
-        var productPrice = parseFloat(document.querySelector('[itemprop="price"]').getAttribute('content'));
+        var productPrice = 0;
+        var productPriceDOM = document.querySelector('[itemprop="price"]');
+
+        if (productPriceDOM == null) {
+            productPriceDOM = document.querySelector('.current-price-value');
+        }
+
+        if (productPriceDOM instanceof Element) {
+            productPrice = parseFloat(productPriceDOM.getAttribute('content'));
+        }
+
         this.amount = quantity * productPrice;
     };
 
