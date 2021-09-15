@@ -187,6 +187,10 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
             $this->actualizeOrder($paypalOrder, $webhookEvent);
         }
 
+        if ($psOrderStatus == $this->getStatusMapping()->getCanceledStatus()) {
+            $this->removeEventInWaiting($paypalOrder);
+        }
+
         $paypalWebhook = $this->getWebhookService()->createForOrder($paypalOrder, $psOrderStatus);
         $paypalWebhook->id_webhook = $this->getWebhookId($data);
         $paypalWebhook->event_type = $this->eventType($data);
@@ -227,7 +231,13 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
             }
         }
 
-        return (new StatusMapping())->getPsOrderStatusByEventType($eventType);
+        return $this->getStatusMapping()->getPsOrderStatusByEventType($eventType);
+    }
+
+    /** @return StatusMapping*/
+    protected function getStatusMapping()
+    {
+        return new StatusMapping();
     }
 
     /**
@@ -427,5 +437,18 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
     protected function getActualizeTotalPaid()
     {
         return new ActualizeTotalPaid();
+    }
+
+    protected function removeEventInWaiting(PaypalOrder $paypalOrder)
+    {
+        $webhookEvents = $this->getWebhookService()->getPendingWebhooks($paypalOrder);
+
+        if (empty($webhookEvents)) {
+            return;
+        }
+
+        foreach ($webhookEvents as $webhookEvent) {
+            $webhookEvent->delete();
+        }
     }
 }
