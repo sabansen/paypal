@@ -70,6 +70,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
     const PAYPAL_PARTNER_ID_SANDBOX = 'J7Q7R6V9MQZUG';
 
+    const NEED_INSTALL_MODELS = 'PAYPAL_NEED_INSTALL_MODELS';
+
     public static $dev = true;
     public $express_checkout;
     public $message;
@@ -2533,5 +2535,12 @@ class PayPal extends \PaymentModule implements WidgetInterface
     public function getPaymentRefundAmount()
     {
         return new PaymentRefundAmount();
+    }
+
+    /** @return bool*/
+    public function installModels()
+    {
+        $installer = new ModuleInstaller($this);
+        return $installer->installObjectModels();
     }
 }

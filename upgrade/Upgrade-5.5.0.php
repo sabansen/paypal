@@ -36,7 +36,13 @@ use PaypalPPBTlib\Install\ModuleInstaller;
  */
 function upgrade_module_5_5_0($module)
 {
-    $installer = new ModuleInstaller($module);
-    $installer->installObjectModels();
+    try {
+        $installer = new ModuleInstaller($module);
+        $installer->installObjectModels();
+        Configuration::updateGlobalValue(Paypal::NEED_INSTALL_MODELS, 0);
+    } catch (Exception $e) {
+        Configuration::updateGlobalValue(Paypal::NEED_INSTALL_MODELS, 1);
+    }
+
     return true;
 }

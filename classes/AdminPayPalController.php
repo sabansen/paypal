@@ -77,6 +77,12 @@ class AdminPayPalController extends \ModuleAdminController
         }
 
         parent::init();
+
+        if ((int)\Configuration::getGlobalValue(\PayPal::NEED_INSTALL_MODELS) === 1) {
+            if ($this->module->installModels()) {
+                \Configuration::updateGlobalValue(\PayPal::NEED_INSTALL_MODELS, 0);
+            }
+        }
     }
 
     public function initContent()
