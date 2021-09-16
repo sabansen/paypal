@@ -1,28 +1,4 @@
 <?php
-/**
- * 2007-2021 PayPal
- *
- *  NOTICE OF LICENSE
- *
- *  This source file is subject to the Academic Free License (AFL 3.0)
- *  that is bundled with this package in the file LICENSE.txt.
- *  It is also available through the world-wide-web at this URL:
- *  http://opensource.org/licenses/afl-3.0.php
- *  If you did not receive a copy of the license and are unable to
- *  obtain it through the world-wide-web, please send an email
- *  to license@prestashop.com so we can send you a copy immediately.
- *
- *  DISCLAIMER
- *
- *  Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- *  versions in the future. If you wish to customize PrestaShop for your
- *  needs please refer to http://www.prestashop.com for more information.
- *
- *  @author 2007-2021 PayPal
- *  @author 202 ecommerce <tech@202-ecommerce.com>
- *  @copyright PayPal
- *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- */
 
 global $_MODULE;
 $_MODULE = array();
@@ -505,6 +481,7 @@ $_MODULE['<{paypal}prestashop>messageforcustomerone_e8fdd95502f3d9eef321833fe60a
 $_MODULE['<{paypal}prestashop>messageforcustomertwo_e8fdd95502f3d9eef321833fe60aed0c'] = 'Mode Sandbox: Toutes les transactions seront fictives';
 $_MODULE['<{paypal}prestashop>adminpaypalcontroller_7e4ed5efc0f056eb2b36609af35177d3'] = 'Mode « bac à sable »';
 $_MODULE['<{paypal}prestashop>paypalordercreaterequest_2605fbb693837be42d0cd0e701cb5aa3'] = 'Traitement de';
+$_MODULE['<{paypal}prestashop>forminstallment_a731897be50d002773a0ee7fc7a62c3e'] = 'Informez vos clients de l’option de payer en 4x PayPal en affichant des bannières sur votre site.';
 $_MODULE['<{paypal}prestashop>forminstallment_f4f70727dc34561dfde1a3c529b6205c'] = 'Paramètres';
 $_MODULE['<{paypal}prestashop>forminstallment_638e1f70e3be66cd373e5b7e98b80bec'] = 'Activer l\'affichage des bannières 4x';
 $_MODULE['<{paypal}prestashop>forminstallment_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Activé';
@@ -543,3 +520,8 @@ $_MODULE['<{paypal}prestashop>installmentdisclaimer_1b139287ea9bd54f5252e7868dae
 $_MODULE['<{paypal}prestashop>installmentdisclaimer_b0a144a9a1cbd31bbc841d2656e20e51'] = 'Affichez des messages de paiement ultérieur sur votre site pour des offres telles que le paiement en 3, qui permet aux clients de payer en 3 mensualités sans intérêt.';
 $_MODULE['<{paypal}prestashop>installmentdisclaimer_fbbbfb2dd1598fbc34d42a4d662bdb52'] = 'Nous afficherons des messages sur votre site pour promouvoir cette fonction pour vous. Vous ne pouvez pas promouvoir les offres de paiement ultérieur avec tout autre contenu, marketing ou matériel.';
 $_MODULE['<{paypal}prestashop>forminstallment_12cd357e7240fc5d8bd9884dec5c3a38'] = 'Activer l\'affichage des bannières 3x';
+$_MODULE['<{paypal}prestashop>bnplpagedisplayingsetting_468a21d1076328f1b4cd946b72e2d5cd'] = 'Page Panier';
+$_MODULE['<{paypal}prestashop>bnplpagedisplayingsetting_0fcaf0531dd6d6a53f7bde67adafd035'] = 'Page Produit';
+$_MODULE['<{paypal}prestashop>bnplpagedisplayingsetting_b29281296165d65c9c816c2ed17e5109'] = 'Étape d\'inscription au checkout';
+$_MODULE['<{paypal}prestashop>forminstallment_e78a577e6891286e36f49c540c757d06'] = 'Activez le paiement en 4 fois dans checkout.';
+$_MODULE['<{paypal}prestashop>forminstallment_9871fad8feec04bf651c960e6538814b'] = 'Le paiement en 4x est actif sur';

@@ -17,32 +17,26 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-* @author 2007-2021 PayPal
- *  @author 202 ecommerce <tech@202-ecommerce.com>
-  * @copyright PayPal
-  * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
-  *
-  *}
+*  @author 2007-2021 PayPal
+*  @copyright PayPal
+*  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+*
+*}
 
-<style>
-  #popup-ppp-waiting p {
-    font-size: 16px;
-    margin: 10px;
-    line-height: 1.5em;
-    color: #373a3c;
-  }
-</style>
-<div class="row">
-  <div class="col-xs-12 col-md-10">
-    <div class="paypal-plus-row-payment">
-      <div class="payment_module paypal-plus">
-        {if isset($showAdvantage) && $showAdvantage}
-            {include file="module:paypal/views/templates/front/payment_infos.tpl"}
-        {/if}
+{extends 'module:paypal/views/templates/bnpl/bnpl-cart.tpl'}
 
-        <div id="ppplus" style="width: 100%;"></div>
-      </div>
-    </div>
+{block name='content'}
+  <div paypal-bnpl-signup style="display: flex;">
+      {$smarty.block.parent}
   </div>
-</div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var shortcut = document.querySelector('[paypal-bnpl-signup]');
+        var signupForm = document.querySelector('#checkout-personal-information-step .content');
+
+        signupForm.insertBefore(shortcut, signupForm.childNodes[0]);
+    });
+  </script>
+{/block}
 

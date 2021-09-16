@@ -59,75 +59,110 @@ class FormInstallment implements FormInterface
     public function getFields()
     {
         $isoCountryDefault = strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
+        $input = [];
+        $input[] = array(
+            'type' => 'html',
+            'html_content' => $this->getDisclaimerHtml(),
+            'name' => '',
+            'col' => 12,
+            'label' => '',
+        );
+
+        if ($isoCountryDefault == 'fr') {
+            $input[] = array(
+                'type' => 'switch',
+                'label' => $isoCountryDefault == 'gb' ? $this->module->l('Enable \'Pay in 3x\' in your checkout', $this->className) : $this->module->l('Enable \'Pay in 4x\' in your checkout', $this->className),
+                'name' => ConfigurationMap::ENABLE_BNPL,
+                'is_bool' => true,
+                'values' => array(
+                    array(
+                        'id' => ConfigurationMap::ENABLE_BNPL . '_on',
+                        'value' => 1,
+                        'label' => $this->module->l('Enabled', $this->className),
+                    ),
+                    array(
+                        'id' => ConfigurationMap::ENABLE_BNPL . '_off',
+                        'value' => 0,
+                        'label' => $this->module->l('Disabled', $this->className),
+                    )
+                ),
+            );
+
+            $input[] = array(
+                'type' => 'html',
+                'html_content' => $this->getHtmlBnplPageDisplayingSetting(),
+                'name' => '',
+                'label' => $isoCountryDefault == 'gb' ? $this->module->l('\'Pay in 3x\' is active on', $this->className) : $this->module->l('\'Pay in 4x\' is active on', $this->className),
+            );
+        }
+
+        $input[] = array(
+            'type' => 'switch',
+            'label' => $isoCountryDefault == 'gb' ? $this->module->l('Enable the display of 3x banners', $this->className) : $this->module->l('Enable the display of 4x banners', $this->className),
+            'name' => ConfigurationMap::ENABLE_INSTALLMENT,
+            'is_bool' => true,
+            'hint' => $this->module->l('Let your customers know about the option \'Pay 4x PayPal\' by displaying banners on your site.', $this->className),
+            'values' => array(
+                array(
+                    'id' => ConfigurationMap::ENABLE_INSTALLMENT . '_on',
+                    'value' => 1,
+                    'label' => $this->module->l('Enabled', $this->className),
+                ),
+                array(
+                    'id' => ConfigurationMap::ENABLE_INSTALLMENT . '_off',
+                    'value' => 0,
+                    'label' => $this->module->l('Disabled', $this->className),
+                )
+            ),
+        );
+
+        $input[] = array(
+            'type' => 'html',
+            'html_content' => $this->getHtmlBlockPageDisplayingSetting(),
+            'name' => '',
+            'label' => '',
+        );
+
+        $input[] = array(
+            'type' => 'switch',
+            'label' => $this->module->l('Advanced options', $this->className),
+            'name' => ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT,
+            'is_bool' => true,
+            'values' => array(
+                array(
+                    'id' => ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT . '_on',
+                    'value' => 1,
+                    'label' => $this->module->l('Enabled', $this->className),
+                ),
+                array(
+                    'id' => ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT . '_off',
+                    'value' => 0,
+                    'label' => $this->module->l('Disabled', $this->className),
+                )
+            ),
+        );
+
+        $input[] = array(
+            'type' => 'html',
+            'label' => $this->module->l('Widget code', $this->className),
+            'hint' => $this->module->l('By default, PayPal 4x banner is displayed on your web site via PrestaShop native hook. If you choose to use widgets, you will be able to copy widget code and insert it wherever you want in the web site template.', $this->className),
+            'name' => '',
+            'html_content' => $this->getWidgetField()
+        );
+
+        $input[] = array(
+            'type' => 'html',
+            'html_content' => $this->getBannerStyleSection(),
+            'name' => '',
+            'label' => $this->module->l('Home page and category page styles', $this->className),
+        );
+
         $fields = array(
             'legend' => array(
                 'title' => $this->module->l('Settings', $this->className),
                 'icon' => 'icon-cogs',
             ),
-            'input' => array(
-                array(
-                    'type' => 'html',
-                    'html_content' => $this->getDisclaimerHtml(),
-                    'name' => '',
-                    'col' => 12,
-                    'label' => '',
-                ),
-                array(
-                    'type' => 'switch',
-                    'label' => $isoCountryDefault == 'gb' ? $this->module->l('Enable the display of 3x banners', $this->className) : $this->module->l('Enable the display of 4x banners', $this->className),
-                    'name' => ConfigurationMap::ENABLE_INSTALLMENT,
-                    'is_bool' => true,
-                    'values' => array(
-                        array(
-                            'id' => ConfigurationMap::ENABLE_INSTALLMENT . '_on',
-                            'value' => 1,
-                            'label' => $this->module->l('Enabled', $this->className),
-                        ),
-                        array(
-                            'id' => ConfigurationMap::ENABLE_INSTALLMENT . '_off',
-                            'value' => 0,
-                            'label' => $this->module->l('Disabled', $this->className),
-                        )
-                    ),
-                ),
-                array(
-                    'type' => 'html',
-                    'html_content' => $this->getHtmlBlockPageDisplayingSetting(),
-                    'name' => '',
-                    'label' => '',
-                ),
-                array(
-                    'type' => 'switch',
-                    'label' => $this->module->l('Advanced options', $this->className),
-                    'name' => ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT,
-                    'is_bool' => true,
-                    'values' => array(
-                        array(
-                            'id' => ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT . '_on',
-                            'value' => 1,
-                            'label' => $this->module->l('Enabled', $this->className),
-                        ),
-                        array(
-                            'id' => ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT . '_off',
-                            'value' => 0,
-                            'label' => $this->module->l('Disabled', $this->className),
-                        )
-                    ),
-                ),
-                array(
-                    'type' => 'html',
-                    'label' => $this->module->l('Widget code', $this->className),
-                    'hint' => $this->module->l('By default, PayPal 4x banner is displayed on your web site via PrestaShop native hook. If you choose to use widgets, you will be able to copy widget code and insert it wherever you want in the web site template.', $this->className),
-                    'name' => '',
-                    'html_content' => $this->getWidgetField()
-                ),
-                array(
-                    'type' => 'html',
-                    'html_content' => $this->getBannerStyleSection(),
-                    'name' => '',
-                    'label' => $this->module->l('Home page and category page styles', $this->className),
-                )
-            ),
+            'input' => $input,
             'submit' => array(
                 'title' => $this->module->l('Save', $this->className),
                 'class' => 'btn btn-default pull-right button',
@@ -146,7 +181,8 @@ class FormInstallment implements FormInterface
     {
         return [
             ConfigurationMap::ENABLE_INSTALLMENT => (int)Configuration::get(ConfigurationMap::ENABLE_INSTALLMENT),
-            ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT => (int)Configuration::get(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT)
+            ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT => (int)Configuration::get(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT),
+            ConfigurationMap::ENABLE_BNPL => (int)Configuration::get(ConfigurationMap::ENABLE_BNPL)
         ];
     }
 
@@ -170,7 +206,27 @@ class FormInstallment implements FormInterface
         $return &= Configuration::updateValue(ConfigurationMap::CATEGORY_PAGE, (int)Tools::getValue(ConfigurationMap::CATEGORY_PAGE));
         $return &= Configuration::updateValue(ConfigurationMap::COLOR, Tools::getValue(ConfigurationMap::COLOR));
 
+        // BNPL configurations
+        $return &= Configuration::updateValue(ConfigurationMap::ENABLE_BNPL, (int)Tools::getValue(ConfigurationMap::ENABLE_BNPL));
+        $return &= Configuration::updateValue(ConfigurationMap::BNPL_CHECKOUT_PAGE, (int)Tools::getValue(ConfigurationMap::BNPL_CHECKOUT_PAGE));
+        $return &= Configuration::updateValue(ConfigurationMap::BNPL_CART_PAGE, (int)Tools::getValue(ConfigurationMap::BNPL_CART_PAGE));
+        $return &= Configuration::updateValue(ConfigurationMap::BNPL_PRODUCT_PAGE, (int)Tools::getValue(ConfigurationMap::BNPL_PRODUCT_PAGE));
+
         return $return;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getHtmlBnplPageDisplayingSetting()
+    {
+        Context::getContext()->smarty->assign([
+            ConfigurationMap::BNPL_PRODUCT_PAGE => Configuration::get(ConfigurationMap::BNPL_PRODUCT_PAGE),
+            ConfigurationMap::BNPL_CART_PAGE => Configuration::get(ConfigurationMap::BNPL_CART_PAGE),
+            ConfigurationMap::BNPL_CHECKOUT_PAGE => Configuration::get(ConfigurationMap::BNPL_CHECKOUT_PAGE)
+        ]);
+
+        return Context::getContext()->smarty->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/_partials/paypalBanner/bnplPageDisplayingSetting.tpl');
     }
 
     /**

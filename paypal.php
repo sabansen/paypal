@@ -31,6 +31,11 @@ include_once(_PS_MODULE_DIR_ . 'paypal/vendor/autoload.php');
 
 use PaypalAddons\classes\Constants\WebHookConf;
 use PaypalAddons\classes\PaypalPaymentMode;
+use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLCart;
+use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLDummy;
+use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLOption;
+use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLProduct;
+use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLSignup;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Shortcut\ShortcutSignup;
 use PaypalAddons\classes\Webhook\WebhookOption;
@@ -415,8 +420,19 @@ class PayPal extends \PaymentModule implements WidgetInterface
             'PAYPAL_OS_VALIDATION_ERROR' => (int)Configuration::get('PS_OS_CANCELED'),
             'PAYPAL_OS_REFUNDED_PAYPAL' => (int)Configuration::get('PS_OS_REFUND'),
             'PAYPAL_NOT_SHOW_PS_CHECKOUT' => json_encode([$this->version, 0]),
+            \PaypalAddons\classes\InstallmentBanner\ConfigurationMap::ENABLE_BNPL => 1,
+            \PaypalAddons\classes\InstallmentBanner\ConfigurationMap::BNPL_CART_PAGE => 1,
+            'PAYPAL_NOT_SHOW_PS_CHECKOUT' => json_encode([$this->version, 0]),
             WebHookConf::ENABLE => 1
         );
+
+        if (version_compare(_PS_VERSION_, '1.7.6', '<')) {
+            $this->moduleConfigs[ShortcutConfiguration::PRODUCT_PAGE_HOOK] = ShortcutConfiguration::HOOK_REASSURANCE;
+        } else {
+            $this->moduleConfigs[ShortcutConfiguration::PRODUCT_PAGE_HOOK] = ShortcutConfiguration::HOOK_PRODUCT_ACTIONS;
+        }
+
+        $this->moduleConfigs[ShortcutConfiguration::CART_PAGE_HOOK] = ShortcutConfiguration::HOOK_EXPRESS_CHECKOUT;
     }
 
     public function install()
@@ -607,10 +623,13 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $content .= $bannerManager->renderForProductPage();
         }
 
-        return $content .= $this->displayShortcutButton([
+        $content .= $this->displayShortcutButton([
             'sourcePage' => ShortcutConfiguration::SOURCE_PAGE_PRODUCT,
             'hook' => ShortcutConfiguration::HOOK_PRODUCT_ACTIONS
         ]);
+        $content .= $this->renderBnpl(['sourcePage' => ShortcutConfiguration::SOURCE_PAGE_PRODUCT]);
+
+        return $content;
     }
 
     public function hookDisplayAfterProductThumbs($params)
@@ -647,6 +666,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             'sourcePage' => ShortcutConfiguration::SOURCE_PAGE_CART,
             'hook' => ShortcutConfiguration::HOOK_EXPRESS_CHECKOUT
         ]);
+        $returnContent .= $this->renderBnpl(['sourcePage' => ShortcutConfiguration::SOURCE_PAGE_CART]);
         $bannerManager = $this->getBannerManager();
 
         if ($bannerManager->isBannerAvailable()) {
@@ -662,10 +682,13 @@ class PayPal extends \PaymentModule implements WidgetInterface
             return '';
         }
 
-        return $this->displayShortcutButton([
+        $content = $this->renderBnpl(['sourcePage' => ShortcutConfiguration::SOURCE_PAGE_SIGNUP]);
+        $content .= $this->displayShortcutButton([
             'sourcePage' => ShortcutConfiguration::SOURCE_PAGE_SIGNUP,
             'hook' => ShortcutConfiguration::HOOK_PERSONAL_INFORMATION_TOP
         ]);
+
+        return $content;
     }
 
     public function hookDisplayNavFullWidth()
@@ -729,7 +752,11 @@ class PayPal extends \PaymentModule implements WidgetInterface
                     $payment_option->setModuleName('paypal_plus');
                     try {
                         $this->context->smarty->assign('path', $this->_path);
-                        $payment_option->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_ppp.tpl'));
+                        $payment_option->setAdditionalInformation(
+                            $this->context->smarty
+                                ->assign('showAdvantage', Configuration::get('PAYPAL_API_ADVANTAGES'))
+                                ->fetch('module:paypal/views/templates/front/payment_ppp.tpl')
+                        );
                     } catch (Exception $e) {
                         die($e);
                     }
@@ -872,7 +899,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 if (version_compare(_PS_VERSION_, '1.7.6', '<')
                     && ((bool)Configuration::get(ShortcutConfiguration::CUSTOMIZE_STYLE) === false || (int)Configuration::get(ShortcutConfiguration::DISPLAY_MODE_SIGNUP) == ShortcutConfiguration::DISPLAY_MODE_TYPE_HOOK)) {
                     $Shortcut = new ShortcutSignup();
-                    $returnContent .= $Shortcut->render();
+                    $returnContent .= $this->renderBnpl(['sourcePage' => ShortcutConfiguration::SOURCE_PAGE_SIGNUP]) . $Shortcut->render();
                 }
                 $returnContent .= $this->context->smarty->fetch('module:paypal/views/templates/front/prefetch.tpl');
                 return $returnContent;
@@ -1018,10 +1045,16 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 $content .= $bannerManager->renderForProductPage();
             }
 
-            return $content .= $this->displayShortcutButton([
+            $content .= $this->displayShortcutButton([
                 'sourcePage' => ShortcutConfiguration::SOURCE_PAGE_PRODUCT,
                 'hook' => ShortcutConfiguration::HOOK_REASSURANCE
             ]);
+
+            if (version_compare(_PS_VERSION_, '1.7.6', '<')) {
+                $content .= $this->renderBnpl(['sourcePage' => ShortcutConfiguration::SOURCE_PAGE_PRODUCT]);
+            }
+
+            return $content;
         }
 
         if ($this->context->controller instanceof CartController) {
@@ -1040,6 +1073,79 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
 
         return '';
+    }
+
+    /**
+     * @param array $data
+     * @return string
+     */
+    public function renderBnpl($data)
+    {
+        $bnplOption = new BNPLOption();
+        $bnpl = new BNPLDummy();
+        $isoCountryDefault = Country::getIsoById((int)Configuration::get(
+            'PS_COUNTRY_DEFAULT',
+            null,
+            null,
+            $this->context->shop->id));
+
+        if (strtolower($isoCountryDefault) != 'fr') {
+            return '';
+        }
+
+        if ($bnplOption->isEnable() == false) {
+            return '';
+        }
+
+        if (strtolower($this->context->currency->iso_code) != 'eur') {
+            return '';
+        }
+
+        if (strtolower($this->context->language->iso_code) != 'fr') {
+            return '';
+        }
+
+        if ($data['sourcePage'] == ShortcutConfiguration::SOURCE_PAGE_CART) {
+            if ($bnplOption->displayOnCart() == false) {
+                return '';
+            }
+
+            if ($this->context->cart->nbProducts() == 0 || $this->context->cart->checkQuantities() === false) {
+                return '';
+            }
+
+            $bnpl = new BNPLCart();
+        }
+
+        if ($data['sourcePage'] == ShortcutConfiguration::SOURCE_PAGE_PRODUCT) {
+            if ($bnplOption->displayOnProduct() == false) {
+                return '';
+            }
+
+            $bnpl = new BNPLProduct((int)Tools::getValue('id_product'));
+        }
+
+        if ($data['sourcePage'] == ShortcutConfiguration::SOURCE_PAGE_SIGNUP) {
+            if ($bnplOption->displayOnSignup() == false) {
+                return '';
+            }
+
+            $bnpl = new BNPLSignup();
+        }
+
+        if ($this->paypal_method == 'MB') {
+            $methodType = 'EC';
+        } else {
+            $methodType = $this->paypal_method;
+        }
+
+        $method = AbstractMethodPaypal::load($methodType);
+
+        if ($method->isConfigured() == false) {
+            return '';
+        }
+
+        return $bnpl->render();
     }
 
     /**

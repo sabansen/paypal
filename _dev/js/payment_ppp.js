@@ -24,7 +24,7 @@
 let ppp = {},
     exec_ppp_payment = true;
 $(document).ready( () => {
-  if ($('#checkout-payment-step').hasClass('js-current-step')) {
+  function initPaymentWall() {
     let showPui = false;
     if (modePPP == 'sandbox') {
       showPui = true;
@@ -41,6 +41,19 @@ $(document).ready( () => {
       "useraction": "continue",
       "showPuiOnSandbox": showPui
     });
+  }
+
+  function waitPaypalLoaded() {
+    if (typeof PAYPAL == "undefined") {
+      setTimeout(waitPaypalLoaded, 200);
+      return;
+    }
+
+    initPaymentWall();
+  }
+
+  if ($('#checkout-payment-step').hasClass('js-current-step')) {
+    waitPaypalLoaded();
   }
 
   // Order payment button action for paypal plus

@@ -1,28 +1,4 @@
 <?php
-/**
- * 2007-2021 PayPal
- *
- *  NOTICE OF LICENSE
- *
- *  This source file is subject to the Academic Free License (AFL 3.0)
- *  that is bundled with this package in the file LICENSE.txt.
- *  It is also available through the world-wide-web at this URL:
- *  http://opensource.org/licenses/afl-3.0.php
- *  If you did not receive a copy of the license and are unable to
- *  obtain it through the world-wide-web, please send an email
- *  to license@prestashop.com so we can send you a copy immediately.
- *
- *  DISCLAIMER
- *
- *  Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- *  versions in the future. If you wish to customize PrestaShop for your
- *  needs please refer to http://www.prestashop.com for more information.
- *
- *  @author 2007-2021 PayPal
- *  @author 202 ecommerce <tech@202-ecommerce.com>
- *  @copyright PayPal
- *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- */
 
 global $_MODULE;
 $_MODULE = array();
@@ -538,3 +514,8 @@ $_MODULE['<{paypal}prestashop>installmentpopup_9e091c37835dd133ef649311ba561408'
 $_MODULE['<{paypal}prestashop>installmentpopup_611c3c7ed877fc3071ab177ed36acbb6'] = 'Agora seus clientes podem pagar em 4 parcelas com PayPal!';
 $_MODULE['<{paypal}prestashop>installmentpopup_119879090c04004d26811acd3c1379c1'] = 'Melhore sua taxa de conversão mostrando 4x as informações de pagamento a seus clientes.';
 $_MODULE['<{paypal}prestashop>installmentpopup_4d263aae337221a257777dd3e4efec32'] = 'Habilite agora';
+$_MODULE['<{paypal}prestashop>bnplpagedisplayingsetting_468a21d1076328f1b4cd946b72e2d5cd'] = 'Página do carrinho';
+$_MODULE['<{paypal}prestashop>bnplpagedisplayingsetting_0fcaf0531dd6d6a53f7bde67adafd035'] = 'Páginas de produtos';
+$_MODULE['<{paypal}prestashop>bnplpagedisplayingsetting_b29281296165d65c9c816c2ed17e5109'] = 'Inscrição passo a passo na caixa';
+$_MODULE['<{paypal}prestashop>forminstallment_e78a577e6891286e36f49c540c757d06'] = 'Habilite \'Pagar em 4x\' em seu checkout';
+$_MODULE['<{paypal}prestashop>forminstallment_9871fad8feec04bf651c960e6538814b'] = 'O \'Pay in 4x\' está ativo em';
