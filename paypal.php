@@ -739,7 +739,11 @@ class PayPal extends \PaymentModule implements WidgetInterface
                     $payment_option->setModuleName('paypal_plus');
                     try {
                         $this->context->smarty->assign('path', $this->_path);
-                        $payment_option->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_ppp.tpl'));
+                        $payment_option->setAdditionalInformation(
+                            $this->context->smarty
+                                ->assign('showAdvantage', Configuration::get('PAYPAL_API_ADVANTAGES'))
+                                ->fetch('module:paypal/views/templates/front/payment_ppp.tpl')
+                        );
                     } catch (Exception $e) {
                         die($e);
                     }
