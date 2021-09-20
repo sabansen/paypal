@@ -1792,10 +1792,15 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
                 $orderPayPal->payment_status = 'voided';
                 $orderPayPal->save();
+                $message = $response->getMessage();
+
+                if ($this->getWebhookOption()->isEnable() && $this->getWebhookOption()->isAvailable()) {
+                    $message .= $this->l('Waiting for webhook message in order for change the order status.');
+                }
 
                 ProcessLoggerHandler::openLogger();
                 ProcessLoggerHandler::logInfo(
-                    $response->getMessage(),
+                    $message,
                     $response->getIdTransaction(),
                     $orderPayPal->id_order,
                     $orderPayPal->id_cart,
@@ -1910,10 +1915,15 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 $capture->result = $response->getStatus();
                 $orderPayPal->save();
                 $capture->save();
+                $message = $response->getMessage();
+
+                if ($this->getWebhookOption()->isEnable() && $this->getWebhookOption()->isAvailable()) {
+                    $message .= $this->l('Waiting for webhook message in order for change the order status.');
+                }
 
                 ProcessLoggerHandler::openLogger();
                 ProcessLoggerHandler::logInfo(
-                    $response->getMessage(),
+                    $message,
                     $response->getIdTransaction(),
                     $orderPayPal->id_order,
                     $orderPayPal->id_cart,
