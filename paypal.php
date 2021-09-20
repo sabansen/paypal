@@ -1534,7 +1534,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
 
         if ($order->getCurrentOrderState()->paid == 1 && Validate::isLoadedObject($paypal_capture) && $paypal_capture->id_capture) {
-            $msg = $this->l('Your order is fully captured by PayPal.');
+            $msg = $this->l('Your order is captured by PayPal.');
             $paypal_msg .= $this->displayWarning(
                 '<p class="paypal-warning">' . $msg . '</p>'
             );
