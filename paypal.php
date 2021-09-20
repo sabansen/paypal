@@ -1503,7 +1503,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $tmpMessage .= "</p>";
             $paypal_msg .= $this->displayWarning($tmpMessage);
         }
-        if (Tools::getValue('need_refund')) {
+        if (isset($_SESSION['need_refund']) && $_SESSION['need_refund']) {
+            unset($_SESSION['not_payed_capture']);
             $tmpMessage = "<p class='paypal-warning'>";
             $tmpMessage .= $this->l('The order should be refunded before the cancellation. Please select the status "Refunded".');
             $tmpMessage .= $this->l('You can cancel the order after. If you don\'t want to generate a refund automatically on PayPal when you change the status, you can disable it via the module settings: "Experience -> Advanced settings - Customize order status", select "no action".');
@@ -1778,7 +1779,12 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
             //If a payment is already captured, so need to refund firstly
             if (false == Validate::isLoadedObject($paypalCapture) || $paypalCapture->id_capture) {
-                Tools::redirect($_SERVER['HTTP_REFERER'] . '&need_refund=1');
+                if (session_status() == PHP_SESSION_NONE) {
+                    session_start();
+                }
+
+                $_SESSION['need_refund'] = true;
+                Tools::redirect($_SERVER['HTTP_REFERER']);
             }
 
             /** @var $response \PaypalAddons\classes\API\Response\ResponseAuthorizationVoid*/
