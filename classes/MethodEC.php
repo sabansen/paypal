@@ -34,7 +34,12 @@ use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
  */
 class MethodEC extends AbstractMethodPaypal
 {
-    /** @var boolean pay with card without pp account */
+
+    const AUTHORIZE = 'AUTHORIZE';
+
+    const SALE = 'CAPTURE';
+
+        /** @var boolean pay with card without pp account */
     public $credit_card;
 
     /** @var boolean shortcut payment from product or cart page*/
@@ -265,7 +270,7 @@ class MethodEC extends AbstractMethodPaypal
 
     public function getIntent()
     {
-        return Configuration::get('PAYPAL_API_INTENT') == 'sale' ? 'CAPTURE' : 'AUTHORIZE';
+        return Configuration::get('PAYPAL_API_INTENT') == 'sale' ? self::SALE : self::AUTHORIZE;
     }
 
     public function getClientId($sandbox = null)

@@ -189,7 +189,8 @@ abstract class AbstractMethodPaypal extends AbstractMethod
             'payment_tool' => $data->getPaymentTool(),
             'date_transaction' => $data->getDateTransaction()->format('Y-m-d H:i:s'),
             'transaction_id' => $data->getTransactionId(),
-            'capture' => $data->isCapture()
+            'capture' => $data->isCapture(),
+            'intent' => $this->getIntent()
         );
 
         $this->transaction_detail = $transaction_detail;

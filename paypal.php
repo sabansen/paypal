@@ -1383,6 +1383,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $paypal_order->method = $transaction['method'];
             $paypal_order->payment_tool = isset($transaction['payment_tool']) ? $transaction['payment_tool'] : 'PayPal';
             $paypal_order->sandbox = (int)Configuration::get('PAYPAL_SANDBOX');
+            $paypal_order->intent = $transaction['intent'];
             $paypal_order->save();
 
             if ($transaction['capture']) {
@@ -1482,7 +1483,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             }
         }
 
-        if ($order->current_state == $this->getStatusMapping()->getWaitValidationStatus() && false == $this->getStatusMapping()->isModeSale()) {
+        if ($order->current_state == $this->getStatusMapping()->getWaitValidationStatus() && $paypal_order->method == 'EC' && $paypal_order->intent == MethodEC::AUTHORIZE) {
             $paypal_msg .= $this->displayInformation(
                 $this->l('This order has been created in Authorize mode, so you customer was not charged yet. Set \'Payment accepted status\' in order to confirm the order and to capture it or \'Cancelled\' if you want to cancel it.')
             );

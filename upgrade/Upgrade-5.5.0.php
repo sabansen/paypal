@@ -44,5 +44,14 @@ function upgrade_module_5_5_0($module)
         Configuration::updateGlobalValue(Paypal::NEED_INSTALL_MODELS, 1);
     }
 
+    $count = DB::getInstance()->getValue('SELECT count(*) 
+	    FROM INFORMATION_SCHEMA.COLUMNS
+		WHERE `TABLE_NAME` = "'._DB_PREFIX_.'paypal_order"
+		AND `TABLE_SCHEMA` = "'._DB_NAME_.'"
+		AND `COLUMN_NAME` = "intent"');
+    if ($count == 0) {
+        DB::getInstance()->Execute('ALTER TABLE `' . _DB_PREFIX_ . 'paypal_order` ADD COLUMN `intent` VARCHAR(250)');
+    }
+
     return true;
 }
