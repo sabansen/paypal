@@ -1504,7 +1504,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $paypal_msg .= $this->displayWarning($tmpMessage);
         }
         if (isset($_SESSION['need_refund']) && $_SESSION['need_refund']) {
-            unset($_SESSION['not_payed_capture']);
+            unset($_SESSION['need_refund']);
             $tmpMessage = "<p class='paypal-warning'>";
             $tmpMessage .= $this->l('The order should be refunded before the cancellation. Please select the status "Refunded".');
             $tmpMessage .= $this->l('You can cancel the order after. If you don\'t want to generate a refund automatically on PayPal when you change the status, you can disable it via the module settings: "Experience -> Advanced settings - Customize order status", select "no action".');
