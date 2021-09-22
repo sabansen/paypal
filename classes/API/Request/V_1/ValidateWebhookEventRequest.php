@@ -92,7 +92,7 @@ class ValidateWebhookEventRequest extends RequestAbstract
             );
             ProcessLoggerHandler::openLogger();
             ProcessLoggerHandler::logError(
-                '' . $response->getError()->getMessage(),
+                '[ValidateWebhookEventRequest::execut()]: ' . $message,
                 null,
                 null,
                 null,

@@ -91,16 +91,18 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
         } catch (\Exception $e) {
             $message = 'Error code: ' . $e->getCode() . '.';
             $message .= 'Short message: ' . $e->getMessage() . '.';
+            $transaction = $this->getTransactionRef($this->getRequestData());
+            $paypalOrder = $this->servicePaypalOrder->getPaypalOrderByTransaction($transaction);
 
             ProcessLoggerHandler::openLogger();
             ProcessLoggerHandler::logError(
                 $message,
-                $this->getTransactionRef($this->getRequestData()),
+                $transaction,
+                Validate::isLoadedObject($paypalOrder) ? $paypalOrder->id_order : null,
+                Validate::isLoadedObject($paypalOrder) ? $paypalOrder->id_cart : null,
                 null,
                 null,
-                null,
-                null,
-                (int)Configuration::get('PAYPAL_SANDBOX'),
+                Validate::isLoadedObject($paypalOrder) ? $paypalOrder->sandbox : (int)Configuration::get('PAYPAL_SANDBOX'),
                 null
             );
             ProcessLoggerHandler::closeLogger();
