@@ -1801,7 +1801,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 $message = $response->getMessage();
 
                 if ($this->getWebhookOption()->isEnable() && $this->getWebhookOption()->isAvailable()) {
-                    $message .= $this->l('Waiting for webhook message in order for change the order status.');
+                    $message .= '. ' . $this->l('Waiting for webhook message in order for change the order status.');
                 }
 
                 ProcessLoggerHandler::openLogger();
@@ -1924,7 +1924,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 $message = $response->getMessage();
 
                 if ($this->getWebhookOption()->isEnable() && $this->getWebhookOption()->isAvailable()) {
-                    $message .= $this->l('Waiting for webhook message in order for change the order status.');
+                    $message .= '. ' . $this->l('Waiting for webhook message in order for change the order status.');
                 }
 
                 ProcessLoggerHandler::openLogger();
