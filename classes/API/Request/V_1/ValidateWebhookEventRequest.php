@@ -81,6 +81,17 @@ class ValidateWebhookEventRequest extends RequestAbstract
             }
 
             $response->setData($execute);
+            ProcessLoggerHandler::openLogger();
+            ProcessLoggerHandler::logInfo(
+                '[ValidateWebhookEventRequest::execut()] Result: ' . $execute->getVerificationStatus(),
+                null,
+                null,
+                null,
+                null,
+                null,
+                $this->method->isSandbox()
+            );
+            ProcessLoggerHandler::closeLogger();
         } catch (\Exception $e) {
             $message = implode(
                 '; ',
