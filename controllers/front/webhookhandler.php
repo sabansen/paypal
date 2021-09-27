@@ -75,15 +75,18 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
                     header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
                 }
             } else {
+                $transaction = $this->getTransactionRef($this->getRequestData());
+                $paypalOrder = $this->servicePaypalOrder->getPaypalOrderByTransaction($transaction);
+
                 ProcessLoggerHandler::openLogger();
                 ProcessLoggerHandler::logError(
                     Tools::substr('Invalid webhook event. Data: ' . $this->getRequest(),0, 999) ,
-                    $this->getTransactionRef($this->getRequestData()),
+                    $transaction,
+                    Validate::isLoadedObject($paypalOrder) ? $paypalOrder->id_order : null,
+                    Validate::isLoadedObject($paypalOrder) ? $paypalOrder->id_cart : null,
                     null,
                     null,
-                    null,
-                    null,
-                    (int)Configuration::get('PAYPAL_SANDBOX'),
+                    Validate::isLoadedObject($paypalOrder) ? $paypalOrder->sandbox : (int)Configuration::get('PAYPAL_SANDBOX'),
                     null
                 );
                 ProcessLoggerHandler::closeLogger();
