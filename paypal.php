@@ -1617,6 +1617,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 return true;
             }
 
+            $params = array_merge(Tools::getAllValues(), $params);
             /** @var \PaypalAddons\classes\API\Response\ResponseOrderRefund*/
             $refundResponse = $method->partialRefund($params);
 

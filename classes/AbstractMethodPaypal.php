@@ -229,6 +229,12 @@ abstract class AbstractMethodPaypal extends AbstractMethod
             $amount += floatval(str_replace(',', '.', $refundData['shipping_amount']));
         }
 
+        if (isset($params['refund_voucher_off']) && $params['refund_voucher_off']) {
+            if (isset($params['order_discount_price'])) {
+                $amount -= floatval($params['order_discount_price']);
+            }
+        }
+
         return $response = $this->paypalApiManager->getOrderPartialRefundRequest($paypalOrder, $amount)->execute();
     }
 
