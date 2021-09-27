@@ -56,14 +56,24 @@ class RequestValidator
      * @param string $request
      * @return bool
      */
-    public function isValidWebhookEvent($headers, $request)
+    public function isValidWebhookEvent($headers, $request, $attemptCount = 1)
     {
+        $attemptCountDone = 0;
         $validateRequest = new ValidateWebhookEventRequest(
             AbstractMethodPaypal::load(),
             $headers,
             $request
         );
 
-        return $validateRequest->execute()->isSuccess();
+        while ($attemptCount > $attemptCountDone) {
+            $attemptCountDone += 1;
+            $isValid = $validateRequest->execute()->isSuccess();
+
+            if ($isValid) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -125,7 +125,7 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
      */
     protected function requestIsValid()
     {
-        return (new RequestValidator())->isValidWebhookEvent(getallheaders(), $this->getRequest());
+        return (new RequestValidator())->isValidWebhookEvent(getallheaders(), $this->getRequest(), 2);
     }
 
     /**
