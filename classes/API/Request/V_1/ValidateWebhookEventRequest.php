@@ -83,7 +83,11 @@ class ValidateWebhookEventRequest extends RequestAbstract
             $response->setData($execute);
             ProcessLoggerHandler::openLogger();
             ProcessLoggerHandler::logInfo(
-                '[ValidateWebhookEventRequest::execut()] Result: ' . $execute->getVerificationStatus(),
+                sprintf(
+                    '[ValidateWebhookEventRequest::execut()] Result: %s. Correlation-Id: %s',
+                    $execute->getVerificationStatus(),
+                    (isset($this->headers['CORRELATION-ID']) ? $this->headers['CORRELATION-ID'] : '')
+                ),
                 null,
                 null,
                 null,
@@ -98,7 +102,8 @@ class ValidateWebhookEventRequest extends RequestAbstract
                 [
                     'Message: ' . $e->getMessage(),
                     'File: ' . $e->getFile(),
-                    'Line: ' . $e->getLine()
+                    'Line: ' . $e->getLine(),
+                    'Correlation-Id: ' . isset($this->headers['CORRELATION-ID']) ? $this->headers['CORRELATION-ID'] : ''
                 ]
             );
             ProcessLoggerHandler::openLogger();
