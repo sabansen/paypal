@@ -103,7 +103,7 @@ class ValidateWebhookEventRequest extends RequestAbstract
                     'Message: ' . $e->getMessage(),
                     'File: ' . $e->getFile(),
                     'Line: ' . $e->getLine(),
-                    'Correlation-Id: ' . isset($this->headers['CORRELATION-ID']) ? $this->headers['CORRELATION-ID'] : ''
+                    'Correlation-Id: ' . (isset($this->headers['CORRELATION-ID']) ? $this->headers['CORRELATION-ID'] : '')
                 ]
             );
             ProcessLoggerHandler::openLogger();
