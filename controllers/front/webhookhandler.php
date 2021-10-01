@@ -90,7 +90,7 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
                     null
                 );
                 ProcessLoggerHandler::closeLogger();
-                header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad request', true, 400);
+                header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
             }
         } catch (\Exception $e) {
             $message = 'Error code: ' . $e->getCode() . '.';
