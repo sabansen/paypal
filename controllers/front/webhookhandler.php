@@ -25,6 +25,8 @@
  */
 
 
+use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\API\Request\V_1\GetWebhookEvents;
 use PaypalAddons\classes\Constants\WebhookHandler;
 use PaypalAddons\classes\Constants\WebHookType;
 use PaypalAddons\classes\Exception\RefundCalculationException;
@@ -48,12 +50,15 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
     /** @var array*/
     protected $requestData;
 
+    protected $request;
+
     public function __construct()
     {
         parent::__construct();
 
         $this->servicePaypalOrder = new ServicePaypalOrder();
         $this->initContainer();
+        $this->request = file_get_contents('php://input');
     }
     public function run()
     {
@@ -125,7 +130,33 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
      */
     protected function requestIsValid()
     {
-        return (new RequestValidator())->isValidWebhookEvent(getallheaders(), $this->getRequest(), 3);
+        try {
+            if (empty($this->getRequestData()['id'])) {
+                return false;
+            }
+
+            $params = [
+                'id' => $this->getRequestData()['id']
+            ];
+            $events = $this->getWebhookEventRequest()->setParams($params)->execute()->getData();
+
+            if (empty($events)) {
+                return false;
+            }
+
+            $this->request = $events[0]->toJson();
+            $this->requestData = $events[0]->toArray();
+        } catch (Exception $e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /** @return GetWebhookEvents*/
+    protected function getWebhookEventRequest()
+    {
+        return new GetWebhookEvents(AbstractMethodPaypal::load());
     }
 
     /**
@@ -276,7 +307,7 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
 
     protected function getRequest()
     {
-        return file_get_contents('php://input');
+        return $this->request;
     }
 
     /**

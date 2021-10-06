@@ -43,10 +43,17 @@ class GetWebhookEvents extends RequestAbstract
         $response = $this->getResponse();
 
         try {
-            $eventList = WebhookEvent::all($this->getParams(), $this->getApiContext());
+            if (empty($this->getParams()['id'])) {
+                $eventList = WebhookEvent::all($this->getParams(), $this->getApiContext())->getEvents();
+            } else {
+                $eventList = [
+                    WebhookEvent::get($this->getParams()['id'], $this->getApiContext())
+                ];
+            }
+
             $response
                 ->setSuccess(true)
-                ->setData($eventList->getEvents());
+                ->setData($eventList);
         } catch (\Exception $e) {
             $error = new PaypalError();
             $error
