@@ -71,7 +71,7 @@ class FormInstallment implements FormInterface
         if (in_array($isoCountryDefault, ConfigurationMap::getBnplAvailableCountries())) {
             $input[] = array(
                 'type' => 'switch',
-                'label' => $isoCountryDefault == 'gb' ? $this->module->l('Enable \'Pay in 3x\' in your checkout', $this->className) : $this->module->l('Enable \'Pay in 4x\' in your checkout', $this->className),
+                'label' => $this->module->l('Enable \'Pay Later\' in your checkout', $this->className),
                 'name' => ConfigurationMap::ENABLE_BNPL,
                 'is_bool' => true,
                 'values' => array(
@@ -92,13 +92,13 @@ class FormInstallment implements FormInterface
                 'type' => 'html',
                 'html_content' => $this->getHtmlBnplPageDisplayingSetting(),
                 'name' => '',
-                'label' => $isoCountryDefault == 'gb' ? $this->module->l('\'Pay in 3x\' is active on', $this->className) : $this->module->l('\'Pay in 4x\' is active on', $this->className),
+                'label' => $isoCountryDefault == 'gb' ? $this->module->l('\'Pay Later\' is active on', $this->className) : $this->module->l('\'Pay in 4x\' is active on', $this->className),
             );
         }
 
         $input[] = array(
             'type' => 'switch',
-            'label' => $isoCountryDefault == 'gb' ? $this->module->l('Enable the display of 3x banners', $this->className) : $this->module->l('Enable the display of 4x banners', $this->className),
+            'label' => $isoCountryDefault == 'gb' ? $this->module->l('Enable the display of banners', $this->className) : $this->module->l('Enable the display of banners', $this->className),
             'name' => ConfigurationMap::ENABLE_INSTALLMENT,
             'is_bool' => true,
             'hint' => $this->module->l('Let your customers know about the option \'Pay 4x PayPal\' by displaying banners on your site.', $this->className),

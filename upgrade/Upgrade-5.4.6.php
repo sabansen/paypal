@@ -49,5 +49,11 @@ function upgrade_module_5_4_6($module)
     } else {
         Configuration::updateValue(\PaypalAddons\classes\InstallmentBanner\ConfigurationMap::BNPL_PAYMENT_STEP_PAGE, 1);
     }
+
+    $installer = new ModuleInstaller($module);
+    $installer->uninstallModuleAdminControllers();
+    $installer->installAdminControllers();
+    $module->hookActionLocalizationPageSave([]);
+
     return true;
 }
