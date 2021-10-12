@@ -24,6 +24,7 @@
  */
 
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\services\PaymentData;
 
 /**
  * Validate EC payment
@@ -33,8 +34,17 @@ class PaypalEcValidationModuleFrontController extends PaypalAbstarctModuleFrontC
     public function init()
     {
         parent::init();
+
+        if (Tools::isSubmit('paymentData')) {
+            $paymentData = $this->parsePaymentData(Tools::getValue('paymentData'));
+            $this->values['paymentId'] = $paymentData->getOrderId();
+        }
+
         $this->values['short_cut'] = Tools::getvalue('short_cut');
-        $this->values['paymentId'] = Tools::getvalue('token');
+
+        if (empty($this->values['paymentId'])) {
+            $this->values['paymentId'] = Tools::getvalue('token');
+        }
     }
     /**
      * @see FrontController::postProcess()
@@ -88,5 +98,26 @@ class PaypalEcValidationModuleFrontController extends PaypalAbstarctModuleFrontC
                 $this->redirectUrl = Context::getContext()->link->getModuleLink($this->name, 'error', $this->_errors);
             }
         }
+    }
+
+    /**
+     * @return PaymentData
+     */
+    protected function parsePaymentData($data)
+    {
+        $paymentDataObj = new PaymentData();
+
+        try {
+            $paymentData = json_decode($data, true);
+        } catch (Exception $e) {
+            $paymentData = [];
+        }
+
+        if (false == is_array($paymentData)) {
+            return $paymentDataObj;
+        }
+
+        $paymentDataObj->fromArray($paymentData);
+        return $paymentDataObj;
     }
 }

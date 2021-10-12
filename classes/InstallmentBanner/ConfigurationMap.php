@@ -65,6 +65,8 @@ class ConfigurationMap
 
     const PAGE_TYPE_CHECKOUT = 'checkout';
 
+    const PAGE_TYPE_PAYMENT_STEP = 'payment-step';
+
     const ENABLE_BNPL = 'PAYPAL_ENABLE_BNPL';
 
     const BNPL_PRODUCT_PAGE = 'PAYPAL_BNPL_PRODUCT_PAGE';

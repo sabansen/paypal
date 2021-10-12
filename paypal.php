@@ -33,8 +33,10 @@ use PaypalAddons\classes\InstallmentBanner\BNPL\BnplAvailabilityManager;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLCart;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLDummy;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLOption;
+use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLPaymentStep;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLProduct;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLSignup;
+use PaypalAddons\classes\InstallmentBanner\ConfigurationMap;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Shortcut\ShortcutSignup;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerExtension;
@@ -712,6 +714,9 @@ class PayPal extends \PaymentModule implements WidgetInterface
         $isoCountryDefault = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
         $payments_options = array();
         $method = AbstractMethodPaypal::load();
+        $bnplAvailabilityManager = $this->getBnplAvailabilityManager();
+        $bnplOption = $this->getBnplOption();
+
         switch ($this->paypal_method) {
             case 'EC':
                 if ($method->isConfigured()) {
@@ -787,6 +792,12 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 }
 
                 break;
+        }
+
+        if ($bnplOption->isEnable() && $bnplOption->displayOnPaymentStep()) {
+            if ($bnplAvailabilityManager->isEligibleCountryConfiguration() && $bnplAvailabilityManager->isEligibleContext()) {
+                $payments_options[] = $this->buildBnplPaymentOption($params);
+            }
         }
 
         if ($method->isSandbox() && false === empty($payments_options)) {
@@ -1084,6 +1095,14 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
         if (false == $bnplAvailabilityManager->isEligibleContext()) {
             return '';
+        }
+
+        if ($data['sourcePage'] == ConfigurationMap::PAGE_TYPE_PAYMENT_STEP) {
+            if ($bnplOption->displayOnPaymentStep() == false) {
+                return '';
+            }
+
+            $bnpl = new BNPLPaymentStep();
         }
 
         if ($data['sourcePage'] == ShortcutConfiguration::SOURCE_PAGE_CART) {
@@ -2462,5 +2481,34 @@ class PayPal extends \PaymentModule implements WidgetInterface
     public function getBnplAvailabilityManager()
     {
         return new BnplAvailabilityManager();
+    }
+
+    /**
+     * @return BNPLOption
+     */
+    public function getBnplOption()
+    {
+        return new BNPLOption();
+    }
+
+    /**
+     * @return PaymentOption
+     */
+    protected function buildBnplPaymentOption($params)
+    {
+        $paymentOption = new PaymentOption();
+        $action_text = $this->l('Pay with paypal in X');
+        $paymentOption->setCallToActionText($action_text);
+        $paymentOption->setAction(
+            sprintf(
+                'javascript:alert(\'%s\');',
+                $this->l('Should use the button "Pay in x"') // todo: specify message
+            )
+        );
+        $paymentOption->setModuleName('paypal_bnpl');
+        $paymentOption->setAdditionalInformation($this->renderBnpl(['sourcePage' => ConfigurationMap::PAGE_TYPE_PAYMENT_STEP]));
+        $paymentOption->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/paypal_logo.png'));
+
+        return $paymentOption;
     }
 }
