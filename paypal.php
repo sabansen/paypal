@@ -1620,25 +1620,25 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 if (Tools::strtolower($countryDefault->iso_code) === 'gb') {
                     switch(Tools::strtolower($language['iso_code'])) {
                         case 'fr':
-                            $installmentTab->name[$language['id_lang']] = 'Paiement en 3x';
+                            $installmentTab->name[$language['id_lang']] = 'Paiement Later';
                             break;
                         case 'de':
-                            $installmentTab->name[$language['id_lang']] = 'Zahlung in 3x';
+                            $installmentTab->name[$language['id_lang']] = 'Zahlung Later';
                             break;
                         default:
-                            $installmentTab->name[$language['id_lang']] = 'Payment in 3x';
+                            $installmentTab->name[$language['id_lang']] = 'Payment Later';
                             break;
                     }
                 } else {
                     switch(Tools::strtolower($language['iso_code'])) {
                         case 'fr':
-                            $installmentTab->name[$language['id_lang']] = 'Paiement en 4x';
+                            $installmentTab->name[$language['id_lang']] = 'Paiement Later';
                             break;
                         case 'de':
-                            $installmentTab->name[$language['id_lang']] = 'Zahlung in 4x';
+                            $installmentTab->name[$language['id_lang']] = 'Zahlung Later';
                             break;
                         default:
-                            $installmentTab->name[$language['id_lang']] = 'Payment in 4x';
+                            $installmentTab->name[$language['id_lang']] = 'Payment Later';
                             break;
                     }
                 }
