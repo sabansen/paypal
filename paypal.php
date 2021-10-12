@@ -285,9 +285,9 @@ class PayPal extends \PaymentModule implements WidgetInterface
         ),
         array(
             'name' => array(
-                'en' => 'Payment Later',
-                'fr' => 'Payment Later',
-                'de' => 'Payment Later'
+                'en' => 'Pay in X',
+                'fr' => 'Pay in X',
+                'de' => 'Pay in X'
             ),
             'class_name' => 'AdminPayPalInstallment',
             'parent_class_name' => 'AdminPayPalConfiguration',
@@ -1620,25 +1620,25 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 if (Tools::strtolower($countryDefault->iso_code) === 'gb') {
                     switch(Tools::strtolower($language['iso_code'])) {
                         case 'fr':
-                            $installmentTab->name[$language['id_lang']] = 'Paiement Later';
+                            $installmentTab->name[$language['id_lang']] = 'Pay in X';
                             break;
                         case 'de':
-                            $installmentTab->name[$language['id_lang']] = 'Zahlung Later';
+                            $installmentTab->name[$language['id_lang']] = 'Pay in X';
                             break;
                         default:
-                            $installmentTab->name[$language['id_lang']] = 'Payment Later';
+                            $installmentTab->name[$language['id_lang']] = 'Pay in X';
                             break;
                     }
                 } else {
                     switch(Tools::strtolower($language['iso_code'])) {
                         case 'fr':
-                            $installmentTab->name[$language['id_lang']] = 'Paiement Later';
+                            $installmentTab->name[$language['id_lang']] = 'Pay in X';
                             break;
                         case 'de':
-                            $installmentTab->name[$language['id_lang']] = 'Zahlung Later';
+                            $installmentTab->name[$language['id_lang']] = 'Pay in X';
                             break;
                         default:
-                            $installmentTab->name[$language['id_lang']] = 'Payment Later';
+                            $installmentTab->name[$language['id_lang']] = 'Pay in X';
                             break;
                     }
                 }
