@@ -41,6 +41,19 @@
     <div class="form-group">
       <input
               type="checkbox"
+              id="PAYPAL_BNPL_PAYMENT_STEP_PAGE"
+              name="PAYPAL_BNPL_PAYMENT_STEP_PAGE"
+              value="1"
+              {if isset($PAYPAL_BNPL_PAYMENT_STEP_PAGE) && $PAYPAL_BNPL_PAYMENT_STEP_PAGE}checked{/if}
+      >
+      <label for="PAYPAL_BNPL_PAYMENT_STEP_PAGE" class="control-label">
+          {l s='Step payment in checkout' mod='paypal'}
+      </label>
+    </div>
+
+    <div class="form-group">
+      <input
+              type="checkbox"
               id="PAYPAL_BNPL_PRODUCT_PAGE"
               name="PAYPAL_BNPL_PRODUCT_PAGE"
               value="1"

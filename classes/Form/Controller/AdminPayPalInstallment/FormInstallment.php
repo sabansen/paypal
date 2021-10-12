@@ -211,6 +211,7 @@ class FormInstallment implements FormInterface
         $return &= Configuration::updateValue(ConfigurationMap::BNPL_CHECKOUT_PAGE, (int)Tools::getValue(ConfigurationMap::BNPL_CHECKOUT_PAGE));
         $return &= Configuration::updateValue(ConfigurationMap::BNPL_CART_PAGE, (int)Tools::getValue(ConfigurationMap::BNPL_CART_PAGE));
         $return &= Configuration::updateValue(ConfigurationMap::BNPL_PRODUCT_PAGE, (int)Tools::getValue(ConfigurationMap::BNPL_PRODUCT_PAGE));
+        $return &= Configuration::updateValue(ConfigurationMap::BNPL_PAYMENT_STEP_PAGE, (int)Tools::getValue(ConfigurationMap::BNPL_PAYMENT_STEP_PAGE));
 
         return $return;
     }
@@ -222,6 +223,7 @@ class FormInstallment implements FormInterface
     {
         Context::getContext()->smarty->assign([
             ConfigurationMap::BNPL_PRODUCT_PAGE => Configuration::get(ConfigurationMap::BNPL_PRODUCT_PAGE),
+            ConfigurationMap::BNPL_PAYMENT_STEP_PAGE => Configuration::get(ConfigurationMap::BNPL_PAYMENT_STEP_PAGE),
             ConfigurationMap::BNPL_CART_PAGE => Configuration::get(ConfigurationMap::BNPL_CART_PAGE),
             ConfigurationMap::BNPL_CHECKOUT_PAGE => Configuration::get(ConfigurationMap::BNPL_CHECKOUT_PAGE)
         ]);
