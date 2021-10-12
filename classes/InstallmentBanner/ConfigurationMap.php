@@ -119,8 +119,21 @@ class ConfigurationMap
         ];
     }
 
+    public static function getBnplLanguageCurrencyMap()
+    {
+        return [
+            ['fr' => 'eur'],
+            ['de' => 'eur'],
+            ['gb' => 'gbp'],
+            ['en' => 'gbp'],
+            ['gb' => 'usd'],
+            ['en' => 'usd']
+        ];
+    }
+
     public static function getPageConfMap()
     {
+        //todo: should add possibility modify the list by hook?
         return [
             'OrderController' => self::CHECKOUT_PAGE,
             'CartController' => self::CART_PAGE,

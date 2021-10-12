@@ -29,6 +29,7 @@ if (!defined('_PS_VERSION_')) {
 
 include_once(_PS_MODULE_DIR_ . 'paypal/vendor/autoload.php');
 
+use PaypalAddons\classes\InstallmentBanner\BNPL\BnplAvailabilityManager;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLCart;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLDummy;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLOption;
@@ -1070,14 +1071,10 @@ class PayPal extends \PaymentModule implements WidgetInterface
     public function renderBnpl($data)
     {
         $bnplOption = new BNPLOption();
+        $bnplAvailabilityManager = $this->getBnplAvailabilityManager();
         $bnpl = new BNPLDummy();
-        $isoCountryDefault = Country::getIsoById((int)Configuration::get(
-            'PS_COUNTRY_DEFAULT',
-            null,
-            null,
-            $this->context->shop->id));
 
-        if (strtolower($isoCountryDefault) != 'fr') {
+        if (false == $bnplAvailabilityManager->isEligibleCountryConfiguration()) {
             return '';
         }
 
@@ -1085,11 +1082,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             return '';
         }
 
-        if (strtolower($this->context->currency->iso_code) != 'eur') {
-            return '';
-        }
-
-        if (strtolower($this->context->language->iso_code) != 'fr') {
+        if (false == $bnplAvailabilityManager->isEligibleContext()) {
             return '';
         }
 
@@ -2461,5 +2454,13 @@ class PayPal extends \PaymentModule implements WidgetInterface
     public function getBannerManager()
     {
         return new BannerManager();
+    }
+
+    /**
+     * @return BnplAvailabilityManager
+     */
+    public function getBnplAvailabilityManager()
+    {
+        return new BnplAvailabilityManager();
     }
 }
