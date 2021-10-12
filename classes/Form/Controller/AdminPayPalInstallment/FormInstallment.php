@@ -68,7 +68,7 @@ class FormInstallment implements FormInterface
             'label' => '',
         );
 
-        if ($isoCountryDefault == 'fr') {
+        if (in_array($isoCountryDefault, ConfigurationMap::getBnplAvailableCountries())) {
             $input[] = array(
                 'type' => 'switch',
                 'label' => $isoCountryDefault == 'gb' ? $this->module->l('Enable \'Pay in 3x\' in your checkout', $this->className) : $this->module->l('Enable \'Pay in 4x\' in your checkout', $this->className),

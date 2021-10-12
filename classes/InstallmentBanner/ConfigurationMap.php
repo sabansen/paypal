@@ -102,6 +102,11 @@ class ConfigurationMap
         return ['fr', 'de', 'gb', 'us'];
     }
 
+    public static function getBnplAvailableCountries()
+    {
+        return ['fr', 'de', 'gb', 'us', 'au'];
+    }
+
     public static function getLanguageCurrencyMap()
     {
         return [
