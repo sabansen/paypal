@@ -106,15 +106,19 @@ class ConfigurationMap
      */
     public static function getAllowedCountries()
     {
-        return ['fr', 'de', 'gb', 'us'];
+        return ['fr', 'de', 'gb', 'us', 'au'];
     }
 
     public static function getLanguageCurrencyMap()
     {
         return [
             ['fr' => 'eur'],
+            ['fr' => 'aud'],
             ['de' => 'eur'],
+            ['de' => 'aud'],
             ['gb' => 'gbp'],
+            ['gb' => 'aud'],
+            ['en' => 'aud'],
             ['en' => 'gbp'],
             ['gb' => 'usd'],
             ['en' => 'usd']
