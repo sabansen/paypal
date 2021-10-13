@@ -1050,7 +1050,7 @@ class PayPal extends PaymentModule
 
     public function hookDisplayMobileAddToCartTop()
     {
-        return $this->renderExpressCheckoutButton('cart');
+        return $this->renderExpressCheckoutButton('cart').$this->renderExpressCheckoutForm('cart');
     }
 
     public function hookProductFooter()
@@ -1313,7 +1313,7 @@ class PayPal extends PaymentModule
             $content .= $bannerManager->renderForCartPage();
         }
 
-        return $content . $this->renderExpressCheckoutButton('cart');
+        return $content . $this->renderExpressCheckoutButton('cart').$this->renderExpressCheckoutForm('cart');
     }
 
     public function hookPaymentReturn($params)
