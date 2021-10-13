@@ -44,6 +44,7 @@ const BNPL = {
 
   init() {
     this.updateInfo();
+    BNPL.checkProductAvailability();
     prestashop.on('updatedProduct', function(e, xhr, settings) {
       BNPL.checkProductAvailability();
     });

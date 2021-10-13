@@ -101,7 +101,7 @@ class ConfigurationMap
      */
     public static function getAllowedCountries()
     {
-        return ['fr', 'de', 'gb', 'us'];
+        return ['fr', 'de', 'gb', 'us', 'au'];
     }
 
     public static function getBnplAvailableCountries()
@@ -113,11 +113,21 @@ class ConfigurationMap
     {
         return [
             ['fr' => 'eur'],
+            ['fr' => 'gbp'],
+            ['fr' => 'usd'],
+            ['fr' => 'aud'],
             ['de' => 'eur'],
+            ['de' => 'gbp'],
+            ['de' => 'aud'],
+            ['de' => 'usd'],
             ['gb' => 'gbp'],
-            ['en' => 'gbp'],
             ['gb' => 'usd'],
-            ['en' => 'usd']
+            ['gb' => 'aud'],
+            ['gb' => 'eur'],
+            ['en' => 'gbp'],
+            ['en' => 'usd'],
+            ['en' => 'aud'],
+            ['en' => 'eur'],
         ];
     }
 
@@ -125,11 +135,21 @@ class ConfigurationMap
     {
         return [
             ['fr' => 'eur'],
+            ['fr' => 'gbp'],
+            ['fr' => 'usd'],
+            ['fr' => 'aud'],
             ['de' => 'eur'],
+            ['de' => 'gbp'],
+            ['de' => 'aud'],
+            ['de' => 'usd'],
             ['gb' => 'gbp'],
-            ['en' => 'gbp'],
             ['gb' => 'usd'],
-            ['en' => 'usd']
+            ['gb' => 'aud'],
+            ['gb' => 'eur'],
+            ['en' => 'gbp'],
+            ['en' => 'usd'],
+            ['en' => 'aud'],
+            ['en' => 'eur'],
         ];
     }
 
