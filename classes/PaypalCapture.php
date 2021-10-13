@@ -30,6 +30,8 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+require_once _PS_MODULE_DIR_ . 'paypal/classes/Services/OrderPrice.php';
+
 class PaypalCapture extends ObjectModel
 {
 
@@ -115,9 +117,13 @@ class PaypalCapture extends ObjectModel
 
     public function getRestToPaid(Order $order)
     {
-        $cart = new Cart($order->id_cart);
-        $totalPaid = Tools::ps_round($cart->getOrderTotal(), 2);
+        $totalPaid = Tools::ps_round($this->getOrderPriceService()->getTotalPaidByReference($order->reference), 2);
         return Tools::ps_round($totalPaid, 2) - Tools::ps_round(self::getTotalAmountCapturedByIdOrder($order->id), 2);
+    }
+
+    protected function getOrderPriceService()
+    {
+        return new OrderPrice();
     }
 
     public function getRestToCapture($id_order)

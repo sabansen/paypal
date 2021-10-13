@@ -45,6 +45,7 @@ require_once _PS_MODULE_DIR_.'paypal/classes/InstallmentBanner/ConfigurationMap.
 require_once _PS_MODULE_DIR_.'paypal/classes/InstallmentBanner/BannerManager.php';
 require_once _PS_MODULE_DIR_.'paypal/classes/InstallmentBanner/Banner.php';
 require_once _PS_MODULE_DIR_.'paypal/express_checkout/ExpressCheckout.php';
+require_once _PS_MODULE_DIR_.'paypal/classes/Services/OrderPrice.php';
 
 define('WPS', 1); //Paypal Integral
 define('HSS', 2); //Paypal Integral Evolution
@@ -1376,9 +1377,10 @@ class PayPal extends PaymentModule
 
                         if (($capture_amount > Tools::ps_round(0, '6')) && (Tools::ps_round($cpt->getRestToPaid($ord), '6') >= $capture_amount)) {
                             $complete = false;
+                            $totalPaid = $this->getOrderPriceService()->getTotalPaidByReference($ord->reference);
 
-                            if ($capture_amount > Tools::ps_round((float) $ord->total_paid, '6')) {
-                                $capture_amount = Tools::ps_round((float) $ord->total_paid, '6');
+                            if ($capture_amount > Tools::ps_round((float) $totalPaid, '6')) {
+                                $capture_amount = Tools::ps_round((float) $totalPaid, '6');
                                 $complete = true;
                             }
                             if ($capture_amount == Tools::ps_round($cpt->getRestToPaid($ord), '6')) {
@@ -1447,6 +1449,11 @@ class PayPal extends PaymentModule
         }
 
         return $this->_html;
+    }
+
+    public function getOrderPriceService()
+    {
+        return new OrderPrice();
     }
 
     public function hookCancelProduct($params)
