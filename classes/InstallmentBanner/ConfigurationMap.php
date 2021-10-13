@@ -113,15 +113,21 @@ class ConfigurationMap
     {
         return [
             ['fr' => 'eur'],
+            ['fr' => 'gbp'],
+            ['fr' => 'usd'],
             ['fr' => 'aud'],
             ['de' => 'eur'],
+            ['de' => 'gbp'],
             ['de' => 'aud'],
+            ['de' => 'usd'],
             ['gb' => 'gbp'],
-            ['gb' => 'aud'],
-            ['en' => 'aud'],
-            ['en' => 'gbp'],
             ['gb' => 'usd'],
-            ['en' => 'usd']
+            ['gb' => 'aud'],
+            ['gb' => 'eur'],
+            ['en' => 'gbp'],
+            ['en' => 'usd'],
+            ['en' => 'aud'],
+            ['en' => 'eur'],
         ];
     }
 }
