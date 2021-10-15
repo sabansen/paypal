@@ -31,6 +31,8 @@
     [data-container-bnpl] {
       margin: 10px 0;
       display: flex;
+      flex-direction: column;
+      align-items: flex-start;
     }
 
   </style>
@@ -42,20 +44,26 @@
       <input type="hidden" id="source_page" name="source_page" value="cart">
     </form>
     <div paypal-bnpl-button-container></div>
+
+    <div style="display: none" class="alert alert-danger" paypal-wrong-button-message>
+      <div>{l s='Please click on the \'Pay in X\' button' mod='paypal'}</div>
+    </div>
   </div>
   <div class="clearfix"></div>
 {/block}
 
 {block name='js'}
   <script>
-      $('#payment-confirmation button').on('click', (event) => {
-          let selectedOption = $('input[name=payment-option]:checked');
-          if (selectedOption.attr("data-module-name") == "paypal_bnpl") {
-              event.preventDefault();
-              event.stopPropagation();
-              alert('Should use button "Pay in x"');
-          }
-      });
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelector('#payment-confirmation button').addEventListener('click', function(event) {
+            let selectedOption = $('input[name=payment-option]:checked');
+            if (selectedOption.attr("data-module-name") == "paypal_bnpl") {
+                event.preventDefault();
+                event.stopPropagation();
+                document.querySelector('[paypal-wrong-button-message]').style.display = 'block';
+            }
+        });
+    });
   </script>
 {/block}
 
