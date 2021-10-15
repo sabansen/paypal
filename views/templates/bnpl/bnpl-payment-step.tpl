@@ -46,7 +46,7 @@
     <div paypal-bnpl-button-container></div>
 
     <div style="display: none" class="alert alert-danger" paypal-wrong-button-message>
-      <div>{l s='Please click on the \'Pay in X\' button' mod='paypal'}</div>
+      <div>{l s='Please click on the \'Pay in X times\' button' mod='paypal'}</div>
     </div>
   </div>
   <div class="clearfix"></div>

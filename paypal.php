@@ -285,9 +285,9 @@ class PayPal extends \PaymentModule implements WidgetInterface
         ),
         array(
             'name' => array(
-                'en' => 'Pay in X',
-                'fr' => 'Pay in X',
-                'de' => 'Pay in X'
+                'en' => 'Pay in X times',
+                'fr' => 'Paiement en X fois',
+                'de' => 'Pay in X times'
             ),
             'class_name' => 'AdminPayPalInstallment',
             'parent_class_name' => 'AdminPayPalConfiguration',
@@ -1617,32 +1617,17 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
         if (in_array(Tools::strtolower($countryDefault->iso_code), InstallmentConfiguration::getAllowedCountries()) && $method->isConfigured()) {
             foreach (Language::getLanguages() as $language) {
-                if (Tools::strtolower($countryDefault->iso_code) === 'gb') {
-                    switch(Tools::strtolower($language['iso_code'])) {
-                        case 'fr':
-                            $installmentTab->name[$language['id_lang']] = 'Pay in X';
-                            break;
-                        case 'de':
-                            $installmentTab->name[$language['id_lang']] = 'Pay in X';
-                            break;
-                        default:
-                            $installmentTab->name[$language['id_lang']] = 'Pay in X';
-                            break;
-                    }
-                } else {
-                    switch(Tools::strtolower($language['iso_code'])) {
-                        case 'fr':
-                            $installmentTab->name[$language['id_lang']] = 'Pay in X';
-                            break;
-                        case 'de':
-                            $installmentTab->name[$language['id_lang']] = 'Pay in X';
-                            break;
-                        default:
-                            $installmentTab->name[$language['id_lang']] = 'Pay in X';
-                            break;
-                    }
+                switch(Tools::strtolower($language['iso_code'])) {
+                    case 'fr':
+                        $installmentTab->name[$language['id_lang']] = 'Paiement en X fois';
+                        break;
+                    case 'de':
+                        $installmentTab->name[$language['id_lang']] = 'Pay in X times';
+                        break;
+                    default:
+                        $installmentTab->name[$language['id_lang']] = 'Pay in X times';
+                        break;
                 }
-
             }
 
             $installmentTab->active = true;
@@ -2502,7 +2487,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         $paymentOption->setAction(
             sprintf(
                 'javascript:alert(\'%s\');',
-                $this->l('Should use the button "Pay in x"') // todo: specify message
+                $this->l('Should use the button "Pay in X times"') // todo: specify message
             )
         );
         $paymentOption->setModuleName('paypal_bnpl');

@@ -71,7 +71,7 @@ class FormInstallment implements FormInterface
         if (in_array($isoCountryDefault, ConfigurationMap::getBnplAvailableCountries())) {
             $input[] = array(
                 'type' => 'switch',
-                'label' => $this->module->l('Enable \'Pay in X\' in your checkout', $this->className),
+                'label' => $this->module->l('Enable \'Pay in X times\' in your checkout', $this->className),
                 'name' => ConfigurationMap::ENABLE_BNPL,
                 'is_bool' => true,
                 'values' => array(
@@ -92,7 +92,7 @@ class FormInstallment implements FormInterface
                 'type' => 'html',
                 'html_content' => $this->getHtmlBnplPageDisplayingSetting(),
                 'name' => '',
-                'label' => $this->module->l('\'Pay in X\' is active on', $this->className),
+                'label' => $this->module->l('\'Pay in X times\' is active on', $this->className),
             );
         }
 
