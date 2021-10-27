@@ -24,35 +24,36 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
-namespace PaypalAddons\classes\InstallmentBanner\BNPL;
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
-use Configuration;
-use PaypalAddons\classes\InstallmentBanner\ConfigurationMap;
+use PaypalPPBTlib\Install\ModuleInstaller;
 
-class BNPLOption
+/**
+ * @param $module PayPal
+ * @return bool
+ */
+function upgrade_module_5_4_6($module)
 {
-    public function isEnable()
-    {
-        return (bool)Configuration::get(ConfigurationMap::ENABLE_BNPL);
+    if (Shop::isFeatureActive()) {
+        foreach (Shop::getShops() as $shop) {
+            Configuration::updateValue(
+                \PaypalAddons\classes\InstallmentBanner\ConfigurationMap::BNPL_PAYMENT_STEP_PAGE,
+                1,
+                false,
+                null,
+                (int)$shop['id_shop']
+            );
+        }
+    } else {
+        Configuration::updateValue(\PaypalAddons\classes\InstallmentBanner\ConfigurationMap::BNPL_PAYMENT_STEP_PAGE, 1);
     }
 
-    public function displayOnCart()
-    {
-        return (bool)Configuration::get(ConfigurationMap::BNPL_CART_PAGE);
-    }
+    $installer = new ModuleInstaller($module);
+    $installer->uninstallModuleAdminControllers();
+    $installer->installAdminControllers();
+    $module->hookActionLocalizationPageSave([]);
 
-    public function displayOnProduct()
-    {
-        return (bool)Configuration::get(ConfigurationMap::BNPL_PRODUCT_PAGE);
-    }
-
-    public function displayOnSignup()
-    {
-        return (bool)Configuration::get(ConfigurationMap::BNPL_CHECKOUT_PAGE);
-    }
-
-    public function displayOnPaymentStep()
-    {
-        return (bool)Configuration::get(ConfigurationMap::BNPL_PAYMENT_STEP_PAGE);
-    }
+    return true;
 }

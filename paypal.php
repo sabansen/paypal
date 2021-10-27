@@ -29,11 +29,14 @@ if (!defined('_PS_VERSION_')) {
 
 include_once(_PS_MODULE_DIR_ . 'paypal/vendor/autoload.php');
 
+use PaypalAddons\classes\InstallmentBanner\BNPL\BnplAvailabilityManager;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLCart;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLDummy;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLOption;
+use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLPaymentStep;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLProduct;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLSignup;
+use PaypalAddons\classes\InstallmentBanner\ConfigurationMap;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Shortcut\ShortcutSignup;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerExtension;
@@ -282,9 +285,9 @@ class PayPal extends \PaymentModule implements WidgetInterface
         ),
         array(
             'name' => array(
-                'en' => 'Payment in 4x',
-                'fr' => 'Paiement en 4x',
-                'de' => 'Zahlung in 4x'
+                'en' => 'Pay in X times',
+                'fr' => 'Paiement en X fois',
+                'de' => 'Pay in X times'
             ),
             'class_name' => 'AdminPayPalInstallment',
             'parent_class_name' => 'AdminPayPalConfiguration',
@@ -412,6 +415,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             'PAYPAL_NOT_SHOW_PS_CHECKOUT' => json_encode([$this->version, 0]),
             \PaypalAddons\classes\InstallmentBanner\ConfigurationMap::ENABLE_BNPL => 1,
             \PaypalAddons\classes\InstallmentBanner\ConfigurationMap::BNPL_CART_PAGE => 1,
+            \PaypalAddons\classes\InstallmentBanner\ConfigurationMap::BNPL_PAYMENT_STEP_PAGE => 1,
         );
 
         if (version_compare(_PS_VERSION_, '1.7.6', '<')) {
@@ -710,6 +714,9 @@ class PayPal extends \PaymentModule implements WidgetInterface
         $isoCountryDefault = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
         $payments_options = array();
         $method = AbstractMethodPaypal::load();
+        $bnplAvailabilityManager = $this->getBnplAvailabilityManager();
+        $bnplOption = $this->getBnplOption();
+
         switch ($this->paypal_method) {
             case 'EC':
                 if ($method->isConfigured()) {
@@ -739,7 +746,11 @@ class PayPal extends \PaymentModule implements WidgetInterface
                     $payment_option->setModuleName('paypal_plus');
                     try {
                         $this->context->smarty->assign('path', $this->_path);
-                        $payment_option->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_ppp.tpl'));
+                        $payment_option->setAdditionalInformation(
+                            $this->context->smarty
+                                ->assign('showAdvantage', Configuration::get('PAYPAL_API_ADVANTAGES'))
+                                ->fetch('module:paypal/views/templates/front/payment_ppp.tpl')
+                        );
                     } catch (Exception $e) {
                         die($e);
                     }
@@ -781,6 +792,12 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 }
 
                 break;
+        }
+
+        if ($bnplOption->isEnable() && $bnplOption->displayOnPaymentStep()) {
+            if ($bnplAvailabilityManager->isEligibleCountryConfiguration() && $bnplAvailabilityManager->isEligibleContext()) {
+                $payments_options[] = $this->buildBnplPaymentOption($params);
+            }
         }
 
         if ($method->isSandbox() && false === empty($payments_options)) {
@@ -1065,14 +1082,10 @@ class PayPal extends \PaymentModule implements WidgetInterface
     public function renderBnpl($data)
     {
         $bnplOption = new BNPLOption();
+        $bnplAvailabilityManager = $this->getBnplAvailabilityManager();
         $bnpl = new BNPLDummy();
-        $isoCountryDefault = Country::getIsoById((int)Configuration::get(
-            'PS_COUNTRY_DEFAULT',
-            null,
-            null,
-            $this->context->shop->id));
 
-        if (strtolower($isoCountryDefault) != 'fr') {
+        if (false == $bnplAvailabilityManager->isEligibleCountryConfiguration()) {
             return '';
         }
 
@@ -1080,12 +1093,16 @@ class PayPal extends \PaymentModule implements WidgetInterface
             return '';
         }
 
-        if (strtolower($this->context->currency->iso_code) != 'eur') {
+        if (false == $bnplAvailabilityManager->isEligibleContext()) {
             return '';
         }
 
-        if (strtolower($this->context->language->iso_code) != 'fr') {
-            return '';
+        if ($data['sourcePage'] == ConfigurationMap::PAGE_TYPE_PAYMENT_STEP) {
+            if ($bnplOption->displayOnPaymentStep() == false) {
+                return '';
+            }
+
+            $bnpl = new BNPLPaymentStep();
         }
 
         if ($data['sourcePage'] == ShortcutConfiguration::SOURCE_PAGE_CART) {
@@ -1600,32 +1617,17 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
         if (in_array(Tools::strtolower($countryDefault->iso_code), InstallmentConfiguration::getAllowedCountries()) && $method->isConfigured()) {
             foreach (Language::getLanguages() as $language) {
-                if (Tools::strtolower($countryDefault->iso_code) === 'gb') {
-                    switch(Tools::strtolower($language['iso_code'])) {
-                        case 'fr':
-                            $installmentTab->name[$language['id_lang']] = 'Paiement en 3x';
-                            break;
-                        case 'de':
-                            $installmentTab->name[$language['id_lang']] = 'Zahlung in 3x';
-                            break;
-                        default:
-                            $installmentTab->name[$language['id_lang']] = 'Payment in 3x';
-                            break;
-                    }
-                } else {
-                    switch(Tools::strtolower($language['iso_code'])) {
-                        case 'fr':
-                            $installmentTab->name[$language['id_lang']] = 'Paiement en 4x';
-                            break;
-                        case 'de':
-                            $installmentTab->name[$language['id_lang']] = 'Zahlung in 4x';
-                            break;
-                        default:
-                            $installmentTab->name[$language['id_lang']] = 'Payment in 4x';
-                            break;
-                    }
+                switch(Tools::strtolower($language['iso_code'])) {
+                    case 'fr':
+                        $installmentTab->name[$language['id_lang']] = 'Paiement en X fois';
+                        break;
+                    case 'de':
+                        $installmentTab->name[$language['id_lang']] = 'Pay in X times';
+                        break;
+                    default:
+                        $installmentTab->name[$language['id_lang']] = 'Pay in X times';
+                        break;
                 }
-
             }
 
             $installmentTab->active = true;
@@ -2456,5 +2458,42 @@ class PayPal extends \PaymentModule implements WidgetInterface
     public function getBannerManager()
     {
         return new BannerManager();
+    }
+
+    /**
+     * @return BnplAvailabilityManager
+     */
+    public function getBnplAvailabilityManager()
+    {
+        return new BnplAvailabilityManager();
+    }
+
+    /**
+     * @return BNPLOption
+     */
+    public function getBnplOption()
+    {
+        return new BNPLOption();
+    }
+
+    /**
+     * @return PaymentOption
+     */
+    protected function buildBnplPaymentOption($params)
+    {
+        $paymentOption = new PaymentOption();
+        $action_text = $this->l('Pay with paypal in X');
+        $paymentOption->setCallToActionText($action_text);
+        $paymentOption->setAction(
+            sprintf(
+                'javascript:alert(\'%s\');',
+                $this->l('Should use the button "Pay in X times"') // todo: specify message
+            )
+        );
+        $paymentOption->setModuleName('paypal_bnpl');
+        $paymentOption->setAdditionalInformation($this->renderBnpl(['sourcePage' => ConfigurationMap::PAGE_TYPE_PAYMENT_STEP]));
+        $paymentOption->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/paypal_logo.png'));
+
+        return $paymentOption;
     }
 }

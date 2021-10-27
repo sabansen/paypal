@@ -68,10 +68,10 @@ class FormInstallment implements FormInterface
             'label' => '',
         );
 
-        if ($isoCountryDefault == 'fr') {
+        if (in_array($isoCountryDefault, ConfigurationMap::getBnplAvailableCountries())) {
             $input[] = array(
                 'type' => 'switch',
-                'label' => $isoCountryDefault == 'gb' ? $this->module->l('Enable \'Pay in 3x\' in your checkout', $this->className) : $this->module->l('Enable \'Pay in 4x\' in your checkout', $this->className),
+                'label' => $this->module->l('Enable \'Pay in X times\' in your checkout', $this->className),
                 'name' => ConfigurationMap::ENABLE_BNPL,
                 'is_bool' => true,
                 'values' => array(
@@ -92,13 +92,13 @@ class FormInstallment implements FormInterface
                 'type' => 'html',
                 'html_content' => $this->getHtmlBnplPageDisplayingSetting(),
                 'name' => '',
-                'label' => $isoCountryDefault == 'gb' ? $this->module->l('\'Pay in 3x\' is active on', $this->className) : $this->module->l('\'Pay in 4x\' is active on', $this->className),
+                'label' => $this->module->l('\'Pay in X times\' is active on', $this->className),
             );
         }
 
         $input[] = array(
             'type' => 'switch',
-            'label' => $isoCountryDefault == 'gb' ? $this->module->l('Enable the display of 3x banners', $this->className) : $this->module->l('Enable the display of 4x banners', $this->className),
+            'label' => $this->module->l('Enable the display of banners', $this->className),
             'name' => ConfigurationMap::ENABLE_INSTALLMENT,
             'is_bool' => true,
             'hint' => $this->module->l('Let your customers know about the option \'Pay 4x PayPal\' by displaying banners on your site.', $this->className),
@@ -211,6 +211,7 @@ class FormInstallment implements FormInterface
         $return &= Configuration::updateValue(ConfigurationMap::BNPL_CHECKOUT_PAGE, (int)Tools::getValue(ConfigurationMap::BNPL_CHECKOUT_PAGE));
         $return &= Configuration::updateValue(ConfigurationMap::BNPL_CART_PAGE, (int)Tools::getValue(ConfigurationMap::BNPL_CART_PAGE));
         $return &= Configuration::updateValue(ConfigurationMap::BNPL_PRODUCT_PAGE, (int)Tools::getValue(ConfigurationMap::BNPL_PRODUCT_PAGE));
+        $return &= Configuration::updateValue(ConfigurationMap::BNPL_PAYMENT_STEP_PAGE, (int)Tools::getValue(ConfigurationMap::BNPL_PAYMENT_STEP_PAGE));
 
         return $return;
     }
@@ -222,6 +223,7 @@ class FormInstallment implements FormInterface
     {
         Context::getContext()->smarty->assign([
             ConfigurationMap::BNPL_PRODUCT_PAGE => Configuration::get(ConfigurationMap::BNPL_PRODUCT_PAGE),
+            ConfigurationMap::BNPL_PAYMENT_STEP_PAGE => Configuration::get(ConfigurationMap::BNPL_PAYMENT_STEP_PAGE),
             ConfigurationMap::BNPL_CART_PAGE => Configuration::get(ConfigurationMap::BNPL_CART_PAGE),
             ConfigurationMap::BNPL_CHECKOUT_PAGE => Configuration::get(ConfigurationMap::BNPL_CHECKOUT_PAGE)
         ]);

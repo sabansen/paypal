@@ -65,9 +65,13 @@ class ConfigurationMap
 
     const PAGE_TYPE_CHECKOUT = 'checkout';
 
+    const PAGE_TYPE_PAYMENT_STEP = 'payment-step';
+
     const ENABLE_BNPL = 'PAYPAL_ENABLE_BNPL';
 
     const BNPL_PRODUCT_PAGE = 'PAYPAL_BNPL_PRODUCT_PAGE';
+
+    const BNPL_PAYMENT_STEP_PAGE = 'PAYPAL_BNPL_PAYMENT_STEP_PAGE';
 
     const BNPL_CART_PAGE = 'PAYPAL_BNPL_CART_PAGE';
 
@@ -97,23 +101,61 @@ class ConfigurationMap
      */
     public static function getAllowedCountries()
     {
-        return ['fr', 'de', 'gb', 'us'];
+        return ['fr', 'de', 'gb', 'us', 'au'];
+    }
+
+    public static function getBnplAvailableCountries()
+    {
+        return ['fr', 'de', 'gb', 'us', 'au'];
     }
 
     public static function getLanguageCurrencyMap()
     {
         return [
             ['fr' => 'eur'],
+            ['fr' => 'gbp'],
+            ['fr' => 'usd'],
+            ['fr' => 'aud'],
             ['de' => 'eur'],
+            ['de' => 'gbp'],
+            ['de' => 'aud'],
+            ['de' => 'usd'],
             ['gb' => 'gbp'],
-            ['en' => 'gbp'],
             ['gb' => 'usd'],
-            ['en' => 'usd']
+            ['gb' => 'aud'],
+            ['gb' => 'eur'],
+            ['en' => 'gbp'],
+            ['en' => 'usd'],
+            ['en' => 'aud'],
+            ['en' => 'eur'],
+        ];
+    }
+
+    public static function getBnplLanguageCurrencyMap()
+    {
+        return [
+            ['fr' => 'eur'],
+            ['fr' => 'gbp'],
+            ['fr' => 'usd'],
+            ['fr' => 'aud'],
+            ['de' => 'eur'],
+            ['de' => 'gbp'],
+            ['de' => 'aud'],
+            ['de' => 'usd'],
+            ['gb' => 'gbp'],
+            ['gb' => 'usd'],
+            ['gb' => 'aud'],
+            ['gb' => 'eur'],
+            ['en' => 'gbp'],
+            ['en' => 'usd'],
+            ['en' => 'aud'],
+            ['en' => 'eur'],
         ];
     }
 
     public static function getPageConfMap()
     {
+        //todo: should add possibility modify the list by hook?
         return [
             'OrderController' => self::CHECKOUT_PAGE,
             'CartController' => self::CART_PAGE,

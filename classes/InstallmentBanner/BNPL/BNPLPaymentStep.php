@@ -27,32 +27,37 @@
 namespace PaypalAddons\classes\InstallmentBanner\BNPL;
 
 use Configuration;
-use PaypalAddons\classes\InstallmentBanner\ConfigurationMap;
+use Tools;
 
-class BNPLOption
+class BNPLPaymentStep extends BNPLAbstract
 {
-    public function isEnable()
+    protected function getTemplatePath()
     {
-        return (bool)Configuration::get(ConfigurationMap::ENABLE_BNPL);
+        return 'module:paypal/views/templates/bnpl/bnpl-payment-step.tpl';
     }
 
-    public function displayOnCart()
+    protected function getTplVars()
     {
-        return (bool)Configuration::get(ConfigurationMap::BNPL_CART_PAGE);
+        $environment = ($this->method->isSandbox() ? 'sandbox': 'live');
+        $shop_url = $this->context->link->getBaseLink($this->context->shop->id, true);
+
+        $return = array(
+            'shop_url' => $shop_url,
+            'PayPal_payment_type' => $this->getMethodType(),
+            'action_url' => $this->context->link->getModuleLink($this->module->name, 'ScInit', array(), true),
+            'ec_sc_in_context' => Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT'),
+            'merchant_id' => Configuration::get('PAYPAL_MERCHANT_ID_'.Tools::strtoupper($environment)),
+            'environment' => $environment,
+        );
+
+        return $return;
     }
 
-    public function displayOnProduct()
+    protected function getJSvars()
     {
-        return (bool)Configuration::get(ConfigurationMap::BNPL_PRODUCT_PAGE);
-    }
+        $vars = parent::getJSvars();
+        $vars['scOrderUrl'] = $this->method->getReturnUrl();
 
-    public function displayOnSignup()
-    {
-        return (bool)Configuration::get(ConfigurationMap::BNPL_CHECKOUT_PAGE);
-    }
-
-    public function displayOnPaymentStep()
-    {
-        return (bool)Configuration::get(ConfigurationMap::BNPL_PAYMENT_STEP_PAGE);
+        return $vars;
     }
 }

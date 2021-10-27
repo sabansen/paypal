@@ -36,7 +36,10 @@
   <div class="col-xs-12 col-md-10">
     <div class="paypal-plus-row-payment">
       <div class="payment_module paypal-plus">
-        {include file="module:paypal/views/templates/front/payment_infos.tpl"}
+        {if isset($showAdvantage) && $showAdvantage}
+            {include file="module:paypal/views/templates/front/payment_infos.tpl"}
+        {/if}
+
         <div id="ppplus" style="width: 100%;"></div>
       </div>
     </div>
