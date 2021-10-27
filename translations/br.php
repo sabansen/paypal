@@ -131,3 +131,12 @@ $_MODULE['<{paypal}prestashop>iframe_ecab922bc1f9b5726e2a6deb4acaec4e'] = 'Volte
 $_MODULE['<{paypal}prestashop>payment_dac2693baa5c5c9a5318609ed81c4f2a'] = 'Pague com o Paypal';
 $_MODULE['<{paypal}prestashop>payment_a3f2caee6ef8e68fbd26e42d83f2bf65'] = 'Pague com sua conta Paypal, cartão de crédito (CB, Visa, Mastercard...), ou cartão de crédito privado';
 $_MODULE['<{paypal}prestashop>payment_b08008a2de4331ba13f006c9bcf37b62'] = 'Pague com sua conta Paypal';
+$_MODULE['<{paypal}prestashop>back_office_dded4ff4c6103f5b41af5a17c215d75c'] = 'Pagamento em 3x';
+$_MODULE['<{paypal}prestashop>back_office_0822861afd7b07b0dc60ec6b127cb143'] = 'https://www.paypal.com/bizsignup/?country.x=BR';
+$_MODULE['<{paypal}prestashop>installmentsettings_1b139287ea9bd54f5252e7868dae1f40'] = 'Exibir o pagamento 3X PayPal em seu site';
+$_MODULE['<{paypal}prestashop>installmentsettings_b0a144a9a1cbd31bbc841d2656e20e51'] = 'Exibir mensagens de pagamento posteriores em seu site para ofertas como o Pay in 3, que permite aos clientes pagar com 3 pagamentos mensais sem juros.';
+$_MODULE['<{paypal}prestashop>installmentsettings_0d2dd5928e3d293dfe139a73840ecb6e'] = 'Mostraremos mensagens em seu site para promover este recurso para voc. Voc no pode promover ofertas de pagamento posteriores com qualquer outro contedo, marketing ou materiais.';
+$_MODULE['<{paypal}prestashop>installmentsettings_12cd357e7240fc5d8bd9884dec5c3a38'] = 'Habilite a exibição de banners 3x';
+$_MODULE['<{paypal}prestashop>installmentsettings_2884ea0466e67dd75144a184a3df5054'] = 'REST Client ID Sandbox';
+$_MODULE['<{paypal}prestashop>installmentsettings_ff2be5cf3891e5b5c7e937519c6e3a22'] = 'REST ID do cliente';
+$_MODULE['<{paypal}prestashop>installmentsettings_b4e962d20b8b7edfe2ce508713d941c0'] = 'Mostraremos mensagens em seu site para promover este recurso para você. Você não pode promover ofertas de pagamento posteriores com qualquer outro conteúdo, marketing ou materiais.';

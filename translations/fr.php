@@ -416,3 +416,12 @@ $_MODULE['<{paypal}prestashop>installmentsettings_ee2d3754b6e7f57898d9d8670f78ae
 $_MODULE['<{paypal}prestashop>installmentsettings_2cca02ce9a0a514bf0c7fd92b9ec8686'] = 'Styles pour la page d’accueil et pages catégories';
 $_MODULE['<{paypal}prestashop>installmentsettings_c9cc8cce247e49bae79f15173ce97354'] = 'Enregistrer';
 $_MODULE['<{paypal}prestashop>back_office_63bcf82f55380ac090b680f338d8dfe7'] = 'Vous pouvez trouvez votre account ID dans l\'onglet \"Account options\" > \"Business information\" > \"PayPal merchant ID\" dans les configurations de votre compte PayPal';
+$_MODULE['<{paypal}prestashop>back_office_dded4ff4c6103f5b41af5a17c215d75c'] = 'Paiement en 3x';
+$_MODULE['<{paypal}prestashop>back_office_0822861afd7b07b0dc60ec6b127cb143'] = 'https://www.paypal.com/bizsignup/?country.x=FR';
+$_MODULE['<{paypal}prestashop>installmentsettings_1b139287ea9bd54f5252e7868dae1f40'] = 'Affichez le paiement PayPal en 3x sur votre site';
+$_MODULE['<{paypal}prestashop>installmentsettings_b0a144a9a1cbd31bbc841d2656e20e51'] = 'Affichez des messages de paiement ultérieur sur votre site pour des offres comme le paiement en 3, qui permet aux clients de payer en 3 mensualités sans intérêt.';
+$_MODULE['<{paypal}prestashop>installmentsettings_0d2dd5928e3d293dfe139a73840ecb6e'] = 'Nous afficherons des messages sur votre site pour promouvoir cette fonction pour vous. Vous ne pouvez pas promouvoir les offres de paiement ultrieur avec tout autre contenu, marketing ou matriel.';
+$_MODULE['<{paypal}prestashop>installmentsettings_12cd357e7240fc5d8bd9884dec5c3a38'] = 'Permettre l\'affichage de 3x bannières';
+$_MODULE['<{paypal}prestashop>installmentsettings_2884ea0466e67dd75144a184a3df5054'] = 'REST Client ID Sandbox';
+$_MODULE['<{paypal}prestashop>installmentsettings_ff2be5cf3891e5b5c7e937519c6e3a22'] = 'REST Client ID';
+$_MODULE['<{paypal}prestashop>installmentsettings_b4e962d20b8b7edfe2ce508713d941c0'] = 'Nous afficherons des messages sur votre site pour promouvoir cette fonction pour vous. Vous ne pouvez pas promouvoir les offres de paiement ultérieur avec tout autre contenu, marketing ou matériel.';

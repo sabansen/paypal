@@ -376,3 +376,12 @@ $_MODULE['<{paypal}prestashop>paypal_96206d662aca4e9decf3cbfb572b1feb'] = 'Rimbo
 $_MODULE['<{paypal}prestashop>back_office_97df59e5ea5e291f9a9166e9e65889b5'] = 'Nota : Nell\'ambito del regolamento europeo PSD2 e della relativa SCA (Strong Customer Authentication) prevista dal 14 settembre 2019, tutte le transazioni dovranno passare attraverso SCA (3DS 2.0) con l\'obiettivo di ridurre i rischi per i clienti (maggiori responsabilità per il commerciante a la banca).';
 $_MODULE['<{paypal}prestashop>back_office_39bf0aadcf072faca7e9c3cf24c924c7'] = 'Dopo aver fatto clic sul pulsante \"Ottieni le mie credenziali PayPal\", inserisci il nome utente e la password PayPal nella finestra che verrà visualizzata, copia le informazioni fornite da PayPal e incollale nei campi sottostanti';
 $_MODULE['<{paypal}prestashop>back_office_3cd13873f8c7bdf1de12ed34ceb5a022'] = 'La funzione di Login con PayPal è stata rimossa in questa versione. Se era abilitata, verrà disattivata automaticamente.';
+$_MODULE['<{paypal}prestashop>back_office_dded4ff4c6103f5b41af5a17c215d75c'] = 'Pagamento in 3x';
+$_MODULE['<{paypal}prestashop>back_office_0822861afd7b07b0dc60ec6b127cb143'] = 'https://www.paypal.com/bizsignup/?country.x=IT';
+$_MODULE['<{paypal}prestashop>installmentsettings_1b139287ea9bd54f5252e7868dae1f40'] = 'Visualizza il pagamento in 3X di PayPal sul tuo sito';
+$_MODULE['<{paypal}prestashop>installmentsettings_b0a144a9a1cbd31bbc841d2656e20e51'] = 'Visualizzare la messaggistica di pagamento più tardi sul tuo sito per le offerte come Pay in 3, che permette ai clienti di pagare con 3 pagamenti mensili senza interessi.';
+$_MODULE['<{paypal}prestashop>installmentsettings_0d2dd5928e3d293dfe139a73840ecb6e'] = 'Mostreremo messaggi sul tuo sito per promuovere questa funzione per te. Non puoi promuovere le offerte pay later con altri contenuti, marketing o materiali.';
+$_MODULE['<{paypal}prestashop>installmentsettings_12cd357e7240fc5d8bd9884dec5c3a38'] = 'Abilita la visualizzazione dei banner 3x';
+$_MODULE['<{paypal}prestashop>installmentsettings_2884ea0466e67dd75144a184a3df5054'] = 'REST Client ID Sandbox';
+$_MODULE['<{paypal}prestashop>installmentsettings_ff2be5cf3891e5b5c7e937519c6e3a22'] = 'REST Client ID';
+$_MODULE['<{paypal}prestashop>installmentsettings_b4e962d20b8b7edfe2ce508713d941c0'] = 'Mostreremo messaggi sul tuo sito per promuovere questa funzione per te. Non puoi promuovere le offerte pay later con altri contenuti, marketing o materiali.';
