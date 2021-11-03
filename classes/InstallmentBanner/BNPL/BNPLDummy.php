@@ -26,7 +26,6 @@
 
 namespace PaypalAddons\classes\InstallmentBanner\BNPL;
 
-
 class BNPLDummy
 {
     public function render()

@@ -55,8 +55,8 @@ class BannerManager
      */
     public function isEligibleContext()
     {
-        $isoLang = strtolower($this->context->language->iso_code);
-        $isoCurrency = strtolower($this->context->currency->iso_code);
+        $isoLang = \Tools::strtolower($this->context->language->iso_code);
+        $isoCurrency = \Tools::strtolower($this->context->currency->iso_code);
 
         foreach (ConfigurationMap::getLanguageCurrencyMap() as $langCurrency) {
             if (isset($langCurrency[$isoLang]) && $langCurrency[$isoLang] == $isoCurrency) {
@@ -99,13 +99,16 @@ class BannerManager
 
     public function isEligibleCountry()
     {
-        $isoCountryDefault = Country::getIsoById((int)Configuration::get(
-            'PS_COUNTRY_DEFAULT',
-            null,
-            null,
-            $this->context->shop->id));
+        $isoCountryDefault = Country::getIsoById(
+            (int)Configuration::get(
+                'PS_COUNTRY_DEFAULT',
+                null,
+                null,
+                $this->context->shop->id
+            )
+        );
 
-        if (false === in_array(strtolower($isoCountryDefault), ConfigurationMap::getAllowedCountries())) {
+        if (false === in_array(\Tools::strtolower($isoCountryDefault), ConfigurationMap::getAllowedCountries())) {
             return false;
         }
 

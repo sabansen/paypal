@@ -26,7 +26,6 @@
 
 namespace PaypalAddons\classes\Form\Controller\AdminPayPalInstallment;
 
-
 use PaypalAddons\classes\Form\FormInterface;
 use \Module;
 use \Configuration;
@@ -58,7 +57,7 @@ class FormInstallment implements FormInterface
      */
     public function getFields()
     {
-        $isoCountryDefault = strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
+        $isoCountryDefault = Tools::strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
         $input = [];
         $input[] = array(
             'type' => 'html',
@@ -260,7 +259,7 @@ class FormInstallment implements FormInterface
 
     protected function getBannerStyleSection()
     {
-        $isoCountryDefault = strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
+        $isoCountryDefault = Tools::strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
         $colorOptions = [
             new SelectOption(ConfigurationMap::COLOR_GRAY, $this->module->l('gray', $this->className)),
             new SelectOption(ConfigurationMap::COLOR_BLUE, $this->module->l('blue', $this->className)),
@@ -289,7 +288,7 @@ class FormInstallment implements FormInterface
     {
         $isoCountryDefault = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
         return Context::getContext()->smarty
-            ->assign('isoCountryDefault', strtolower($isoCountryDefault))
+            ->assign('isoCountryDefault', Tools::strtolower($isoCountryDefault))
             ->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/_partials/paypalBanner/installmentDisclaimer.tpl');
     }
 }

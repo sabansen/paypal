@@ -38,7 +38,7 @@ class ShortcutWidget extends AbstractWidget
     /**
      * @return string
      */
-    function render()
+    public function render()
     {
         $sourcePage = null;
 

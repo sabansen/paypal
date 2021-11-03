@@ -56,8 +56,8 @@ class BnplAvailabilityManager
      */
     public function isEligibleContext()
     {
-        $isoLang = strtolower($this->context->language->iso_code);
-        $isoCurrency = strtolower($this->context->currency->iso_code);
+        $isoLang = \Tools::strtolower($this->context->language->iso_code);
+        $isoCurrency = \Tools::strtolower($this->context->currency->iso_code);
 
         foreach (ConfigurationMap::getBnplLanguageCurrencyMap() as $langCurrency) {
             if (isset($langCurrency[$isoLang]) && $langCurrency[$isoLang] == $isoCurrency) {
@@ -70,12 +70,15 @@ class BnplAvailabilityManager
 
     public function isEligibleCountryConfiguration()
     {
-        $isoCountryDefault = Country::getIsoById((int)Configuration::get(
-            'PS_COUNTRY_DEFAULT',
-            null,
-            null,
-            $this->context->shop->id));
+        $isoCountryDefault = Country::getIsoById(
+            (int)Configuration::get(
+                'PS_COUNTRY_DEFAULT',
+                null,
+                null,
+                $this->context->shop->id
+            )
+        );
 
-        return in_array(strtolower($isoCountryDefault), ConfigurationMap::getBnplAvailableCountries());
+        return in_array(\Tools::strtolower($isoCountryDefault), ConfigurationMap::getBnplAvailableCountries());
     }
 }

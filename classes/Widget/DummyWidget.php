@@ -26,7 +26,6 @@
 
 namespace PaypalAddons\classes\Widget;
 
-
 class DummyWidget extends AbstractWidget
 {
 

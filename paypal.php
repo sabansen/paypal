@@ -1617,7 +1617,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
         if (in_array(Tools::strtolower($countryDefault->iso_code), InstallmentConfiguration::getAllowedCountries()) && $method->isConfigured()) {
             foreach (Language::getLanguages() as $language) {
-                switch(Tools::strtolower($language['iso_code'])) {
+                switch (Tools::strtolower($language['iso_code'])) {
                     case 'fr':
                         $installmentTab->name[$language['id_lang']] = 'Paiement en X fois';
                         break;
@@ -2239,7 +2239,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
             try {
                 $alias = Hook::getNameById(Hook::getIdByName($hookName));
-            } catch (Exception $e) {}
+            } catch (Exception $e) {
+            }
 
             $hookName = empty($alias) ? $hookName : $alias;
 

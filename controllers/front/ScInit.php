@@ -146,6 +146,6 @@ class PaypalScInitModuleFrontController extends PaypalAbstarctModuleFrontControl
 
     public function getRequest()
     {
-        return json_decode(file_get_contents('php://input'));
+        return json_decode(Tools::file_get_contents('php://input'));
     }
 }

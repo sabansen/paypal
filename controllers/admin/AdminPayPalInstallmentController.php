@@ -82,5 +82,4 @@ class AdminPayPalInstallmentController extends AdminPayPalController
         ]);
         return $jsonResponse->send();
     }
-
 }

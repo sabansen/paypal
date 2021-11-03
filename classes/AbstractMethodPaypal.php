@@ -222,7 +222,7 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         }
 
         // For prestashop version > 1.7.7
-        if  ($refundData = \Tools::getValue('cancel_product')) {
+        if ($refundData = \Tools::getValue('cancel_product')) {
             $amount += floatval(str_replace(',', '.', $refundData['shipping_amount']));
         }
 
@@ -375,7 +375,7 @@ abstract class AbstractMethodPaypal extends AbstractMethod
      * @param int $sourcePage
      * @return string
      */
-    public function renderExpressCheckoutShortCut($sourcePage, $isWidget=false)
+    public function renderExpressCheckoutShortCut($sourcePage, $isWidget = false)
     {
         if ($sourcePage === ShortcutConfiguration::SOURCE_PAGE_PRODUCT) {
             $Shortcut = new ShortcutProduct(

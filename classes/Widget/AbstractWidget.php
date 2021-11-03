@@ -45,7 +45,7 @@ abstract class AbstractWidget
      * @param array $configuratons
      * @return void
      */
-    public function __construct(Module $module, $configuratons=[])
+    public function __construct(Module $module, $configuratons = [])
     {
         $this->module = $module;
         $this->configuratons = $configuratons;
@@ -55,5 +55,5 @@ abstract class AbstractWidget
     /**
      * @return string
      */
-    abstract function render();
+    abstract public function render();
 }

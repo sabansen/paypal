@@ -39,7 +39,7 @@ class InstallmentWidget extends AbstractWidget
     /**
      * @return string
      */
-    function render()
+    public function render()
     {
         $bannerMaganager = new BannerManager();
 
