@@ -242,8 +242,7 @@ if (Tools::getValue('receiver_email') == Configuration::get('PAYPAL_BUSINESS_ACC
             while (file_exists($custom['id_cart'].'.txt')) {
                 sleep(1);
                 $seconds++;
-                if ($seconds >= 300)
-                {
+                if ($seconds >= 300) {
                     @rename($custom['id_cart'].'.txt', date('YmdHis').'_'.$custom['id_cart'].'.txt');
                 }
             }

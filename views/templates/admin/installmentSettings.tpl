@@ -280,10 +280,10 @@
                             {if isset($installmentColorOptions) && false === empty($installmentColorOptions)}
                                 {foreach from=$installmentColorOptions key=value item=title}
                                     <option
-                                            value="{$value|escape:'htmlall':'utf-8'}"
+                                            value="{$value|escape:'htmlall':'UTF-8'}"
                                             {if isset($PAYPAL_INSTALLMENT_COLOR) && $PAYPAL_INSTALLMENT_COLOR == $value}selected{/if}>
 
-                                        {$title|escape:'htmlall':'utf-8'}
+                                        {$title|escape:'htmlall':'UTF-8'}
                                     </option>
                                 {/foreach}
                             {/if}

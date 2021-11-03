@@ -103,7 +103,7 @@
                     type='text' size="85"
                     name="paypal_braintree_pub_key_live"
                     id="paypal_braintree_pub_key_live"
-                    value="{if isset($paypal_braintree_pub_key_live)}{$paypal_braintree_pub_key_live|escape:'htmlall':'utf-8'}{/if}"
+                    value="{if isset($paypal_braintree_pub_key_live)}{$paypal_braintree_pub_key_live|escape:'htmlall':'UTF-8'}{/if}"
                     autocomplete="off"
             />
         </dd>
@@ -115,7 +115,7 @@
                     size="85"
                     name="paypal_braintree_priv_key_live"
                     id="paypal_braintree_priv_key_live"
-                    value="{if isset($paypal_braintree_priv_key_live)}{$paypal_braintree_priv_key_live|escape:'htmlall':'utf-8'}{/if}"
+                    value="{if isset($paypal_braintree_priv_key_live)}{$paypal_braintree_priv_key_live|escape:'htmlall':'UTF-8'}{/if}"
                     autocomplete="off"
             />
         </dd>
@@ -127,7 +127,7 @@
                     size="85"
                     name="paypal_braintree_merchant_id_live"
                     id="paypal_braintree_merchant_id_live"
-                    value="{if isset($paypal_braintree_merchant_id_live)}{$paypal_braintree_merchant_id_live|escape:'htmlall':'utf-8'}{/if}"
+                    value="{if isset($paypal_braintree_merchant_id_live)}{$paypal_braintree_merchant_id_live|escape:'htmlall':'UTF-8'}{/if}"
                     autocomplete="off"
             />
         </dd>
@@ -147,7 +147,7 @@
                     type='text' size="85"
                     name="paypal_braintree_pub_key_sandbox"
                     id="paypal_braintree_pub_key_sandbox"
-                    value="{if isset($paypal_braintree_pub_key_sandbox)}{$paypal_braintree_pub_key_sandbox|escape:'htmlall':'utf-8'}{/if}"
+                    value="{if isset($paypal_braintree_pub_key_sandbox)}{$paypal_braintree_pub_key_sandbox|escape:'htmlall':'UTF-8'}{/if}"
                     autocomplete="off"
             />
         </dd>
@@ -159,7 +159,7 @@
                     size="85"
                     name="paypal_braintree_priv_key_sandbox"
                     id="paypal_braintree_priv_key_sandbox"
-                    value="{if isset($paypal_braintree_priv_key_sandbox)}{$paypal_braintree_priv_key_sandbox|escape:'htmlall':'utf-8'}{/if}"
+                    value="{if isset($paypal_braintree_priv_key_sandbox)}{$paypal_braintree_priv_key_sandbox|escape:'htmlall':'UTF-8'}{/if}"
                     autocomplete="off"
             />
         </dd>
@@ -171,7 +171,7 @@
                     size="85"
                     name="paypal_braintree_merchant_id_sandbox"
                     id="paypal_braintree_merchant_id_sandbox"
-                    value="{if isset($paypal_braintree_merchant_id_sandbox)}{$paypal_braintree_merchant_id_sandbox|escape:'htmlall':'utf-8'}{/if}"
+                    value="{if isset($paypal_braintree_merchant_id_sandbox)}{$paypal_braintree_merchant_id_sandbox|escape:'htmlall':'UTF-8'}{/if}"
                     autocomplete="off"
             />
         </dd>
