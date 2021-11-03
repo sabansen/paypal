@@ -23,7 +23,6 @@
  *  @author 2014-2019 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- *  
  */
 
 require_once _PS_MODULE_DIR_.'paypal/api/ApiPaypalPlus.php';

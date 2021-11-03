@@ -221,7 +221,6 @@ class PayPal extends PaymentModule
         $tab->module = $this->name;
 
         return $tab->save();
-
     }
 
     public function uninstallTab()
@@ -799,7 +798,7 @@ class PayPal extends PaymentModule
 
         // Tpl vars for Paypal installment banner. Start
         $banner = new Banner();
-        $isoCountryDefault = strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
+        $isoCountryDefault = Tools::strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
         $installmentColorOptions = [
             ConfigurationMap::COLOR_GRAY => $this->l('gray'),
             ConfigurationMap::COLOR_BLUE => $this->l('blue'),
@@ -1286,7 +1285,6 @@ class PayPal extends PaymentModule
     {
         if ($this->context->controller instanceof IndexController === false
             && $this->context->controller instanceof CategoryController === false) {
-
             return '';
         }
         $bannerManager = new BannerManager();

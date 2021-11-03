@@ -53,8 +53,7 @@ class PayPalSubmitModuleFrontController extends ModuleFrontController
             while (file_exists(dirname(__FILE__).'/../../'.$id_cart.'.txt')) {
                 sleep(1);
                 $seconds++;
-                if($seconds >= 300)
-                {
+                if ($seconds >= 300) {
                     @rename(dirname(__FILE__).'/../../'.$id_cart.'.txt', dirname(__FILE__).'/../../'.date('YmdHis').'_'.$id_cart.'.txt');
                 }
             }

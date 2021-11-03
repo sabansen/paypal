@@ -212,8 +212,6 @@ class PayPalInstall
         Configuration::deleteByName('PAYPAL_BRAINTREE_PRIV_KEY_SANDBOX');
         Configuration::deleteByName('PAYPAL_BRAINTREE_MERCHANT_ID_SANDBOX');
         Configuration::deleteByName('PAYPAL_USE_3D_SECURE');
-
-
     }
 
     /**

@@ -48,8 +48,8 @@ class BannerManager
         $badLanguageCurrencyContext = true;
 
         foreach (ConfigurationMap::getLanguageCurrencyMap() as $langCurrency) {
-            $isoLang = strtolower($this->context->language->iso_code);
-            $isoCurrency = strtolower($this->context->currency->iso_code);
+            $isoLang = Tools::strtolower($this->context->language->iso_code);
+            $isoCurrency = Tools::strtolower($this->context->currency->iso_code);
             if (isset($langCurrency[$isoLang]) && $langCurrency[$isoLang] == $isoCurrency) {
                 $badLanguageCurrencyContext = false;
             }
@@ -65,41 +65,39 @@ class BannerManager
 
         if ($this->context->controller instanceof CartController
             && false === (bool)Configuration::get(ConfigurationMap::CART_PAGE)) {
-
             return false;
         }
 
         if ($this->context->controller instanceof OrderController
             && false === (bool)Configuration::get(ConfigurationMap::CHECKOUT_PAGE)) {
-
             return false;
         }
 
         if ($this->context->controller instanceof ProductController
             && false === (bool)Configuration::get(ConfigurationMap::PRODUCT_PAGE)) {
-
             return false;
         }
 
         if ($this->context->controller instanceof IndexController
             && false === (bool)Configuration::get(ConfigurationMap::HOME_PAGE)) {
-
             return false;
         }
 
         if ($this->context->controller instanceof CategoryController
             && false === (bool)Configuration::get(ConfigurationMap::CATEGORY_PAGE)) {
-
             return false;
         }
 
-        $isoCountryDefault = Country::getIsoById((int)Configuration::get(
-            'PS_COUNTRY_DEFAULT',
-            null,
-            null,
-            $this->context->shop->id));
+        $isoCountryDefault = Country::getIsoById(
+            (int)Configuration::get(
+                'PS_COUNTRY_DEFAULT',
+                null,
+                null,
+                $this->context->shop->id
+            )
+        );
 
-        if (false === in_array(strtolower($isoCountryDefault), ConfigurationMap::getAllowedCountries())) {
+        if (false === in_array(Tools::strtolower($isoCountryDefault), ConfigurationMap::getAllowedCountries())) {
             return false;
         }
 

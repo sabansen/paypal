@@ -270,6 +270,4 @@ class PayPalLogin
 
         return $url . http_build_query($query);
     }
-
-
 }
