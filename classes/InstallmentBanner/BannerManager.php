@@ -1,6 +1,7 @@
 <?php
 /**
- * 2007-2021 PayPal
+ *
+ *  2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
  *
@@ -18,10 +19,11 @@
  *  versions in the future. If you wish to customize PrestaShop for your
  *  needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 2007-2020 PayPal
+ *  @author 2007-2021 PayPal
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ *
  */
 
 require_once 'Banner.php';
