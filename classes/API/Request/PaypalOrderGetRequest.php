@@ -50,7 +50,7 @@ class PaypalOrderGetRequest extends RequestAbstract
 
         try {
             $orderGetRequest = new OrdersGetRequest($this->idPayment);
-            $orderGetRequest->headers = array_merge($this->getHeaders(), $orderGetRequest);
+            $orderGetRequest->headers = array_merge($this->getHeaders(), $orderGetRequest->headers);
             $exec = $this->client->execute($orderGetRequest);
 
             if (in_array($exec->statusCode, [200, 201, 202])) {
