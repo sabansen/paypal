@@ -53,6 +53,7 @@ class PaypalCaptureAuthorizeRequest extends RequestAbstract
         $response = new ResponseCaptureAuthorize();
         $captureAuhorize = new AuthorizationsCaptureRequest($this->paypalOrder->id_transaction);
         $captureAuhorize->prefer('return=representation');
+        $captureAuhorize->headers = array_merge($this->getHeaders(), $captureAuhorize->headers);
 
         try {
             $exec = $this->client->execute($captureAuhorize);

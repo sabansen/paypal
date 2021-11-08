@@ -39,7 +39,9 @@ class PaypalAccessTokenRequest extends RequestAbstract
         $response = new PaypalResponseAccessToken();
 
         try {
-            $accessToken = $this->client->execute(new AccessTokenRequest($this->client->environment));
+            $accessTokenRequest = new AccessTokenRequest($this->client->environment);
+            $accessTokenRequest->headers = array_merge($this->getHeaders(), $accessTokenRequest->headers);
+            $accessToken = $this->client->execute($accessTokenRequest);
 
             if ($accessToken->statusCode == 200) {
                 $response->setSuccess(true)

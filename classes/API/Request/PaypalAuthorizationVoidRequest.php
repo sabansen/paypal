@@ -49,6 +49,7 @@ class PaypalAuthorizationVoidRequest extends RequestAbstract
     {
         $response = new ResponseAuthorizationVoid();
         $authorizationVoid = new AuthorizationsVoidRequest($this->paypalOrder->id_transaction);
+        $authorizationVoid->headers = array_merge($this->getHeaders(), $authorizationVoid->headers);
 
         try {
             $exec = $this->client->execute($authorizationVoid);

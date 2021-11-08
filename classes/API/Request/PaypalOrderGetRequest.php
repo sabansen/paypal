@@ -49,7 +49,9 @@ class PaypalOrderGetRequest extends RequestAbstract
         $response = new ResponseOrderGet();
 
         try {
-            $exec = $this->client->execute(new OrdersGetRequest($this->idPayment));
+            $orderGetRequest = new OrdersGetRequest($this->idPayment);
+            $orderGetRequest->headers = array_merge($this->getHeaders(), $orderGetRequest);
+            $exec = $this->client->execute($orderGetRequest);
 
             if (in_array($exec->statusCode, [200, 201, 202])) {
                 $response->setSuccess(true)

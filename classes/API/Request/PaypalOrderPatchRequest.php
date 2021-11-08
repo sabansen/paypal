@@ -50,6 +50,7 @@ class PaypalOrderPatchRequest extends PaypalOrderCreateRequest
         $response = new Response();
         $orderPath = new OrdersPatchRequest($this->idPayment);
         $orderPath->body = $this->buildRequestBody();
+        $orderPath->headers = array_merge($this->getHeaders(), $orderPath->headers);
 
         try {
             $exec = $this->client->execute($orderPath);

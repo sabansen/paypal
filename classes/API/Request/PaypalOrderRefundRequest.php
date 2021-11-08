@@ -53,6 +53,7 @@ class PaypalOrderRefundRequest extends RequestAbstract
         $response = new ResponseOrderRefund();
         $captureRefund = new CapturesRefundRequest($this->getResourceId());
         $captureRefund->prefer('return=representation');
+        $captureRefund->headers = array_merge($this->getHeaders(), $captureRefund->headers);
 
         try {
             if ($body = $this->buildRequestBody()) {
