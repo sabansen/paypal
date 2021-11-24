@@ -358,11 +358,41 @@ class PaypalOrderCreateRequest extends RequestAbstract
         if ($this->context->cart->id_address_delivery == false || $this->context->cart->isVirtualCart()) {
             return [];
         }
+
         $shippingInfo = [
             'address' => $this->getAddress()
         ];
 
+        $name = $this->getShippingName();
+
+        if (false == empty($name)) {
+            $shippingInfo['name'] = $name;
+        }
+
         return $shippingInfo;
+    }
+
+    protected function getShippingName()
+    {
+        if (empty($this->context->cart->id_address_delivery)) {
+            return [];
+        }
+
+        $address = new \Address($this->context->cart->id_address_delivery);
+
+        if (false == \Validate::isLoadedObject($address)) {
+            return [];
+        }
+
+        return [
+            'full_name' => implode(
+                ' ',
+                [
+                    $address->firstname,
+                    $address->lastname
+                ]
+            )
+        ];
     }
 
     /**
