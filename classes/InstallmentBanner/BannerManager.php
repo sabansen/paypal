@@ -29,6 +29,7 @@ namespace PaypalAddons\classes\InstallmentBanner;
 use \Context;
 use \Configuration;
 use \Country;
+use PaypalAddons\services\CurrencyConverter;
 use Symfony\Component\VarDumper\VarDumper;
 use \ProductController;
 use \CartController;
@@ -152,13 +153,20 @@ class BannerManager
      */
     public function renderForCartPage()
     {
+        $amount = $this->getCurrencyConverter()->convert($this->context->cart->getOrderTotal(true));
         return $this->banner
             ->setPlacement('cart')
             ->setLayout('text')
-            ->setAmount($this->context->cart->getOrderTotal(true))
+            ->setAmount($amount)
             ->setPageTypeAttribute(ConfigurationMap::PAGE_TYPE_CART)
             ->setTemplate(_PS_MODULE_DIR_ . 'paypal/views/templates/installmentBanner/cart-banner.tpl')
             ->render();
+    }
+
+    /** @return CurrencyConverter*/
+    public function getCurrencyConverter()
+    {
+        return new CurrencyConverter();
     }
 
     /**
@@ -166,10 +174,11 @@ class BannerManager
      */
     public function renderForCheckoutPage()
     {
+        $amount = $this->getCurrencyConverter()->convert($this->context->cart->getOrderTotal(true));
         return $this->banner
             ->setPlacement('payment')
             ->setLayout('text')
-            ->setAmount($this->context->cart->getOrderTotal(true))
+            ->setAmount($amount)
             ->setPageTypeAttribute(ConfigurationMap::PAGE_TYPE_CHECKOUT)
             ->addJsVar('paypalInstallmentController', $this->context->link->getModuleLink('paypal', 'installment'))
             ->setTemplate(_PS_MODULE_DIR_ . 'paypal/views/templates/installmentBanner/checkout-banner.tpl')
