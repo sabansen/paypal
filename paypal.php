@@ -795,9 +795,11 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 break;
         }
 
-        if ($bnplOption->isEnable() && $bnplOption->displayOnPaymentStep()) {
-            if ($bnplAvailabilityManager->isEligibleCountryConfiguration() && $bnplAvailabilityManager->isEligibleContext()) {
-                $payments_options[] = $this->buildBnplPaymentOption($params);
+        if ($method->isConfigured()) {
+            if ($bnplOption->isEnable() && $bnplOption->displayOnPaymentStep()) {
+                if ($bnplAvailabilityManager->isEligibleCountryConfiguration() && $bnplAvailabilityManager->isEligibleContext()) {
+                    $payments_options[] = $this->buildBnplPaymentOption($params);
+                }
             }
         }
 
