@@ -26,6 +26,7 @@
 
 namespace PaypalAddons\classes;
 
+use Cart;
 use Context;
 use Currency;
 use Customer;
@@ -41,6 +42,7 @@ use PaypalAddons\classes\Shortcut\ShortcutProduct;
 use PaypalAddons\classes\Shortcut\ShortcutCart;
 use PaypalAddons\classes\Shortcut\ShortcutSignup;
 use PaypalPPBTlib\AbstractMethod;
+use PrestaShopLogger;
 use Symfony\Component\VarDumper\VarDumper;
 use Tools;
 use Validate;
@@ -437,7 +439,11 @@ abstract class AbstractMethodPaypal extends AbstractMethod
             $key[] = $cart->id_carrier;
         }
 
-        $key[] = $paymentId;
+        try {
+            $key[] = $cart->getOrderTotal(true, Cart::BOTH);
+        } catch (Exception $e) {
+            PrestaShopLogger::addLog('[PayPal] AbstractMethodPaypal::buildCartTrace(). Error: ' . $e->getMessage());
+        }
 
         return md5(implode('_', $key));
     }
