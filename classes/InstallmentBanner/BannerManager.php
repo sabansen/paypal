@@ -27,6 +27,7 @@
  */
 
 require_once 'Banner.php';
+require_once __DIR__ . '/../Services/CurrencyConverter.php';
 
 class BannerManager
 {
@@ -123,10 +124,11 @@ class BannerManager
      */
     public function renderForCartPage()
     {
+        $amount = $this->getCurrencyConverter()->convert($this->context->cart->getOrderTotal(true));
         return $this->banner
             ->setPlacement('cart')
             ->setLayout('text')
-            ->setAmount($this->context->cart->getOrderTotal(true))
+            ->setAmount($amount)
             ->setPageTypeAttribute(ConfigurationMap::PAGE_TYPE_CART)
             ->setTemplate(_PS_MODULE_DIR_ . 'paypal/views/templates/installmentBanner/cart-banner.tpl')
             ->render();
@@ -137,10 +139,11 @@ class BannerManager
      */
     public function renderForCheckoutPage()
     {
+        $amount = $this->getCurrencyConverter()->convert($this->context->cart->getOrderTotal(true));
         return $this->banner
             ->setPlacement('payment')
             ->setLayout('text')
-            ->setAmount($this->context->cart->getOrderTotal(true))
+            ->setAmount($amount)
             ->setPageTypeAttribute(ConfigurationMap::PAGE_TYPE_CHECKOUT)
             ->setTemplate(_PS_MODULE_DIR_ . 'paypal/views/templates/installmentBanner/checkout-banner.tpl')
             ->render();
@@ -157,5 +160,10 @@ class BannerManager
             ->setPageTypeAttribute(ConfigurationMap::PAGE_TYPE_PRODUCT)
             ->setTemplate(_PS_MODULE_DIR_ . 'paypal/views/templates/installmentBanner/product-banner.tpl')
             ->render();
+    }
+
+    public function getCurrencyConverter()
+    {
+        return new CurrencyConverter();
     }
 }
