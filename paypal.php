@@ -2486,7 +2486,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
     protected function buildBnplPaymentOption($params)
     {
         $paymentOption = new PaymentOption();
-        $action_text = $this->l('Pay with paypal in X');
+        $action_text = $this->l('Pay with PayPal in X');
         $paymentOption->setCallToActionText($action_text);
         $paymentOption->setAction(
             sprintf(

@@ -547,7 +547,7 @@ $_MODULE['<{paypal}prestashop>bnplpagedisplayingsetting_0fcaf0531dd6d6a53f7bde67
 $_MODULE['<{paypal}prestashop>bnplpagedisplayingsetting_b29281296165d65c9c816c2ed17e5109'] = 'Regístrese paso a paso en la caja';
 $_MODULE['<{paypal}prestashop>forminstallment_e78a577e6891286e36f49c540c757d06'] = 'Habilite el \"Pago en 4x\" en su caja';
 $_MODULE['<{paypal}prestashop>forminstallment_9871fad8feec04bf651c960e6538814b'] = 'El pago en 4x está activo en';
-$_MODULE['<{paypal}prestashop>paypal_14b7cc5b0023c621cdab56b67b7e93fd'] = 'Pagar con paypal en X';
+$_MODULE['<{paypal}prestashop>paypal_90e2bf03385212f0e792524dfb935188'] = 'Pagar con PayPal en X';
 $_MODULE['<{paypal}prestashop>paypal_d9477f0fb4bf73e4e174c1b8591cc9ef'] = 'Utilice el botón \"Pagar en X veces\".';
 $_MODULE['<{paypal}prestashop>forminstallment_381805411dac8b454d0de986ef0eaf3d'] = 'Active la opción \"Pagar en X veces\" en su caja.';
 $_MODULE['<{paypal}prestashop>forminstallment_4d312c672b84eeb1b903e5cda7c65fb9'] = 'La opción \"Pagar en X veces\" está activa en';

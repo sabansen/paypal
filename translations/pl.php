@@ -553,7 +553,7 @@ $_MODULE['<{paypal}prestashop>bnplpagedisplayingsetting_0fcaf0531dd6d6a53f7bde67
 $_MODULE['<{paypal}prestashop>bnplpagedisplayingsetting_b29281296165d65c9c816c2ed17e5109'] = 'Zarejestruj się w kasie';
 $_MODULE['<{paypal}prestashop>forminstallment_e78a577e6891286e36f49c540c757d06'] = 'Włącz \'Płać w 4x\' w swojej kasie';
 $_MODULE['<{paypal}prestashop>forminstallment_9871fad8feec04bf651c960e6538814b'] = 'Płać w 4x\' jest aktywne na';
-$_MODULE['<{paypal}prestashop>paypal_14b7cc5b0023c621cdab56b67b7e93fd'] = 'P_a_ przez paypal w X';
+$_MODULE['<{paypal}prestashop>paypal_90e2bf03385212f0e792524dfb935188'] = 'P_a_ przez PayPal w X';
 $_MODULE['<{paypal}prestashop>paypal_d9477f0fb4bf73e4e174c1b8591cc9ef'] = 'U_yj przycisku \"Zap_a_ za X razy\".';
 $_MODULE['<{paypal}prestashop>forminstallment_381805411dac8b454d0de986ef0eaf3d'] = 'Aktywuj opcj_ \"Zap_a_ za X razy\" w swojej kasie.';
 $_MODULE['<{paypal}prestashop>forminstallment_4d312c672b84eeb1b903e5cda7c65fb9'] = 'Opcja \"Zap_a_ za X razy\" jest aktywna na';
