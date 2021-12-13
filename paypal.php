@@ -39,6 +39,7 @@ use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLProduct;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLSignup;
 use PaypalAddons\classes\InstallmentBanner\ConfigurationMap;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
+use PaypalAddons\classes\Shortcut\ShortcutPaymentStep;
 use PaypalAddons\classes\Shortcut\ShortcutSignup;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerExtension;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
@@ -830,6 +831,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
     {
         $paymentOptions = array();
         $is_virtual = 0;
+        $additionalInformation = '';
         foreach ($params['cart']->getProducts() as $key => $product) {
             if ($product['is_virtual']) {
                 $is_virtual = 1;
@@ -848,14 +850,15 @@ class PayPal extends \PaymentModule implements WidgetInterface
         ));
         $paymentOption->setCallToActionText($action_text);
         if (Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT')) {
-            $paymentOption->setAction('javascript:ECInContext()');
+            $additionalInformation .= $this->getShortcutPaymentStep()->render();
         } else {
             $paymentOption->setAction($this->context->link->getModuleLink($this->name, 'ecInit', array('credit_card' => '0'), true));
         }
         if (!$is_virtual && Configuration::get('PAYPAL_API_ADVANTAGES')) {
-            $paymentOption->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_infos.tpl'));
+            $additionalInformation .= $this->context->smarty->fetch('module:paypal/views/templates/front/payment_infos.tpl');
         }
 
+        $paymentOption->setAdditionalInformation($additionalInformation);
         $paymentOptions[] = $paymentOption;
 
         if ((Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART') || Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_SIGNUP')) && isset($this->context->cookie->paypal_ecs)) {
@@ -938,19 +941,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 Media::addJsDefL('scPaypalCheckedMsg', $messageForCustomer);
             }
 
-            if (($this->paypal_method == 'EC' && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT')) ||
-                ($this->paypal_method == 'MB' && (int)Configuration::get('PAYPAL_MB_EC_ENABLED') && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT'))) {
-                $environment = (Configuration::get('PAYPAL_SANDBOX') ? 'sandbox' : 'live');
-                Media::addJsDef(array(
-                    'environment' => $environment,
-                    'merchant_id' => Configuration::get('PAYPAL_MERCHANT_ID_' . Tools::strtoupper($environment)),
-                    'url_token' => $this->context->link->getModuleLink($this->name, 'ecInit', array('credit_card' => '0', 'getToken' => 1), true),
-                ));
-                $this->context->controller->registerJavascript($this->name . '-paypal-checkout', 'https://www.paypalobjects.com/api/checkout.min.js', array('server' => 'remote'));
-                $this->context->controller->registerJavascript($this->name . '-paypal-checkout-in-context', 'modules/' . $this->name . '/views/js/ec_in_context.js');
-                $resources[] = _MODULE_DIR_ . $this->name . '/views/js/ec_in_context.js' . '?v=' . $this->version;
-                $resources[] = 'https://www.paypalobjects.com/api/checkout.min.js' . '?v=' . $this->version;
-            }
             if ($this->paypal_method == 'PPP') {
                 $method->assignJSvarsPaypalPlus();
                 $this->context->controller->registerJavascript($this->name . '-plus-minjs', 'https://www.paypalobjects.com/webstatic/ppplus/ppplus.min.js', array('server' => 'remote'));
@@ -2499,5 +2489,10 @@ class PayPal extends \PaymentModule implements WidgetInterface
         $paymentOption->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/paypal_logo.png'));
 
         return $paymentOption;
+    }
+
+    public function getShortcutPaymentStep()
+    {
+        return new ShortcutPaymentStep();
     }
 }
