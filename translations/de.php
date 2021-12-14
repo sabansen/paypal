@@ -544,8 +544,8 @@ $_MODULE['<{paypal}prestashop>forminstallment_e78a577e6891286e36f49c540c757d06']
 $_MODULE['<{paypal}prestashop>forminstallment_9871fad8feec04bf651c960e6538814b'] = 'Die Funktion \"4x bezahlen\" ist aktiv auf';
 $_MODULE['<{paypal}prestashop>paypal_90e2bf03385212f0e792524dfb935188'] = 'Bezahlen mit PayPal in X';
 $_MODULE['<{paypal}prestashop>paypal_d9477f0fb4bf73e4e174c1b8591cc9ef'] = 'Verwenden Sie die Schaltfläche \"Zahlen in X Zeiten\".';
-$_MODULE['<{paypal}prestashop>forminstallment_381805411dac8b454d0de986ef0eaf3d'] = 'Aktivieren Sie in Ihrer Kasse die Option \"Bezahlen in X Zeiten\".';
-$_MODULE['<{paypal}prestashop>forminstallment_4d312c672b84eeb1b903e5cda7c65fb9'] = 'Die Option \"Zahlung in X Zeiten\" ist aktiv auf';
+$_MODULE['<{paypal}prestashop>forminstallment_381805411dac8b454d0de986ef0eaf3d'] = 'Aktivieren Sie in Ihrer Kasse die Option \"Später Bezahlen\".';
+$_MODULE['<{paypal}prestashop>forminstallment_4d312c672b84eeb1b903e5cda7c65fb9'] = 'Die Option \"Später Bezahlen\" ist aktiv auf';
 $_MODULE['<{paypal}prestashop>forminstallment_9176dcc49f1dd25a41f0e96adebf91f8'] = 'Aktivieren Sie die Anzeige von Bannern';
 $_MODULE['<{paypal}prestashop>bnplpagedisplayingsetting_d53f3fd73815da5fd604769249c6968c'] = 'Schritt-für-Schritt-Zahlung im Checkout';
 $_MODULE['<{paypal}prestashop>bnpl-payment-step_6842756c67a29c72c89e0a019e0fbc6f'] = 'Bitte klicken Sie auf die Schaltfläche \"Bezahlen in X Zeiten\".';

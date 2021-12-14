@@ -551,8 +551,8 @@ $_MODULE['<{paypal}prestashop>forminstallment_e78a577e6891286e36f49c540c757d06']
 $_MODULE['<{paypal}prestashop>forminstallment_9871fad8feec04bf651c960e6538814b'] = 'Le paiement en 4x est actif sur';
 $_MODULE['<{paypal}prestashop>paypal_90e2bf03385212f0e792524dfb935188'] = 'Payer avec PayPal en X fois';
 $_MODULE['<{paypal}prestashop>paypal_d9477f0fb4bf73e4e174c1b8591cc9ef'] = 'Utilisez le bouton \"Payer en X fois\".';
-$_MODULE['<{paypal}prestashop>forminstallment_381805411dac8b454d0de986ef0eaf3d'] = 'Activez \'Payer en X fois\' dans votre caisse.';
-$_MODULE['<{paypal}prestashop>forminstallment_4d312c672b84eeb1b903e5cda7c65fb9'] = 'L\'option \"Payer en X fois\" est active sur';
+$_MODULE['<{paypal}prestashop>forminstallment_381805411dac8b454d0de986ef0eaf3d'] = 'Activez \'4X PayPal\' dans votre caisse.';
+$_MODULE['<{paypal}prestashop>forminstallment_4d312c672b84eeb1b903e5cda7c65fb9'] = 'L\'option \"4X PayPal\" est active sur';
 $_MODULE['<{paypal}prestashop>forminstallment_9176dcc49f1dd25a41f0e96adebf91f8'] = 'Activez l\'affichage des bannières';
 $_MODULE['<{paypal}prestashop>bnplpagedisplayingsetting_d53f3fd73815da5fd604769249c6968c'] = 'Paiement par étapes dans la caisse';
 $_MODULE['<{paypal}prestashop>bnpl-payment-step_6842756c67a29c72c89e0a019e0fbc6f'] = 'Veuillez cliquer sur le bouton \"Payer en X fois\".';

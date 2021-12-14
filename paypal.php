@@ -1612,7 +1612,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             foreach (Language::getLanguages() as $language) {
                 switch (Tools::strtolower($language['iso_code'])) {
                     case 'fr':
-                        $installmentTab->name[$language['id_lang']] = 'Paiement en X fois';
+                        $installmentTab->name[$language['id_lang']] = '4X PayPal';
                         break;
                     case 'de':
                         $installmentTab->name[$language['id_lang']] = 'Später Bezahlen';
@@ -1627,7 +1627,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
                         $installmentTab->name[$language['id_lang']] = 'Pay Later';
                         break;
                     default:
-                        $installmentTab->name[$language['id_lang']] = 'Pay in X times';
+                        $installmentTab->name[$language['id_lang']] = 'Pay Later';
                         break;
                 }
             }
