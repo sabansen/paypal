@@ -1615,7 +1615,16 @@ class PayPal extends \PaymentModule implements WidgetInterface
                         $installmentTab->name[$language['id_lang']] = 'Paiement en X fois';
                         break;
                     case 'de':
-                        $installmentTab->name[$language['id_lang']] = 'Pay in X times';
+                        $installmentTab->name[$language['id_lang']] = 'Später Bezahlen';
+                        break;
+                    case 'au':
+                        $installmentTab->name[$language['id_lang']] = 'Pay in 4';
+                        break;
+                    case 'uk':
+                        $installmentTab->name[$language['id_lang']] = 'Pay Later';
+                        break;
+                    case 'us':
+                        $installmentTab->name[$language['id_lang']] = 'Pay Later';
                         break;
                     default:
                         $installmentTab->name[$language['id_lang']] = 'Pay in X times';
