@@ -32,11 +32,14 @@
 {if isset($JSscripts) && is_array($JSscripts) && false === empty($JSscripts)}
   <script>
       function init() {
-          if (document.body instanceof Element) {
+          if (document.readyState == 'complete') {
               addScripts();
           } else {
-              document.addEventListener('DOMContentLoaded', function () {
-                  addScripts();
+              document.addEventListener('readystatechange', function () {
+                  console.log(document.readyState);
+                  if (document.readyState == 'complete') {
+                      addScripts();
+                  }
               })
           }
 

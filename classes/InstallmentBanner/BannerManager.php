@@ -18,7 +18,7 @@
  *  versions in the future. If you wish to customize PrestaShop for your
  *  needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 2007-2020 PayPal
+ *  @author 2007-2021 PayPal
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
@@ -29,6 +29,7 @@ namespace PaypalAddons\classes\InstallmentBanner;
 use \Context;
 use \Configuration;
 use \Country;
+use PaypalAddons\services\CurrencyConverter;
 use Symfony\Component\VarDumper\VarDumper;
 use \ProductController;
 use \CartController;
@@ -55,8 +56,8 @@ class BannerManager
      */
     public function isEligibleContext()
     {
-        $isoLang = strtolower($this->context->language->iso_code);
-        $isoCurrency = strtolower($this->context->currency->iso_code);
+        $isoLang = \Tools::strtolower($this->context->language->iso_code);
+        $isoCurrency = \Tools::strtolower($this->context->currency->iso_code);
 
         foreach (ConfigurationMap::getLanguageCurrencyMap() as $langCurrency) {
             if (isset($langCurrency[$isoLang]) && $langCurrency[$isoLang] == $isoCurrency) {
@@ -99,13 +100,16 @@ class BannerManager
 
     public function isEligibleCountry()
     {
-        $isoCountryDefault = Country::getIsoById((int)Configuration::get(
-            'PS_COUNTRY_DEFAULT',
-            null,
-            null,
-            $this->context->shop->id));
+        $isoCountryDefault = Country::getIsoById(
+            (int)Configuration::get(
+                'PS_COUNTRY_DEFAULT',
+                null,
+                null,
+                $this->context->shop->id
+            )
+        );
 
-        if (false === in_array(strtolower($isoCountryDefault), ConfigurationMap::getAllowedCountries())) {
+        if (false === in_array(\Tools::strtolower($isoCountryDefault), ConfigurationMap::getAllowedCountries())) {
             return false;
         }
 
@@ -149,13 +153,20 @@ class BannerManager
      */
     public function renderForCartPage()
     {
+        $amount = $this->getCurrencyConverter()->convert($this->context->cart->getOrderTotal(true));
         return $this->banner
             ->setPlacement('cart')
             ->setLayout('text')
-            ->setAmount($this->context->cart->getOrderTotal(true))
+            ->setAmount($amount)
             ->setPageTypeAttribute(ConfigurationMap::PAGE_TYPE_CART)
             ->setTemplate(_PS_MODULE_DIR_ . 'paypal/views/templates/installmentBanner/cart-banner.tpl')
             ->render();
+    }
+
+    /** @return CurrencyConverter*/
+    public function getCurrencyConverter()
+    {
+        return new CurrencyConverter();
     }
 
     /**
@@ -163,10 +174,11 @@ class BannerManager
      */
     public function renderForCheckoutPage()
     {
+        $amount = $this->getCurrencyConverter()->convert($this->context->cart->getOrderTotal(true));
         return $this->banner
             ->setPlacement('payment')
             ->setLayout('text')
-            ->setAmount($this->context->cart->getOrderTotal(true))
+            ->setAmount($amount)
             ->setPageTypeAttribute(ConfigurationMap::PAGE_TYPE_CHECKOUT)
             ->addJsVar('paypalInstallmentController', $this->context->link->getModuleLink('paypal', 'installment'))
             ->setTemplate(_PS_MODULE_DIR_ . 'paypal/views/templates/installmentBanner/checkout-banner.tpl')

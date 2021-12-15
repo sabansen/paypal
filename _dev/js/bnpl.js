@@ -44,6 +44,7 @@ const BNPL = {
 
   init() {
     this.updateInfo();
+    BNPL.checkProductAvailability();
     prestashop.on('updatedProduct', function(e, xhr, settings) {
       BNPL.checkProductAvailability();
     });
@@ -153,6 +154,10 @@ const BNPL = {
   },
 
   checkProductAvailability() {
+    if (this.page == 'payment-step') {
+      return true;
+    }
+
     let data = new Object();
     let url = new URL(this.controller);
     url.searchParams.append('ajax', '1');

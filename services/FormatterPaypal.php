@@ -26,11 +26,10 @@
 
 namespace PaypalAddons\services;
 
-
 class FormatterPaypal
 {
     public function formatPaypalString($str)
     {
-        return substr($str, 0, 126);
+        return \Tools::substr($str, 0, 126);
     }
 }

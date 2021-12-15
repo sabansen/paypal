@@ -2,25 +2,26 @@
 /**
  * 2007-2021 PayPal
  *
- * NOTICE OF LICENSE
+ *  NOTICE OF LICENSE
  *
- * This source file is subject to the Academic Free License (AFL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/afl-3.0.php
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
+ *  This source file is subject to the Academic Free License (AFL 3.0)
+ *  that is bundled with this package in the file LICENSE.txt.
+ *  It is also available through the world-wide-web at this URL:
+ *  http://opensource.org/licenses/afl-3.0.php
+ *  If you did not receive a copy of the license and are unable to
+ *  obtain it through the world-wide-web, please send an email
+ *  to license@prestashop.com so we can send you a copy immediately.
  *
- * DISCLAIMER
+ *  DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ *  Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ *  versions in the future. If you wish to customize PrestaShop for your
+ *  needs please refer to http://www.prestashop.com for more information.
  *
- * @author 2007-2021 PayPal
- * @copyright PayPal
- * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ *  @author 2007-2021 PayPal
+ *  @author 202 ecommerce <tech@202-ecommerce.com>
+ *  @copyright PayPal
+ *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
 if (!defined('_PS_VERSION_')) {
@@ -29,14 +30,18 @@ if (!defined('_PS_VERSION_')) {
 
 include_once(_PS_MODULE_DIR_ . 'paypal/vendor/autoload.php');
 
+use PaypalAddons\classes\InstallmentBanner\BNPL\BnplAvailabilityManager;
 use PaypalAddons\classes\Constants\WebHookConf;
 use PaypalAddons\classes\PaypalPaymentMode;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLCart;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLDummy;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLOption;
+use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLPaymentStep;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLProduct;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLSignup;
+use PaypalAddons\classes\InstallmentBanner\ConfigurationMap;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
+use PaypalAddons\classes\Shortcut\ShortcutPaymentStep;
 use PaypalAddons\classes\Shortcut\ShortcutSignup;
 use PaypalAddons\classes\Webhook\WebhookOption;
 use PaypalAddons\services\PaymentRefundAmount;
@@ -292,9 +297,9 @@ class PayPal extends \PaymentModule implements WidgetInterface
         ),
         array(
             'name' => array(
-                'en' => 'Payment in 4x',
-                'fr' => 'Paiement en 4x',
-                'de' => 'Zahlung in 4x'
+                'en' => 'Pay in X times',
+                'fr' => 'Paiement en X fois',
+                'de' => 'Pay in X times'
             ),
             'class_name' => 'AdminPayPalInstallment',
             'parent_class_name' => 'AdminPayPalConfiguration',
@@ -422,6 +427,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             'PAYPAL_NOT_SHOW_PS_CHECKOUT' => json_encode([$this->version, 0]),
             \PaypalAddons\classes\InstallmentBanner\ConfigurationMap::ENABLE_BNPL => 1,
             \PaypalAddons\classes\InstallmentBanner\ConfigurationMap::BNPL_CART_PAGE => 1,
+            \PaypalAddons\classes\InstallmentBanner\ConfigurationMap::BNPL_PAYMENT_STEP_PAGE => 1,
             'PAYPAL_NOT_SHOW_PS_CHECKOUT' => json_encode([$this->version, 0]),
             WebHookConf::ENABLE => 1
         );
@@ -723,6 +729,9 @@ class PayPal extends \PaymentModule implements WidgetInterface
         $isoCountryDefault = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
         $payments_options = array();
         $method = AbstractMethodPaypal::load();
+        $bnplAvailabilityManager = $this->getBnplAvailabilityManager();
+        $bnplOption = $this->getBnplOption();
+
         switch ($this->paypal_method) {
             case 'EC':
                 if ($method->isConfigured()) {
@@ -800,6 +809,14 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 break;
         }
 
+        if ($method->isConfigured()) {
+            if ($bnplOption->isEnable() && $bnplOption->displayOnPaymentStep()) {
+                if ($bnplAvailabilityManager->isEligibleCountryConfiguration() && $bnplAvailabilityManager->isEligibleContext()) {
+                    $payments_options[] = $this->buildBnplPaymentOption($params);
+                }
+            }
+        }
+
         if ($method->isSandbox() && false === empty($payments_options)) {
             foreach ($payments_options as $paymentOption) {
                 if ($paymentOption instanceof PaymentOption) {
@@ -827,6 +844,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
     {
         $paymentOptions = array();
         $is_virtual = 0;
+        $additionalInformation = '';
         foreach ($params['cart']->getProducts() as $key => $product) {
             if ($product['is_virtual']) {
                 $is_virtual = 1;
@@ -845,14 +863,15 @@ class PayPal extends \PaymentModule implements WidgetInterface
         ));
         $paymentOption->setCallToActionText($action_text);
         if (Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT')) {
-            $paymentOption->setAction('javascript:ECInContext()');
+            $additionalInformation .= $this->getShortcutPaymentStep()->render();
         } else {
             $paymentOption->setAction($this->context->link->getModuleLink($this->name, 'ecInit', array('credit_card' => '0'), true));
         }
         if (!$is_virtual && Configuration::get('PAYPAL_API_ADVANTAGES')) {
-            $paymentOption->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_infos.tpl'));
+            $additionalInformation .= $this->context->smarty->fetch('module:paypal/views/templates/front/payment_infos.tpl');
         }
 
+        $paymentOption->setAdditionalInformation($additionalInformation);
         $paymentOptions[] = $paymentOption;
 
         if ((Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART') || Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_SIGNUP')) && isset($this->context->cookie->paypal_ecs)) {
@@ -935,19 +954,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 Media::addJsDefL('scPaypalCheckedMsg', $messageForCustomer);
             }
 
-            if (($this->paypal_method == 'EC' && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT')) ||
-                ($this->paypal_method == 'MB' && (int)Configuration::get('PAYPAL_MB_EC_ENABLED') && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT'))) {
-                $environment = (Configuration::get('PAYPAL_SANDBOX') ? 'sandbox' : 'live');
-                Media::addJsDef(array(
-                    'environment' => $environment,
-                    'merchant_id' => Configuration::get('PAYPAL_MERCHANT_ID_' . Tools::strtoupper($environment)),
-                    'url_token' => $this->context->link->getModuleLink($this->name, 'ecInit', array('credit_card' => '0', 'getToken' => 1), true),
-                ));
-                $this->context->controller->registerJavascript($this->name . '-paypal-checkout', 'https://www.paypalobjects.com/api/checkout.min.js', array('server' => 'remote'));
-                $this->context->controller->registerJavascript($this->name . '-paypal-checkout-in-context', 'modules/' . $this->name . '/views/js/ec_in_context.js');
-                $resources[] = _MODULE_DIR_ . $this->name . '/views/js/ec_in_context.js' . '?v=' . $this->version;
-                $resources[] = 'https://www.paypalobjects.com/api/checkout.min.js' . '?v=' . $this->version;
-            }
             if ($this->paypal_method == 'PPP') {
                 $method->assignJSvarsPaypalPlus();
                 $this->context->controller->registerJavascript($this->name . '-plus-minjs', 'https://www.paypalobjects.com/webstatic/ppplus/ppplus.min.js', array('server' => 'remote'));
@@ -1082,14 +1088,10 @@ class PayPal extends \PaymentModule implements WidgetInterface
     public function renderBnpl($data)
     {
         $bnplOption = new BNPLOption();
+        $bnplAvailabilityManager = $this->getBnplAvailabilityManager();
         $bnpl = new BNPLDummy();
-        $isoCountryDefault = Country::getIsoById((int)Configuration::get(
-            'PS_COUNTRY_DEFAULT',
-            null,
-            null,
-            $this->context->shop->id));
 
-        if (strtolower($isoCountryDefault) != 'fr') {
+        if (false == $bnplAvailabilityManager->isEligibleCountryConfiguration()) {
             return '';
         }
 
@@ -1097,12 +1099,16 @@ class PayPal extends \PaymentModule implements WidgetInterface
             return '';
         }
 
-        if (strtolower($this->context->currency->iso_code) != 'eur') {
+        if (false == $bnplAvailabilityManager->isEligibleContext()) {
             return '';
         }
 
-        if (strtolower($this->context->language->iso_code) != 'fr') {
-            return '';
+        if ($data['sourcePage'] == ConfigurationMap::PAGE_TYPE_PAYMENT_STEP) {
+            if ($bnplOption->displayOnPaymentStep() == false) {
+                return '';
+            }
+
+            $bnpl = new BNPLPaymentStep();
         }
 
         if ($data['sourcePage'] == ShortcutConfiguration::SOURCE_PAGE_CART) {
@@ -1697,32 +1703,26 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
         if (in_array(Tools::strtolower($countryDefault->iso_code), InstallmentConfiguration::getAllowedCountries()) && $method->isConfigured()) {
             foreach (Language::getLanguages() as $language) {
-                if (Tools::strtolower($countryDefault->iso_code) === 'gb') {
-                    switch(Tools::strtolower($language['iso_code'])) {
-                        case 'fr':
-                            $installmentTab->name[$language['id_lang']] = 'Paiement en 3x';
-                            break;
-                        case 'de':
-                            $installmentTab->name[$language['id_lang']] = 'Zahlung in 3x';
-                            break;
-                        default:
-                            $installmentTab->name[$language['id_lang']] = 'Payment in 3x';
-                            break;
-                    }
-                } else {
-                    switch(Tools::strtolower($language['iso_code'])) {
-                        case 'fr':
-                            $installmentTab->name[$language['id_lang']] = 'Paiement en 4x';
-                            break;
-                        case 'de':
-                            $installmentTab->name[$language['id_lang']] = 'Zahlung in 4x';
-                            break;
-                        default:
-                            $installmentTab->name[$language['id_lang']] = 'Payment in 4x';
-                            break;
-                    }
+                switch (Tools::strtolower($language['iso_code'])) {
+                    case 'fr':
+                        $installmentTab->name[$language['id_lang']] = '4X PayPal';
+                        break;
+                    case 'de':
+                        $installmentTab->name[$language['id_lang']] = 'Später Bezahlen';
+                        break;
+                    case 'au':
+                        $installmentTab->name[$language['id_lang']] = 'Pay in 4';
+                        break;
+                    case 'uk':
+                        $installmentTab->name[$language['id_lang']] = 'Pay Later';
+                        break;
+                    case 'us':
+                        $installmentTab->name[$language['id_lang']] = 'Pay Later';
+                        break;
+                    default:
+                        $installmentTab->name[$language['id_lang']] = 'Pay Later';
+                        break;
                 }
-
             }
 
             $installmentTab->active = true;
@@ -2385,7 +2385,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
             try {
                 $alias = Hook::getNameById(Hook::getIdByName($hookName));
-            } catch (Exception $e) {}
+            } catch (Exception $e) {
+            }
 
             $hookName = empty($alias) ? $hookName : $alias;
 
@@ -2666,5 +2667,47 @@ class PayPal extends \PaymentModule implements WidgetInterface
     {
         $installer = new ModuleInstaller($this);
         return $installer->installObjectModels();
+    }
+
+    /**
+     * @return BnplAvailabilityManager
+     */
+    public function getBnplAvailabilityManager()
+    {
+        return new BnplAvailabilityManager();
+    }
+
+    /**
+     * @return BNPLOption
+     */
+    public function getBnplOption()
+    {
+        return new BNPLOption();
+    }
+
+    /**
+     * @return PaymentOption
+     */
+    protected function buildBnplPaymentOption($params)
+    {
+        $paymentOption = new PaymentOption();
+        $action_text = $this->l('Pay with PayPal in X');
+        $paymentOption->setCallToActionText($action_text);
+        $paymentOption->setAction(
+            sprintf(
+                'javascript:alert(\'%s\');',
+                $this->l('Should use the button "Pay in X times"') // todo: specify message
+            )
+        );
+        $paymentOption->setModuleName('paypal_bnpl');
+        $paymentOption->setAdditionalInformation($this->renderBnpl(['sourcePage' => ConfigurationMap::PAGE_TYPE_PAYMENT_STEP]));
+        $paymentOption->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/paypal_logo.png'));
+
+        return $paymentOption;
+    }
+
+    public function getShortcutPaymentStep()
+    {
+        return new ShortcutPaymentStep();
     }
 }

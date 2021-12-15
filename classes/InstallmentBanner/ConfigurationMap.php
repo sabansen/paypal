@@ -18,7 +18,7 @@
  *  versions in the future. If you wish to customize PrestaShop for your
  *  needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 2007-2020 PayPal
+ *  @author 2007-2021 PayPal
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
@@ -65,9 +65,13 @@ class ConfigurationMap
 
     const PAGE_TYPE_CHECKOUT = 'checkout';
 
+    const PAGE_TYPE_PAYMENT_STEP = 'payment-step';
+
     const ENABLE_BNPL = 'PAYPAL_ENABLE_BNPL';
 
     const BNPL_PRODUCT_PAGE = 'PAYPAL_BNPL_PRODUCT_PAGE';
+
+    const BNPL_PAYMENT_STEP_PAGE = 'PAYPAL_BNPL_PAYMENT_STEP_PAGE';
 
     const BNPL_CART_PAGE = 'PAYPAL_BNPL_CART_PAGE';
 
@@ -83,7 +87,7 @@ class ConfigurationMap
             self::COLOR_GRAYSCALE => '#ffffff',
             self::COLOR_GRAY => '#ebecee'
         ];
-        $isoCountryDefault = strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
+        $isoCountryDefault = \Tools::strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
 
         if ($isoCountryDefault === 'de') {
             $gradientMap[self::COLOR_BLACK] = '#2c2e2f';
@@ -97,23 +101,61 @@ class ConfigurationMap
      */
     public static function getAllowedCountries()
     {
-        return ['fr', 'de', 'gb', 'us'];
+        return ['fr', 'de', 'gb', 'us', 'au'];
+    }
+
+    public static function getBnplAvailableCountries()
+    {
+        return ['fr', 'de', 'gb', 'us', 'au'];
     }
 
     public static function getLanguageCurrencyMap()
     {
         return [
             ['fr' => 'eur'],
+            ['fr' => 'gbp'],
+            ['fr' => 'usd'],
+            ['fr' => 'aud'],
             ['de' => 'eur'],
+            ['de' => 'gbp'],
+            ['de' => 'aud'],
+            ['de' => 'usd'],
             ['gb' => 'gbp'],
-            ['en' => 'gbp'],
             ['gb' => 'usd'],
-            ['en' => 'usd']
+            ['gb' => 'aud'],
+            ['gb' => 'eur'],
+            ['en' => 'gbp'],
+            ['en' => 'usd'],
+            ['en' => 'aud'],
+            ['en' => 'eur'],
+        ];
+    }
+
+    public static function getBnplLanguageCurrencyMap()
+    {
+        return [
+            ['fr' => 'eur'],
+            ['fr' => 'gbp'],
+            ['fr' => 'usd'],
+            ['fr' => 'aud'],
+            ['de' => 'eur'],
+            ['de' => 'gbp'],
+            ['de' => 'aud'],
+            ['de' => 'usd'],
+            ['gb' => 'gbp'],
+            ['gb' => 'usd'],
+            ['gb' => 'aud'],
+            ['gb' => 'eur'],
+            ['en' => 'gbp'],
+            ['en' => 'usd'],
+            ['en' => 'aud'],
+            ['en' => 'eur'],
         ];
     }
 
     public static function getPageConfMap()
     {
+        //todo: should add possibility modify the list by hook?
         return [
             'OrderController' => self::CHECKOUT_PAGE,
             'CartController' => self::CART_PAGE,
@@ -137,4 +179,3 @@ class ConfigurationMap
         ];
     }
 }
-

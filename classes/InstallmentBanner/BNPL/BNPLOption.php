@@ -50,4 +50,9 @@ class BNPLOption
     {
         return (bool)Configuration::get(ConfigurationMap::BNPL_CHECKOUT_PAGE);
     }
+
+    public function displayOnPaymentStep()
+    {
+        return (bool)Configuration::get(ConfigurationMap::BNPL_PAYMENT_STEP_PAGE);
+    }
 }
