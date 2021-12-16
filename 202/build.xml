@@ -62,7 +62,7 @@
     </target>
 
     <target name="tot-testing" description="Create prestashop environment and execute unit tests">
-        <exec executable="${env.TOTBUILDER_PATH}tot-testing.sh" failonerror="true">
+        <exec executable="${env.TOTBUILDER_PATH}tot-testing.sh" failonerror="false">
             <arg value="${env.WORKSPACE}/202/build/packages/v${TARGETVERSION}-prod-${TARGETNAME}.zip" />
             <arg value="${TARGETNAME}" />
             <arg value="${env.WORKSPACE}/" />
