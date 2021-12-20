@@ -549,3 +549,4 @@ $_MODULE['<{paypal}prestashop>forminstallment_4d312c672b84eeb1b903e5cda7c65fb9']
 $_MODULE['<{paypal}prestashop>forminstallment_9176dcc49f1dd25a41f0e96adebf91f8'] = 'Aktivieren Sie die Anzeige von Bannern';
 $_MODULE['<{paypal}prestashop>bnplpagedisplayingsetting_d53f3fd73815da5fd604769249c6968c'] = 'Schritt-für-Schritt-Zahlung im Checkout';
 $_MODULE['<{paypal}prestashop>bnpl-payment-step_6842756c67a29c72c89e0a019e0fbc6f'] = 'Bitte klicken Sie auf die Schaltfläche \"Bezahlen in X Zeiten\".';
+$_MODULE['<{paypal}prestashop>bnpl-payment-step_f9952e95d55801d9b0742431aefc1d3e'] = 'Bitte klicken Sie auf die Schaltfläche \"Mit PayPal zahlen\".';
