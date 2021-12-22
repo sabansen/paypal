@@ -34,7 +34,7 @@
     <property name="PHPVERSION" value="5.6" />
     <property name="PSVERSION" value="1.7.5.2" />
 
-    <target name="build" depends="build-common,package-zip,psvalidator" />
+    <target name="build" depends="build-common,package-zip,psvalidator,tot-testing" />
 
     <target name="build-common" depends="lint,prepare,composer,npm,doc" />
 
@@ -61,16 +61,16 @@
         </exec>
     </target>
 
-<!--    <target name="tot-testing" description="Create prestashop environment and execute unit tests">-->
-<!--        <exec executable="${env.TOTBUILDER_PATH}tot-testing.sh" failonerror="false">-->
-<!--            <arg value="${env.WORKSPACE}/202/build/packages/v${TARGETVERSION}-prod-${TARGETNAME}.zip" />-->
-<!--            <arg value="${TARGETNAME}" />-->
-<!--            <arg value="${env.WORKSPACE}/" />-->
-<!--            <arg value="${PHPVERSION}" />-->
-<!--            <arg value="${PSVERSION}" />-->
-<!--            <arg value="${env.TOTBUILDER_PATH}" />-->
-<!--        </exec>-->
-<!--    </target>-->
+    <target name="tot-testing" description="Create prestashop environment and execute unit tests">
+        <exec executable="${env.TOTBUILDER_PATH}tot-testing.sh" failonerror="false">
+            <arg value="${env.WORKSPACE}/202/build/packages/v${TARGETVERSION}-prod-${TARGETNAME}.zip" />
+            <arg value="${TARGETNAME}" />
+            <arg value="${env.WORKSPACE}/" />
+            <arg value="${PHPVERSION}" />
+            <arg value="${PSVERSION}" />
+            <arg value="${env.TOTBUILDER_PATH}" />
+        </exec>
+    </target>
 
     <target name="lint" description="Perform syntax check of sourcecode files">
         <apply executable="php" failonerror="false">
