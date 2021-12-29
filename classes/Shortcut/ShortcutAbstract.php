@@ -27,9 +27,11 @@
 namespace PaypalAddons\classes\Shortcut;
 
 use Context;
+use Hook;
 use Media;
 use Module;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\services\PaypalMedia;
 use Symfony\Component\VarDumper\VarDumper;
 
 abstract class ShortcutAbstract
@@ -86,8 +88,10 @@ abstract class ShortcutAbstract
     {
         $JSscripts = [];
 
-        foreach (Media::getJqueryPath() as $index => $lib) {
-            $JSscripts['jq-lib-' . $index] = ['src' => $lib];
+        if ($this->isAddJquery()) {
+            foreach ($this->getJqueryPath() as $index => $lib) {
+                $JSscripts['jq-lib-' . $index] = ['src' => $lib];
+            }
         }
 
         $JSscripts['tot-paypal-sdk'] = [
@@ -147,5 +151,29 @@ abstract class ShortcutAbstract
     {
         $this->id = $id;
         return $this;
+    }
+
+    /** @return []*/
+    public function getJqueryPath()
+    {
+        return $this->getPaypalMedia()->getJqueryPath();
+    }
+
+    /** @return PaypalMedia*/
+    public function getPaypalMedia()
+    {
+        return new PaypalMedia();
+    }
+
+    public function isAddJquery()
+    {
+        $isAddJquery = version_compare(_PS_VERSION_, '1.7.7', '<');
+
+        try {
+            Hook::exec('actionPaypalShortcutIsAddJquery', ['isAddJquery' => &$isAddJquery]);
+        } catch (\Throwable $e) {}
+
+
+        return $isAddJquery;
     }
 }
