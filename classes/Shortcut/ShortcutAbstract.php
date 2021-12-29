@@ -171,7 +171,8 @@ abstract class ShortcutAbstract
 
         try {
             Hook::exec('actionPaypalShortcutIsAddJquery', ['isAddJquery' => &$isAddJquery]);
-        } catch (\Throwable $e) {}
+        } catch (\Throwable $e) {
+        }
 
 
         return $isAddJquery;

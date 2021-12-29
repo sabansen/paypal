@@ -26,7 +26,6 @@
 
 namespace PaypalAddons\classes\Shortcut;
 
-
 use Configuration;
 use Tools;
 

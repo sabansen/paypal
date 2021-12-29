@@ -42,6 +42,5 @@ class CurrencyConverter
         } catch (Exception $e) {
             return 0;
         }
-
     }
 }
