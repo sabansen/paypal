@@ -1,26 +1,27 @@
 <?php
 /**
- * 2007-2021 PayPal
+ * 2007-2022 PayPal
  *
- * NOTICE OF LICENSE
+ *  NOTICE OF LICENSE
  *
- * This source file is subject to the Academic Free License (AFL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/afl-3.0.php
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
+ *  This source file is subject to the Academic Free License (AFL 3.0)
+ *  that is bundled with this package in the file LICENSE.txt.
+ *  It is also available through the world-wide-web at this URL:
+ *  http://opensource.org/licenses/afl-3.0.php
+ *  If you did not receive a copy of the license and are unable to
+ *  obtain it through the world-wide-web, please send an email
+ *  to license@prestashop.com so we can send you a copy immediately.
  *
- * DISCLAIMER
+ *  DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ *  Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ *  versions in the future. If you wish to customize PrestaShop for your
+ *  needs please refer to http://www.prestashop.com for more information.
  *
- * @author 2007-2021 PayPal
- * @copyright PayPal
- * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ *  @author 2007-2022 PayPal
+ *  @author 202 ecommerce <tech@202-ecommerce.com>
+ *  @copyright PayPal
+ *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
 if (!defined('_PS_VERSION_')) {
@@ -38,6 +39,7 @@ use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLProduct;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLSignup;
 use PaypalAddons\classes\InstallmentBanner\ConfigurationMap;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
+use PaypalAddons\classes\Shortcut\ShortcutPaymentStep;
 use PaypalAddons\classes\Shortcut\ShortcutSignup;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerExtension;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
@@ -794,9 +796,11 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 break;
         }
 
-        if ($bnplOption->isEnable() && $bnplOption->displayOnPaymentStep()) {
-            if ($bnplAvailabilityManager->isEligibleCountryConfiguration() && $bnplAvailabilityManager->isEligibleContext()) {
-                $payments_options[] = $this->buildBnplPaymentOption($params);
+        if ($method->isConfigured()) {
+            if ($bnplOption->isEnable() && $bnplOption->displayOnPaymentStep()) {
+                if ($bnplAvailabilityManager->isEligibleCountryConfiguration() && $bnplAvailabilityManager->isEligibleContext()) {
+                    $payments_options[] = $this->buildBnplPaymentOption($params);
+                }
             }
         }
 
@@ -827,6 +831,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
     {
         $paymentOptions = array();
         $is_virtual = 0;
+        $additionalInformation = '';
         foreach ($params['cart']->getProducts() as $key => $product) {
             if ($product['is_virtual']) {
                 $is_virtual = 1;
@@ -845,14 +850,15 @@ class PayPal extends \PaymentModule implements WidgetInterface
         ));
         $paymentOption->setCallToActionText($action_text);
         if (Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT')) {
-            $paymentOption->setAction('javascript:ECInContext()');
+            $additionalInformation .= $this->getShortcutPaymentStep()->render();
         } else {
             $paymentOption->setAction($this->context->link->getModuleLink($this->name, 'ecInit', array('credit_card' => '0'), true));
         }
         if (!$is_virtual && Configuration::get('PAYPAL_API_ADVANTAGES')) {
-            $paymentOption->setAdditionalInformation($this->context->smarty->fetch('module:paypal/views/templates/front/payment_infos.tpl'));
+            $additionalInformation .= $this->context->smarty->fetch('module:paypal/views/templates/front/payment_infos.tpl');
         }
 
+        $paymentOption->setAdditionalInformation($additionalInformation);
         $paymentOptions[] = $paymentOption;
 
         if ((Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART') || Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_SIGNUP')) && isset($this->context->cookie->paypal_ecs)) {
@@ -935,19 +941,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 Media::addJsDefL('scPaypalCheckedMsg', $messageForCustomer);
             }
 
-            if (($this->paypal_method == 'EC' && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT')) ||
-                ($this->paypal_method == 'MB' && (int)Configuration::get('PAYPAL_MB_EC_ENABLED') && Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT'))) {
-                $environment = (Configuration::get('PAYPAL_SANDBOX') ? 'sandbox' : 'live');
-                Media::addJsDef(array(
-                    'environment' => $environment,
-                    'merchant_id' => Configuration::get('PAYPAL_MERCHANT_ID_' . Tools::strtoupper($environment)),
-                    'url_token' => $this->context->link->getModuleLink($this->name, 'ecInit', array('credit_card' => '0', 'getToken' => 1), true),
-                ));
-                $this->context->controller->registerJavascript($this->name . '-paypal-checkout', 'https://www.paypalobjects.com/api/checkout.min.js', array('server' => 'remote'));
-                $this->context->controller->registerJavascript($this->name . '-paypal-checkout-in-context', 'modules/' . $this->name . '/views/js/ec_in_context.js');
-                $resources[] = _MODULE_DIR_ . $this->name . '/views/js/ec_in_context.js' . '?v=' . $this->version;
-                $resources[] = 'https://www.paypalobjects.com/api/checkout.min.js' . '?v=' . $this->version;
-            }
             if ($this->paypal_method == 'PPP') {
                 $method->assignJSvarsPaypalPlus();
                 $this->context->controller->registerJavascript($this->name . '-plus-minjs', 'https://www.paypalobjects.com/webstatic/ppplus/ppplus.min.js', array('server' => 'remote'));
@@ -1617,15 +1610,24 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
         if (in_array(Tools::strtolower($countryDefault->iso_code), InstallmentConfiguration::getAllowedCountries()) && $method->isConfigured()) {
             foreach (Language::getLanguages() as $language) {
-                switch(Tools::strtolower($language['iso_code'])) {
+                switch (Tools::strtolower($language['iso_code'])) {
                     case 'fr':
-                        $installmentTab->name[$language['id_lang']] = 'Paiement en X fois';
+                        $installmentTab->name[$language['id_lang']] = '4X PayPal';
                         break;
                     case 'de':
-                        $installmentTab->name[$language['id_lang']] = 'Pay in X times';
+                        $installmentTab->name[$language['id_lang']] = 'Später Bezahlen';
+                        break;
+                    case 'au':
+                        $installmentTab->name[$language['id_lang']] = 'Pay in 4';
+                        break;
+                    case 'uk':
+                        $installmentTab->name[$language['id_lang']] = 'Pay Later';
+                        break;
+                    case 'us':
+                        $installmentTab->name[$language['id_lang']] = 'Pay Later';
                         break;
                     default:
-                        $installmentTab->name[$language['id_lang']] = 'Pay in X times';
+                        $installmentTab->name[$language['id_lang']] = 'Pay Later';
                         break;
                 }
             }
@@ -2239,7 +2241,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
             try {
                 $alias = Hook::getNameById(Hook::getIdByName($hookName));
-            } catch (Exception $e) {}
+            } catch (Exception $e) {
+            }
 
             $hookName = empty($alias) ? $hookName : $alias;
 
@@ -2482,7 +2485,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
     protected function buildBnplPaymentOption($params)
     {
         $paymentOption = new PaymentOption();
-        $action_text = $this->l('Pay with paypal in X');
+        $action_text = $this->l('Pay with PayPal in X');
         $paymentOption->setCallToActionText($action_text);
         $paymentOption->setAction(
             sprintf(
@@ -2495,5 +2498,10 @@ class PayPal extends \PaymentModule implements WidgetInterface
         $paymentOption->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/paypal_logo.png'));
 
         return $paymentOption;
+    }
+
+    public function getShortcutPaymentStep()
+    {
+        return new ShortcutPaymentStep();
     }
 }

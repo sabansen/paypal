@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2021 PayPal
+ * 2007-2022 PayPal
  *
  *  NOTICE OF LICENSE
  *
@@ -18,14 +18,13 @@
  *  versions in the future. If you wish to customize PrestaShop for your
  *  needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 2007-2020 PayPal
+ *  @author 2007-2022 PayPal
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
 namespace PaypalAddons\classes\Form\Controller\AdminPayPalInstallment;
-
 
 use PaypalAddons\classes\Form\FormInterface;
 use \Module;
@@ -58,7 +57,7 @@ class FormInstallment implements FormInterface
      */
     public function getFields()
     {
-        $isoCountryDefault = strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
+        $isoCountryDefault = Tools::strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
         $input = [];
         $input[] = array(
             'type' => 'html',
@@ -260,7 +259,7 @@ class FormInstallment implements FormInterface
 
     protected function getBannerStyleSection()
     {
-        $isoCountryDefault = strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
+        $isoCountryDefault = Tools::strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
         $colorOptions = [
             new SelectOption(ConfigurationMap::COLOR_GRAY, $this->module->l('gray', $this->className)),
             new SelectOption(ConfigurationMap::COLOR_BLUE, $this->module->l('blue', $this->className)),
@@ -289,7 +288,7 @@ class FormInstallment implements FormInterface
     {
         $isoCountryDefault = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
         return Context::getContext()->smarty
-            ->assign('isoCountryDefault', strtolower($isoCountryDefault))
+            ->assign('isoCountryDefault', Tools::strtolower($isoCountryDefault))
             ->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/_partials/paypalBanner/installmentDisclaimer.tpl');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2021 PayPal
+ * 2007-2022 PayPal
  *
  *  NOTICE OF LICENSE
  *
@@ -18,7 +18,7 @@
  *  versions in the future. If you wish to customize PrestaShop for your
  *  needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 2007-2020 PayPal
+ *  @author 2007-2022 PayPal
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
@@ -87,7 +87,7 @@ class ConfigurationMap
             self::COLOR_GRAYSCALE => '#ffffff',
             self::COLOR_GRAY => '#ebecee'
         ];
-        $isoCountryDefault = strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
+        $isoCountryDefault = \Tools::strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
 
         if ($isoCountryDefault === 'de') {
             $gradientMap[self::COLOR_BLACK] = '#2c2e2f';
@@ -179,4 +179,3 @@ class ConfigurationMap
         ];
     }
 }
-

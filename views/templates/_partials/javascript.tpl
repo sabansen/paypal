@@ -1,5 +1,5 @@
 {*
-* 2007-2021 PayPal
+* 2007-2022 PayPal
 *
 * NOTICE OF LICENSE
 *
@@ -17,7 +17,7 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author 2007-2021 PayPal
+*  @author 2007-2022 PayPal
 *  @copyright PayPal
 *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
 *
@@ -32,11 +32,14 @@
 {if isset($JSscripts) && is_array($JSscripts) && false === empty($JSscripts)}
   <script>
       function init() {
-          if (document.body instanceof Element) {
+          if (document.readyState == 'complete') {
               addScripts();
           } else {
-              document.addEventListener('DOMContentLoaded', function () {
-                  addScripts();
+              document.addEventListener('readystatechange', function () {
+                  console.log(document.readyState);
+                  if (document.readyState == 'complete') {
+                      addScripts();
+                  }
               })
           }
 

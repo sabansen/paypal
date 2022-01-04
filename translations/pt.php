@@ -1,4 +1,28 @@
 <?php
+/**
+ * 2007-2022 PayPal
+ *
+ *  NOTICE OF LICENSE
+ *
+ *  This source file is subject to the Academic Free License (AFL 3.0)
+ *  that is bundled with this package in the file LICENSE.txt.
+ *  It is also available through the world-wide-web at this URL:
+ *  http://opensource.org/licenses/afl-3.0.php
+ *  If you did not receive a copy of the license and are unable to
+ *  obtain it through the world-wide-web, please send an email
+ *  to license@prestashop.com so we can send you a copy immediately.
+ *
+ *  DISCLAIMER
+ *
+ *  Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ *  versions in the future. If you wish to customize PrestaShop for your
+ *  needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author 2007-2022 PayPal
+ *  @author 202 ecommerce <tech@202-ecommerce.com>
+ *  @copyright PayPal
+ *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ */
 
 global $_MODULE;
 $_MODULE = array();
@@ -523,10 +547,11 @@ $_MODULE['<{paypal}prestashop>bnplpagedisplayingsetting_0fcaf0531dd6d6a53f7bde67
 $_MODULE['<{paypal}prestashop>bnplpagedisplayingsetting_b29281296165d65c9c816c2ed17e5109'] = 'Inscrição passo a passo na caixa';
 $_MODULE['<{paypal}prestashop>forminstallment_e78a577e6891286e36f49c540c757d06'] = 'Habilite \'Pagar em 4x\' no seu checkout';
 $_MODULE['<{paypal}prestashop>forminstallment_9871fad8feec04bf651c960e6538814b'] = 'Pagar em 4x\' está activo em';
-$_MODULE['<{paypal}prestashop>paypal_14b7cc5b0023c621cdab56b67b7e93fd'] = 'Pagar com paypal em X';
+$_MODULE['<{paypal}prestashop>paypal_90e2bf03385212f0e792524dfb935188'] = 'Pagar com PayPal em X';
 $_MODULE['<{paypal}prestashop>paypal_d9477f0fb4bf73e4e174c1b8591cc9ef'] = 'Utilizar o botão \"Pagar em X vezes\".';
 $_MODULE['<{paypal}prestashop>forminstallment_381805411dac8b454d0de986ef0eaf3d'] = 'Activar \"Pagar em X vezes\" no seu checkout.';
 $_MODULE['<{paypal}prestashop>forminstallment_4d312c672b84eeb1b903e5cda7c65fb9'] = 'A opção \"Pagar em X vezes\" está activa em';
 $_MODULE['<{paypal}prestashop>forminstallment_9176dcc49f1dd25a41f0e96adebf91f8'] = 'Activar a afixação dos banners';
 $_MODULE['<{paypal}prestashop>bnplpagedisplayingsetting_d53f3fd73815da5fd604769249c6968c'] = 'Pagamento passo a passo no checkout';
 $_MODULE['<{paypal}prestashop>bnpl-payment-step_6842756c67a29c72c89e0a019e0fbc6f'] = 'Por favor clicar no botão \"Pagar em X vezes\".';
+$_MODULE['<{paypal}prestashop>bnpl-payment-step_f9952e95d55801d9b0742431aefc1d3e'] = 'Por favor clicar no botão \"Pagar com PayPal\".';
