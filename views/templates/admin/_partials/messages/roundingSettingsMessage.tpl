@@ -1,5 +1,5 @@
 {*
-* 2007-2021 PayPal
+* 2007-2022 PayPal
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2021 PayPal SA
+*  @copyright 2007-2022 PayPal SA
 *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
 *
 *}
