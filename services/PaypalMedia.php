@@ -1,4 +1,5 @@
-/*
+<?php
+/**
  * 2007-2022 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,21 +24,21 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
+namespace PaypalAddons\services;
 
-export  const Onboarding = {
-  handleResponse (authCode, sharedId) {
-    $.ajax({
-      url: controllerUrl,
-      type: 'POST',
-      data: {
-        ajax: true,
-        action: 'handleOnboardingResponse',
-        authCode: authCode,
-        sharedId: sharedId,
-      },
-      success: function(response) {
-        console.log(response);
-      }
-    });
-  },
-};
+use Media;
+
+class PaypalMedia
+{
+    /**
+     * @return array
+     */
+    public function getJqueryPath()
+    {
+        if (version_compare(_PS_VERSION_, '1.7.7', '<')) {
+            return Media::getJqueryPath();
+        }
+
+        return [];
+    }
+}
