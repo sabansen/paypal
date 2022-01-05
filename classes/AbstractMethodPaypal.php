@@ -42,6 +42,7 @@ use PaypalAddons\classes\Shortcut\ShortcutProduct;
 use PaypalAddons\classes\Shortcut\ShortcutCart;
 use PaypalAddons\classes\Shortcut\ShortcutSignup;
 use PaypalAddons\classes\Webhook\WebhookOption;
+use PaypalAddons\services\Order\RefundAmountCalculator;
 use PaypalAddons\services\StatusMapping;
 use PaypalPPBTlib\AbstractMethod;
 use PrestaShopLogger;
@@ -217,28 +218,14 @@ abstract class AbstractMethodPaypal extends AbstractMethod
     public function partialRefund($params)
     {
         $paypalOrder = \PaypalOrder::loadByOrderId($params['order']->id);
-        $amount = 0;
-
-        foreach ($params['productList'] as $product) {
-            $amount += \Tools::ps_round($product['amount'], PayPal::getPrecision());
-        }
-
-        if (\Tools::getValue('partialRefundShippingCost')) {
-            $amount += \Tools::getValue('partialRefundShippingCost');
-        }
-
-        // For prestashop version > 1.7.7
-        if ($refundData = \Tools::getValue('cancel_product')) {
-            $amount += floatval(str_replace(',', '.', $refundData['shipping_amount']));
-        }
-
-        if (isset($params['refund_voucher_off']) && $params['refund_voucher_off']) {
-            if (isset($params['order_discount_price'])) {
-                $amount -= floatval($params['order_discount_price']);
-            }
-        }
+        $amount = $this->getRefundAmountCalculator()->calculate($params);
 
         return $response = $this->paypalApiManager->getOrderPartialRefundRequest($paypalOrder, $amount)->execute();
+    }
+
+    public function getRefundAmountCalculator()
+    {
+        return new RefundAmountCalculator();
     }
 
     /**
