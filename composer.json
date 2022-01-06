@@ -9,11 +9,7 @@
             "PaypalAddons\\": "."
         },
         "classmap": [
-          "classes/PaypalCapture.php",
-          "classes/PaypalOrder.php",
-          "classes/PaypalLog.php",
-          "classes/PaypalVaulting.php",
-          "classes/PaypalIpn.php",
+          "classes/",
           "controllers/front/abstract.php"
         ]
     },

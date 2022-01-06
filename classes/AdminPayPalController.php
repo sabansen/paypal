@@ -28,6 +28,11 @@ namespace PaypalAddons\classes;
 
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Onboarding\PaypalGetCredentials;
+use PaypalAddons\classes\Constants\WebHookConf;
+use PaypalAddons\classes\Webhook\CreateWebhook;
+use PaypalAddons\classes\Webhook\WebhookAvailability;
+use PaypalAddons\classes\Webhook\WebhookHandlerUrl;
+use PaypalAddons\classes\Webhook\WebhookOption;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -71,6 +76,12 @@ class AdminPayPalController extends \ModuleAdminController
         }
 
         parent::init();
+
+        if ((int)\Configuration::getGlobalValue(\PayPal::NEED_INSTALL_MODELS) === 1) {
+            if ($this->module->installModels()) {
+                \Configuration::updateGlobalValue(\PayPal::NEED_INSTALL_MODELS, 0);
+            }
+        }
     }
 
     public function initContent()
@@ -178,9 +189,21 @@ class AdminPayPalController extends \ModuleAdminController
             $response['success'] = false;
             $response['message'][] = $this->module->l('Tls verification failed.', 'AdminPayPalController').' '.$tls_check['error_message'];
         }
+
+        if ($this->getWebhookOption()->isEnable()) {
+            $webhookCheck = $this->_checkWebhook();
+
+            if ($webhookCheck['state'] == false) {
+                $response['success'] = false;
+                $response['message'][] = $webhookCheck['message'];
+            }
+
+        }
+
         if ($response['success']) {
             $response['message'][] = $this->module->l('Your shop configuration is OK. You can start configuring your PayPal module.', 'AdminPayPalController');
         }
+
         return $response;
     }
 
@@ -315,29 +338,38 @@ class AdminPayPalController extends \ModuleAdminController
 
     public function displayAjaxUpdateRoundingSettings()
     {
-        \Configuration::updateValue(
-            'PS_ROUND_TYPE',
-            '1',
-            false,
-            null,
-            (int) $this->context->shop->id
-        );
+        if (\Shop::getContext() == \Shop::CONTEXT_ALL) {
+            $idShops = array_column(\Shop::getShops(), 'id_shop');
+            $idShops[] = null;
+        } else {
+            $idShops = [$this->context->shop->id];
+        }
 
-        \Configuration::updateValue(
-            'PS_PRICE_ROUND_MODE',
-            '2',
-            false,
-            null,
-            (int) $this->context->shop->id
-        );
+        foreach ($idShops as $idShop) {
+            \Configuration::updateValue(
+                'PS_ROUND_TYPE',
+                '1',
+                false,
+                null,
+                $idShop
+            );
 
-        \Configuration::updateValue(
-            'PS_PRICE_DISPLAY_PRECISION',
-            '2',
-            false,
-            null,
-            (int) $this->context->shop->id
-        );
+            \Configuration::updateValue(
+                'PS_PRICE_ROUND_MODE',
+                '2',
+                false,
+                null,
+                $idShop
+            );
+
+            \Configuration::updateValue(
+                'PS_PRICE_DISPLAY_PRECISION',
+                '2',
+                false,
+                null,
+                $idShop
+            );
+        }
 
         $message = $this->module->l('Settings updated. Your rounding settings are compatible with PayPal!', 'AdminPayPalController');
 
@@ -383,5 +415,63 @@ class AdminPayPalController extends \ModuleAdminController
 
         parent::initPageHeaderToolbar();
         $this->context->smarty->clearAssign('help_link');
+    }
+
+    /**
+     * @return WebhookOption
+     */
+    protected function getWebhookOption()
+    {
+        return new WebhookOption();
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isWebhookCreated()
+    {
+        $response = (new CreateWebhook(AbstractMethodPaypal::load()))
+            ->setUpdate(false)
+            ->execute();
+
+        return $response->isSuccess();
+    }
+
+    /**
+     * @return string
+     */
+    protected function getWebhookHandler()
+    {
+        return (new WebhookHandlerUrl())->get();
+    }
+
+    protected function _checkWebhook()
+    {
+        $return = [
+            'state' => true,
+            'message' => $this->l('PayPal webhooks are enabled with success.', get_class($this))
+        ];
+
+        $webhookAvailable = $this->getWebhookAvalability()->check();
+
+        if ($webhookAvailable->isSuccess() == false) {
+            $return['state'] = false;
+            $return['message'] = $this->context->smarty->fetch(
+                $this->getTemplatePath() . '_partials/messages/webhookhandler_not_available.tpl'
+            );
+        }
+
+        if ($return['state'] && !$this->isWebhookCreated()) {
+            $return['state'] = false;
+            $return['message'] = $this->l('PayPal webhooks can not be enabled. The webhook listener was not created. Webhooks are not used by the module until the moment the problem will be fixed. Please try to refresh the page and click on \'check requirements\' again.', get_class($this));
+        }
+
+        \Configuration::updateValue(WebHookConf::AVAILABLE, (int)$return['state']);
+        return $return;
+    }
+
+    protected function getWebhookAvalability()
+    {
+        return new WebhookAvailability();
     }
 }

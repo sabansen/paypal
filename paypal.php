@@ -31,6 +31,8 @@ if (!defined('_PS_VERSION_')) {
 include_once(_PS_MODULE_DIR_ . 'paypal/vendor/autoload.php');
 
 use PaypalAddons\classes\InstallmentBanner\BNPL\BnplAvailabilityManager;
+use PaypalAddons\classes\Constants\WebHookConf;
+use PaypalAddons\classes\PaypalPaymentMode;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLCart;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLDummy;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLOption;
@@ -41,6 +43,11 @@ use PaypalAddons\classes\InstallmentBanner\ConfigurationMap;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Shortcut\ShortcutPaymentStep;
 use PaypalAddons\classes\Shortcut\ShortcutSignup;
+use PaypalAddons\classes\Webhook\WebhookOption;
+use PaypalAddons\services\PaymentRefundAmount;
+use PaypalAddons\services\ServicePaypalOrder;
+use PaypalAddons\services\StatusMapping;
+use PaypalAddons\services\WebhookService;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerExtension;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 use PaypalPPBTlib\Install\ModuleInstaller;
@@ -72,6 +79,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
     const PAYPAL_PARTNER_CLIENT_ID_SANDBOX = 'AVJ8YvTxw5Clf5CyJXIX6mnSSNgpzFFRaZh0KekLIMVe2vlkrWDMgaOTbvNds1U2bXVcjX4JGaP_jDM1';
 
     const PAYPAL_PARTNER_ID_SANDBOX = 'J7Q7R6V9MQZUG';
+
+    const NEED_INSTALL_MODELS = 'PAYPAL_NEED_INSTALL_MODELS';
 
     public static $dev = true;
     public $express_checkout;
@@ -178,7 +187,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
         'PaypalCapture',
         'PaypalOrder',
         'PaypalVaulting',
-        'PaypalIpn'
+        'PaypalIpn',
+        'PaypalWebhook',
     );
 
     /**
@@ -418,6 +428,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
             \PaypalAddons\classes\InstallmentBanner\ConfigurationMap::ENABLE_BNPL => 1,
             \PaypalAddons\classes\InstallmentBanner\ConfigurationMap::BNPL_CART_PAGE => 1,
             \PaypalAddons\classes\InstallmentBanner\ConfigurationMap::BNPL_PAYMENT_STEP_PAGE => 1,
+            'PAYPAL_NOT_SHOW_PS_CHECKOUT' => json_encode([$this->version, 0]),
+            WebHookConf::ENABLE => 1
         );
 
         if (version_compare(_PS_VERSION_, '1.7.6', '<')) {
@@ -449,6 +461,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             return false;
         }
 
+        $this->registerHooks();
         $this->moduleConfigs['PAYPAL_OS_WAITING_VALIDATION'] = (int)Configuration::get('PAYPAL_OS_WAITING');
         $this->moduleConfigs['PAYPAL_OS_PROCESSING'] = (int)Configuration::get('PAYPAL_OS_WAITING');
         $shops = Shop::getShops();
@@ -1376,12 +1389,24 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $paypal_order->method = $transaction['method'];
             $paypal_order->payment_tool = isset($transaction['payment_tool']) ? $transaction['payment_tool'] : 'PayPal';
             $paypal_order->sandbox = (int)Configuration::get('PAYPAL_SANDBOX');
+            $paypal_order->intent = $transaction['intent'];
             $paypal_order->save();
 
             if ($transaction['capture']) {
                 $paypal_capture = new PaypalCapture();
                 $paypal_capture->id_paypal_order = $paypal_order->id;
                 $paypal_capture->save();
+            }
+
+            if ($this->getWebhookOption()->isEnable() && $this->getWebhookOption()->isAvailable()) {
+                if (PaypalPaymentMode::isSale()) {
+                    $this
+                        ->getWebhookService()
+                        ->createForOrder(
+                            $paypal_order,
+                            $this->getStatusMapping()->getAcceptedStatus()
+                        );
+                }
             }
         }
     }
@@ -1432,6 +1457,44 @@ class PayPal extends \PaymentModule implements WidgetInterface
             return false;
         }
 
+        //Webhooks that wait more 1 hour
+        $oldPendingWebhooks = $this->getWebhookService()->getPendingWebhooks($paypal_order, 1);
+        $pendingWebhooks = $this->getWebhookService()->getPendingWebhooks($paypal_order);
+        $totalRefunded = $this->getTotalRefunded($paypal_order);
+        $totalPaid = $order->getTotalPaid();
+
+        if ($totalRefunded > 0 && $totalRefunded < $totalPaid) {
+            $paypal_msg .= $this->displayInformation(
+                sprintf(
+                    $this->l('A partial refund has been issued : %.2f refunded instead of %.2f'),
+                    $totalRefunded,
+                    $totalPaid
+                )
+            );
+        }
+
+        if (false == empty($oldPendingWebhooks)) {
+            $paypal_msg .= $this->displayError(
+                $this->l('Event notification has not been received yet. Please check if your website has a correct SSL certificate (https) or htaccess are not enabled.')
+            );
+        } elseif (false == empty($pendingWebhooks)) {
+            foreach ($pendingWebhooks as $webhook) {
+                $orderState = new OrderState($webhook->id_state, $this->context->language->id);
+                $paypal_msg .= $this->displayInformation(
+                    sprintf(
+                        $this->l('A request has been sent to PayPal. The order status \'%s\' will be applied after confirmation from PayPal.'),
+                        $orderState->name ? $orderState->name : ''
+                    )
+                );
+            }
+        }
+
+        if ($order->current_state == $this->getStatusMapping()->getWaitValidationStatus() && $paypal_order->method == 'EC' && $paypal_order->intent == MethodEC::AUTHORIZE) {
+            $paypal_msg .= $this->displayInformation(
+                $this->l('This order has been created in Authorize mode, so you customer was not charged yet. Set \'Payment accepted status\' in order to confirm the order and to capture it or \'Cancelled\' if you want to cancel it.')
+            );
+        }
+
         if ($paypal_order->method == 'BT' && (Module::isInstalled('braintreeofficial') == false)) {
             $tmpMessage = "<p class='paypal-warning'>";
             $tmpMessage .= $this->l('This order has been paid via Braintree payment solution provided by PayPal module prior v5.0. ') . "</br>";
@@ -1446,7 +1509,16 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $tmpMessage .= "</p>";
             $paypal_msg .= $this->displayWarning($tmpMessage);
         }
-        if (Tools::getValue('not_payed_capture')) {
+        if (isset($_SESSION['need_refund']) && $_SESSION['need_refund']) {
+            unset($_SESSION['need_refund']);
+            $tmpMessage = "<p class='paypal-warning'>";
+            $tmpMessage .= $this->l('The order should be refunded before the cancellation. Please select the status "Refunded".');
+            $tmpMessage .= $this->l('You can cancel the order after. If you don\'t want to generate a refund automatically on PayPal when you change the status, you can disable it via the module settings: "Experience -> Advanced settings - Customize order status", select "no action".');
+            $tmpMessage .= "</p>";
+            $paypal_msg .= $this->displayWarning($tmpMessage);
+        }
+        if (isset($_SESSION['not_payed_capture']) && $_SESSION['not_payed_capture']) {
+            unset($_SESSION['not_payed_capture']);
             $paypal_msg .= $this->displayWarning(
                 '<p class="paypal-warning">' . $this->l('You can\'t refund order as it hasn\'t be paid yet.') . '</p>'
             );
@@ -1469,7 +1541,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
 
         if ($order->getCurrentOrderState()->paid == 1 && Validate::isLoadedObject($paypal_capture) && $paypal_capture->id_capture) {
-            $msg = $this->l('Your order is fully captured by PayPal.');
+            $msg = $this->l('Your order is captured by PayPal.');
             $paypal_msg .= $this->displayWarning(
                 '<p class="paypal-warning">' . $msg . '</p>'
             );
@@ -1491,6 +1563,14 @@ class PayPal extends \PaymentModule implements WidgetInterface
             unset($_SESSION['paypal_transaction_already_refunded']);
             $tmpMessage = '<p class="paypal-warning">';
             $tmpMessage .= $this->l('The order status was changed but this transaction has already been fully refunded.');
+            $tmpMessage .= '</p>';
+            $paypal_msg .= $this->displayWarning($tmpMessage);
+        }
+
+        if (isset($_SESSION['paypal_partial_refund_successful']) && $_SESSION['paypal_partial_refund_successful']) {
+            unset($_SESSION['paypal_partial_refund_successful']);
+            $tmpMessage = '<p class="paypal-warning">';
+            $tmpMessage .= $this->l('A refund request has been sent to PayPal.');
             $tmpMessage .= '</p>';
             $paypal_msg .= $this->displayWarning($tmpMessage);
         }
@@ -1543,20 +1623,22 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 return true;
             }
 
+            $params = array_merge(Tools::getAllValues(), $params);
             /** @var \PaypalAddons\classes\API\Response\ResponseOrderRefund*/
             $refundResponse = $method->partialRefund($params);
 
             if ($refundResponse->isSuccess()) {
-                if (Validate::isLoadedObject($capture) && $capture->id_capture) {
-                    $capture->result = 'refunded';
-                    $capture->save();
+                if ($this->getWebhookOption()->isEnable() && $this->getWebhookOption()->isAvailable()) {
+                    if (session_status() == PHP_SESSION_NONE) {
+                        session_start();
+                    }
+
+                    $_SESSION['paypal_partial_refund_successful'] = true;
                 }
-                $paypalOrder->payment_status = 'refunded';
-                $paypalOrder->save();
 
                 ProcessLoggerHandler::openLogger();
                 ProcessLoggerHandler::logInfo(
-                    $refundResponse->getMessage(),
+                    $this->getMessageFromRefundResponse($refundResponse),
                     $refundResponse->getIdTransaction(),
                     $paypalOrder->id_order,
                     $paypalOrder->id_cart,
@@ -1580,6 +1662,17 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 ProcessLoggerHandler::closeLogger();
             }
         }
+    }
+
+    public function getMessageFromRefundResponse(PaypalAddons\classes\API\Response\ResponseOrderRefund $response)
+    {
+        $message = '';
+
+        if ($this->getWebhookOption()->isEnable() && $this->getWebhookOption()->isAvailable()) {
+            $message .= $this->l('The refund request has been sent with success. Waiting for a webhook message.');
+        }
+
+        return $message .= $response->getMessage();
     }
 
     public function hookActionOrderStatusPostUpdate(&$params)
@@ -1642,6 +1735,14 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
     }
 
+    /**
+     * @return StatusMapping
+     */
+    protected function getStatusMapping()
+    {
+        return new StatusMapping();
+    }
+
 
     public function hookActionOrderStatusUpdate(&$params)
     {
@@ -1652,40 +1753,43 @@ class PayPal extends \PaymentModule implements WidgetInterface
             return false;
         }
 
-        $method = AbstractMethodPaypal::load($orderPayPal->method);
-
-        if ((int)Configuration::get('PAYPAL_CUSTOMIZE_ORDER_STATUS')) {
-            $osCanceled = Configuration::get('PAYPAL_API_INTENT') == 'sale' ? (int)Configuration::get('PAYPAL_OS_CANCELED') : (int)Configuration::get('PAYPAL_OS_CAPTURE_CANCELED');
-        } else {
-            $osCanceled = (int)Configuration::get('PS_OS_CANCELED');
+        if ($this->context->controller instanceof PaypalWebhookhandlerModuleFrontController) {
+            return true;
         }
 
-        $osRefunded = (int)Configuration::get('PAYPAL_CUSTOMIZE_ORDER_STATUS') ? (int)Configuration::get('PAYPAL_OS_REFUNDED') : (int)Configuration::get('PS_OS_REFUND');
-        $osPaymentAccepted = (int)Configuration::get('PAYPAL_CUSTOMIZE_ORDER_STATUS') ? (int)Configuration::get('PAYPAL_OS_ACCEPTED') : (int)Configuration::get('PS_OS_PAYMENT');
+        $method = AbstractMethodPaypal::load($orderPayPal->method);
+
+        $osCanceled = $this->getStatusMapping()->getCanceledStatus($method);
+        $osRefunded = $this->getStatusMapping()->getRefundStatus($method);
+        $osPaymentAccepted = $this->getStatusMapping()->getAcceptedStatus();
 
         if ($params['newOrderStatus']->id == $osCanceled) {
             if ($this->context->controller instanceof PaypalIpnModuleFrontController) {
                 return true;
             }
 
-            if (in_array($orderPayPal->method, array("MB", "PPP")) || $orderPayPal->payment_status == "refunded" || $orderPayPal->payment_status == "voided") {
-                return;
+            if (in_array($orderPayPal->payment_status, ['refunded', 'voided'])) {
+                return true;
+            }
+
+            if ($orderPayPal->method != 'EC') {
+                return true;
             }
 
             $paypalCapture = PaypalCapture::loadByOrderPayPalId($orderPayPal->id);
 
-            /** @var $response \PaypalAddons\classes\API\Response\ResponseAuthorizationVoid*/
-            if ($orderPayPal->method == 'EC' && Validate::isLoadedObject($paypalCapture) == false) {
-                $response = $method->refund($orderPayPal);
-            } elseif ($orderPayPal->method == 'EC' &&
-                Validate::isLoadedObject($paypalCapture) &&
-                $paypalCapture->id_capture) {
-                $response = $method->refund($orderPayPal);
-            } elseif ($orderPayPal->method == 'EC' &&
-                Validate::isLoadedObject($paypalCapture) &&
-                $paypalCapture->id_capture == false) {
-                $response = $method->void($orderPayPal);
+            //If a payment is already captured, so need to refund firstly
+            if (false == Validate::isLoadedObject($paypalCapture) || $paypalCapture->id_capture) {
+                if (session_status() == PHP_SESSION_NONE) {
+                    session_start();
+                }
+
+                $_SESSION['need_refund'] = true;
+                Tools::redirect($_SERVER['HTTP_REFERER']);
             }
+
+            /** @var $response \PaypalAddons\classes\API\Response\ResponseAuthorizationVoid*/
+            $response = $method->void($orderPayPal);
 
             if ($response->isSuccess()) {
                 if (Validate::isLoadedObject($paypalCapture)) {
@@ -1695,10 +1799,15 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
                 $orderPayPal->payment_status = 'voided';
                 $orderPayPal->save();
+                $message = $response->getMessage();
+
+                if ($this->getWebhookOption()->isEnable() && $this->getWebhookOption()->isAvailable()) {
+                    $message .= '. ' . $this->l('Waiting for webhook message in order for change the order status.');
+                }
 
                 ProcessLoggerHandler::openLogger();
                 ProcessLoggerHandler::logInfo(
-                    $response->getMessage(),
+                    $message,
                     $response->getIdTransaction(),
                     $orderPayPal->id_order,
                     $orderPayPal->id_cart,
@@ -1709,26 +1818,18 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 );
                 ProcessLoggerHandler::closeLogger();
             } else {
-                if ($response->isAlreadyRefunded()) {
-                    if (session_status() == PHP_SESSION_NONE) {
-                        session_start();
-                    }
-
-                    $_SESSION['paypal_transaction_already_refunded'] = true;
-                } else {
-                    ProcessLoggerHandler::openLogger();
-                    ProcessLoggerHandler::logError(
-                        $response->getError()->getMessage(),
-                        null,
-                        $orderPayPal->id_order,
-                        $orderPayPal->id_cart,
-                        $this->context->shop->id,
-                        $orderPayPal->payment_tool,
-                        $orderPayPal->sandbox
-                    );
-                    ProcessLoggerHandler::closeLogger();
-                    Tools::redirect($_SERVER['HTTP_REFERER'] . '&cancel_failed=1');
-                }
+                ProcessLoggerHandler::openLogger();
+                ProcessLoggerHandler::logError(
+                    $response->getError()->getMessage(),
+                    null,
+                    $orderPayPal->id_order,
+                    $orderPayPal->id_cart,
+                    $this->context->shop->id,
+                    $orderPayPal->payment_tool,
+                    $orderPayPal->sandbox
+                );
+                ProcessLoggerHandler::closeLogger();
+                Tools::redirect($_SERVER['HTTP_REFERER'] . '&cancel_failed=1');
             }
         }
 
@@ -1750,7 +1851,12 @@ class PayPal extends \PaymentModule implements WidgetInterface
                     $orderPayPal->sandbox
                 );
                 ProcessLoggerHandler::closeLogger();
-                Tools::redirect($_SERVER['HTTP_REFERER'] . '&not_payed_capture=1');
+                if (session_status() == PHP_SESSION_NONE) {
+                    session_start();
+                }
+
+                $_SESSION['not_payed_capture'] = true;
+                Tools::redirect($_SERVER['HTTP_REFERER']);
             }
 
             /** @var \PaypalAddons\classes\API\Response\ResponseOrderRefund*/
@@ -1767,7 +1873,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
                 ProcessLoggerHandler::openLogger();
                 ProcessLoggerHandler::logInfo(
-                    $refundResponse->getMessage(),
+                    $this->getMessageFromRefundResponse($refundResponse),
                     $refundResponse->getIdTransaction(),
                     $orderPayPal->id_order,
                     $orderPayPal->id_cart,
@@ -1816,10 +1922,15 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 $capture->result = $response->getStatus();
                 $orderPayPal->save();
                 $capture->save();
+                $message = $response->getMessage();
+
+                if ($this->getWebhookOption()->isEnable() && $this->getWebhookOption()->isAvailable()) {
+                    $message .= '. ' . $this->l('Waiting for webhook message in order for change the order status.');
+                }
 
                 ProcessLoggerHandler::openLogger();
                 ProcessLoggerHandler::logInfo(
-                    $response->getMessage(),
+                    $message,
                     $response->getIdTransaction(),
                     $orderPayPal->id_order,
                     $orderPayPal->id_cart,
@@ -1844,6 +1955,39 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 Tools::redirect($_SERVER['HTTP_REFERER'] . '&error_capture=1');
             }
         }
+
+        if ($this->getWebhookOption()->isEnable() && $this->getWebhookOption()->isAvailable()) {
+            try {
+                $this->getWebhookService()->createForOrder($orderPayPal, $params['newOrderStatus']->id);
+            } catch (Exception $e) {}
+
+            if ($this->context->controller instanceof AdminOrdersController) {
+                Tools::redirect($_SERVER['HTTP_REFERER']);
+            }
+
+            /** @var PrestaShopBundle\Service\Routing\Router $router*/
+            $router = $this->get('prestashop.router');
+            $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
+            $match = $router->getMatcher()->match($request->getPathInfo());
+
+            if (isset($match['_legacy_controller']) && $match['_legacy_controller'] == 'AdminOrders') {
+                Tools::redirect($_SERVER['HTTP_REFERER']);
+            }
+
+            throw new \PaypalAddons\classes\PaypalException(
+                0,
+                $this->l('A request has been sent to PayPal. The order status will be updated after confirmation from PayPal')
+            );
+        }
+
+    }
+
+    /**
+     * @return WebhookService
+     */
+    public function getWebhookService()
+    {
+        return new WebhookService();
     }
 
     /**
@@ -2461,6 +2605,68 @@ class PayPal extends \PaymentModule implements WidgetInterface
     public function getBannerManager()
     {
         return new BannerManager();
+    }
+
+    public function getWebhookOption()
+    {
+        return new WebhookOption();
+    }
+
+    protected function getPaypalOrderService()
+    {
+        return new ServicePaypalOrder();
+    }
+
+    public function registerHooks()
+    {
+        $result = true;
+        $hooksUnregistered = $this->getHooksUnregistered();
+
+        if (empty($hooksUnregistered)) {
+            return $result;
+        }
+
+        foreach ($hooksUnregistered as $hookName) {
+            $result &= $this->registerHook($hookName);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param PaypalOrder $paypalOrder
+     * @return float
+     */
+    public function getTotalRefunded(PaypalOrder $paypalOrder)
+    {
+        $webhookOption = $this->getWebhookOption();
+        $paymentRefundAmount = $this->getPaymentRefundAmount();
+
+        if ($webhookOption->isEnable() && $webhookOption->isAvailable()) {
+            return $paymentRefundAmount->calculateReceivedWebhookEvent($paypalOrder);
+        }
+
+        try {
+            return $paymentRefundAmount->calculateTotalRefunded($paypalOrder);
+        } catch (Exception $e) {
+            return 0;
+        }
+
+    }
+
+    /**
+     * @return PaymentRefundAmount
+     */
+    public function getPaymentRefundAmount()
+    {
+        return new PaymentRefundAmount();
+    }
+
+    /** @return bool*/
+    public function installModels()
+    {
+        $installer = new ModuleInstaller($this);
+        return $installer->installObjectModels();
     }
 
     /**

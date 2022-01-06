@@ -60,11 +60,11 @@ class PaypalIpnModuleFrontController extends PaypalAbstarctModuleFrontController
             ProcessLoggerHandler::openLogger();
             ProcessLoggerHandler::logError(
                 $message,
-                null,
-                null,
-                null,
-                null,
                 \Tools::getValue('txn_id') ? \Tools::getValue('txn_id') : null,
+                null,
+                null,
+                null,
+                null,
                 (int)\Configuration::get('PAYPAL_SANDBOX'),
                 null
             );

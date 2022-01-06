@@ -27,6 +27,7 @@
 require_once _PS_MODULE_DIR_ . 'paypal/vendor/autoload.php';
 
 use PaypalAddons\classes\API\Onboarding\PaypalGetAuthToken;
+use PaypalAddons\classes\Webhook\WebhookOption;
 use PaypalPPBTlib\Install\ModuleInstaller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use PaypalAddons\classes\AdminPayPalController;
@@ -281,6 +282,13 @@ class AdminPayPalSetupController extends AdminPayPalController
             'accountConfigured' => $method == null ? false : $method->isConfigured(),
             'sslActivated' => $this->module->isSslActive()
         );
+
+        if ($this->getWebhookOption()->isEnable()) {
+            $webhookCheck = $this->_checkWebhook();
+            $tpl_vars['showWebhookState'] = true;
+            $tpl_vars['webhookState'] = $webhookCheck['state'];
+            $tpl_vars['webhookStateMsg'] = $webhookCheck['message'];
+        }
 
         $this->context->smarty->assign($tpl_vars);
         $html_content = $this->context->smarty->fetch($this->getTemplatePath() . '_partials/statusBlock.tpl');

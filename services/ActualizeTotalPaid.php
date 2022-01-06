@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2022 PayPal
+ * 2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
  *
@@ -18,62 +18,37 @@
  *  versions in the future. If you wish to customize PrestaShop for your
  *  needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 2007-2022 PayPal
+ *  @author 2007-2021 PayPal
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
-namespace PaypalAddons\classes\API\Response;
+namespace PaypalAddons\services;
 
-class Response
+use Order;
+use OrderPayment;
+
+class ActualizeTotalPaid
 {
-    /** @var $success bool*/
-    protected $success;
-
-    /** @var $error Error*/
-    protected $error;
-
-    protected $data;
-
     /**
-     * @return bool
+     * @param Order $order
+     * @param float $totalPaid
      */
-    public function isSuccess()
+    public function actualize(Order $order, $totalPaid)
     {
-        return $this->success;
-    }
+        $order->total_paid_real = $totalPaid;
+        $order->save();
+        $payments = $order->getOrderPayments();
 
-
-    public function getError()
-    {
-        if ($this->error instanceof Error) {
-            return $this->error;
+        if (count($payments) > 1) {
+            // todo: implement
+            return;
         }
 
-        return new Error();
-    }
-
-    public function setSuccess($success)
-    {
-        $this->success = (bool)$success;
-        return $this;
-    }
-
-    public function getData()
-    {
-        return $this->data;
-    }
-
-    public function setData($data)
-    {
-        $this->data = $data;
-        return $this;
-    }
-
-    public function setError(Error $error)
-    {
-        $this->error = $error;
-        return $this;
+        /** @var OrderPayment $payment*/
+        $payment = array_shift($payments);
+        $payment->amount = (float)$totalPaid;
+        $payment->save();
     }
 }

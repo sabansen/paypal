@@ -94,17 +94,6 @@ class AdminPayPalHelpController extends AdminPayPalController
 
     public function registerHooks()
     {
-        $result = true;
-        $hooksUnregistered = $this->module->getHooksUnregistered();
-
-        if (empty($hooksUnregistered)) {
-            return $result;
-        }
-
-        foreach ($hooksUnregistered as $hookName) {
-            $result &= $this->module->registerHook($hookName);
-        }
-
-        return $result;
+        return $this->module->registerHooks();
     }
 }
