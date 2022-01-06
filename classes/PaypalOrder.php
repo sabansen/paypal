@@ -71,6 +71,9 @@ class PaypalOrder extends ObjectModel
     /** @var string Object last modification date */
     public $date_upd;
 
+    /** @var string */
+    public $intent;
+
     /**
      * @see ObjectModel::$definition
      */
@@ -85,6 +88,7 @@ class PaypalOrder extends ObjectModel
             'id_payment' => array('type' => self::TYPE_STRING),
             'payment_method' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
             'currency' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
+            'intent' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
             'total_paid' => array('type' => self::TYPE_FLOAT, 'size' => 10, 'scale' => 2),
             'payment_status' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
             'total_prestashop' => array('type' => self::TYPE_FLOAT, 'size' => 10, 'scale' => 2),

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2022 PayPal
+ * 2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
  *
@@ -18,62 +18,38 @@
  *  versions in the future. If you wish to customize PrestaShop for your
  *  needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 2007-2022 PayPal
+ *  @author 2007-2021 PayPal
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
-namespace PaypalAddons\classes\API\Response;
+namespace PaypalAddons\classes\Constants;
 
-class Response
+class WebHookType
 {
-    /** @var $success bool*/
-    protected $success;
+    const AUTHORIZATION_VOIDED = 'PAYMENT.AUTHORIZATION.VOIDED';
 
-    /** @var $error Error*/
-    protected $error;
+    const CAPTURE_COMPLETED = 'PAYMENT.CAPTURE.COMPLETED';
 
-    protected $data;
+    const CAPTURE_DENIED = 'PAYMENT.CAPTURE.DENIED';
 
-    /**
-     * @return bool
-     */
-    public function isSuccess()
+    const CAPTURE_REVERSED = 'PAYMENT.CAPTURE.REVERSED';
+
+    const CAPTURE_REFUNDED = 'PAYMENT.CAPTURE.REFUNDED';
+
+    const CAPTURE_PENDING = 'PAYMENT.CAPTURE.PENDING';
+
+    public static function getAll()
     {
-        return $this->success;
+        return [
+            self::AUTHORIZATION_VOIDED,
+            self::CAPTURE_COMPLETED,
+            self::CAPTURE_DENIED,
+            self::CAPTURE_REVERSED,
+            self::CAPTURE_REFUNDED,
+            self::CAPTURE_PENDING
+        ];
     }
 
-
-    public function getError()
-    {
-        if ($this->error instanceof Error) {
-            return $this->error;
-        }
-
-        return new Error();
-    }
-
-    public function setSuccess($success)
-    {
-        $this->success = (bool)$success;
-        return $this;
-    }
-
-    public function getData()
-    {
-        return $this->data;
-    }
-
-    public function setData($data)
-    {
-        $this->data = $data;
-        return $this;
-    }
-
-    public function setError(Error $error)
-    {
-        $this->error = $error;
-        return $this;
-    }
 }

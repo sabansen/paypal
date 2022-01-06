@@ -28,6 +28,7 @@ require_once _PS_MODULE_DIR_ . 'paypal/vendor/autoload.php';
 
 use PaypalAddons\classes\AdminPayPalController;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\Constants\WebHookConf;
 use PaypalAddons\classes\Shortcut\Form\Definition\CustomizeButtonStyleSectionDefinition;
 use PaypalAddons\classes\Form\Field\InputChain;
 use PaypalAddons\classes\Form\Field\Select;
@@ -36,6 +37,7 @@ use PaypalAddons\classes\Form\Field\TextInput;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Shortcut\ShortcutPreview;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use PaypalAddons\classes\Webhook\CreateWebhook;
 
 class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
 {
@@ -67,6 +69,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             'paypal_os_canceled',
             'paypal_os_accepted',
             'paypal_os_capture_canceled',
+            WebHookConf::ENABLE,
             ShortcutConfiguration::CUSTOMIZE_STYLE,
             ShortcutConfiguration::DISPLAY_MODE_PRODUCT,
             ShortcutConfiguration::PRODUCT_PAGE_HOOK,
@@ -525,6 +528,26 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
 
         $inputs = array_merge($inputs, $inputsMethod);
 
+        $inputs[] = array(
+            'type' => 'switch',
+            'label' => $this->l('Enable PayPal webhooks'),
+            'name' => WebHookConf::ENABLE,
+            'hint' => $this->l('PayPal webhooks allow you to automatically update the order status on PrestaShop once the status of transaction on PayPal is changed.'),
+            'is_bool' => true,
+            'values' => array(
+                array(
+                    'id' => WebHookConf::ENABLE . '_on',
+                    'value' => 1,
+                    'label' => $this->l('Enabled'),
+                ),
+                array(
+                    'id' => WebHookConf::ENABLE . '_off',
+                    'value' => 0,
+                    'label' => $this->l('Disabled'),
+                )
+            ),
+        );
+
         $this->fields_form['form']['form'] = array(
             'legend' => array(
                 'title' => $this->l('Advanced mode'),
@@ -618,6 +641,20 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
                             if ((int) $value < 150) {
                                 $value = 150;
                                 $this->advancedFormErrors['signup'] = $this->l($wrongWidthMsg);
+                            }
+
+                            break;
+                        case WebHookConf::ENABLE:
+                            if ($value) {
+                                $response = (new CreateWebhook())->execute();
+                                $value = (int)$response->isSuccess();
+
+                                if (false == $value) {
+                                    $msg = $this->l('An error occurred while creating the webhook. This feature has been automatically disabled.');
+                                    $msg .= $this->l('Please enbale it via the “Experience” tab-> “Advanced mode”-> “Enable event notifications”.');
+                                    $msg .= $this->l('If the problem persists please contact our support service.');
+                                    $this->errors[] = $msg;
+                                }
                             }
 
                             break;

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2022 PayPal
+ * 2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
  *
@@ -18,62 +18,40 @@
  *  versions in the future. If you wish to customize PrestaShop for your
  *  needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 2007-2022 PayPal
+ *  @author 2007-2021 PayPal
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
-namespace PaypalAddons\classes\API\Response;
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
-class Response
+use PaypalPPBTlib\Install\ModuleInstaller;
+
+/**
+ * @param $module PayPal
+ * @return bool
+ */
+function upgrade_module_5_5_0($module)
 {
-    /** @var $success bool*/
-    protected $success;
-
-    /** @var $error Error*/
-    protected $error;
-
-    protected $data;
-
-    /**
-     * @return bool
-     */
-    public function isSuccess()
-    {
-        return $this->success;
+    try {
+        $installer = new ModuleInstaller($module);
+        $installer->installObjectModels();
+        Configuration::updateGlobalValue(Paypal::NEED_INSTALL_MODELS, 0);
+    } catch (Exception $e) {
+        Configuration::updateGlobalValue(Paypal::NEED_INSTALL_MODELS, 1);
     }
 
-
-    public function getError()
-    {
-        if ($this->error instanceof Error) {
-            return $this->error;
-        }
-
-        return new Error();
+    $count = DB::getInstance()->getValue('SELECT count(*) 
+	    FROM INFORMATION_SCHEMA.COLUMNS
+		WHERE `TABLE_NAME` = "'._DB_PREFIX_.'paypal_order"
+		AND `TABLE_SCHEMA` = "'._DB_NAME_.'"
+		AND `COLUMN_NAME` = "intent"');
+    if ($count == 0) {
+        DB::getInstance()->Execute('ALTER TABLE `' . _DB_PREFIX_ . 'paypal_order` ADD COLUMN `intent` VARCHAR(250)');
     }
 
-    public function setSuccess($success)
-    {
-        $this->success = (bool)$success;
-        return $this;
-    }
-
-    public function getData()
-    {
-        return $this->data;
-    }
-
-    public function setData($data)
-    {
-        $this->data = $data;
-        return $this;
-    }
-
-    public function setError(Error $error)
-    {
-        $this->error = $error;
-        return $this;
-    }
+    return true;
 }

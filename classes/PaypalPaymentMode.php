@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2022 PayPal
+ * 2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
  *
@@ -18,62 +18,32 @@
  *  versions in the future. If you wish to customize PrestaShop for your
  *  needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 2007-2022 PayPal
+ *  @author 2007-2021 PayPal
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
-namespace PaypalAddons\classes\API\Response;
+namespace PaypalAddons\classes;
 
-class Response
+use PaypalAddons\classes\Constants\PaypalConfigurations;
+use Configuration;
+
+class PaypalPaymentMode
 {
-    /** @var $success bool*/
-    protected $success;
-
-    /** @var $error Error*/
-    protected $error;
-
-    protected $data;
+    /**
+     * @return bool
+     */
+    public static function isSale()
+    {
+        return Configuration::get(PaypalConfigurations::INTENT) == 'sale';
+    }
 
     /**
      * @return bool
      */
-    public function isSuccess()
+    public static function isAuthorize()
     {
-        return $this->success;
-    }
-
-
-    public function getError()
-    {
-        if ($this->error instanceof Error) {
-            return $this->error;
-        }
-
-        return new Error();
-    }
-
-    public function setSuccess($success)
-    {
-        $this->success = (bool)$success;
-        return $this;
-    }
-
-    public function getData()
-    {
-        return $this->data;
-    }
-
-    public function setData($data)
-    {
-        $this->data = $data;
-        return $this;
-    }
-
-    public function setError(Error $error)
-    {
-        $this->error = $error;
-        return $this;
+        return Configuration::get(PaypalConfigurations::INTENT) == 'authorize';
     }
 }

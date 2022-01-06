@@ -26,6 +26,9 @@
 
 namespace PaypalAddons\services;
 
+use Db;
+use DbQuery;
+use Exception;
 use PrestaShopBundle\Security\Admin\Employee;
 
 require_once dirname(__FILE__) . '/../classes/PaypalOrder.php';
@@ -40,7 +43,7 @@ class ServicePaypalOrder
      * @param $idStatus integer id of the order status
      * @return bool
      */
-    public function setOrderStatus($paypalOrder, $idStatus)
+    public function setOrderStatus($paypalOrder, $idStatus, $checkHistory = true)
     {
         $psOrders = $this->getPsOrders($paypalOrder);
 
@@ -50,8 +53,14 @@ class ServicePaypalOrder
 
         /* @var $psOrder \Order*/
         foreach ($psOrders as $psOrder) {
-            if (empty($psOrder->getHistory(\Context::getContext()->language->id, $idStatus)) == false) {
-                continue;
+            if ($checkHistory) {
+                if (empty($psOrder->getHistory(\Context::getContext()->language->id, $idStatus)) == false) {
+                    continue;
+                }
+            } else {
+                if ($psOrder->current_state == $idStatus) {
+                    continue;
+                }
             }
 
             if (in_array($idStatus, array((int)\Configuration::get('PS_OS_REFUND'), (int)\Configuration::get('PAYPAL_OS_REFUNDED_PAYPAL')))) {
@@ -83,10 +92,24 @@ class ServicePaypalOrder
      */
     public function getPaypalOrderByTransaction($transactionId)
     {
-        $collection = new \PrestaShopCollection('PaypalOrder');
-        $collection->where('id_transaction', '=', $transactionId);
+        $query = (new DbQuery())
+            ->select('po.id_paypal_order')
+            ->from('paypal_order', 'po')
+            ->leftJoin('paypal_capture', 'pc', 'po.id_paypal_order = pc.id_paypal_order')
+            ->where(implode(
+                ' OR ',
+                [
+                    'po.id_transaction = "' . pSQL($transactionId).'"',
+                    'pc.id_capture = "' . pSQL($transactionId).'"'
+                ])
+            );
+        $idPaypalOrder = (int)Db::getInstance()->getValue($query);
 
-        return $collection->getFirst();
+        if ($idPaypalOrder) {
+            return new \PaypalOrder($idPaypalOrder);
+        }
+
+        return false;
     }
 
     /**
@@ -99,5 +122,11 @@ class ServicePaypalOrder
         $collection->where('id_cart', '=', $paypalOrder->id_cart);
 
         return $collection->getResults();
+    }
+
+    public function waitForWebhook(\PaypalOrder $paypalOrder)
+    {
+        $pendingWebhooks = (new WebhookService())->getPendingWebhooks($paypalOrder);
+        return empty($pendingWebhooks) == false;
     }
 }

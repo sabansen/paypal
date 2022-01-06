@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2022 PayPal
+ * 2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
  *
@@ -18,62 +18,32 @@
  *  versions in the future. If you wish to customize PrestaShop for your
  *  needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 2007-2022 PayPal
+ *  @author 2007-2021 PayPal
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
-namespace PaypalAddons\classes\API\Response;
+namespace PaypalAddons\classes\Webhook;
 
-class Response
+use Configuration;
+
+class IpnPaypalListener
 {
-    /** @var $success bool*/
-    protected $success;
-
-    /** @var $error Error*/
-    protected $error;
-
-    protected $data;
-
     /**
-     * @return bool
+     * @param bool $sandbox
+     * @return string
      */
-    public function isSuccess()
+    public function get($sandbox = null)
     {
-        return $this->success;
-    }
-
-
-    public function getError()
-    {
-        if ($this->error instanceof Error) {
-            return $this->error;
+        if ($sandbox === null) {
+            $sandbox = (int)Configuration::get('PAYPAL_SANDBOX');
         }
 
-        return new Error();
-    }
-
-    public function setSuccess($success)
-    {
-        $this->success = (bool)$success;
-        return $this;
-    }
-
-    public function getData()
-    {
-        return $this->data;
-    }
-
-    public function setData($data)
-    {
-        $this->data = $data;
-        return $this;
-    }
-
-    public function setError(Error $error)
-    {
-        $this->error = $error;
-        return $this;
+        if ((int)$sandbox) {
+            return 'https://ipnpb.sandbox.paypal.com/cgi-bin/webscr';
+        } else {
+            return 'https://ipnpb.paypal.com/cgi-bin/webscr';
+        }
     }
 }

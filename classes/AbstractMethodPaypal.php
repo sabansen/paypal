@@ -41,6 +41,9 @@ use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Shortcut\ShortcutProduct;
 use PaypalAddons\classes\Shortcut\ShortcutCart;
 use PaypalAddons\classes\Shortcut\ShortcutSignup;
+use PaypalAddons\classes\Webhook\WebhookOption;
+use PaypalAddons\services\Order\RefundAmountCalculator;
+use PaypalAddons\services\StatusMapping;
 use PaypalPPBTlib\AbstractMethod;
 use PrestaShopLogger;
 use Symfony\Component\VarDumper\VarDumper;
@@ -190,7 +193,8 @@ abstract class AbstractMethodPaypal extends AbstractMethod
             'payment_tool' => $data->getPaymentTool(),
             'date_transaction' => $data->getDateTransaction()->format('Y-m-d H:i:s'),
             'transaction_id' => $data->getTransactionId(),
-            'capture' => $data->isCapture()
+            'capture' => $data->isCapture(),
+            'intent' => $this->getIntent()
         );
 
         $this->transaction_detail = $transaction_detail;
@@ -214,22 +218,14 @@ abstract class AbstractMethodPaypal extends AbstractMethod
     public function partialRefund($params)
     {
         $paypalOrder = \PaypalOrder::loadByOrderId($params['order']->id);
-        $amount = 0;
-
-        foreach ($params['productList'] as $product) {
-            $amount += \Tools::ps_round($product['amount'], PayPal::getPrecision());
-        }
-
-        if (\Tools::getValue('partialRefundShippingCost')) {
-            $amount += \Tools::getValue('partialRefundShippingCost');
-        }
-
-        // For prestashop version > 1.7.7
-        if ($refundData = \Tools::getValue('cancel_product')) {
-            $amount += floatval(str_replace(',', '.', $refundData['shipping_amount']));
-        }
+        $amount = $this->getRefundAmountCalculator()->calculate($params);
 
         return $response = $this->paypalApiManager->getOrderPartialRefundRequest($paypalOrder, $amount)->execute();
+    }
+
+    public function getRefundAmountCalculator()
+    {
+        return new RefundAmountCalculator();
     }
 
     /**
@@ -490,6 +486,32 @@ abstract class AbstractMethodPaypal extends AbstractMethod
     protected function isCorrectCart(\Cart $cart, $paymentId)
     {
         return $this->getCartTrace() == $this->buildCartTrace($cart, $paymentId);
+    }
+
+    /**
+     * @return int id of the order status
+     **/
+    public function getOrderStatus()
+    {
+        if ($this->getWebhookOption()->isEnable() && $this->getWebhookOption()->isAvailable()) {
+            return $this->getStatusMapping()->getWaitValidationStatus();
+        }
+
+        if ($this->getStatusMapping()->isModeSale() == false) {
+            return $this->getStatusMapping()->getWaitValidationStatus();
+        }
+
+        return $this->getStatusMapping()->getAcceptedStatus();
+    }
+
+    protected function getWebhookOption()
+    {
+        return new WebhookOption();
+    }
+
+    protected function getStatusMapping()
+    {
+        return new StatusMapping();
     }
 
     /** @return  string*/

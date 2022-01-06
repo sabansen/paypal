@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2022 PayPal
+ * 2007-2021 PayPal
  *
  *  NOTICE OF LICENSE
  *
@@ -18,62 +18,56 @@
  *  versions in the future. If you wish to customize PrestaShop for your
  *  needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 2007-2022 PayPal
+ *  @author 2007-2021 PayPal
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
-namespace PaypalAddons\classes\API\Response;
+namespace PaypalAddons\classes\Webhook;
 
-class Response
+use Configuration;
+use PaypalAddons\classes\AbstractMethodPaypal;
+
+class WebhookId
 {
-    /** @var $success bool*/
-    protected $success;
+    /** @var AbstractMethodPaypal*/
+    protected $method;
 
-    /** @var $error Error*/
-    protected $error;
-
-    protected $data;
+    public function __construct(AbstractMethodPaypal $method)
+    {
+        $this->method = $method;
+    }
 
     /**
-     * @return bool
+     * @return string
      */
-    public function isSuccess()
+    public function get()
     {
-        return $this->success;
+        return Configuration::get(
+            $this->getConfName(),
+            null,
+            null,
+            null,
+            ''
+        );
     }
 
-
-    public function getError()
+    /**
+     * @param string $id
+     * @return self
+     */
+    public function update($id)
     {
-        if ($this->error instanceof Error) {
-            return $this->error;
-        }
-
-        return new Error();
-    }
-
-    public function setSuccess($success)
-    {
-        $this->success = (bool)$success;
+        Configuration::updateValue($this->getConfName(), (string)$id);
         return $this;
     }
 
-    public function getData()
+    /**
+     * @return string
+     */
+    public function getConfName()
     {
-        return $this->data;
-    }
-
-    public function setData($data)
-    {
-        $this->data = $data;
-        return $this;
-    }
-
-    public function setError(Error $error)
-    {
-        $this->error = $error;
-        return $this;
+        return $this->method->isSandbox() ? 'PAYPAL_WEBHOOK_ID_SANDBOX' : 'PAYPAL_WEBHOOK_ID';
     }
 }
