@@ -40,6 +40,8 @@ class WebHookType
 
     const CAPTURE_PENDING = 'PAYMENT.CAPTURE.PENDING';
 
+    const CHECKOUT_PAYMENT_RESERVED = 'CHECKOUT.PAYMENT-APPROVAL.REVERSED';
+
     public static function getAll()
     {
         return [
@@ -48,7 +50,8 @@ class WebHookType
             self::CAPTURE_DENIED,
             self::CAPTURE_REVERSED,
             self::CAPTURE_REFUNDED,
-            self::CAPTURE_PENDING
+            self::CAPTURE_PENDING,
+            self::CHECKOUT_PAYMENT_RESERVED
         ];
     }
 
