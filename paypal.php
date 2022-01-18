@@ -40,6 +40,7 @@ use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLPaymentStep;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLProduct;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLSignup;
 use PaypalAddons\classes\InstallmentBanner\ConfigurationMap;
+use PaypalAddons\classes\PUI\FraudNetForm;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Shortcut\ShortcutPaymentStep;
 use PaypalAddons\classes\Shortcut\ShortcutSignup;
@@ -752,6 +753,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 break;
             case 'PPP':
                 if ($method->isConfigured()) {
+                    $payments_options[] = $this->renderPuiOption($params);
                     $payment_option = new PaymentOption();
                     $action_text = $this->l('Pay with PayPal Plus');
                     if (Configuration::get('PAYPAL_API_ADVANTAGES')) {
@@ -832,6 +834,24 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
 
         return $payments_options;
+    }
+
+    public function renderPuiOption($params)
+    {
+        $paymentOption = new PaymentOption();
+        $action_text = $this->l('Pay upon invoice with Paypal');
+        $paymentOption->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/paypal_logo.png'));
+        $paymentOption->setModuleName('paypal_pui');
+        $paymentOption->setCallToActionText($action_text);
+        $paymentOption->setAdditionalInformation($this->getFraudNetForm()->render());
+
+        return $paymentOption;
+    }
+
+    /** @return FraudNetForm*/
+    public function getFraudNetForm()
+    {
+        return new FraudNetForm();
     }
 
     /**
