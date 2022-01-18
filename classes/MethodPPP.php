@@ -318,4 +318,9 @@ class MethodPPP extends AbstractMethodPaypal
         $this->short_cut = (bool) $shortCut;
         return $this;
     }
+
+    public function createPartnerReferrals()
+    {
+        return $this->paypalApiManager->getPartnerReferralsRequest()->execute();
+    }
 }

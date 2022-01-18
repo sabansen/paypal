@@ -37,6 +37,7 @@ use PaypalAddons\classes\API\Request\PaypalOrderGetRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderPartialRefundRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderPatchRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderRefundRequest;
+use PaypalAddons\classes\API\Request\PaypalPartnerReferralsRequest;
 
 class PaypalApiManager implements PaypalApiManagerInterface
 {
@@ -100,5 +101,10 @@ class PaypalApiManager implements PaypalApiManagerInterface
     public function getOrderPatchRequest($idPayment)
     {
         return new PaypalOrderPatchRequest($this->client, $this->method, $idPayment);
+    }
+
+    public function getPartnerReferralsRequest()
+    {
+        return new PaypalPartnerReferralsRequest($this->client, $this->method);
     }
 }
