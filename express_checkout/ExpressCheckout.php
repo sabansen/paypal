@@ -158,7 +158,7 @@ class ExpressCheckout
      */
     public function isConfigured()
     {
-        if (false === Configuration::hasKey(self::CONFIGURED)) {
+        if (false === Configuration::hasKey(self::CONFIGURED, null, null, Shop::getContextShopID)) {
             $this->checkCredentials();
         }
 
