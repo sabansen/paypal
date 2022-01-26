@@ -30,6 +30,8 @@ use Configuration;
 use Context;
 use Media;
 use Module;
+use Country;
+use Tools;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\InstallmentBanner\ConfigurationMap;
 use Symfony\Component\VarDumper\VarDumper;
@@ -90,7 +92,11 @@ abstract class BNPLAbstract
         $srcLib = $this->method->getUrlJsSdkLib() . '&enable-funding=paylater';
 
         if ($this->method->isSandbox()) {
-            $srcLib .= '&buyer-country=FR';
+            $buyerCountry = $this->getBuyerCountry();
+
+            if (false == empty($buyerCountry)) {
+                $srcLib .= '&buyer-country=' . $buyerCountry;
+            }
         }
 
         $JSscripts['tot-paypal-bnpl-sdk'] = [
@@ -169,5 +175,16 @@ abstract class BNPLAbstract
 
 
         return isset(ConfigurationMap::getBnplColorMapping()[$bannerColor]) ? ConfigurationMap::getBnplColorMapping()[$bannerColor] : 'white';
+    }
+
+    public function getBuyerCountry()
+    {
+        $buyerCountry = Tools::strtoupper(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
+        // https://developer.paypal.com/docs/regional/th/checkout/reference/customize-sdk/
+        if (in_array($buyerCountry, ['US', 'CA', 'GB', 'DE', 'FR'])) {
+            return $buyerCountry;
+        }
+
+        return '';
     }
 }
