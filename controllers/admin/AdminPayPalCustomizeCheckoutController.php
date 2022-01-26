@@ -226,7 +226,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
 
         $this->fields_form['form']['form']['input'][] = array(
             'type' => 'text',
-            'label' => $this->l('Brand name shown on top left during PayPal checkout'),
+            'label' => $this->l('Brand name shown on bottom right during PayPal checkout'),
             'name' => 'paypal_config_brand',
             'placeholder' => $this->l('Leave it empty to use your Shop name setup on your PayPal account'),
             'hint' => $this->l('A label that overrides the business name in the PayPal account on the PayPal pages. If logo is set, then brand name won\'t be shown.', get_class($this)),

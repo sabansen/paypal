@@ -557,3 +557,4 @@ $_MODULE['<{paypal}prestashop>forminstallment_9176dcc49f1dd25a41f0e96adebf91f8']
 $_MODULE['<{paypal}prestashop>bnplpagedisplayingsetting_d53f3fd73815da5fd604769249c6968c'] = 'Paiement par étapes dans la caisse';
 $_MODULE['<{paypal}prestashop>bnpl-payment-step_6842756c67a29c72c89e0a019e0fbc6f'] = 'Veuillez cliquer sur le bouton \"Payer en X fois\".';
 $_MODULE['<{paypal}prestashop>shortcut-payment-step_f9952e95d55801d9b0742431aefc1d3e'] = 'Veuillez cliquer sur le bouton \"Payer avec PayPal\".';
+$_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_d4350ae4398468173e2d732aafdde5e1'] = 'Nom de la marque affiché en bas à droite lors du paiement PayPal';
