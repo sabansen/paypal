@@ -1939,10 +1939,11 @@ class PayPal extends PaymentModule
 
                 $sandbox = (int)Configuration::get('PAYPAL_SANDBOX');
                 $switch_sandbox = false;
-                $expressCheckout->checkCredentials();
 
                 Configuration::updateValue('PAYPAL_SANDBOX', (int) Tools::getValue('sandbox_mode'));
                 Configuration::updateValue('PAYPAL_CAPTURE', (int) Tools::getValue('payment_capture'));
+
+                $expressCheckout->checkCredentials();
                 /* USE PAYPAL LOGIN */
                 Configuration::updateValue('PAYPAL_LOGIN', (int) Tools::getValue('paypal_login'));
                 Configuration::updateValue('PAYPAL_LOGIN_CLIENT_ID', Tools::getValue('paypal_login_client_id'));

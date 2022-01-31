@@ -42,6 +42,10 @@ class ExpressCheckout
 
     const API_MERCHANT_ID = 'PAYPAL_IN_CONTEXT_CHECKOUT_M_ID';
 
+    const IS_CONFIGURED = 1;
+
+    const NOT_CONFIGURED = 2;
+
     /** @var PayPal*/
     protected $module;
 
@@ -109,7 +113,13 @@ class ExpressCheckout
      */
     public function checkCredentials()
     {
-        Configuration::updateValue(self::CONFIGURED, (int)$this->isRightCredentials());
+        if ($this->isRightCredentials()) {
+            $status = self::IS_CONFIGURED;
+        } else {
+            $status = self::NOT_CONFIGURED;
+        }
+
+        Configuration::updateValue(self::CONFIGURED, $status);
     }
 
     /**
@@ -158,11 +168,14 @@ class ExpressCheckout
      */
     public function isConfigured()
     {
-        if (false === Configuration::hasKey(self::CONFIGURED, null, null, Shop::getContextShopID)) {
+        $status = (int) Configuration::get(self::CONFIGURED);
+
+        if (!$status) {
             $this->checkCredentials();
+            $status = (int) Configuration::get(self::CONFIGURED);
         }
 
-        return (bool)Configuration::get(self::CONFIGURED);
+        return $status == self::IS_CONFIGURED;
     }
 
     /**
