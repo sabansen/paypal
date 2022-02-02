@@ -27,10 +27,21 @@
 namespace PaypalAddons\classes\Shortcut;
 
 use Configuration;
+use MethodMB;
+use PaypalAddons\classes\AbstractMethodPaypal;
 use Tools;
 
 class ShortcutPaymentStep extends ShortcutAbstract
 {
+    public function __construct()
+    {
+        parent::__construct();
+
+        if ($this->method instanceof MethodMB) {
+            $this->method = AbstractMethodPaypal::load('EC');
+        }
+    }
+
     public function getTemplatePath()
     {
         return 'module:paypal/views/templates/shortcut/shortcut-payment-step.tpl';
