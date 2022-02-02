@@ -181,7 +181,9 @@ abstract class BNPLAbstract
     {
         $buyerCountry = Tools::strtoupper(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
         // https://developer.paypal.com/docs/regional/th/checkout/reference/customize-sdk/
-        if (in_array($buyerCountry, ['US', 'CA', 'GB', 'DE', 'FR'])) {
+        // According a documentation the available countries are following 'US', 'CA', 'GB', 'DE', 'FR'
+        // But an error was occurring using 'US', 'CA', 'GB' during the test
+        if (in_array($buyerCountry, ['DE', 'FR'])) {
             return $buyerCountry;
         }
 
