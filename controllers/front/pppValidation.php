@@ -34,8 +34,17 @@ class PaypalPppValidationModuleFrontController extends PaypalAbstarctModuleFront
     public function init()
     {
         parent::init();
+
+        if (Tools::isSubmit('paymentData')) {
+            $paymentData = $this->parsePaymentData(Tools::getValue('paymentData'));
+            $this->values['paymentId'] = $paymentData->getOrderId();
+        }
+
         $this->values['short_cut'] = Tools::getvalue('short_cut');
-        $this->values['paymentId'] = Tools::getvalue('token');
+
+        if (empty($this->values['paymentId'])) {
+            $this->values['paymentId'] = Tools::getvalue('token');
+        }
     }
 
     /**

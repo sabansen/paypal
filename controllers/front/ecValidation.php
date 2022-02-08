@@ -100,25 +100,4 @@ class PaypalEcValidationModuleFrontController extends PaypalAbstarctModuleFrontC
             }
         }
     }
-
-    /**
-     * @return PaymentData
-     */
-    protected function parsePaymentData($data)
-    {
-        $paymentDataObj = new PaymentData();
-
-        try {
-            $paymentData = json_decode($data, true);
-        } catch (Exception $e) {
-            $paymentData = [];
-        }
-
-        if (false == is_array($paymentData)) {
-            return $paymentDataObj;
-        }
-
-        $paymentDataObj->fromArray($paymentData);
-        return $paymentDataObj;
-    }
 }
