@@ -36,6 +36,7 @@ use \CartController;
 use \IndexController;
 use \Categorycontroller;
 use \OrderController;
+use Validate;
 
 class BannerManager
 {
@@ -190,9 +191,19 @@ class BannerManager
      */
     public function renderForProductPage()
     {
+        $idProduct = 0;
+
+        if ($this->context->controller instanceof ProductController) {
+            if (Validate::isLoadedObject($this->context->controller->getProduct())) {
+                $idProduct = (int)$this->context->controller->getProduct()->id;
+            }
+        }
+
         return $this->banner
             ->setPlacement('product')
             ->setLayout('text')
+            ->addJsVar('paypalBanner_IdProduct', $idProduct)
+            ->addJsVar('paypalBanner_scInitController', $this->context->link->getModuleLink('paypal', 'ScInit'))
             ->setPageTypeAttribute(ConfigurationMap::PAGE_TYPE_PRODUCT)
             ->setTemplate(_PS_MODULE_DIR_ . 'paypal/views/templates/installmentBanner/product-banner.tpl')
             ->render();
