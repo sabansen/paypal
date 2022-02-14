@@ -26,14 +26,25 @@
 
 namespace PaypalAddons\classes\API\Request;
 
+use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\ExtensionSDK\PartnerReferrals;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\ResponsePartnerReferrals;
+use PaypalAddons\services\Builder\PartnerReferralsRequestBody;
+use PayPalCheckoutSdk\Core\PayPalHttpClient;
 use PayPalHttp\HttpException;
 use Symfony\Component\VarDumper\VarDumper;
 
 class PaypalPartnerReferralsRequest extends RequestAbstract
 {
+    protected $bodyBuilder;
+
+    public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method)
+    {
+        parent::__construct($client, $method);
+
+        $this->bodyBuilder = new PartnerReferralsRequestBody($method);
+    }
 
     public function execute()
     {
@@ -57,40 +68,7 @@ class PaypalPartnerReferralsRequest extends RequestAbstract
 
     public function buildRequestBody()
     {
-        $body = [
-            'operations' => [
-                [
-                    'operation' => 'API_INTEGRATION',
-                    'api_integration_preference' => [
-                        'rest_api_integration' => [
-                            'integration_method' => 'PAYPAL',
-                            'integration_type' => 'THIRD_PARTY',
-                            'third_party_details' => [
-                                'features' => [
-                                    'PAYMENT',
-                                    'REFUND',
-                                    'PARTNER_FEE'
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
-            ],
-            'products' => [
-                'PPPLUS'
-            ],
-            'capabilities' => [
-                'PAY_UPON_INVOICE'
-            ],
-            'legal_consents' => [
-                [
-                    'type' => 'SHARE_DATA_CONSENT',
-                    'granted' => true
-                ]
-            ]
-        ];
-
-        return $body;
+        return $this->bodyBuilder->build();
     }
 
     /** @return ResponsePartnerReferrals*/
