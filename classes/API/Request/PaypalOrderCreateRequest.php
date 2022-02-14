@@ -494,4 +494,18 @@ class PaypalOrderCreateRequest extends RequestAbstract
     {
         return $this->context->cart->getOrderTotal(true, \Cart::ONLY_SHIPPING);
     }
+
+    protected function getHeaders()
+    {
+        $headers = parent::getHeaders();
+        $sessionId = $this->paypalContext->get('client-session-id', '');
+
+        if (empty($sessionId)) {
+            return $headers;
+        }
+
+        //This header is required for PUI payment
+        $headers['PayPal-Client-Metadata-Id'] = $sessionId;
+        return $headers;
+    }
 }

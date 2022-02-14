@@ -22,10 +22,13 @@
 *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
 *
 *}
+
 {literal}
 <script type="application/json" fncls="fnparams-dede7cc5-15fd-4c75-a9f4-36c430ee3a99">
   {
-    "f":"{/literal}{$sessionId}{literal}"
+    "f":"{/literal}{$sessionId}{literal}",
+    "s":"{/literal}{$sourceId}{literal}",
+    "sandbox": {/literal}{$isSandbox}{literal}
   }
 </script>
 {/literal}

@@ -27,15 +27,28 @@
 namespace PaypalAddons\classes\PUI;
 
 use Context;
+use PaypalAddons\classes\AbstractMethodPaypal;
 
 class FraudNetForm
 {
+    protected $context;
+
+    protected $method;
+
+    public function __construct()
+    {
+        $this->context = Context::getContext();
+        $this->method = AbstractMethodPaypal::load('PPP');
+    }
+
     /**
      * @return string
      */
     public function render()
     {
-        Context::getContext()->smarty->assign('sessionId', $this->getFraudSessionId()->buildSessionId());
+        $this->context->smarty->assign('sessionId', $this->getFraudSessionId()->buildSessionId());
+        $this->context->smarty->assign('sourceId', $this->getSourceId());
+        $this->context->smarty->assign('isSandbox', $this->method->isSandbox());
 
         try {
             return Context::getContext()->smarty->fetch('module:paypal/views/templates/pui/fraudNetForm.tpl');
@@ -44,8 +57,14 @@ class FraudNetForm
         }
     }
 
-    public function getFraudSessionId()
+    protected function getFraudSessionId()
     {
         return new FraudSessionId();
+    }
+
+    protected function getSourceId()
+    {
+        //todo: use format merchantId + page name
+        return '[use-client-id-here]-checkout-page';
     }
 }

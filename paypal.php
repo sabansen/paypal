@@ -41,6 +41,7 @@ use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLProduct;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLSignup;
 use PaypalAddons\classes\InstallmentBanner\ConfigurationMap;
 use PaypalAddons\classes\PUI\FraudNetForm;
+use PaypalAddons\classes\PUI\FraudSessionId;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Shortcut\ShortcutPaymentStep;
 use PaypalAddons\classes\Shortcut\ShortcutSignup;
@@ -844,8 +845,21 @@ class PayPal extends \PaymentModule implements WidgetInterface
         $paymentOption->setModuleName('paypal_pui');
         $paymentOption->setCallToActionText($action_text);
         $paymentOption->setAdditionalInformation($this->getFraudNetForm()->render());
+        $paymentOption->setAction(
+            $this->context->link->getModuleLink(
+                $this->name,
+                'puiInit',
+                array('sessionId' => $this->getFraudSessionId()->buildSessionId()),
+                true
+            )
+        );
 
         return $paymentOption;
+    }
+
+    protected function getFraudSessionId()
+    {
+        return new FraudSessionId();
     }
 
     /** @return FraudNetForm*/

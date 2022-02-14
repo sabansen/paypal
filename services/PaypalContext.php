@@ -24,29 +24,38 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
-namespace PaypalAddons\classes\PUI;
+namespace PaypalAddons\services;
 
-use Context;
-use Customer;
-use Validate;
-
-class FraudSessionId
+class PaypalContext
 {
-    /**
-     * @param Customer|null $customer
-     * @return string
-     */
-    public function buildSessionId($customer = null)
+    protected $dataset = [];
+
+    protected static $instance;
+
+    public function get($key, $default = null)
     {
-        if (is_null($customer)) {
-            $customer = Context::getContext()->customer;
+        if (empty($this->dataset[$key])) {
+            return $default;
         }
 
-        if (false == Validate::isLoadedObject($customer)) {
-            return '';
+        return $this->dataset[$key];
+    }
+
+    public function set($key, $value)
+    {
+        $this->dataset[$key] = $value;
+    }
+
+    protected function __construct()
+    {
+    }
+
+    public static function getContext()
+    {
+        if (!isset(self::$instance)) {
+            self::$instance = new self();
         }
 
-        $key = $customer->email.$customer->id.getmypid();
-        return md5($key);
+        return self::$instance;
     }
 }
