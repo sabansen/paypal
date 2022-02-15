@@ -29,6 +29,7 @@ namespace PaypalAddons\classes\API\Request;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\Response;
+use PaypalAddons\services\Builder\OrderPatchBody;
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
 use PayPalCheckoutSdk\Orders\OrdersPatchRequest;
 use PayPalHttp\HttpException;
@@ -76,29 +77,8 @@ class PaypalOrderPatchRequest extends PaypalOrderCreateRequest
         return $response;
     }
 
-    protected function buildRequestBody()
+    protected function initBodyBuilder()
     {
-        $body = [];
-        $currency = $this->getCurrency();
-        $productItmes = $this->getProductItems($currency);
-        $wrappingItems = $this->getWrappingItems($currency);
-        $items = array_merge($productItmes, $wrappingItems);
-        $shippingInfo = $this->getShippingInfo();
-
-        $body[] = [
-            'op' => 'replace',
-            'path' => '/purchase_units/@reference_id==\'default\'',
-            'value' => [
-                'amount' => $this->getAmount($currency),
-                'items' => $items,
-                'custom_id' => $this->getCustomId()
-            ]
-        ];
-
-        if (false === empty($shippingInfo)) {
-            $body[0]['value']['shipping'] = $shippingInfo;
-        }
-
-        return $body;
+        return new OrderPatchBody($this->context, $this->method);
     }
 }

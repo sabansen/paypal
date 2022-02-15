@@ -33,7 +33,7 @@ use Symfony\Component\VarDumper\VarDumper;
  */
 class PaypalPuiInitModuleFrontController extends PaypalAbstarctModuleFrontController
 {
-    /* @var $method AbstractMethodPaypal*/
+    /* @var $method MethodPPP*/
     protected $method;
 
     public function init()
@@ -48,7 +48,7 @@ class PaypalPuiInitModuleFrontController extends PaypalAbstarctModuleFrontContro
     public function postProcess()
     {
         try {
-            $this->redirectUrl = $this->method->init()->getApproveLink();
+            $this->redirectUrl = $this->method->initPui()->getApproveLink();
         } catch (PayPal\Exception\PPConnectionException $e) {
             $this->_errors['error_msg'] = $this->module->l('Error connecting to ', pathinfo(__FILE__)['filename']) . $e->getUrl();
         } catch (PayPal\Exception\PPMissingCredentialException $e) {

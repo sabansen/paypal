@@ -29,7 +29,7 @@ namespace PaypalAddons\services\Builder;
 
 use PaypalAddons\classes\AbstractMethodPaypal;
 
-class PartnerReferralsRequestBody
+class PartnerReferralsRequestBody implements BuilderInterface
 {
     /** @var AbstractMethodPaypal*/
     protected $method;

@@ -27,13 +27,14 @@
 use PaypalAddons\classes\API\PaypalApiManager;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\PuiMethodInterface;
 
 /**
  * Class MethodPPP
  * @see https://paypal.github.io/PayPal-PHP-SDK/ REST API sdk doc
  * @see https://developer.paypal.com/docs/api/payments/v1/ REST API references
  */
-class MethodPPP extends AbstractMethodPaypal
+class MethodPPP extends AbstractMethodPaypal implements PuiMethodInterface
 {
     public $errors = array();
 
@@ -322,5 +323,10 @@ class MethodPPP extends AbstractMethodPaypal
     public function createPartnerReferrals()
     {
         return $this->paypalApiManager->getPartnerReferralsRequest()->execute();
+    }
+
+    public function initPui()
+    {
+        return $this->paypalApiManager->getOrderPuiRequest()->execute();
     }
 }
