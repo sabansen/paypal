@@ -48,7 +48,8 @@ class PaypalPuiInitModuleFrontController extends PaypalAbstarctModuleFrontContro
     public function postProcess()
     {
         try {
-            $this->redirectUrl = $this->method->initPui()->getApproveLink();
+            $response = $this->method->initPui();
+            $this->redirectUrl = $response->getApproveLink();
         } catch (PayPal\Exception\PPConnectionException $e) {
             $this->_errors['error_msg'] = $this->module->l('Error connecting to ', pathinfo(__FILE__)['filename']) . $e->getUrl();
         } catch (PayPal\Exception\PPMissingCredentialException $e) {

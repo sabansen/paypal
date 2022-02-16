@@ -29,4 +29,6 @@ namespace PaypalAddons\classes\Constants;
 class PaypalConfigurations
 {
     const INTENT = 'PAYPAL_API_INTENT';
+
+    const PUI_CUSTOMER_SERVICE_INSTRUCTIONS = 'PAYPAL_PUI_CUSTOMER_SERVICE_INSTRUCTIONS';
 }

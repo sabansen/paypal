@@ -27,10 +27,14 @@
 namespace PaypalAddons\services\Builder;
 
 use Address;
+use Configuration;
 use Context;
+use Country;
+use Customer;
 use Module;
 use Paypal;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\Constants\PaypalConfigurations;
 use PaypalAddons\services\FormatterPaypal;
 
 class OrderPuiCreateBody extends OrderCreateBody
@@ -41,16 +45,52 @@ class OrderPuiCreateBody extends OrderCreateBody
         $billingAddress = new Address($this->context->cart->id_address_invoice);
 
         $body['payment_source'] = [
-            'pay_Upon_invoice' => [
+            'pay_upon_invoice' => [
                 'name' => [
                     'given_name' => $this->context->customer->firstname,
                     'surname' => $this->context->customer->lastname
                 ],
+                'birth_date' => $this->getBirthDate($this->context->customer),
                 'email' => $this->context->customer->email,
-                'billing_address' => $this->getAddress($billingAddress)
+                'billing_address' => $this->getAddress($billingAddress),
+                'phone' => $this->getPhone($billingAddress),
+                'experience_context' => [
+                    'locale' => 'en-DE',
+                    'customer_service_instructions' => $this->getCustomerServiceInstructions()
+                ]
             ]
         ];
 
         return $body;
+    }
+
+    protected function getBirthDate(Customer $customer)
+    {
+        if ($customer->birthday) {
+            return $customer->birthday;
+        }
+
+        return '';
+    }
+
+    protected function getCustomerServiceInstructions()
+    {
+        $instructions = Configuration::get(PaypalConfigurations::PUI_CUSTOMER_SERVICE_INSTRUCTIONS);
+
+        if (false == $instructions) {
+            $instructions = 'Instructions are not found';
+        }
+
+        return [$instructions];
+    }
+
+    protected function getPhone(Address $billingAddress)
+    {
+        $country = new Country($billingAddress->id_country);
+
+        return [
+            'national_number' => $billingAddress->phone,
+            'country_code' => $country->call_prefix
+        ];
     }
 }

@@ -327,6 +327,20 @@ class MethodPPP extends AbstractMethodPaypal implements PuiMethodInterface
 
     public function initPui()
     {
-        return $this->paypalApiManager->getOrderPuiRequest()->execute();
+        if ($this->isConfigured() == false) {
+            throw new Exception('Module is not configured');
+        }
+
+        /** @var $response \PaypalAddons\classes\API\Response\ResponseOrderCreate*/
+        $response = $this->paypalApiManager->getOrderPuiRequest()->execute();
+
+        if ($response->isSuccess() == false) {
+            throw new \Exception($response->getError()->getMessage());
+        }
+
+        $this->setPaymentId($response->getPaymentId());
+        $this->updateCartTrace(Context::getContext()->cart, $response->getPaymentId());
+
+        return $response;
     }
 }
