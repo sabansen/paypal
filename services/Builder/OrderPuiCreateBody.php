@@ -35,6 +35,7 @@ use Module;
 use Paypal;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\Constants\PaypalConfigurations;
+use PaypalAddons\classes\PUI\DataUserForm;
 use PaypalAddons\services\FormatterPaypal;
 
 class OrderPuiCreateBody extends OrderCreateBody
@@ -42,18 +43,23 @@ class OrderPuiCreateBody extends OrderCreateBody
     public function build()
     {
         $body = parent::build();
+        $dataUser = $this->getDataUser();
         $billingAddress = new Address($this->context->cart->id_address_invoice);
+        $country = new Country($billingAddress->id_country);
 
         $body['payment_source'] = [
             'pay_upon_invoice' => [
                 'name' => [
-                    'given_name' => $this->context->customer->firstname,
-                    'surname' => $this->context->customer->lastname
+                    'given_name' => $dataUser->getFirstName(),
+                    'surname' => $dataUser->getLastName()
                 ],
-                'birth_date' => $this->getBirthDate($this->context->customer),
-                'email' => $this->context->customer->email,
+                'birth_date' => $dataUser->getBirth(),
+                'email' => $dataUser->getEmail(),
                 'billing_address' => $this->getAddress($billingAddress),
-                'phone' => $this->getPhone($billingAddress),
+                'phone' => [
+                    'national_number' => $dataUser->getPhone(),
+                    'country_code' => $country->call_prefix
+                ],
                 'experience_context' => [
                     'locale' => 'en-DE',
                     'customer_service_instructions' => $this->getCustomerServiceInstructions()
@@ -62,15 +68,6 @@ class OrderPuiCreateBody extends OrderCreateBody
         ];
 
         return $body;
-    }
-
-    protected function getBirthDate(Customer $customer)
-    {
-        if ($customer->birthday) {
-            return $customer->birthday;
-        }
-
-        return '';
     }
 
     protected function getCustomerServiceInstructions()
@@ -84,13 +81,9 @@ class OrderPuiCreateBody extends OrderCreateBody
         return [$instructions];
     }
 
-    protected function getPhone(Address $billingAddress)
+    /** @return DataUserForm*/
+    protected function getDataUser()
     {
-        $country = new Country($billingAddress->id_country);
-
-        return [
-            'national_number' => $billingAddress->phone,
-            'country_code' => $country->call_prefix
-        ];
+        return $this->method->getPuiDataUser();
     }
 }

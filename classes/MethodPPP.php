@@ -25,6 +25,7 @@
  */
 
 use PaypalAddons\classes\API\PaypalApiManager;
+use PaypalAddons\classes\PUI\DataUserForm;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\PuiMethodInterface;
@@ -46,6 +47,9 @@ class MethodPPP extends AbstractMethodPaypal implements PuiMethodInterface
 
     /** payment Object IDl*/
     public $paymentId;
+
+    /** @var \PaypalAddons\classes\PUI\DataUserForm*/
+    protected $puiDataUser;
 
     /**
      * @return mixed
@@ -342,5 +346,15 @@ class MethodPPP extends AbstractMethodPaypal implements PuiMethodInterface
         $this->updateCartTrace(Context::getContext()->cart, $response->getPaymentId());
 
         return $response;
+    }
+
+    public function getPuiDataUser()
+    {
+        return $this->puiDataUser;
+    }
+
+    public function setPuiDataUser(DataUserForm $data)
+    {
+        $this->puiDataUser = $data;
     }
 }

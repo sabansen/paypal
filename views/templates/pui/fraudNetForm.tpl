@@ -43,8 +43,70 @@
 {*  })*}
 {*</script>*}
 
-<div class="alert alert-info">
-  {{l s='By clicking on the button, you agree to the [a @href1@]terms of payment[/a] and [a @href2@]performance of a risk check[/a] from the payment partner, Ratepay.' mod='paypal'}|paypalreplace:['@href1@' => {'https://www.ratepay.com/legal-payment-terms'}, '@target@' => {'target="blank"'}, '@href2@' => {'https://www.ratepay.com/legal-payment-dataprivacy'}, '@target@' => {'target="blank"'}] nofilter}
-  {{l s='You also agree to PayPal’s [a @href1@]privacy statement[/a].' mod='paypal'}|paypalreplace:['@href1@' => {'https://www.paypal.com/us/webapps/mpp/ua/privacy-full?_ga=1.129822860.1014894959.1637147141'}, '@target@' => {'target="blank"'}] nofilter}
-  {l s='If your request to purchase Upon invoice is accepted, the purchase price claim will be assigned to Ratepay, and you may only pay Ratepay, not the merchant.' mod='paypal'}
-</div>
+<form
+        class="form"
+        action="{Context::getContext()->link->getModuleLink('paypal','puiInit',['sessionId' => $sessionId], true)}"
+        method="POST"
+>
+
+  <div class="form-group row">
+    <div class="col-lg-2">
+      <label class="form-label" for="paypal_pui_firstname">{l s='First name' mod='paypal'}</label>
+
+    </div>
+
+    <div class="col-lg-6">
+      <input required class="form-control" type="text" name="paypal_pui_firstname" id="paypal_pui_firstname">
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-lg-2">
+      <label class="form-label" for="paypal_pui_lastname">{l s='Last name' mod='paypal'}</label>
+    </div>
+
+    <div class="col-lg-6">
+      <input required class="form-control" type="text" name="paypal_pui_lastname" id="paypal_pui_lastname">
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-lg-2">
+      <label class="form-label" for="paypal_pui_email">{l s='Email' mod='paypal'}</label>
+    </div>
+
+    <div class="col-lg-6">
+      <input required class="form-control" type="text" name="paypal_pui_email" id="paypal_pui_email">
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-lg-2">
+      <label class="form-label" for="paypal_pui_birhday">{l s='Birth day' mod='paypal'}</label>
+    </div>
+
+    <div class="col-lg-6">
+      <input required class="form-control" type="text" name="paypal_pui_birhday" id="paypal_pui_birhday" placeholder="yyyy-mm-dd">
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-lg-2">
+      <label class="form-label" for="paypal_pui_phone">{l s='Phone' mod='paypal'}</label>
+    </div>
+
+    <div class="col-lg-6">
+      <input required class="form-control" type="text" name="paypal_pui_phone" id="paypal_pui_phone" placeholder="6912345678">
+    </div>
+  </div>
+
+  <div class="alert alert-info">
+      {{l s='By clicking on the button, you agree to the [a @href1@]terms of payment[/a] and [a @href2@]performance of a risk check[/a] from the payment partner, Ratepay.' mod='paypal'}|paypalreplace:['@href1@' => {'https://www.ratepay.com/legal-payment-terms'}, '@target@' => {'target="blank"'}, '@href2@' => {'https://www.ratepay.com/legal-payment-dataprivacy'}, '@target@' => {'target="blank"'}] nofilter}
+      {{l s='You also agree to PayPal’s [a @href1@]privacy statement[/a].' mod='paypal'}|paypalreplace:['@href1@' => {'https://www.paypal.com/us/webapps/mpp/ua/privacy-full?_ga=1.129822860.1014894959.1637147141'}, '@target@' => {'target="blank"'}] nofilter}
+      {l s='If your request to purchase Upon invoice is accepted, the purchase price claim will be assigned to Ratepay, and you may only pay Ratepay, not the merchant.' mod='paypal'}
+  </div>
+
+  <div class="form-group row">
+    <button class="btn btn-primary">{l s='Submit' mod='paypal'}</button>
+  </div>
+</form>

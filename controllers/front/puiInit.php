@@ -25,6 +25,7 @@
  */
 
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\PUI\DataUserForm;
 use PaypalAddons\services\PaypalContext;
 use Symfony\Component\VarDumper\VarDumper;
 
@@ -48,6 +49,7 @@ class PaypalPuiInitModuleFrontController extends PaypalAbstarctModuleFrontContro
     public function postProcess()
     {
         try {
+            $this->method->setPuiDataUser($this->getUserDataFromRequest());
             $response = $this->method->initPui();
             $this->redirectUrl = $response->getApproveLink();
         } catch (PayPal\Exception\PPConnectionException $e) {
@@ -68,5 +70,17 @@ class PaypalPuiInitModuleFrontController extends PaypalAbstarctModuleFrontContro
         if (!empty($this->_errors)) {
             $this->redirectUrl = Context::getContext()->link->getModuleLink($this->name, 'error', $this->_errors);
         }
+    }
+
+    protected function getUserDataFromRequest()
+    {
+        $userData = new DataUserForm();
+        $userData->setFirstName(Tools::getValue('paypal_pui_firstname', ''));
+        $userData->setLastName(Tools::getValue('paypal_pui_lastname', ''));
+        $userData->setEmail(Tools::getValue('paypal_pui_email', ''));
+        $userData->setBirth(Tools::getValue('paypal_pui_birhday', ''));
+        $userData->setPhone(Tools::getValue('paypal_pui_phone', ''));
+
+        return $userData;
     }
 }
