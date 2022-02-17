@@ -56,7 +56,13 @@
     </div>
 
     <div class="col-lg-6">
-      <input required class="form-control" type="text" name="paypal_pui_firstname" id="paypal_pui_firstname">
+      <input
+              required
+              class="form-control"
+              type="text"
+              name="paypal_pui_firstname"
+              id="paypal_pui_firstname"
+              value="{if isset($userData)}{$userData->getFirstName()}{/if}">
     </div>
   </div>
 
@@ -66,7 +72,13 @@
     </div>
 
     <div class="col-lg-6">
-      <input required class="form-control" type="text" name="paypal_pui_lastname" id="paypal_pui_lastname">
+      <input
+              required
+              class="form-control"
+              type="text"
+              name="paypal_pui_lastname"
+              id="paypal_pui_lastname"
+              value="{if isset($userData)}{$userData->getLastName()}{/if}">
     </div>
   </div>
 
@@ -76,7 +88,13 @@
     </div>
 
     <div class="col-lg-6">
-      <input required class="form-control" type="text" name="paypal_pui_email" id="paypal_pui_email">
+      <input
+              required
+              class="form-control"
+              type="text"
+              name="paypal_pui_email"
+              id="paypal_pui_email"
+              value="{if isset($userData)}{$userData->getEmail()}{/if}">
     </div>
   </div>
 
@@ -86,7 +104,14 @@
     </div>
 
     <div class="col-lg-6">
-      <input required class="form-control" type="text" name="paypal_pui_birhday" id="paypal_pui_birhday" placeholder="yyyy-mm-dd">
+      <input
+              required
+              class="form-control"
+              type="date"
+              name="paypal_pui_birhday"
+              id="paypal_pui_birhday"
+              {literal}pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"{/literal}
+              value="{if isset($userData)}{$userData->getBirth()}{/if}">
     </div>
   </div>
 
@@ -96,7 +121,14 @@
     </div>
 
     <div class="col-lg-6">
-      <input required class="form-control" type="text" name="paypal_pui_phone" id="paypal_pui_phone" placeholder="6912345678">
+      <input
+              required
+              class="form-control"
+              type="text"
+              name="paypal_pui_phone"
+              id="paypal_pui_phone"
+              placeholder="{l s='Example: 6912345678' mod='paypal'}"
+              value="{if isset($userData)}{$userData->getPhone()}{/if}">
     </div>
   </div>
 
@@ -107,6 +139,8 @@
   </div>
 
   <div class="form-group row">
-    <button class="btn btn-primary">{l s='Submit' mod='paypal'}</button>
+    <div class="col-lg-12">
+      <button class="btn btn-primary">{l s='Submit' mod='paypal'}</button>
+    </div>
   </div>
 </form>

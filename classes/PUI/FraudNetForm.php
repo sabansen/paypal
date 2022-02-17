@@ -26,6 +26,7 @@
 
 namespace PaypalAddons\classes\PUI;
 
+use Address;
 use Context;
 use PaypalAddons\classes\AbstractMethodPaypal;
 
@@ -49,6 +50,7 @@ class FraudNetForm
         $this->context->smarty->assign('sessionId', $this->getFraudSessionId()->buildSessionId());
         $this->context->smarty->assign('sourceId', $this->getSourceId());
         $this->context->smarty->assign('isSandbox', $this->method->isSandbox());
+        $this->context->smarty->assign('userData', $this->getUserData());
 
         try {
             return Context::getContext()->smarty->fetch('module:paypal/views/templates/pui/fraudNetForm.tpl');
@@ -66,5 +68,18 @@ class FraudNetForm
     {
         //todo: use format merchantId + page name
         return '[use-client-id-here]-checkout-page';
+    }
+
+    protected function getUserData()
+    {
+        $billingAddress = new Address($this->context->cart->id_address_invoice);
+        $userData = new DataUserForm();
+
+        $userData->setFirstName($this->context->customer->firstname);
+        $userData->setLastName($this->context->customer->lastname);
+        $userData->setEmail($this->context->customer->email);
+        $userData->setPhone($billingAddress->phone);
+
+        return $userData;
     }
 }
