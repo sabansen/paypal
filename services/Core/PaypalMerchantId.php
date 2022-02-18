@@ -24,39 +24,46 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
-use PaypalAddons\classes\Constants\Account;
-use PaypalAddons\classes\Constants\PUI;
-use PaypalAddons\classes\PUI\PsMerchantId;
-use PaypalAddons\services\Core\PaypalMerchantId;
+namespace PaypalAddons\services\Core;
 
-class AdminPayPalPUIListenerController extends ModuleAdminController
+use Configuration;
+
+class PaypalMerchantId
 {
-    public function init()
-    {
-        parent::init();
+    const SANDBOX = 'PAYPAL_MERCHANT_ID_SANDBOX';
 
-        if (Tools::getValue('merchantId') != $this->initPsMerchantId()->get()) {
-            return $this->redirectToSetup();
+    const LIVE = 'PAYPAL_MERCHANT_ID_LIVE';
+
+    public function get($sandboxMode = null)
+    {
+        if ($sandboxMode instanceof SandboxMode) {
+            $sandboxMode = $this->getSandboxMode();
         }
 
-        Configuration::updateValue(PUI::PARTNER_REFERRAL_ACTION_URL, false);
-        $this->initPaypalMerchantId()->set(Tools::getValue('merchantIdInPayPal'));
-
-        return $this->redirectToSetup();
+        if ($sandboxMode->isSandbox()) {
+            return Configuration::get(self::SANDBOX);
+        } else {
+            return Configuration::get(self::LIVE);
+        }
     }
 
-    protected function initPsMerchantId()
+    public function set($id, $sandboxMode = null)
     {
-        return new PsMerchantId();
+        if ($sandboxMode instanceof SandboxMode) {
+            $sandboxMode = $this->getSandboxMode();
+        }
+
+        if ($sandboxMode->isSandbox()) {
+            Configuration::updateValue(self::SANDBOX, $id);
+        } else {
+            Configuration::updateValue(self::LIVE, $id);
+        }
+
+        return $this;
     }
 
-    protected function redirectToSetup()
+    protected function getSandboxMode()
     {
-        Tools::redirectAdmin($this->context->link->getAdminLink('AdminPayPalSetup'));
-    }
-
-    protected function initPaypalMerchantId()
-    {
-        return new PaypalMerchantId();
+        return new SandboxMode();
     }
 }

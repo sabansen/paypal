@@ -24,39 +24,27 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
-use PaypalAddons\classes\Constants\Account;
-use PaypalAddons\classes\Constants\PUI;
-use PaypalAddons\classes\PUI\PsMerchantId;
-use PaypalAddons\services\Core\PaypalMerchantId;
+namespace PaypalAddons\classes\PUI;
 
-class AdminPayPalPUIListenerController extends ModuleAdminController
+
+use PaypalAddons\classes\AbstractMethodPaypal;
+
+class PsMerchantId
 {
-    public function init()
-    {
-        parent::init();
+    /** @var AbstractMethodPaypal*/
+    protected $method;
 
-        if (Tools::getValue('merchantId') != $this->initPsMerchantId()->get()) {
-            return $this->redirectToSetup();
+    public function __construct($method = null)
+    {
+        if ($method instanceof AbstractMethodPaypal) {
+            $this->method = $method;
+        } else {
+            $this->method = AbstractMethodPaypal::load('PPP');
         }
-
-        Configuration::updateValue(PUI::PARTNER_REFERRAL_ACTION_URL, false);
-        $this->initPaypalMerchantId()->set(Tools::getValue('merchantIdInPayPal'));
-
-        return $this->redirectToSetup();
     }
 
-    protected function initPsMerchantId()
+    public function get()
     {
-        return new PsMerchantId();
-    }
-
-    protected function redirectToSetup()
-    {
-        Tools::redirectAdmin($this->context->link->getAdminLink('AdminPayPalSetup'));
-    }
-
-    protected function initPaypalMerchantId()
-    {
-        return new PaypalMerchantId();
+        return 'PrestaShop_'.md5($this->method->getClientId());
     }
 }

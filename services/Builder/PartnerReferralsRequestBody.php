@@ -28,6 +28,7 @@ namespace PaypalAddons\services\Builder;
 
 
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\PUI\PsMerchantId;
 use State;
 use Store;
 use Context;
@@ -77,7 +78,7 @@ class PartnerReferralsRequestBody implements BuilderInterface
                     ]
                 ]
             ],
-            'tracking_id' => $this->getTrackingId(),
+            'tracking_id' => $this->initPsMerchantId()->get(),
             'products' => [
                 'PAYMENT_METHODS'
             ],
@@ -101,9 +102,9 @@ class PartnerReferralsRequestBody implements BuilderInterface
         return $body;
     }
 
-    protected function getTrackingId()
+    protected function initPsMerchantId()
     {
-        return 'PrestaShop_'.md5($this->method->getClientId());
+        return new PsMerchantId($this->method);
     }
 
     protected function getBusinessAddresses()

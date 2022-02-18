@@ -55,11 +55,22 @@ class PaypalPartnerReferralsRequest extends RequestAbstract
 
         try {
             $exec = $this->client->execute($partnerReferral);
+            $response->setActionLink($this->getActionLink($exec));
+            $response->setSelfLink($this->getSelfLink($exec));
+        } catch (HttpException $e) {
+            $error = new Error();
+            $resultDecoded = json_decode($e->getMessage());
+            $error->setMessage($resultDecoded->details[0]->description)->setErrorCode($e->getCode());
+            $response->setSuccess(false)
+                ->setError($error);
         } catch (\Throwable $e) {
-            return $response->setSuccess(false);
+            $error = new Error();
+            $error->setMessage($e->getMessage())
+                ->setErrorCode($e->getCode());
+            return $response->setSuccess(false)->setError($error);
         }
 
-        //todo: parse action_url and self link from paypal response
+
         $response->setSuccess(true);
         $response->setData($exec);
 
@@ -75,5 +86,36 @@ class PaypalPartnerReferralsRequest extends RequestAbstract
     protected function getResponse()
     {
         return new ResponsePartnerReferrals();
+    }
+
+    protected function getActionLink(\PayPalHttp\HttpResponse $exec)
+    {
+        return $this->getLink('action_url', $exec);
+    }
+
+    protected function getSelfLink(\PayPalHttp\HttpResponse $exec)
+    {
+        return $this->getLink('self', $exec);
+    }
+
+    protected function getLink($type, \PayPalHttp\HttpResponse $exec)
+    {
+        $link = '';
+
+        if (empty($exec->result->links)) {
+            return $link;
+        }
+
+        foreach ($exec->result->links as $link) {
+            if (empty($link->rel)) {
+                continue;
+            }
+
+            if ($link->rel == $type) {
+                return empty($link->href) ? '' : $link->href;
+            }
+        }
+
+        return $link;
     }
 }

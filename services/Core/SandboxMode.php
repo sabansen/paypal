@@ -24,39 +24,33 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
-use PaypalAddons\classes\Constants\Account;
-use PaypalAddons\classes\Constants\PUI;
-use PaypalAddons\classes\PUI\PsMerchantId;
-use PaypalAddons\services\Core\PaypalMerchantId;
+namespace PaypalAddons\services\Core;
 
-class AdminPayPalPUIListenerController extends ModuleAdminController
+use Configuration;
+
+class SandboxMode
 {
-    public function init()
-    {
-        parent::init();
+    const NAME = 'PAYPAL_SANDBOX';
 
-        if (Tools::getValue('merchantId') != $this->initPsMerchantId()->get()) {
-            return $this->redirectToSetup();
+    protected $mode;
+
+    public function __construct($mode = null)
+    {
+        if (is_null($mode)) {
+            $this->mode = Configuration::get(self::NAME);
+        } else {
+            $this->mode = $mode;
         }
-
-        Configuration::updateValue(PUI::PARTNER_REFERRAL_ACTION_URL, false);
-        $this->initPaypalMerchantId()->set(Tools::getValue('merchantIdInPayPal'));
-
-        return $this->redirectToSetup();
     }
 
-    protected function initPsMerchantId()
+    public function isSandbox()
     {
-        return new PsMerchantId();
+        return (bool)$this->mode;
     }
 
-    protected function redirectToSetup()
+    public function setMode($mode)
     {
-        Tools::redirectAdmin($this->context->link->getAdminLink('AdminPayPalSetup'));
-    }
-
-    protected function initPaypalMerchantId()
-    {
-        return new PaypalMerchantId();
+        Configuration::updateValue(self::NAME, (int)$mode);
+        return $this;
     }
 }
