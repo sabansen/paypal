@@ -28,20 +28,35 @@ namespace PaypalAddons\services\Builder;
 
 
 use PaypalAddons\classes\AbstractMethodPaypal;
+use State;
+use Store;
+use Context;
+use Country;
+use Tools;
+use Validate;
+use Symfony\Component\VarDumper\VarDumper;
 
 class PartnerReferralsRequestBody implements BuilderInterface
 {
     /** @var AbstractMethodPaypal*/
     protected $method;
 
+    protected $context;
+
     public function __construct(AbstractMethodPaypal $method)
     {
         $this->method = $method;
+        $this->context = Context::getContext();
     }
 
     public function build()
     {
         $body = [
+            'business_entity' => [
+                'business_type' => [
+                    'type' => $this->getBusinessType()
+                ]
+            ],
             'operations' => [
                 [
                     'operation' => 'API_INTEGRATION',
@@ -61,7 +76,10 @@ class PartnerReferralsRequestBody implements BuilderInterface
             ],
             'tracking_id' => $this->getTrackingId(),
             'products' => [
-                'PPPLUS'
+                'PAYMENT_METHODS'
+            ],
+            'capabilities' => [
+                'PAY_UPON_INVOICE'
             ],
             'legal_consents' => [
                 [
@@ -71,11 +89,55 @@ class PartnerReferralsRequestBody implements BuilderInterface
             ]
         ];
 
+        $businessAddress = $this->getBusinessAddresses();
+
+        if (false == empty($businessAddress)) {
+            $body['business_entity']['addresses'] = $businessAddress;
+        }
+
         return $body;
     }
 
     protected function getTrackingId()
     {
         return 'PrestaShop_'.md5($this->method->getClientId());
+    }
+
+    protected function getBusinessAddresses()
+    {
+        $addresses = [];
+        $stores = Store::getStores($this->context->language->id);
+
+        if (empty($stores)) {
+            return $addresses;
+        }
+
+        foreach ($stores as $store) {
+            $country = new Country($store['id_country']);
+            $address = [
+                "address_line_1" => $store['address1'],
+                "admin_area_2" => $store['city'],
+                "postal_code" => $store['postcode'],
+                "country_code" => Tools::strtoupper(Country::getIsoById($country->iso_code)),
+                "type" => "Store"
+            ];
+
+            if ($country->contains_states) {
+                $state = new State($store['id_state']);
+
+                if (Validate::isLoadedObject($state)) {
+                    $address['admin_area_1'] = Tools::strtoupper($state->iso_code);
+                }
+            }
+
+            $addresses[] = $address;
+        }
+
+        return $addresses;
+    }
+
+    protected function getBusinessType()
+    {
+        return 'PRIVATE_CORPORATION';
     }
 }
