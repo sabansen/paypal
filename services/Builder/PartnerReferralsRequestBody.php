@@ -57,6 +57,9 @@ class PartnerReferralsRequestBody implements BuilderInterface
                     'type' => $this->getBusinessType()
                 ]
             ],
+            'partner_config_override' => [
+                'return_url' => $this->context->link->getAdminLink('AdminPayPalPUIListener')
+            ],
             'operations' => [
                 [
                     'operation' => 'API_INTEGRATION',
@@ -118,8 +121,8 @@ class PartnerReferralsRequestBody implements BuilderInterface
                 "address_line_1" => $store['address1'],
                 "admin_area_2" => $store['city'],
                 "postal_code" => $store['postcode'],
-                "country_code" => Tools::strtoupper(Country::getIsoById($country->iso_code)),
-                "type" => "Store"
+                "country_code" => Tools::strtoupper($country->iso_code),
+                "type" => "WORK"
             ];
 
             if ($country->contains_states) {

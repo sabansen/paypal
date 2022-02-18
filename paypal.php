@@ -348,6 +348,14 @@ class PayPal extends \PaymentModule implements WidgetInterface
             'class_name' => 'AdminPaypalGetCredentials',
             'parent_class_name' => 'AdminParentPaypalConfiguration',
             'visible' => false,
+        ),
+        array(
+            'name' => array(
+                'en' => 'PUI listener'
+            ),
+            'class_name' => 'AdminPayPalPUIListener',
+            'parent_class_name' => 'AdminParentPaypalConfiguration',
+            'visible' => false,
         )
     );
 
