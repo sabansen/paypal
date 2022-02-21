@@ -43,6 +43,8 @@ use PaypalAddons\classes\InstallmentBanner\ConfigurationMap;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Shortcut\ShortcutPaymentStep;
 use PaypalAddons\classes\Shortcut\ShortcutSignup;
+use PaypalAddons\classes\Venmo\VenmoButton;
+use PaypalAddons\classes\Venmo\VenmoFunctionality;
 use PaypalAddons\classes\Webhook\WebhookOption;
 use PaypalAddons\services\PaymentRefundAmount;
 use PaypalAddons\services\ServicePaypalOrder;
@@ -714,6 +716,11 @@ class PayPal extends \PaymentModule implements WidgetInterface
         return Tools::redirectAdmin($this->context->link->getAdminLink('AdminPayPalSetup'));
     }
 
+    protected function initVenmoFunctionality()
+    {
+        return new VenmoFunctionality();
+    }
+
     /**
      * @param $params
      * @return array
@@ -731,6 +738,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         $method = AbstractMethodPaypal::load();
         $bnplAvailabilityManager = $this->getBnplAvailabilityManager();
         $bnplOption = $this->getBnplOption();
+        $venmoFunctionality = $this->initVenmoFunctionality();
 
         switch ($this->paypal_method) {
             case 'EC':
@@ -815,6 +823,10 @@ class PayPal extends \PaymentModule implements WidgetInterface
                     $payments_options[] = $this->buildBnplPaymentOption($params);
                 }
             }
+
+            if ($venmoFunctionality->isAvailable() && $venmoFunctionality->isEnabled()) {
+                $payments_options[] = $this->buildVenmoPaymentOption($params);
+            }
         }
 
         if ($method->isSandbox() && false === empty($payments_options)) {
@@ -832,6 +844,29 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
 
         return $payments_options;
+    }
+
+    protected function buildVenmoPaymentOption($params=[])
+    {
+        $paymentOption = new PaymentOption();
+        $action_text = $this->l('Venmo');
+        $paymentOption->setCallToActionText($action_text);
+        $paymentOption->setAction(
+            sprintf(
+                'javascript:alert(\'%s\');',
+                $this->l('Should use the button "Venmo"') // todo: specify message
+            )
+        );
+        $paymentOption->setModuleName('paypal_venmo');
+        $paymentOption->setAdditionalInformation($this->initVenmoButton()->render());
+        $paymentOption->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/paypal_logo.png'));
+
+        return $paymentOption;
+    }
+
+    protected function initVenmoButton()
+    {
+        return new VenmoButton();
     }
 
     /**

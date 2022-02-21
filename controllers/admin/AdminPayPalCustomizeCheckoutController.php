@@ -28,6 +28,7 @@ require_once _PS_MODULE_DIR_ . 'paypal/vendor/autoload.php';
 
 use PaypalAddons\classes\AdminPayPalController;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\Constants\PaypalConfigurations;
 use PaypalAddons\classes\Constants\WebHookConf;
 use PaypalAddons\classes\Shortcut\Form\Definition\CustomizeButtonStyleSectionDefinition;
 use PaypalAddons\classes\Form\Field\InputChain;
@@ -36,6 +37,7 @@ use PaypalAddons\classes\Form\Field\SelectOption;
 use PaypalAddons\classes\Form\Field\TextInput;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Shortcut\ShortcutPreview;
+use PaypalAddons\classes\Venmo\VenmoFunctionality;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use PaypalAddons\classes\Webhook\CreateWebhook;
 
@@ -61,6 +63,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             'paypal_vaulting',
             'paypal_mb_ec_enabled',
             'paypal_merchant_installment',
+            PaypalConfigurations::VENMO_OPTION
         );
 
         $this->advanceFormParametres = array(
@@ -297,11 +300,38 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             );
         }
 
+        if ($this->initVenmoFunctionalityService()->isAvailable()) {
+            $this->fields_form['form']['form']['input'][] = array(
+                'type' => 'switch',
+                'label' => $this->l('Venmo'),
+                'name' => PaypalConfigurations::VENMO_OPTION,
+                'is_bool' => true,
+                'hint' => $this->l(''),
+                'values' => array(
+                    array(
+                        'id' => PaypalConfigurations::VENMO_OPTION . '_on',
+                        'value' => 1,
+                        'label' => $this->l('Enabled'),
+                    ),
+                    array(
+                        'id' => PaypalConfigurations::VENMO_OPTION . '_off',
+                        'value' => 0,
+                        'label' => $this->l('Disabled'),
+                    )
+                ),
+            );
+        }
+
         $values = array();
         foreach ($this->parametres as $parametre) {
             $values[$parametre] = Configuration::get(Tools::strtoupper($parametre));
         }
         $this->tpl_form_vars = array_merge($this->tpl_form_vars, $values);
+    }
+
+    public function initVenmoFunctionalityService()
+    {
+        return new VenmoFunctionality();
     }
 
     public function initAdvancedForm()
