@@ -26,10 +26,42 @@
 
 namespace PaypalAddons\classes\Venmo;
 
+use Context;
+use PaypalAddons\classes\AbstractMethodPaypal;
+
 class VenmoButton
 {
+    protected $context;
+
+    protected $method;
+
+    public function __construct()
+    {
+        $this->context = Context::getContext();
+        $this->method = AbstractMethodPaypal::load();
+    }
+
     public function render()
     {
-        return '';
+        $this->context->smarty->assign([
+            'JSscripts' => $this->getJSscripts(),
+        ]);
+
+        return $this->context->smarty->fetch('module:paypal/views/templates/venmo/venmo-button.tpl');
+    }
+
+    protected function getJSscripts()
+    {
+        $JSscripts = [
+            'tot-paypal-sdk' => [
+                'src' => $this->method->getUrlJsSdkLib(),
+                'data-namespace' => 'totPaypalSdkButtons',
+            ],
+            'venmo' => [
+                'src' => $this->context->shop->getBaseURL() . 'modules/paypal/views/js/Venmo.js',
+            ],
+        ];
+
+        return $JSscripts;
     }
 }
