@@ -26,8 +26,8 @@
 
 namespace PaypalAddons\classes;
 
-use PaypalAddons\classes\Constants\PaypalConfigurations;
 use Configuration;
+use PaypalAddons\classes\Constants\PaypalConfigurations;
 
 class PaypalPaymentMode
 {

@@ -28,34 +28,34 @@ namespace PaypalAddons\classes\API\Response;
 
 class ResponseOrderCapture extends Response
 {
-    /** @var string*/
+    /** @var string */
     protected $paymentId;
 
-    /** @var string*/
+    /** @var string */
     protected $transactionId;
 
-    /** @var string*/
+    /** @var string */
     protected $currency;
 
-    /** @var string*/
+    /** @var string */
     protected $status;
 
-    /** @var \DateTime*/
+    /** @var \DateTime */
     protected $dateTransaction;
 
-    /** @var bool*/
+    /** @var bool */
     protected $capture;
 
-    /** @var string*/
+    /** @var string */
     protected $paymentMethod;
 
-    /** @var string*/
+    /** @var string */
     protected $paymentTool;
 
-    /** @var float*/
+    /** @var float */
     protected $totalPaid;
 
-    /** @var string*/
+    /** @var string */
     protected $method;
 
     /**
@@ -72,10 +72,9 @@ class ResponseOrderCapture extends Response
     public function setMethod($method)
     {
         $this->method = $method;
+
         return $this;
     }
-
-
 
     /**
      * @return float
@@ -91,6 +90,7 @@ class ResponseOrderCapture extends Response
     public function setTotalPaid($totalPaid)
     {
         $this->totalPaid = $totalPaid;
+
         return $this;
     }
 
@@ -108,6 +108,7 @@ class ResponseOrderCapture extends Response
     public function setPaymentMethod($paymentMethod)
     {
         $this->paymentMethod = $paymentMethod;
+
         return $this;
     }
 
@@ -125,6 +126,7 @@ class ResponseOrderCapture extends Response
     public function setPaymentTool($paymentTool)
     {
         $this->paymentTool = $paymentTool;
+
         return $this;
     }
 
@@ -142,6 +144,7 @@ class ResponseOrderCapture extends Response
     public function setPaymentId($paymentId)
     {
         $this->paymentId = $paymentId;
+
         return $this;
     }
 
@@ -159,6 +162,7 @@ class ResponseOrderCapture extends Response
     public function setTransactionId($transactionId)
     {
         $this->transactionId = $transactionId;
+
         return $this;
     }
 
@@ -176,6 +180,7 @@ class ResponseOrderCapture extends Response
     public function setCurrency($currency)
     {
         $this->currency = $currency;
+
         return $this;
     }
 
@@ -193,6 +198,7 @@ class ResponseOrderCapture extends Response
     public function setStatus($status)
     {
         $this->status = $status;
+
         return $this;
     }
 
@@ -210,6 +216,7 @@ class ResponseOrderCapture extends Response
     public function setDateTransaction($dateTransaction)
     {
         $this->dateTransaction = $dateTransaction;
+
         return $this;
     }
 
@@ -227,6 +234,7 @@ class ResponseOrderCapture extends Response
     public function setCapture($capture)
     {
         $this->capture = $capture;
+
         return $this;
     }
 }

@@ -26,7 +26,6 @@
 
 namespace PaypalAddons\classes\Webhook;
 
-
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Request\V_1\ValidateWebhookEventRequest;
 
@@ -54,6 +53,7 @@ class RequestValidator
     /**
      * @param array $headers
      * @param string $request
+     *
      * @return bool
      */
     public function isValidWebhookEvent($headers, $request, $attemptCount = 1)
@@ -66,7 +66,7 @@ class RequestValidator
         );
 
         while ($attemptCount > $attemptCountDone) {
-            $attemptCountDone += 1;
+            ++$attemptCountDone;
             $isValid = $validateRequest->execute()->isSuccess();
 
             if ($isValid) {

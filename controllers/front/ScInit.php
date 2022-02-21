@@ -62,19 +62,19 @@ class PaypalScInitModuleFrontController extends PaypalAbstarctModuleFrontControl
         switch ($request->page) {
             case 'cart':
                 if ($this->context->cart->checkQuantities() && $this->context->cart->nbProducts()) {
-                    $this->jsonValues = array('success' => true);
+                    $this->jsonValues = ['success' => true];
                 } else {
-                    $this->jsonValues = array('success' => false);
+                    $this->jsonValues = ['success' => false];
                 }
                 break;
             case 'product':
-                $product = new Product((int)$request->idProduct);
+                $product = new Product((int) $request->idProduct);
                 $group = $this->parseCombination($request->combination);
                 $product->id_product_attribute = $this->module->getIdProductAttributeByIdAttributes($request->idProduct, $group);
                 if ($product->checkQty($request->quantity)) {
-                    $this->jsonValues = array('success' => true);
+                    $this->jsonValues = ['success' => true];
                 } else {
-                    $this->jsonValues = array('success' => false);
+                    $this->jsonValues = ['success' => false];
                 }
                 break;
             default:
@@ -84,7 +84,7 @@ class PaypalScInitModuleFrontController extends PaypalAbstarctModuleFrontControl
     protected function parseCombination($combination)
     {
         $temp_group = explode('|', $combination);
-        $group = array();
+        $group = [];
 
         foreach ($temp_group as $item) {
             $temp = explode(':', $item);

@@ -46,9 +46,9 @@ class ActualizeTotalPaid
             return;
         }
 
-        /** @var OrderPayment $payment*/
+        /** @var OrderPayment $payment */
         $payment = array_shift($payments);
-        $payment->amount = (float)$totalPaid;
+        $payment->amount = (float) $totalPaid;
         $payment->save();
     }
 }

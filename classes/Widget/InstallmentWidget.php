@@ -26,16 +26,15 @@
 
 namespace PaypalAddons\classes\Widget;
 
+use CartController;
+use CategoryController;
+use IndexController;
+use OrderController;
 use PaypalAddons\classes\InstallmentBanner\BannerManager;
-use \ProductController;
-use \CartController;
-use \IndexController;
-use \CategoryController;
-use \OrderController;
+use ProductController;
 
 class InstallmentWidget extends AbstractWidget
 {
-
     /**
      * @return string
      */

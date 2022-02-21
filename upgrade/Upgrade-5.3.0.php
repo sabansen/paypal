@@ -23,16 +23,16 @@
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-use PaypalPPBTlib\Install\ModuleInstaller;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
+use PaypalPPBTlib\Install\ModuleInstaller;
 
 /**
  * @param $module PayPal
+ *
  * @return bool
  */
 function upgrade_module_5_3_0($module)
@@ -48,7 +48,7 @@ function upgrade_module_5_3_0($module)
                 ShortcutConfiguration::HOOK_REASSURANCE,
                 false,
                 null,
-                (int)$shop['id_shop']
+                (int) $shop['id_shop']
             );
 
             Configuration::updateValue(
@@ -56,7 +56,7 @@ function upgrade_module_5_3_0($module)
                 ShortcutConfiguration::HOOK_SHOPPING_CART_FOOTER,
                 false,
                 null,
-                (int)$shop['id_shop']
+                (int) $shop['id_shop']
             );
         }
     } else {

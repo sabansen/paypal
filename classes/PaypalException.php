@@ -31,7 +31,6 @@ use Exception;
 /**
  * Class PaypalException
  * Custom exception with additional long message parameter
- * @package PaypalAddons\classes
  */
 class PaypalException extends Exception
 {
@@ -41,6 +40,7 @@ class PaypalException extends Exception
     /**
      * PaypalException constructor.
      * Redefine the exception construct so add long message
+     *
      * @param int $code
      * @param string $message not required
      * @param string $message_long not required
@@ -60,7 +60,7 @@ class PaypalException extends Exception
         return $this->message_long;
     }
 
-    /**
+    /*
      * custom string representation of object
      */
     /*public function __toString() {

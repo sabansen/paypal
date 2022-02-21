@@ -27,9 +27,7 @@
 namespace PaypalAddons\classes\Webhook;
 
 use Configuration;
-use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\Constants\WebHookConf;
-
 
 class WebhookOption
 {
@@ -38,7 +36,7 @@ class WebhookOption
      */
     public function isEnable()
     {
-        return (bool)Configuration::get(WebHookConf::ENABLE);
+        return (bool) Configuration::get(WebHookConf::ENABLE);
     }
 
     /**
@@ -47,6 +45,7 @@ class WebhookOption
     public function enable()
     {
         Configuration::updateValue(WebHookConf::ENABLE, 1);
+
         return $this;
     }
 
@@ -56,6 +55,7 @@ class WebhookOption
     public function disable()
     {
         Configuration::updateValue(WebHookConf::ENABLE, 0);
+
         return $this;
     }
 
@@ -64,6 +64,6 @@ class WebhookOption
      */
     public function isAvailable()
     {
-        return (bool)Configuration::get(WebHookConf::AVAILABLE);
+        return (bool) Configuration::get(WebHookConf::AVAILABLE);
     }
 }

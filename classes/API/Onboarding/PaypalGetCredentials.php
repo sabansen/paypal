@@ -30,17 +30,16 @@ use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\ResponseGetCredentials;
-use Symfony\Component\VarDumper\VarDumper;
 
 class PaypalGetCredentials
 {
     /** @var */
     protected $httpClient;
 
-    /** @var string*/
+    /** @var string */
     protected $authToken;
 
-    /** @var string*/
+    /** @var string */
     protected $partnerId;
 
     public function __construct($authToken, $partnerId, $sandbox)
@@ -60,7 +59,7 @@ class PaypalGetCredentials
                 $uri,
                 [
                     RequestOptions::HEADERS => [
-                        'Authorization' => 'Bearer ' . $this->authToken
+                        'Authorization' => 'Bearer ' . $this->authToken,
                     ],
                 ]
             );
@@ -75,7 +74,6 @@ class PaypalGetCredentials
             $error->setMessage($e->getMessage())->setErrorCode($e->getCode());
             $returnResponse->setError($error)->setSuccess(false);
         }
-
 
         return $returnResponse;
     }

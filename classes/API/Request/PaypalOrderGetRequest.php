@@ -32,7 +32,6 @@ use PaypalAddons\classes\API\Response\ResponseOrderGet;
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
 use PayPalCheckoutSdk\Orders\OrdersGetRequest;
 use PayPalHttp\HttpException;
-use Symfony\Component\VarDumper\VarDumper;
 
 class PaypalOrderGetRequest extends RequestAbstract
 {

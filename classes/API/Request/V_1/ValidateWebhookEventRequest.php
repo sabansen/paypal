@@ -26,23 +26,20 @@
 
 namespace PaypalAddons\classes\API\Request\V_1;
 
-
 use Exception;
 use PayPal\Api\VerifyWebhookSignature;
-use PayPal\Api\Webhook;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Response\Error as PaypalError;
 use PaypalAddons\classes\API\Response\Response;
 use PaypalAddons\classes\Webhook\WebhookId;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
-use Symfony\Component\VarDumper\VarDumper;
 
 class ValidateWebhookEventRequest extends RequestAbstract
 {
-    /** @var array*/
+    /** @var array */
     protected $headers = [];
 
-    /** @var string*/
+    /** @var string */
     protected $request;
 
     /**
@@ -103,7 +100,7 @@ class ValidateWebhookEventRequest extends RequestAbstract
                     'Message: ' . $e->getMessage(),
                     'File: ' . $e->getFile(),
                     'Line: ' . $e->getLine(),
-                    'Correlation-Id: ' . (isset($this->headers['CORRELATION-ID']) ? $this->headers['CORRELATION-ID'] : '')
+                    'Correlation-Id: ' . (isset($this->headers['CORRELATION-ID']) ? $this->headers['CORRELATION-ID'] : ''),
                 ]
             );
             ProcessLoggerHandler::openLogger();

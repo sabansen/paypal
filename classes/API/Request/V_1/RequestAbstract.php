@@ -26,18 +26,18 @@
 
 namespace PaypalAddons\classes\API\Request\V_1;
 
-use PayPal\Rest\ApiContext;
 use PayPal\Auth\OAuthTokenCredential;
-use PaypalAddons\classes\API\Request\RequestInteface;
+use PayPal\Rest\ApiContext;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\API\Request\RequestInteface;
 use PaypalAddons\services\FormatterPaypal;
 
 abstract class RequestAbstract implements RequestInteface
 {
-    /** @var AbstractMethodPaypal*/
+    /** @var AbstractMethodPaypal */
     protected $method;
 
-    /** @var FormatterPaypal*/
+    /** @var FormatterPaypal */
     protected $formatter;
 
     public function __construct(AbstractMethodPaypal $method)
@@ -63,11 +63,11 @@ abstract class RequestAbstract implements RequestInteface
         );
 
         $apiContext->setConfig(
-            array(
+            [
                 'mode' => $mode_order ? 'sandbox' : 'live',
                 'log.LogEnabled' => false,
                 'cache.enabled' => true,
-            )
+            ]
         );
 
         return $apiContext;

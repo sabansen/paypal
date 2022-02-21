@@ -26,13 +26,10 @@
 
 namespace PaypalAddons\classes\API\Request\V_1;
 
-
 use DateTime;
-use PayPal\Api\Webhook;
 use PayPal\Api\WebhookEvent;
 use PaypalAddons\classes\API\Response\Error as PaypalError;
 use PaypalAddons\classes\API\Response\Response;
-use Symfony\Component\VarDumper\VarDumper;
 
 class GetWebhookEvents extends RequestAbstract
 {
@@ -47,7 +44,7 @@ class GetWebhookEvents extends RequestAbstract
                 $eventList = WebhookEvent::all($this->getParams(), $this->getApiContext())->getEvents();
             } else {
                 $eventList = [
-                    WebhookEvent::get($this->getParams()['id'], $this->getApiContext())
+                    WebhookEvent::get($this->getParams()['id'], $this->getApiContext()),
                 ];
             }
 
@@ -84,6 +81,7 @@ class GetWebhookEvents extends RequestAbstract
             return $this;
         }
         $this->params = $params;
+
         return $this;
     }
 
@@ -94,6 +92,7 @@ class GetWebhookEvents extends RequestAbstract
         }
 
         $this->params = array_merge($this->params, $params);
+
         return $this;
     }
 

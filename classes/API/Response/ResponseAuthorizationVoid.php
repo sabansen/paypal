@@ -34,6 +34,7 @@ class ResponseAuthorizationVoid extends ResponseOrderRefund
     public function getMessage()
     {
         $message = 'Authorization ' . $this->getIdTransaction() . ' is voided';
+
         return $message;
     }
 }

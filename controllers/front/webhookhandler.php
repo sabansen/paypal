@@ -24,18 +24,16 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
-
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Request\V_1\GetWebhookEvents;
 use PaypalAddons\classes\Constants\WebhookHandler;
 use PaypalAddons\classes\Constants\WebHookType;
 use PaypalAddons\classes\Exception\RefundCalculationException;
-use PaypalAddons\classes\Webhook\RequestValidator;
 use PaypalAddons\services\ActualizeTotalPaid;
 use PaypalAddons\services\ContainerService;
 use PaypalAddons\services\PaymentTotalAmount;
-use PaypalAddons\services\StatusMapping;
 use PaypalAddons\services\ServicePaypalOrder;
+use PaypalAddons\services\StatusMapping;
 use PaypalAddons\services\WebhookService;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 
@@ -44,10 +42,10 @@ use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
  */
 class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFrontController
 {
-    /** @var ServicePaypalOrder*/
+    /** @var ServicePaypalOrder */
     protected $servicePaypalOrder;
 
-    /** @var array*/
+    /** @var array */
     protected $requestData;
 
     protected $request;
@@ -60,12 +58,14 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
         $this->initContainer();
         $this->request = file_get_contents('php://input');
     }
+
     public function run()
     {
         parent::init();
 
         if ($this->isCheckAvailability()) {
-            header("HTTP/1.1 " . WebhookHandler::STATUS_AVAILABLE); die;
+            header('HTTP/1.1 ' . WebhookHandler::STATUS_AVAILABLE);
+            exit;
         }
 
         if (false == ($this->module->getWebhookOption()->isEnable() && $this->module->getWebhookOption()->isAvailable())) {
@@ -75,7 +75,7 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
         try {
             if ($this->requestIsValid()) {
                 if ($this->handleWebhook($this->getRequestData())) {
-                    header("HTTP/1.1 200 OK");
+                    header('HTTP/1.1 200 OK');
                 } else {
                     header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
                 }
@@ -85,13 +85,13 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
 
                 ProcessLoggerHandler::openLogger();
                 ProcessLoggerHandler::logError(
-                    Tools::substr('Invalid webhook event. Data: ' . $this->getRequest(),0, 999) ,
+                    Tools::substr('Invalid webhook event. Data: ' . $this->getRequest(), 0, 999),
                     $transaction,
                     Validate::isLoadedObject($paypalOrder) ? $paypalOrder->id_order : null,
                     Validate::isLoadedObject($paypalOrder) ? $paypalOrder->id_cart : null,
                     null,
                     null,
-                    Validate::isLoadedObject($paypalOrder) ? $paypalOrder->sandbox : (int)Configuration::get('PAYPAL_SANDBOX'),
+                    Validate::isLoadedObject($paypalOrder) ? $paypalOrder->sandbox : (int) Configuration::get('PAYPAL_SANDBOX'),
                     null
                 );
                 ProcessLoggerHandler::closeLogger();
@@ -111,7 +111,7 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
                 Validate::isLoadedObject($paypalOrder) ? $paypalOrder->id_cart : null,
                 null,
                 null,
-                Validate::isLoadedObject($paypalOrder) ? $paypalOrder->sandbox : (int)Configuration::get('PAYPAL_SANDBOX'),
+                Validate::isLoadedObject($paypalOrder) ? $paypalOrder->sandbox : (int) Configuration::get('PAYPAL_SANDBOX'),
                 null
             );
             ProcessLoggerHandler::closeLogger();
@@ -122,7 +122,7 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
 
     protected function isCheckAvailability()
     {
-        return (bool)Tools::isSubmit('checkAvailability');
+        return (bool) Tools::isSubmit('checkAvailability');
     }
 
     /**
@@ -136,7 +136,7 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
             }
 
             $params = [
-                'id' => $this->getRequestData()['id']
+                'id' => $this->getRequestData()['id'],
             ];
             $events = $this->getWebhookEventRequest()->setParams($params)->execute()->getData();
 
@@ -161,6 +161,7 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
 
     /**
      * @param $data array webevent data
+     *
      * @return bool
      */
     protected function handleWebhook($data)
@@ -176,7 +177,7 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
         $msg = 'Webhook event : ' . $this->jsonEncode([
                 'event_type' => $this->eventType($data),
                 'webhook_id' => $this->getWebhookId($data),
-                'data' => $data
+                'data' => $data,
             ]);
         $msg = Tools::substr($msg, 0, 999);
 
@@ -198,7 +199,7 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
                 $order->id_cart,
                 $order->id_shop,
                 'PayPal',
-                (int)Configuration::get('PAYPAL_SANDBOX')
+                (int) Configuration::get('PAYPAL_SANDBOX')
             );
         }
         ProcessLoggerHandler::closeLogger();
@@ -246,7 +247,7 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
             ->select(PaypalWebhook::$definition['primary']);
 
         try {
-            return (bool)Db::getInstance()->getValue($query);
+            return (bool) Db::getInstance()->getValue($query);
         } catch (Exception $e) {
             return false;
         }
@@ -254,6 +255,7 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
 
     /**
      * @param mixed $data
+     *
      * @return int
      */
     protected function getPsOrderStatus($data)
@@ -279,7 +281,9 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
 
     /**
      * @param mixed $data
+     *
      * @return float
+     *
      * @throws RefundCalculationException
      */
     protected function getPaymentTotal($data)
@@ -302,6 +306,7 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
         }
 
         $this->requestData = json_decode($this->getRequest(), true);
+
         return $this->requestData;
     }
 
@@ -312,15 +317,17 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
 
     /**
      * @param mixed $data
+     *
      * @return string
      */
     protected function eventType($data)
     {
-        return isset($data['event_type']) ? (string)$data['event_type'] : '';
+        return isset($data['event_type']) ? (string) $data['event_type'] : '';
     }
 
     /**
      * @param mixed
+     *
      * @return string
      */
     protected function getTransactionRef($data)
@@ -341,11 +348,12 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
             }
         }
 
-        return isset($data['resource']['id']) ? (string)$data['resource']['id'] : '';
+        return isset($data['resource']['id']) ? (string) $data['resource']['id'] : '';
     }
 
     /**
      * @param mixed $data
+     *
      * @return string
      */
     protected function getWebhookId($data)
@@ -355,6 +363,7 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
 
     /**
      * @param $value mixed
+     *
      * @return string
      */
     public function jsonEncode($value)
@@ -374,20 +383,23 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
             foreach ($mixed as $key => $value) {
                 $mixed[$key] = $this->utf8ize($value);
             }
-        } else if (is_string($mixed)) {
+        } elseif (is_string($mixed)) {
             return utf8_encode($mixed);
         }
+
         return $mixed;
     }
 
     /**
      * @param string $href
+     *
      * @return string
      */
     protected function getTransactionFromHref($href)
     {
         $tmp = explode('/', $href);
-        return (string)array_pop($tmp);
+
+        return (string) array_pop($tmp);
     }
 
     protected function initContainer()
@@ -397,6 +409,7 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
 
     /**
      * @param mixed $data
+     *
      * @return bool
      */
     protected function isCaptureAuthorization($data)
@@ -410,6 +423,7 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
 
     /**
      * @param mixed $data
+     *
      * @return string
      */
     protected function getAuthorizationId($data)
@@ -423,12 +437,13 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
 
     /**
      * @param mixed $data
+     *
      * @return float
      */
     protected function getAmount($data)
     {
         try {
-            return (float)$data['resource']['amount']['value'];
+            return (float) $data['resource']['amount']['value'];
         } catch (Exception $e) {
             return 0;
         }
@@ -448,7 +463,7 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
     {
     }
 
-    protected function actualizeOrder(PaypalOrder $paypalOrder, \PayPal\Api\WebhookEvent $webhookEvent)
+    protected function actualizeOrder(PaypalOrder $paypalOrder, PayPal\Api\WebhookEvent $webhookEvent)
     {
         $orders = $this->servicePaypalOrder->getPsOrders($paypalOrder);
 

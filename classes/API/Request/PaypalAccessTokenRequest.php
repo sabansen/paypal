@@ -30,7 +30,6 @@ use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\PaypalResponseAccessToken;
 use PayPalCheckoutSdk\Core\AccessTokenRequest;
 use PayPalHttp\HttpException;
-use Symfony\Component\VarDumper\VarDumper;
 
 class PaypalAccessTokenRequest extends RequestAbstract
 {

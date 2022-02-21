@@ -24,7 +24,6 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
-use Symfony\Component\HttpFoundation\JsonResponse;
 use PaypalAddons\classes\AbstractMethodPaypal;
 
 /**
@@ -41,6 +40,7 @@ class PaypalMbValidationModuleFrontController extends PaypalAbstarctModuleFrontC
 
         $this->method = AbstractMethodPaypal::load('MB');
     }
+
     /**
      * @see FrontController::postProcess()
      */
@@ -56,14 +56,14 @@ class PaypalMbValidationModuleFrontController extends PaypalAbstarctModuleFrontC
             $this->method->validation();
             $cart = Context::getContext()->cart;
             $customer = new Customer($cart->id_customer);
-            $this->redirectUrl = 'index.php?controller=order-confirmation&id_cart='.$cart->id.'&id_module='.$paypal->id.'&id_order='.$paypal->currentOrder.'&key='.$customer->secure_key;
+            $this->redirectUrl = 'index.php?controller=order-confirmation&id_cart=' . $cart->id . '&id_module=' . $paypal->id . '&id_order=' . $paypal->currentOrder . '&key=' . $customer->secure_key;
         } catch (PayPal\Exception\PayPalConnectionException $e) {
             $decoded_message = Tools::jsonDecode($e->getData());
             $this->_errors['error_code'] = $e->getCode();
             $this->_errors['error_msg'] = $decoded_message->message;
             $this->_errors['msg_long'] = $decoded_message->name;
             if (!empty($decoded_message->details)) {
-                $this->_errors['msg_long'] .= ' - '.$decoded_message->details[0]->issue;
+                $this->_errors['msg_long'] .= ' - ' . $decoded_message->details[0]->issue;
             }
         } catch (PayPal\Exception\PayPalInvalidCredentialException $e) {
             $this->_errors['error_msg'] = $e->errorMessage();
@@ -84,10 +84,10 @@ class PaypalMbValidationModuleFrontController extends PaypalAbstarctModuleFrontC
     public function displayAjaxGetPaymentInfo()
     {
         $paymentInfo = $this->method->getPaymentInfo();
-        $responseContent = array(
+        $responseContent = [
             'success' => true,
-            'paymentInfo' => $paymentInfo
-        );
+            'paymentInfo' => $paymentInfo,
+        ];
         $this->jsonValues = $responseContent;
     }
 }

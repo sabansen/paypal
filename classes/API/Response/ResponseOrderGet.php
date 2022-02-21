@@ -28,10 +28,10 @@ namespace PaypalAddons\classes\API\Response;
 
 class ResponseOrderGet extends Response
 {
-    /** @var Client*/
+    /** @var Client */
     protected $client;
 
-    /** @var Address*/
+    /** @var Address */
     protected $address;
 
     public function __construct()
@@ -54,6 +54,7 @@ class ResponseOrderGet extends Response
     public function setClient($client)
     {
         $this->client = $client;
+
         return $this;
     }
 
@@ -71,6 +72,7 @@ class ResponseOrderGet extends Response
     public function setAddress($address)
     {
         $this->address = $address;
+
         return $this;
     }
 }

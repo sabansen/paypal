@@ -31,6 +31,6 @@ class PayPalTlscurltestserverModuleFrontController extends ModuleFrontController
 {
     public function initContent()
     {
-        die('ok');
+        exit('ok');
     }
 }

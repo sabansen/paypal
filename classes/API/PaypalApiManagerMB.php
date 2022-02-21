@@ -28,16 +28,15 @@ namespace PaypalAddons\classes\API;
 
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Request\RequestDummy;
+use PaypalAddons\classes\API\Request\V_1\CreateProfileExperienceRequest;
 use PaypalAddons\classes\API\Request\V_1\PaypalOrderCaptureRequest;
 use PaypalAddons\classes\API\Request\V_1\PaypalOrderCreateRequest;
-use PaypalAddons\classes\API\Request\V_1\CreateProfileExperienceRequest;
-use PaypalAddons\classes\API\Request\V_1\PaypalOrderRefundRequest;
 use PaypalAddons\classes\API\Request\V_1\PaypalOrderPartialRefundRequest;
+use PaypalAddons\classes\API\Request\V_1\PaypalOrderRefundRequest;
 
 class PaypalApiManagerMB implements PaypalApiManagerInterface
 {
-
-    /** @var AbstractMethodPaypal*/
+    /** @var AbstractMethodPaypal */
     protected $method;
 
     public function __construct(AbstractMethodPaypal $method)

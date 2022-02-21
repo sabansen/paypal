@@ -48,8 +48,7 @@ class WebHookType
             self::CAPTURE_DENIED,
             self::CAPTURE_REVERSED,
             self::CAPTURE_REFUNDED,
-            self::CAPTURE_PENDING
+            self::CAPTURE_PENDING,
         ];
     }
-
 }

@@ -31,7 +31,7 @@ class PaypalWebhook extends ObjectModel
 {
     const DATE_FORMAT = 'Y-m-d H:i:s';
 
-    /** @var int*/
+    /** @var int */
     public $id_paypal_order;
 
     /* @var string */
@@ -43,7 +43,7 @@ class PaypalWebhook extends ObjectModel
     /* @var string */
     public $data;
 
-    /** @var int*/
+    /** @var int */
     public $id_state;
 
     /* @var string creation date*/
@@ -55,19 +55,19 @@ class PaypalWebhook extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'paypal_webhook',
         'primary' => 'id_paypal_webhook',
         'multilang' => false,
-        'fields' => array(
-            'id_paypal_order' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'id_webhook' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
-            'event_type' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
-            'data' => array('type' => self::TYPE_HTML, 'validate' => 'isString'),
-            'id_state' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
-            'date_completed' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat')
-        ),
-        'collation' => 'utf8_general_ci'
-    );
+        'fields' => [
+            'id_paypal_order' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
+            'id_webhook' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName'],
+            'event_type' => ['type' => self::TYPE_STRING, 'validate' => 'isString'],
+            'data' => ['type' => self::TYPE_HTML, 'validate' => 'isString'],
+            'id_state' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDateFormat'],
+            'date_completed' => ['type' => self::TYPE_DATE, 'validate' => 'isDateFormat'],
+        ],
+        'collation' => 'utf8_general_ci',
+    ];
 }

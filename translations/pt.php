@@ -23,9 +23,8 @@
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
-
 global $_MODULE;
-$_MODULE = array();
+$_MODULE = [];
 $_MODULE['<{paypal}prestashop>paypal_ad69e733ebae8d264bccaa38d68830e8'] = 'PayPal';
 $_MODULE['<{paypal}prestashop>paypal_3ba4f49f76f54e9305261bc742a24d9b'] = 'Beneficie da plataforma PayPal Complete Payments e expanda a sua atividade online em dispositivos móveis e a nível internacional. Aceite cartões de crédito, cartões de débito e pagamentos com PayPal.';
 $_MODULE['<{paypal}prestashop>paypal_69a1a3ad8dd5da6db3c4da838a0cf9c7'] = 'Quer mesmo eliminar os seus detalhes?';
@@ -180,8 +179,8 @@ $_MODULE['<{paypal}prestashop>statusblock_ba54b8645ec3d87e95b4da1b5baad66f'] = '
 $_MODULE['<{paypal}prestashop>statusblock_5914be43ea057f2fd9fa49180f5db5bf'] = 'Tem de ligar a sua conta PayPal';
 $_MODULE['<{paypal}prestashop>helperoptioninfo_36c23650a89439d28101b389567fe2f5'] = 'Les logs avec ID de commande ne seront pas effacés.';
 $_MODULE['<{paypal}prestashop>headerlogo_e269d95cbf9105896810d64a7307acdd'] = 'Ativar módulo PayPal para começar a vender a mais de 300 milhões de clientes do PayPal em todo o mundo';
-$_MODULE['<{paypal}prestashop>headerlogo_536b624906878dc3954749a6cef3b0fa'] = 'Ativar em 2 passos simples';
-$_MODULE['<{paypal}prestashop>headerlogo_c3d2b0bfba763295a377b71aae0841f1'] = 'Ativar em 3 passos simples';
+$_MODULE['<{paypal}prestashop>headerlogo_536b624906878dc3954749a6cef3b0fa'] = 'Ativar em 2 passos simples';
+$_MODULE['<{paypal}prestashop>headerlogo_c3d2b0bfba763295a377b71aae0841f1'] = 'Ativar em 3 passos simples';
 $_MODULE['<{paypal}prestashop>headerlogo_1193eddeac9b924352d0914cf8361758'] = 'Ligar à sua conta PayPal existente (abaixo) ou criar nova conta';
 $_MODULE['<{paypal}prestashop>headerlogo_dfe4283340c6369e764585c747cbd74a'] = 'Ajustar definição do PayPal para capturar pagamentos de imediato (Venda) ou depois de confirmar o pedido (Autorização)';
 $_MODULE['<{paypal}prestashop>headerlogo_ab527c36284b90820e085125a7a27c96'] = 'Certificar-se de que o módulo está definido para o modo de Produção';
@@ -268,10 +267,10 @@ $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_6d77d17bd0f
 $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_935b666b914a3da3e0b1be2758b82a72'] = 'Deixar em branco para usar a sua configuração do Nome da loja na sua conta PayPal';
 $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_10a0bd9b814341d997541f060a338975'] = 'Uma etiqueta que substitui o nome da empresa na conta PayPal nas páginas do PayPal. Se estiver definido um logótipo, a marca não será apresentada.';
 $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_67b7eb3c13f50cd7dd2ac9b3dfd9701b'] = 'Logótipo da loja mostrado no canto superior direito no checkout com PayPal';
-$_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_a48a9c179058e00f4c4f9c6d442c2e47'] = 'A imagem deve estar armazenada num servidor seguro (https). Use um formato de gráfico válido, como .gif, .jpg ou .png. Limite a imagem a 190 pixels de largura por 60 pixels de altura. O PayPal corta as imagens maiores. Este logótipo substituirá a marca na parte superior da área de análise do carrinho se a experiência de checkout com PayPal estiver definida como REDIRECIONAMENTO.';
+$_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_a48a9c179058e00f4c4f9c6d442c2e47'] = 'A imagem deve estar armazenada num servidor seguro (https). Use um formato de gráfico válido, como .gif, .jpg ou .png. Limite a imagem a 190 pixels de largura por 60 pixels de altura. O PayPal corta as imagens maiores. Este logótipo substituirá a marca na parte superior da área de análise do carrinho se a experiência de checkout com PayPal estiver definida como REDIRECIONAMENTO.';
 $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_c9cc8cce247e49bae79f15173ce97354'] = 'Guardar';
 $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_f6d4c204b4375f370ae346ac19af224a'] = 'Use um formato de gráfico válido, como .gif, .jpg ou .png.';
-$_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_30e94012b686df7279f6a1db3c8a0684'] = 'Limite a imagem a 190 pixels de largura por 60 pixels de altura.';
+$_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_30e94012b686df7279f6a1db3c8a0684'] = 'Limite a imagem a 190 pixels de largura por 60 pixels de altura.';
 $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_06b778accab7c14a499bc6e7a68138ec'] = 'Ocorreu um erro ao copiar a imagem.';
 $_MODULE['<{paypal}prestashop>adminprocessloggercontroller_2ce895700ba5c16bede3b769128d216f'] = 'Aqui poderá alterar a configuração principal para este Process logger (pas sur de lexpression process logger en anglais)';
 $_MODULE['<{paypal}prestashop>adminprocessloggercontroller_36c23650a89439d28101b389567fe2f5'] = 'Os logs com order ID não serão apagados.';
@@ -292,10 +291,10 @@ $_MODULE['<{paypal}prestashop>blockpreviewbuttoncontext_b401397858880fcfe0c8da19
 $_MODULE['<{paypal}prestashop>blockpreviewbuttoncontext_468a21d1076328f1b4cd946b72e2d5cd'] = 'Página do carrinho';
 $_MODULE['<{paypal}prestashop>blockpreviewbuttoncontext_0fcaf0531dd6d6a53f7bde67adafd035'] = 'Páginas de produtos';
 $_MODULE['<{paypal}prestashop>paypal_112cee51bc7d0712033e013bf5154d97'] = 'Pagar com cartão de crédito ou débito';
-$_MODULE['<{paypal}prestashop>paypal_993e08bfbc05df0d2c64d09426a541db'] = 'Atenção: pagamento efetuado. Contacte o Serviço de Apoio ao Cliente. A sua ID da transação é: ';
+$_MODULE['<{paypal}prestashop>paypal_993e08bfbc05df0d2c64d09426a541db'] = 'Atenção: pagamento efetuado. Contacte o Serviço de Apoio ao Cliente. A sua ID da transação é: ';
 $_MODULE['<{paypal}prestashop>paypal_9b9cf9f8778f69b4c6cf37e66f886be8'] = 'Escolher estado';
-$_MODULE['<{paypal}prestashop>abstractmethodpaypal_01c6e0e36101786cfcfa6dd13cfbb099'] = 'ID do carrinho: ';
-$_MODULE['<{paypal}prestashop>abstractmethodpaypal_194c2a3181dd5484df19ff3548b4a019'] = 'Nome da loja: ';
+$_MODULE['<{paypal}prestashop>abstractmethodpaypal_01c6e0e36101786cfcfa6dd13cfbb099'] = 'ID do carrinho: ';
+$_MODULE['<{paypal}prestashop>abstractmethodpaypal_194c2a3181dd5484df19ff3548b4a019'] = 'Nome da loja: ';
 $_MODULE['<{paypal}prestashop>methodec_b98521e63d9c5a52990b450965ab2878'] = 'Pagamento autorizado e a aguardar validação pelo administrador';
 $_MODULE['<{paypal}prestashop>methodec_915901b766a8e732f41c87693184fa89'] = 'Está atualmente a utilizar o modo Autorizar. Significa que separa a autorização de pagamento da captura do pagamento autorizado. Por predefinição, os pedidos serão criados em \"A aguardar pagamento PayPal\", mas pode personalizar se necessário.';
 $_MODULE['<{paypal}prestashop>methodec_658c65a11f676a58088cdb35e0c2c3ab'] = 'Estado predefinido: A aguardar pagamento PayPal';
@@ -341,7 +340,7 @@ $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_8abcd7b8009
 $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_0f9907c62d585faaab3efaf95a3406ac'] = 'Estado predefinido: Reembolsado';
 $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_c158783b379b395205a91a6270a52ff4'] = 'Estado do pedido para acionar o cancelamento no PayPal';
 $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_da78fd8363ff268d8d8694cdb2dd62c4'] = 'Pode cancelar os pedidos pagos através do PayPal diretamente através do BackOffice PrestaShop. Aqui, pode escolher o estado do pedido que aciona a anulação do PayPal de uma transação autorizada no PayPal. Escolha a opção \"sem ações\" se pretender alterar o estado do pedido sem acionar o cancelamento automático no PayPal.';
-$_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_87ad1179406b568d2f8fd6f8ddb44d15'] = ' Estado predefinido: Cancelado';
+$_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_87ad1179406b568d2f8fd6f8ddb44d15'] = ' Estado predefinido: Cancelado';
 $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_41a81fcc63d6a78a0d22630b2e4b1e6c'] = 'Pagamento aceite através do BO (contacte a PayPal para obter o pagamento)';
 $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_36500501ab89967d20b1beb686880d44'] = 'Está atualmente a utilizar o modo Autorizar. Significa que separa a autorização de pagamento da captura do pagamento autorizado. Para capturar o pagamento autorizado, tem de alterar o estado do pedido para \"pagamento aceite\" (ou para um estado personalizado com o mesmo significado). Aqui, pode escolher um estado do pedido personalizado para aceitar o pedido e validar a transação no modo Autorizar.';
 $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_c6a9094c053f62817cf82c904082378e'] = 'Estado predefinido: Pagamento aceite';
@@ -403,9 +402,9 @@ $_MODULE['<{paypal}prestashop>formadvancedhelptwo_06393d7bb6f3fb29efee8938c7cd2f
 $_MODULE['<{paypal}prestashop>formadvancedhelptwo_5a5a6c0531d6207c84a2ce8d0f99b74f'] = 'Pode gerir o estado do pedido abaixo:';
 $_MODULE['<{paypal}prestashop>unregisteredhooksmessage_8855bfb68164e4dfb070572ac3bf62d5'] = 'O módulo não está registado com os seguintes hooks:';
 $_MODULE['<{paypal}prestashop>unregisteredhooksmessage_84bb5767918a71a8d7451f116c681857'] = 'Instalar os hooks necessários automaticamente';
-$_MODULE['<{paypal}prestashop>messageforcustomerone_952f622b6cbe191f3d9abb6d6f34b71d'] = 'Tem de [b]concluir o pagamento[/b] feito com a sua conta PayPal ';
+$_MODULE['<{paypal}prestashop>messageforcustomerone_952f622b6cbe191f3d9abb6d6f34b71d'] = 'Tem de [b]concluir o pagamento[/b] feito com a sua conta PayPal ';
 $_MODULE['<{paypal}prestashop>messageforcustomerone_b3e985da8b5a176abfb74c4c1ca960f9'] = 'ao aceitar os Termos de Serviço e clicando no botão de validação do pedido abaixo.';
-$_MODULE['<{paypal}prestashop>messageforcustomertwo_952f622b6cbe191f3d9abb6d6f34b71d'] = 'Tem de [b]concluir o pagamento[/b] feito com a sua conta PayPal ';
+$_MODULE['<{paypal}prestashop>messageforcustomertwo_952f622b6cbe191f3d9abb6d6f34b71d'] = 'Tem de [b]concluir o pagamento[/b] feito com a sua conta PayPal ';
 $_MODULE['<{paypal}prestashop>messageforcustomertwo_b3e985da8b5a176abfb74c4c1ca960f9'] = 'ao aceitar os Termos de Serviço e clicando no botão de validação do pedido abaixo.';
 $_MODULE['<{paypal}prestashop>messageforcustomertwo_768073dd22a31e3489fad6543b7301b1'] = 'Tenha em atenção que as comissões de entrega adicionais (%1s) foram aplicadas. Para obter mais detalhes, consulte o resumo do pedido.';
 $_MODULE['<{paypal}prestashop>adminpaypalhelpcontroller_8c2c1e868f50c5b477d3f6d985aeaa2f'] = 'Configurar PrestaShop Checkout';

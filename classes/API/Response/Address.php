@@ -28,28 +28,28 @@ namespace PaypalAddons\classes\API\Response;
 
 class Address
 {
-    /** @var string*/
+    /** @var string */
     protected $city;
 
-    /** @var string*/
+    /** @var string */
     protected $countryCode;
 
-    /** @var string*/
+    /** @var string */
     protected $address1;
 
-    /** @var string*/
+    /** @var string */
     protected $address2;
 
-    /** @var string*/
+    /** @var string */
     protected $stateCode;
 
-    /** @var string*/
+    /** @var string */
     protected $phone;
 
-    /** @var string*/
+    /** @var string */
     protected $postCode;
 
-    /** @var string*/
+    /** @var string */
     protected $fullName;
 
     /**
@@ -66,6 +66,7 @@ class Address
     public function setFullName($fullName)
     {
         $this->fullName = $fullName;
+
         return $this;
     }
 
@@ -83,6 +84,7 @@ class Address
     public function setCity($city)
     {
         $this->city = $city;
+
         return $this;
     }
 
@@ -100,6 +102,7 @@ class Address
     public function setCountryCode($countryCode)
     {
         $this->countryCode = $countryCode;
+
         return $this;
     }
 
@@ -117,6 +120,7 @@ class Address
     public function setStateCode($stateCode)
     {
         $this->stateCode = $stateCode;
+
         return $this;
     }
 
@@ -134,6 +138,7 @@ class Address
     public function setPhone($phone)
     {
         $this->phone = $phone;
+
         return $this;
     }
 
@@ -151,6 +156,7 @@ class Address
     public function setPostCode($postCode)
     {
         $this->postCode = $postCode;
+
         return $this;
     }
 
@@ -168,6 +174,7 @@ class Address
     public function setAddress1($address1)
     {
         $this->address1 = $address1;
+
         return $this;
     }
 
@@ -185,6 +192,7 @@ class Address
     public function setAddress2($address2)
     {
         $this->address2 = $address2;
+
         return $this;
     }
 }

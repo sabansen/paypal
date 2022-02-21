@@ -26,21 +26,19 @@
 
 namespace PaypalAddons\classes\Webhook;
 
-
 use PayPal\Api\Webhook;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Request\V_1\CreateWebHookRequest;
 use PaypalAddons\classes\API\Request\V_1\GetWebHooks;
 use PaypalAddons\classes\API\Request\V_1\UpdateWebHookEventType;
 use PaypalAddons\classes\API\Response\Response;
-use Symfony\Component\VarDumper\VarDumper;
 
 class CreateWebhook
 {
-    /** @var AbstractMethodPaypal*/
+    /** @var AbstractMethodPaypal */
     protected $method;
 
-    /** @var bool if webhook exists it will be updated ou not*/
+    /** @var bool if webhook exists it will be updated ou not */
     protected $update = true;
 
     public function __construct($method = null)
@@ -54,6 +52,7 @@ class CreateWebhook
 
     /**
      * Check if webhook exists and create new if not
+     *
      * @return Response
      */
     public function execute()
@@ -77,7 +76,7 @@ class CreateWebhook
 
         $webhookHandler = (new WebhookHandlerUrl())->get();
 
-        /** @var Webhook $webhook*/
+        /** @var Webhook $webhook */
         foreach ($response->getData() as $webhook) {
             if ($webhook->getUrl() == $webhookHandler) {
                 $this->updateWebhookId($webhook);
@@ -130,7 +129,8 @@ class CreateWebhook
      */
     public function setUpdate($update)
     {
-        $this->update = (bool)$update;
+        $this->update = (bool) $update;
+
         return $this;
     }
 
@@ -144,6 +144,7 @@ class CreateWebhook
 
     /**
      * @param Webhook $webhook
+     *
      * @return void
      */
     protected function updateWebhookId(Webhook $webhook)

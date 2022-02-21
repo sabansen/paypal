@@ -44,16 +44,16 @@ class PaypalIpn extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'paypal_ipn',
         'primary' => 'id_paypal_ipn',
         'multilang' => false,
-        'fields' => array(
-            'id_transaction' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
-            'status' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
-            'response' => array('type' => self::TYPE_HTML, 'validate' => 'isString'),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
-        ),
-        'collation' => 'utf8_general_ci'
-    );
+        'fields' => [
+            'id_transaction' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName'],
+            'status' => ['type' => self::TYPE_STRING, 'validate' => 'isString'],
+            'response' => ['type' => self::TYPE_HTML, 'validate' => 'isString'],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDateFormat'],
+        ],
+        'collation' => 'utf8_general_ci',
+    ];
 }

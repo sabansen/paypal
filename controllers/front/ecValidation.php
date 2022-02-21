@@ -25,7 +25,6 @@
  */
 
 use PaypalAddons\classes\AbstractMethodPaypal;
-use PaypalAddons\services\PaymentData;
 
 /**
  * Validate EC payment
@@ -47,6 +46,7 @@ class PaypalEcValidationModuleFrontController extends PaypalAbstarctModuleFrontC
             $this->values['paymentId'] = Tools::getvalue('token');
         }
     }
+
     /**
      * @see FrontController::postProcess()
      */
@@ -59,7 +59,7 @@ class PaypalEcValidationModuleFrontController extends PaypalAbstarctModuleFrontC
             $method_ec->setParameters($this->values);
 
             if ($method_ec->getShortCut()) {
-                /** @var $resultPath \PaypalAddons\classes\API\Response\Response*/
+                /** @var $resultPath \PaypalAddons\classes\API\Response\Response */
                 $resultPath = $method_ec->doOrderPatch();
 
                 if ($resultPath->isSuccess() == false) {
@@ -70,7 +70,7 @@ class PaypalEcValidationModuleFrontController extends PaypalAbstarctModuleFrontC
             $method_ec->validation();
             $cart = Context::getContext()->cart;
             $customer = new Customer($cart->id_customer);
-            $this->redirectUrl = 'index.php?controller=order-confirmation&id_cart='.$cart->id.'&id_module='.$paypal->id.'&id_order='.$paypal->currentOrder.'&key='.$customer->secure_key;
+            $this->redirectUrl = 'index.php?controller=order-confirmation&id_cart=' . $cart->id . '&id_module=' . $paypal->id . '&id_order=' . $paypal->currentOrder . '&key=' . $customer->secure_key;
         } catch (PayPal\Exception\PPConnectionException $e) {
             $this->_errors['error_msg'] = $paypal->l('Error connecting to ', pathinfo(__FILE__)['filename']) . $e->getUrl();
         } catch (PayPal\Exception\PPMissingCredentialException $e) {

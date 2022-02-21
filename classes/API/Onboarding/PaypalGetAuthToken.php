@@ -36,13 +36,13 @@ class PaypalGetAuthToken
     /** @var */
     protected $httpClient;
 
-    /** @var string*/
+    /** @var string */
     protected $authCode;
 
-    /** @var string*/
+    /** @var string */
     protected $sharedId;
 
-    /** @var string*/
+    /** @var string */
     protected $sellerNonce;
 
     public function __construct($authCode, $sharedId, $sellerNonce, $sandbox)
@@ -68,7 +68,7 @@ class PaypalGetAuthToken
                     RequestOptions::BODY => $body,
                     RequestOptions::HEADERS => [
                         'Content-Type' => 'text/plain',
-                        'Authorization' => 'Basic ' . base64_encode($this->sharedId)
+                        'Authorization' => 'Basic ' . base64_encode($this->sharedId),
                     ],
                 ]
             );
@@ -85,7 +85,6 @@ class PaypalGetAuthToken
             $error->setMessage($e->getMessage())->setErrorCode($e->getCode());
             $returnResponse->setError($error)->setSuccess(false);
         }
-
 
         return $returnResponse;
     }

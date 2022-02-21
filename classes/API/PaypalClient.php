@@ -49,6 +49,7 @@ class PaypalClient
         }
 
         $client = new PayPalHttpClient($environment);
+
         return $client;
     }
 }
