@@ -36,7 +36,7 @@ class PaypalMerchantId
 
     public function get($sandboxMode = null)
     {
-        if ($sandboxMode instanceof SandboxMode) {
+        if ($sandboxMode instanceof SandboxMode == false) {
             $sandboxMode = $this->getSandboxMode();
         }
 

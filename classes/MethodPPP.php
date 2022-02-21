@@ -357,4 +357,9 @@ class MethodPPP extends AbstractMethodPaypal implements PuiMethodInterface
     {
         $this->puiDataUser = $data;
     }
+
+    public function getSellerStatus()
+    {
+        return $this->paypalApiManager->getSellerStatusRequest()->execute();
+    }
 }

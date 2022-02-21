@@ -34,12 +34,12 @@ class AdminPayPalPUIListenerController extends ModuleAdminController
     public function init()
     {
         parent::init();
+        Configuration::updateValue(PUI::PARTNER_REFERRAL_ACTION_URL, false);
 
         if (Tools::getValue('merchantId') != $this->initPsMerchantId()->get()) {
             return $this->redirectToSetup();
         }
 
-        Configuration::updateValue(PUI::PARTNER_REFERRAL_ACTION_URL, false);
         $this->initPaypalMerchantId()->set(Tools::getValue('merchantIdInPayPal'));
 
         return $this->redirectToSetup();

@@ -24,14 +24,23 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
-namespace PaypalAddons\classes;
+namespace PaypalAddons\classes\API\ExtensionSDK;
 
 
-interface PuiMethodInterface
+use PayPalHttp\HttpRequest;
+
+class GetSellerStatus extends HttpRequest
 {
-    public function createPartnerReferrals();
+    function __construct($partnerMerchantId, $sellerMerchantId)
+    {
+        parent::__construct(
+            sprintf(
+                "/v1/customer/partners/%s/merchant-integrations/%s",
+                (string)$partnerMerchantId,
+                (string)$sellerMerchantId
 
-    public function initPui();
-
-    public function getSellerStatus();
+            ),
+            "GET");
+        $this->headers["Content-Type"] = "application/json";
+    }
 }

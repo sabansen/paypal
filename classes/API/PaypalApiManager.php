@@ -30,6 +30,7 @@ use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Request\PaypalAccessTokenRequest;
 use PaypalAddons\classes\API\Request\PaypalAuthorizationVoidRequest;
 use PaypalAddons\classes\API\Request\PaypalCaptureAuthorizeRequest;
+use PaypalAddons\classes\API\Request\PaypalGetSellerStatusRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderCaptureRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderCreateRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderAuthorizeRequest;
@@ -112,5 +113,10 @@ class PaypalApiManager implements PaypalApiManagerInterface
     public function getOrderPuiRequest()
     {
         return new PaypalOrderPuiCreateRequest($this->client, $this->method);
+    }
+
+    public function getSellerStatusRequest()
+    {
+        return new PaypalGetSellerStatusRequest($this->client, $this->method);
     }
 }
