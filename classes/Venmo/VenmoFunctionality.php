@@ -26,22 +26,22 @@
 
 namespace PaypalAddons\classes\Venmo;
 
-use Country;
 use Configuration;
+use Country;
 use PaypalAddons\classes\Constants\PaypalConfigurations;
-use Symfony\Component\VarDumper\VarDumper;
 use Tools;
 
 class VenmoFunctionality
 {
     public function isAvailable()
     {
-        $iso = Country::getIsoById((int)Configuration::get('PS_COUNTRY_DEFAULT'));
+        $iso = Country::getIsoById((int) Configuration::get('PS_COUNTRY_DEFAULT'));
+
         return Tools::strtolower($iso) == 'us';
     }
 
     public function isEnabled()
     {
-        return (int)Configuration::get(PaypalConfigurations::VENMO_OPTION);
+        return (int) Configuration::get(PaypalConfigurations::VENMO_OPTION);
     }
 }

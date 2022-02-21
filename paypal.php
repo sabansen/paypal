@@ -851,7 +851,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         return $payments_options;
     }
 
-    protected function buildVenmoPaymentOption($params=[])
+    protected function buildVenmoPaymentOption($params = [])
     {
         $paymentOption = new PaymentOption();
         $action_text = $this->l('Venmo');

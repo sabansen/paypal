@@ -26,7 +26,6 @@
 
 namespace PaypalAddons\classes\Venmo;
 
-
 class VenmoButton
 {
     public function render()
