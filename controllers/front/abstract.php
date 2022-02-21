@@ -50,6 +50,7 @@ abstract class PaypalAbstarctModuleFrontController extends CommonAbstarctModuleF
         }
 
         $paymentDataObj->fromArray($paymentData);
+
         return $paymentDataObj;
     }
 }

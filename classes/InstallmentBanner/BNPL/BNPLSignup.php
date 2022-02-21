@@ -26,11 +26,9 @@
 
 namespace PaypalAddons\classes\InstallmentBanner\BNPL;
 
-use Configuration;
-
 class BNPLSignup extends BNPLCart
 {
-    /** @var bool*/
+    /** @var bool */
     protected $isWidget;
 
     public function __construct()
@@ -58,11 +56,13 @@ class BNPLSignup extends BNPLCart
 
     /**
      * @param bool $isWidget
+     *
      * @return self
      */
     public function setIsWidget($isWidget)
     {
         $this->isWidget = $isWidget;
+
         return $this;
     }
 }

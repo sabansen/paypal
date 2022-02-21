@@ -23,9 +23,8 @@
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
-
 global $_MODULE;
-$_MODULE = array();
+$_MODULE = [];
 $_MODULE['<{paypal}prestashop>paypal_ad69e733ebae8d264bccaa38d68830e8'] = 'PayPal';
 $_MODULE['<{paypal}prestashop>paypal_3ba4f49f76f54e9305261bc742a24d9b'] = 'Aprovecha las ventajas de la plataforma PayPal Complete Payments y haz crecer tu negocio en Internet, en dispositivos móviles e internacionalmente. Acepta pagos con tarjeta de crédito o débito y con PayPal.';
 $_MODULE['<{paypal}prestashop>paypal_69a1a3ad8dd5da6db3c4da838a0cf9c7'] = '¿Seguro que quieres eliminar tus datos?';
@@ -114,10 +113,10 @@ $_MODULE['<{paypal}prestashop>payment_bt_d29ae6715f1eff4efcca108ff2fbbabe'] = 'A
 $_MODULE['<{paypal}prestashop>payment_bt_729cd05e50606aca11e38918222fdd82'] = 'Error de tokenización del lado del servidor. ¿Es válida la tarjeta?';
 $_MODULE['<{paypal}prestashop>payment_bt_1519bda079ebc7a0352e12d5a218daef'] = 'Se ha producido un error de red durante la tokenización.';
 $_MODULE['<{paypal}prestashop>payment_bt_23d1e945d89f99ddf838f0b7921098c5'] = 'Error de tokenización';
-$_MODULE['<{paypal}prestashop>payment_bt_4415d0f48a48bbe04bb7b0ea9dc88284'] = '3D Secure requiere HTTPS.';
+$_MODULE['<{paypal}prestashop>payment_bt_4415d0f48a48bbe04bb7b0ea9dc88284'] = '3D Secure requiere HTTPS.';
 $_MODULE['<{paypal}prestashop>payment_bt_a7e6187b41ceddff7766643f46224dfa'] = 'Error al cargar 3D Secure';
 $_MODULE['<{paypal}prestashop>payment_bt_b999ae7b750a6857e6bea1618fb223c3'] = 'Ha habido un problema con la solicitud.';
-$_MODULE['<{paypal}prestashop>payment_bt_64a0a5788729fd5ba37db816f5a32f38'] = 'Error de 3D Secure';
+$_MODULE['<{paypal}prestashop>payment_bt_64a0a5788729fd5ba37db816f5a32f38'] = 'Error de 3D Secure';
 $_MODULE['<{paypal}prestashop>payment_bt_b989faae3e70a711f45b304dcc9558b7'] = 'está vacío.';
 $_MODULE['<{paypal}prestashop>payment_bt_4d29676394d688341ec389a3de8ff14f'] = 'Fecha de vencimiento';
 $_MODULE['<{paypal}prestashop>payment_bt_691ce9be79afb532d99b698d5f35e226'] = 'número de tarjeta';
@@ -130,7 +129,7 @@ $_MODULE['<{paypal}prestashop>payment_pb_7bf595e2b494eadf0e7007d10e29d3e0'] = 'E
 $_MODULE['<{paypal}prestashop>payment_infos_a904d08142a25af292bb5d4d89d4a5d2'] = 'Disfruta de las muchas ventajas que te ofrece PayPal, como:';
 $_MODULE['<{paypal}prestashop>payment_infos_6275867ca4ee047b50fdb2e28cd6d9e8'] = 'Tus pedidos están protegidos';
 $_MODULE['<{paypal}prestashop>payment_infos_2fb192e49a15cf551f4fee1425335b10'] = 'Reembolso de los gastos de devolución';
-$_MODULE['<{paypal}prestashop>payment_infos_d739a52d16e73b3e0cc09527aa1667ad'] = '* Consultar condiciones en el sitio web de PayPal';
+$_MODULE['<{paypal}prestashop>payment_infos_d739a52d16e73b3e0cc09527aa1667ad'] = '* Consultar condiciones en el sitio web de PayPal';
 $_MODULE['<{paypal}prestashop>help_efb5997728366e83c4358bae826e80b7'] = 'Si acabas de crear tu cuenta PayPal, consulta el correo electrónico que PayPal te ha enviado para confirmar tu dirección de correo electrónico.';
 $_MODULE['<{paypal}prestashop>help_ef763cb04900c763587a037391ab506b'] = 'Debes tener una cuenta Business de PayPal. O también puedes convertir tu cuenta Personal en una cuenta Business.';
 $_MODULE['<{paypal}prestashop>help_f27b801695cc7dfaca3cd5c91ac871db'] = 'Descubre la documentación del módulo antes de la configuración';

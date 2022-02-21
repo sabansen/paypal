@@ -34,7 +34,9 @@ class PaymentTotalAmount
 {
     /**
      * @param PaypalOrder $paypalOrder
+     *
      * @return float
+     *
      * @throws RefundCalculationException
      */
     public function get(PaypalOrder $paypalOrder)
@@ -62,6 +64,6 @@ class PaymentTotalAmount
             throw new RefundCalculationException($e->getMessage());
         }
 
-        return (float)$total - $totalRefund;
+        return (float) $total - $totalRefund;
     }
 }

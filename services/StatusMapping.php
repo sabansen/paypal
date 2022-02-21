@@ -29,8 +29,6 @@ namespace PaypalAddons\services;
 use Configuration;
 use MethodEC;
 use MethodMB;
-use MethodPPP;
-use PayPal\Api\WebhookEventType;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\Constants\WebHookType;
 
@@ -68,10 +66,10 @@ class StatusMapping
     public function getAcceptedStatus()
     {
         if ($this->isCustomize()) {
-            return (int)Configuration::get('PAYPAL_OS_ACCEPTED_TWO');
+            return (int) Configuration::get('PAYPAL_OS_ACCEPTED_TWO');
         }
 
-        return (int)Configuration::get('PS_OS_PAYMENT');
+        return (int) Configuration::get('PS_OS_PAYMENT');
     }
 
     public function getRefundStatus($method = null)
@@ -82,22 +80,22 @@ class StatusMapping
 
         if ($this->isCustomize()) {
             if ($method instanceof MethodMB) {
-                return (int)Configuration::get('PAYPAL_OS_REFUNDED_PAYPAL');
+                return (int) Configuration::get('PAYPAL_OS_REFUNDED_PAYPAL');
             }
 
-            return (int)Configuration::get('PAYPAL_OS_REFUNDED');
+            return (int) Configuration::get('PAYPAL_OS_REFUNDED');
         }
 
-        return (int)Configuration::get('PS_OS_REFUND');
+        return (int) Configuration::get('PS_OS_REFUND');
     }
 
     public function getFailedStatus()
     {
         if ($this->isCustomize()) {
-            return (int)Configuration::get('PAYPAL_OS_VALIDATION_ERROR');
+            return (int) Configuration::get('PAYPAL_OS_VALIDATION_ERROR');
         }
 
-        return (int)Configuration::get('PS_OS_CANCELED');
+        return (int) Configuration::get('PS_OS_CANCELED');
     }
 
     public function getCanceledStatus($method = null)
@@ -109,28 +107,28 @@ class StatusMapping
         if ($this->isCustomize()) {
             if ($method instanceof MethodEC) {
                 if ($this->isModeSale()) {
-                    return (int)Configuration::get('PAYPAL_OS_CANCELED');
+                    return (int) Configuration::get('PAYPAL_OS_CANCELED');
                 }
 
-                return (int)Configuration::get('PAYPAL_OS_CAPTURE_CANCELED');
+                return (int) Configuration::get('PAYPAL_OS_CAPTURE_CANCELED');
             }
         }
 
-        return (int)Configuration::get('PS_OS_CANCELED');
+        return (int) Configuration::get('PS_OS_CANCELED');
     }
 
     public function getWaitValidationStatus()
     {
         if ($this->isCustomize()) {
-            return (int)Configuration::get('PAYPAL_OS_WAITING_VALIDATION');;
+            return (int) Configuration::get('PAYPAL_OS_WAITING_VALIDATION');
         }
 
-        return (int)Configuration::get('PAYPAL_OS_WAITING');;
+        return (int) Configuration::get('PAYPAL_OS_WAITING');
     }
 
     public function isCustomize()
     {
-        return (bool)Configuration::get('PAYPAL_CUSTOMIZE_ORDER_STATUS');
+        return (bool) Configuration::get('PAYPAL_CUSTOMIZE_ORDER_STATUS');
     }
 
     public function isModeSale()
@@ -140,6 +138,7 @@ class StatusMapping
 
     /**
      * @param string $eventType
+     *
      * @return int
      */
     public function getPsOrderStatusByEventType($eventType)

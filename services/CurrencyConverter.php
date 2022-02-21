@@ -33,6 +33,7 @@ class CurrencyConverter
 {
     /**
      * @param float $amount
+     *
      * @return float
      */
     public function convert($amount, $currency = null, $to = false)

@@ -26,15 +26,12 @@
 
 namespace PaypalAddons\classes\API\Request\V_1;
 
-use Configuration;
-use Country;
-
 abstract class RequestAbstractMB extends RequestAbstract
 {
     public function getApiContext($mode_order = null)
     {
         $apiContext = parent::getApiContext($mode_order);
-        $apiContext->addRequestHeader("PayPal-Partner-Attribution-Id", $this->method->getPaypalPartnerId());
+        $apiContext->addRequestHeader('PayPal-Partner-Attribution-Id', $this->method->getPaypalPartnerId());
 
         return $apiContext;
     }

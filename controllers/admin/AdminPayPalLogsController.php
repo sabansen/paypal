@@ -23,7 +23,6 @@
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
-
 require_once _PS_MODULE_DIR_ . 'paypal/controllers/admin/AdminPaypalProcessLogger.php';
 
 class AdminPayPalLogsController extends AdminPayPalProcessLoggerController
@@ -31,7 +30,7 @@ class AdminPayPalLogsController extends AdminPayPalProcessLoggerController
     public function init()
     {
         if (\Tools::getValue('action') === 'set_sandbox_mode') {
-            \Configuration::updateValue('PAYPAL_SANDBOX', (int)\Tools::getValue('sandbox_mode'));
+            \Configuration::updateValue('PAYPAL_SANDBOX', (int) \Tools::getValue('sandbox_mode'));
         }
 
         $this->page_header_toolbar_title = $this->l('Logs');
@@ -59,7 +58,7 @@ class AdminPayPalLogsController extends AdminPayPalProcessLoggerController
             $this->context->cookie->write();
         }
 
-        $this->_filter = sprintf(' AND a.`sandbox` = %d ', (int)\Configuration::get('PAYPAL_SANDBOX'));
+        $this->_filter = sprintf(' AND a.`sandbox` = %d ', (int) \Configuration::get('PAYPAL_SANDBOX'));
     }
 
     public function initContent()
@@ -70,7 +69,7 @@ class AdminPayPalLogsController extends AdminPayPalProcessLoggerController
         $this->content .= parent::initContent();
         $this->content = $this->context->smarty
             ->assign('content', $this->content)
-            ->assign('isModeSandbox', (int)\Configuration::get('PAYPAL_SANDBOX'))
+            ->assign('isModeSandbox', (int) \Configuration::get('PAYPAL_SANDBOX'))
             ->assign('psVersion', _PS_VERSION_)
             ->fetch($this->getTemplatePath() . 'admin.tpl');
         $this->context->smarty->assign('content', $this->content);
@@ -85,7 +84,7 @@ class AdminPayPalLogsController extends AdminPayPalProcessLoggerController
     protected function getDefaultFilters()
     {
         return [
-            $this->getCookieFilterPrefix() . $this->list_id . 'Filter_a!sandbox' => Configuration::get('PAYPAL_SANDBOX')
+            $this->getCookieFilterPrefix() . $this->list_id . 'Filter_a!sandbox' => Configuration::get('PAYPAL_SANDBOX'),
         ];
     }
 
@@ -94,13 +93,13 @@ class AdminPayPalLogsController extends AdminPayPalProcessLoggerController
         $query = [
             'token' => $this->token,
             'action' => 'set_sandbox_mode',
-            'sandbox_mode' => \Configuration::get('PAYPAL_SANDBOX') ? 0 : 1
+            'sandbox_mode' => \Configuration::get('PAYPAL_SANDBOX') ? 0 : 1,
         ];
         $this->page_header_toolbar_btn['switch_sandbox'] = [
             'desc' => $this->l('Sandbox mode'),
             'icon' => 'process-icon-toggle-' . (\Configuration::get('PAYPAL_SANDBOX') ? 'on' : 'off'),
             'help' => $this->l('Sandbox mode is the test environment where you\'ll be not able to collect any real payments.'),
-            'href' => self::$currentIndex . '?' . http_build_query($query)
+            'href' => self::$currentIndex . '?' . http_build_query($query),
         ];
 
         parent::initPageHeaderToolbar();

@@ -28,26 +28,24 @@ namespace PaypalAddons\classes\InstallmentBanner\BNPL;
 
 use Configuration;
 use Context;
-use Media;
-use Module;
 use Country;
-use Tools;
+use Module;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\InstallmentBanner\ConfigurationMap;
-use Symfony\Component\VarDumper\VarDumper;
+use Tools;
 
 abstract class BNPLAbstract
 {
-    /** @var Context*/
+    /** @var Context */
     protected $context;
 
-    /** @var Module*/
+    /** @var Module */
     protected $module;
 
-    /** @var AbstractMethodPaypal*/
+    /** @var AbstractMethodPaypal */
     protected $method;
 
-    /** @var string*/
+    /** @var string */
     protected $id;
 
     public function __construct()
@@ -67,6 +65,7 @@ abstract class BNPLAbstract
         $this->context->smarty->assign('JSvars', $this->getJSvars());
         $this->context->smarty->assign('JSscripts', $this->getJS());
         $this->context->smarty->assign('psPaypalDir', _PS_MODULE_DIR_ . 'paypal');
+
         return $this->context->smarty->fetch($this->getTemplatePath());
     }
 
@@ -76,8 +75,8 @@ abstract class BNPLAbstract
     protected function getJSvars()
     {
         $JSvars = [];
-        $JSvars['sc_init_url'] = $this->context->link->getModuleLink($this->module->name, 'ScInit', array(), true);
-        $JSvars['scOrderUrl'] = $this->context->link->getModuleLink($this->module->name, 'scOrder', array(), true);
+        $JSvars['sc_init_url'] = $this->context->link->getModuleLink($this->module->name, 'ScInit', [], true);
+        $JSvars['scOrderUrl'] = $this->context->link->getModuleLink($this->module->name, 'scOrder', [], true);
         $JSvars['bnplColor'] = $this->getColor();
 
         return $JSvars;
@@ -102,10 +101,10 @@ abstract class BNPLAbstract
         $JSscripts['tot-paypal-bnpl-sdk'] = [
             'src' => $srcLib,
             'data-namespace' => 'totPaypalBnplSdkButtons',
-            'data-partner-attribution-id' => $this->getPartnerId()
+            'data-partner-attribution-id' => $this->getPartnerId(),
         ];
         $JSscripts['bnpl'] = [
-            'src' => __PS_BASE_URI__ . 'modules/' . $this->module->name . '/views/js/bnpl.js?v=' . $this->module->version
+            'src' => __PS_BASE_URI__ . 'modules/' . $this->module->name . '/views/js/bnpl.js?v=' . $this->module->version,
         ];
 
         return $JSscripts;
@@ -156,23 +155,24 @@ abstract class BNPLAbstract
 
     /**
      * @param string $id
+     *
      * @return self
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
     /** @return string*/
     public function getColor()
     {
-        if ((int)Configuration::get(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT)) {
+        if ((int) Configuration::get(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT)) {
             $bannerColor = Configuration::get(ConfigurationMap::COLOR);
         } else {
             $bannerColor = ConfigurationMap::COLOR_GRAY;
         }
-
 
         return isset(ConfigurationMap::getBnplColorMapping()[$bannerColor]) ? ConfigurationMap::getBnplColorMapping()[$bannerColor] : 'white';
     }

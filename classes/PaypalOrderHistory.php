@@ -29,10 +29,10 @@
  */
 class PaypalOrderHistory extends ObjectModel
 {
-    /** @var int*/
+    /** @var int */
     public $status;
 
-    /** @var bool*/
+    /** @var bool */
     public $completed;
 
     /* @var string creation date*/
@@ -44,16 +44,16 @@ class PaypalOrderHistory extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'paypal_order_history',
         'primary' => 'id_paypal_order_history',
         'multilang' => false,
-        'fields' => array(
-            'status' => array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-            '$completed' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
-            'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
-        ),
-        'collation' => 'utf8_general_ci'
-    );
+        'fields' => [
+            'status' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
+            '$completed' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDateFormat'],
+            'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDateFormat'],
+        ],
+        'collation' => 'utf8_general_ci',
+    ];
 }

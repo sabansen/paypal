@@ -24,14 +24,13 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
-use PaypalAddons\classes\API\PaypalApiManagerMB;
-use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
-use PaypalAddons\services\ServicePaypalVaulting;
-use \PayPal\Api\ShippingAddress;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\API\PaypalApiManagerMB;
+use PaypalAddons\services\ServicePaypalVaulting;
 
 /**
  * Class MethodPPP
+ *
  * @see https://paypal.github.io/PayPal-PHP-SDK/ REST API sdk doc
  * @see https://developer.paypal.com/docs/api/payments/v1/ REST API references
  */
@@ -45,27 +44,26 @@ class MethodMB extends AbstractMethodPaypal
 
     protected $payment_method = 'PayPal';
 
-    public $errors = array();
+    public $errors = [];
 
     /** payment Object IDl*/
     public $paymentId;
 
-    /** @var $payerId string*/
+    /** @var string */
     protected $payerId;
 
-    /** @var string hash of the remembered card ids*/
+    /** @var string hash of the remembered card ids */
     protected $rememeberedCards;
 
     protected $servicePaypalVaulting;
 
-    public $advancedFormParametres = array(
+    public $advancedFormParametres = [
         'paypal_os_waiting_validation',
         'paypal_os_accepted_two',
         'paypal_os_processing',
         'paypal_os_validation_error',
-        'paypal_os_refunded_paypal'
-
-    );
+        'paypal_os_refunded_paypal',
+    ];
 
     public function __construct()
     {
@@ -90,7 +88,7 @@ class MethodMB extends AbstractMethodPaypal
         if ($sandbox == null) {
             $mode = Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
         } else {
-            $mode = (int)$sandbox ? 'SANDBOX' : 'LIVE';
+            $mode = (int) $sandbox ? 'SANDBOX' : 'LIVE';
         }
 
         Configuration::updateValue('PAYPAL_MB_' . $mode . '_CLIENTID', '');
@@ -127,10 +125,10 @@ class MethodMB extends AbstractMethodPaypal
 
     public function getOrderStatus()
     {
-        if ((int)Configuration::get('PAYPAL_CUSTOMIZE_ORDER_STATUS')) {
-            $orderStatus = (int)Configuration::get('PAYPAL_OS_PROCESSING');
+        if ((int) Configuration::get('PAYPAL_CUSTOMIZE_ORDER_STATUS')) {
+            $orderStatus = (int) Configuration::get('PAYPAL_OS_PROCESSING');
         } else {
-            $orderStatus = (int)Configuration::get('PAYPAL_OS_WAITING');
+            $orderStatus = (int) Configuration::get('PAYPAL_OS_WAITING');
         }
 
         return $orderStatus;
@@ -155,16 +153,16 @@ class MethodMB extends AbstractMethodPaypal
      */
     public function isConfigured($mode = null)
     {
-        $isMbConfigured = (bool)Configuration::get('PAYPAL_MB_EXPERIENCE');
+        $isMbConfigured = (bool) Configuration::get('PAYPAL_MB_EXPERIENCE');
 
         // If a payment by PayPal account is enabled and the credentials for EC are not setted, so it should use MB credentials
-        if ($isMbConfigured && (bool)Configuration::get('PAYPAL_MB_EC_ENABLED')) {
+        if ($isMbConfigured && (bool) Configuration::get('PAYPAL_MB_EC_ENABLED')) {
             $methodEC = self::load('EC');
 
             if ($methodEC->isCredentialsSetted() === false) {
                 $methodEC->setConfig([
                     'clientId' => $this->getClientId(),
-                    'secret' => $this->getSecret()
+                    'secret' => $this->getSecret(),
                 ]);
             }
         }
@@ -174,23 +172,22 @@ class MethodMB extends AbstractMethodPaypal
 
     public function getTplVars()
     {
-
         if ($this->isSandbox()) {
-            $tpl_vars = array(
+            $tpl_vars = [
                 'paypal_mb_sandbox_clientid' => Configuration::get('PAYPAL_MB_SANDBOX_CLIENTID'),
                 'paypal_mb_sandbox_secret' => Configuration::get('PAYPAL_MB_SANDBOX_SECRET'),
                 'paypal_ec_clientid' => Configuration::get('PAYPAL_EC_CLIENTID_SANDBOX'),
                 'paypal_ec_secret' => Configuration::get('PAYPAL_EC_SECRET_SANDBOX'),
-                'mode' => 'SANDBOX'
-            );
+                'mode' => 'SANDBOX',
+            ];
         } else {
-            $tpl_vars = array(
+            $tpl_vars = [
                 'paypal_mb_live_clientid' => Configuration::get('PAYPAL_MB_LIVE_CLIENTID'),
                 'paypal_mb_live_secret' => Configuration::get('PAYPAL_MB_LIVE_SECRET'),
                 'paypal_ec_clientid' => Configuration::get('PAYPAL_EC_CLIENTID_LIVE'),
                 'paypal_ec_secret' => Configuration::get('PAYPAL_EC_SECRET_LIVE'),
-                'mode' => 'LIVE'
-            );
+                'mode' => 'LIVE',
+            ];
         }
 
         return $tpl_vars;
@@ -213,18 +210,19 @@ class MethodMB extends AbstractMethodPaypal
 
     /**
      * Assign form data for Paypal Plus payment option
-     * @return boolean
+     *
+     * @return bool
      */
     public function assignJSvarsPaypalMB()
     {
         $context = Context::getContext();
         $module = Module::getInstanceByName($this->name);
-        Media::addJsDef(array(
-            'ajaxPatch' => $context->link->getModuleLink('paypal', 'mbValidation', array(), true),
+        Media::addJsDef([
+            'ajaxPatch' => $context->link->getModuleLink('paypal', 'mbValidation', [], true),
             'EMPTY_TAX_ID' => $module->l('For processing you payment via PayPal it is required to add a VAT number to your address. Please fill it and complete your payment.', get_class($this)),
             'INVALID_PAYER_TAX_ID' => $module->l('For processing you payment via PayPal it is required to add a valid Tax ID to your address. Please verify if your Tax ID is correct, change it if needed and complete your payment.', get_class($this)),
             'PAYMENT_SUCCESS' => $module->l('Payment successful! You will be redirected to the payment confirmation page in a couple of seconds.', get_class($this)),
-        ));
+        ]);
     }
 
     protected function getPayerInfo()
@@ -259,7 +257,7 @@ class MethodMB extends AbstractMethodPaypal
             return $taxInfo;
         }
 
-        if ((int)Context::getContext()->cart->id_address_delivery == 0) {
+        if ((int) Context::getContext()->cart->id_address_delivery == 0) {
             return $taxInfo;
         }
 
@@ -270,7 +268,7 @@ class MethodMB extends AbstractMethodPaypal
             return $taxInfo;
         }
 
-        $taxId = str_replace(array('.', '-', '/'), '', $addressCustomer->vat_number);
+        $taxId = str_replace(['.', '-', '/'], '', $addressCustomer->vat_number);
         $taxInfo['tax_id'] = $taxId;
         $taxInfo['tax_id_type'] = $this->getTaxIdType($taxId);
 
@@ -291,17 +289,17 @@ class MethodMB extends AbstractMethodPaypal
         $addressCustomer = new Address(Context::getContext()->cart->id_address_delivery);
         $countryCustomer = new Country($addressCustomer->id_country);
 
-        $paymentInfo = array(
+        $paymentInfo = [
             'approvalUrlPPP' => $response->getApproveLink(),
             'paymentId' => $response->getPaymentId(),
-            'paypalMode' => $this->isSandbox()  ? 'sandbox' : 'live',
+            'paypalMode' => $this->isSandbox() ? 'sandbox' : 'live',
             'payerInfo' => $this->getPayerInfo(),
-            'language' => str_replace("-", "_", $context->language->locale),
+            'language' => str_replace('-', '_', $context->language->locale),
             'country' => $countryCustomer->iso_code,
-            'disallowRememberedCards' => (bool)Configuration::get('PAYPAL_VAULTING') == false,
+            'disallowRememberedCards' => (bool) Configuration::get('PAYPAL_VAULTING') == false,
             'rememberedCards' => $this->servicePaypalVaulting->getRememberedCardsByIdCustomer($context->customer->id),
-            'merchantInstallmentSelectionOptional' => (int)Configuration::get('PAYPAL_MERCHANT_INSTALLMENT')
-        );
+            'merchantInstallmentSelectionOptional' => (int) Configuration::get('PAYPAL_MERCHANT_INSTALLMENT'),
+        ];
 
         return $paymentInfo;
     }
@@ -350,6 +348,7 @@ class MethodMB extends AbstractMethodPaypal
 
     /**
      * @param $vatNumber string
+     *
      * @return string
      */
     public function getTaxIdType($vatNumber)
@@ -375,76 +374,76 @@ class MethodMB extends AbstractMethodPaypal
 
     public function getAdvancedFormInputs()
     {
-        $inputs = array();
+        $inputs = [];
         $module = Module::getInstanceByName($this->name);
         $orderStatuses = $module->getOrderStatuses();
 
-        $inputs[] = array(
+        $inputs[] = [
             'type' => 'select',
             'label' => $module->l('Payment accepted and transaction completed', get_class($this)),
             'name' => 'paypal_os_accepted_two',
             'hint' => $module->l('You are currently using the Authorize mode. It means that you separate the payment authorization from the capture of the authorized payment. For capturing the authorized payement you have to change the order status to "payment accepted" (or to a custom status with the same meaning). Here you can choose a custom order status for accepting the order and validating transaction in Authorize mode.', get_class($this)),
             'desc' => $module->l('Default status : Payment accepted', get_class($this)),
-            'options' => array(
+            'options' => [
                 'query' => $orderStatuses,
                 'id' => 'id',
-                'name' => 'name'
-            )
-        );
+                'name' => 'name',
+            ],
+        ];
 
         if ($this->getIntent() == 'AUTHORIZE') {
-            $inputs[] = array(
+            $inputs[] = [
                 'type' => 'select',
                 'label' => $module->l('Payment authorized, waiting for validation by admin (paid via PayPal express checkout)', get_class($this)),
                 'name' => 'paypal_os_waiting_validation',
                 'hint' => $module->l('You are currently using the Authorize mode. It means that you separate the payment authorization from the capture of the authorized payment. By default the orders will be created in the "Waiting for PayPal payment" but you can customize it if needed.', get_class($this)),
                 'desc' => $module->l('Default status : Waiting for PayPal payment', get_class($this)),
-                'options' => array(
+                'options' => [
                     'query' => $orderStatuses,
                     'id' => 'id',
-                    'name' => 'name'
-                )
-            );
+                    'name' => 'name',
+                ],
+            ];
         }
 
-        $inputs[] = array(
+        $inputs[] = [
             'type' => 'select',
             'label' => $module->l('Payment processing (only for the payments by card)', get_class($this)),
             'name' => 'paypal_os_processing',
             'hint' => $module->l('The transaction paid by card can be in the pending status. If the payment is processing the order will be created in the temporary status.', get_class($this)),
             'desc' => $module->l('Default status : Waiting for PayPal payment', get_class($this)),
-            'options' => array(
+            'options' => [
                 'query' => $orderStatuses,
                 'id' => 'id',
-                'name' => 'name'
-            )
-        );
+                'name' => 'name',
+            ],
+        ];
 
-        $inputs[] = array(
+        $inputs[] = [
             'type' => 'select',
             'label' => $module->l('Payment validation error or transaction rejected (only for payments by card)', get_class($this)),
             'name' => 'paypal_os_validation_error',
             'hint' => $module->l('For the rejected transactions the "Canceled" status is applied automatically. You can modify it and to set your status instead.', get_class($this)),
             'desc' => $module->l('Default status : Canceled', get_class($this)),
-            'options' => array(
+            'options' => [
                 'query' => $orderStatuses,
                 'id' => 'id',
-                'name' => 'name'
-            )
-        );
+                'name' => 'name',
+            ],
+        ];
 
-        $inputs[] = array(
+        $inputs[] = [
             'type' => 'select',
             'label' => $module->l('Payment refunded via PayPal merchant account (only for payments by card)', get_class($this)),
             'name' => 'paypal_os_refunded_paypal',
             'hint' => $module->l('If the transaction was refunded via PayPal interface the corresponding order will pass to the "Refunded" status automatically. You can modify it and to set your status instead.', get_class($this)),
             'desc' => $module->l('Default status : Refunded', get_class($this)),
-            'options' => array(
+            'options' => [
                 'query' => $orderStatuses,
                 'id' => 'id',
-                'name' => 'name'
-            )
-        );
+                'name' => 'name',
+            ],
+        ];
 
         return $inputs;
     }
@@ -518,7 +517,8 @@ class MethodMB extends AbstractMethodPaypal
         } else {
             $bnCodeSuffix = 'Brazil';
         }
-        return (getenv('PLATEFORM') == 'PSREAD')?'PrestaShop_Cart_Ready_'.$bnCodeSuffix:'PrestaShop_Cart_'.$bnCodeSuffix;
+
+        return (getenv('PLATEFORM') == 'PSREAD') ? 'PrestaShop_Cart_Ready_' . $bnCodeSuffix : 'PrestaShop_Cart_' . $bnCodeSuffix;
     }
 
     public function getIntent()

@@ -32,11 +32,10 @@ use PaypalAddons\classes\API\Response\ResponseCaptureAuthorize;
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
 use PayPalCheckoutSdk\Payments\AuthorizationsCaptureRequest;
 use PayPalHttp\HttpException;
-use Symfony\Component\VarDumper\VarDumper;
 
 class PaypalCaptureAuthorizeRequest extends RequestAbstract
 {
-    /** @var \PaypalOrder*/
+    /** @var \PaypalOrder */
     protected $paypalOrder;
 
     public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method, \PaypalOrder $paypalOrder)
@@ -87,6 +86,7 @@ class PaypalCaptureAuthorizeRequest extends RequestAbstract
     protected function getDateTransaction(\PayPalHttp\HttpResponse $exec)
     {
         $date = \DateTime::createFromFormat(\DateTime::ATOM, $exec->result->create_time);
+
         return $date->format('Y-m-d H:i:s');
     }
 }

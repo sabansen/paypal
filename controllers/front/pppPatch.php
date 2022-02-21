@@ -29,7 +29,6 @@ use PaypalAddons\classes\AbstractMethodPaypal;
 /**
  * Update PPP payment request before initialize it.
  */
-
 class PaypalPppPatchModuleFrontController extends PaypalAbstarctModuleFrontController
 {
     public function postProcess()
@@ -43,16 +42,16 @@ class PaypalPppPatchModuleFrontController extends PaypalAbstarctModuleFrontContr
                 $resultPath = $method_ppp->doOrderPatch();
 
                 if ($resultPath->isSuccess()) {
-                    $this->jsonValues = array('success' => $resultPath->isSuccess());
+                    $this->jsonValues = ['success' => $resultPath->isSuccess()];
                     Context::getContext()->cookie->__unset('paypal_plus_payment');
                 } else {
                     $this->_errors['error_msg'] = $resultPath->getError()->getMessage();
-                    $this->jsonValues = array('success' => false, 'redirect_link' => Context::getContext()->link->getModuleLink($this->name, 'error', $this->_errors));
+                    $this->jsonValues = ['success' => false, 'redirect_link' => Context::getContext()->link->getModuleLink($this->name, 'error', $this->_errors)];
                 }
             } catch (Exception $e) {
                 $this->_errors['error_code'] = $e->getCode();
                 $this->_errors['error_msg'] = $e->getMessage();
-                $this->jsonValues = array('success' => false, 'redirect_link' => Context::getContext()->link->getModuleLink($this->name, 'error', $this->_errors));
+                $this->jsonValues = ['success' => false, 'redirect_link' => Context::getContext()->link->getModuleLink($this->name, 'error', $this->_errors)];
             }
         }
     }

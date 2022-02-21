@@ -45,7 +45,7 @@ class PaypalOrderPartialRefundRequest extends PaypalOrderRefundRequest
     protected function buildRequestBody()
     {
         $body = [
-            'amount' => $this->getAmount()
+            'amount' => $this->getAmount(),
         ];
 
         return $body;
@@ -58,7 +58,7 @@ class PaypalOrderPartialRefundRequest extends PaypalOrderRefundRequest
     {
         $amount = [
             'currency_code' => $this->paypalOrder->currency,
-            'value' => $this->amount
+            'value' => $this->amount,
         ];
 
         return $amount;

@@ -30,19 +30,19 @@ use Context;
 
 class TextInput implements FieldInteface
 {
-    /** @var string*/
+    /** @var string */
     protected $name;
 
-    /** @var string*/
+    /** @var string */
     protected $value;
 
-    /** @var string*/
+    /** @var string */
     protected $label;
 
-    /** @var string*/
+    /** @var string */
     protected $type;
 
-    /** @var array*/
+    /** @var array */
     protected $attributes;
 
     public function __construct($name, $value, $label, $type = null, $attributes = null)
@@ -75,11 +75,13 @@ class TextInput implements FieldInteface
 
     /**
      * @param string $name
+     *
      * @return TextInput
      */
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -93,11 +95,13 @@ class TextInput implements FieldInteface
 
     /**
      * @param string $value
+     *
      * @return TextInput
      */
     public function setValue($value)
     {
         $this->value = $value;
+
         return $this;
     }
 
@@ -111,14 +115,15 @@ class TextInput implements FieldInteface
 
     /**
      * @param string $label
+     *
      * @return TextInput
      */
     public function setLabel($label)
     {
         $this->label = $label;
+
         return $this;
     }
-
 
     /**
      * @return string
@@ -130,11 +135,13 @@ class TextInput implements FieldInteface
 
     /**
      * @param string $type
+     *
      * @return TextInput
      */
     public function setType($type)
     {
         $this->type = $type;
+
         return $this;
     }
 
@@ -148,6 +155,7 @@ class TextInput implements FieldInteface
 
     /**
      * @param array $attributes
+     *
      * @return TextInput
      */
     public function setAttributes($attributes)
@@ -157,6 +165,7 @@ class TextInput implements FieldInteface
         }
 
         $this->attributes = $attributes;
+
         return $this;
     }
 }

@@ -28,7 +28,7 @@ namespace PaypalAddons\classes\API\Response;
 
 class PaypalResponseAccessToken extends Response
 {
-    /** @var string*/
+    /** @var string */
     protected $accessToken;
 
     /**
@@ -45,6 +45,7 @@ class PaypalResponseAccessToken extends Response
     public function setAccessToken($accessToken)
     {
         $this->accessToken = $accessToken;
+
         return $this;
     }
 }

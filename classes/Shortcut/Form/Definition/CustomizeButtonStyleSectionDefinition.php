@@ -28,37 +28,37 @@ namespace PaypalAddons\classes\Shortcut\Form\Definition;
 
 class CustomizeButtonStyleSectionDefinition
 {
-    /** @var string*/
+    /** @var string */
     protected $nameColor;
 
-    /** @var int*/
+    /** @var int */
     protected $typeColor;
 
-    /** @var string*/
+    /** @var string */
     protected $nameShape;
 
-    /** @var int*/
+    /** @var int */
     protected $typeShape;
 
-    /** @var string*/
+    /** @var string */
     protected $nameLabel;
 
-    /** @var int*/
+    /** @var int */
     protected $typeLabel;
 
-    /** @var string*/
+    /** @var string */
     protected $nameWidth;
 
-    /** @var int*/
+    /** @var int */
     protected $typeWidth;
 
-    /** @var string*/
+    /** @var string */
     protected $nameHeight;
 
-    /** @var int*/
+    /** @var int */
     protected $typeHeight;
 
-    /** @var array*/
+    /** @var array */
     protected $errors;
 
     /**
@@ -71,11 +71,13 @@ class CustomizeButtonStyleSectionDefinition
 
     /**
      * @param string $nameColor
+     *
      * @return CustomizeButtonStyleSectionDefinition
      */
     public function setNameColor($nameColor)
     {
         $this->nameColor = $nameColor;
+
         return $this;
     }
 
@@ -89,11 +91,13 @@ class CustomizeButtonStyleSectionDefinition
 
     /**
      * @param int $typeColor
+     *
      * @return CustomizeButtonStyleSectionDefinition
      */
     public function setTypeColor($typeColor)
     {
         $this->typeColor = $typeColor;
+
         return $this;
     }
 
@@ -107,11 +111,13 @@ class CustomizeButtonStyleSectionDefinition
 
     /**
      * @param string $nameShape
+     *
      * @return CustomizeButtonStyleSectionDefinition
      */
     public function setNameShape($nameShape)
     {
         $this->nameShape = $nameShape;
+
         return $this;
     }
 
@@ -125,11 +131,13 @@ class CustomizeButtonStyleSectionDefinition
 
     /**
      * @param int $typeShape
+     *
      * @return CustomizeButtonStyleSectionDefinition
      */
     public function setTypeShape($typeShape)
     {
         $this->typeShape = $typeShape;
+
         return $this;
     }
 
@@ -143,11 +151,13 @@ class CustomizeButtonStyleSectionDefinition
 
     /**
      * @param string $nameLabel
+     *
      * @return CustomizeButtonStyleSectionDefinition
      */
     public function setNameLabel($nameLabel)
     {
         $this->nameLabel = $nameLabel;
+
         return $this;
     }
 
@@ -161,11 +171,13 @@ class CustomizeButtonStyleSectionDefinition
 
     /**
      * @param int $typeLabel
+     *
      * @return CustomizeButtonStyleSectionDefinition
      */
     public function setTypeLabel($typeLabel)
     {
         $this->typeLabel = $typeLabel;
+
         return $this;
     }
 
@@ -179,11 +191,13 @@ class CustomizeButtonStyleSectionDefinition
 
     /**
      * @param string $nameWidth
+     *
      * @return CustomizeButtonStyleSectionDefinition
      */
     public function setNameWidth($nameWidth)
     {
         $this->nameWidth = $nameWidth;
+
         return $this;
     }
 
@@ -197,11 +211,13 @@ class CustomizeButtonStyleSectionDefinition
 
     /**
      * @param int $typeWidth
+     *
      * @return CustomizeButtonStyleSectionDefinition
      */
     public function setTypeWidth($typeWidth)
     {
         $this->typeWidth = $typeWidth;
+
         return $this;
     }
 
@@ -215,11 +231,13 @@ class CustomizeButtonStyleSectionDefinition
 
     /**
      * @param string $nameHeight
+     *
      * @return CustomizeButtonStyleSectionDefinition
      */
     public function setNameHeight($nameHeight)
     {
         $this->nameHeight = $nameHeight;
+
         return $this;
     }
 
@@ -233,11 +251,13 @@ class CustomizeButtonStyleSectionDefinition
 
     /**
      * @param int $typeHeight
+     *
      * @return CustomizeButtonStyleSectionDefinition
      */
     public function setTypeHeight($typeHeight)
     {
         $this->typeHeight = $typeHeight;
+
         return $this;
     }
 
@@ -255,12 +275,14 @@ class CustomizeButtonStyleSectionDefinition
 
     /**
      * @param array $errors
+     *
      * @return CustomizeButtonStyleSectionDefinition
      */
     public function setErrors($errors)
     {
         if (false === is_array($errors) || empty($errors)) {
             $this->errors = [];
+
             return $this;
         }
 
@@ -273,6 +295,7 @@ class CustomizeButtonStyleSectionDefinition
 
     /**
      * @param string $error
+     *
      * @return CustomizeButtonStyleSectionDefinition
      */
     public function addError($error)
@@ -282,6 +305,7 @@ class CustomizeButtonStyleSectionDefinition
         }
 
         $this->errors[] = $error;
+
         return $this;
     }
 }

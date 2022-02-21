@@ -31,7 +31,6 @@ use PaypalAddons\classes\API\Response\Response;
 
 class RequestDummy implements RequestInteface
 {
-
     public function execute()
     {
         $response = new Response();

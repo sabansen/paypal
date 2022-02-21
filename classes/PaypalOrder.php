@@ -29,10 +29,10 @@
  */
 class PaypalOrder extends ObjectModel
 {
-    /** @var integer Prestashop Order generated ID */
+    /** @var int Prestashop Order generated ID */
     public $id_order;
 
-    /** @var integer Prestashop Cart generated ID */
+    /** @var int Prestashop Cart generated ID */
     public $id_cart;
 
     /** @var string Transaction ID */
@@ -77,50 +77,55 @@ class PaypalOrder extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'paypal_order',
         'primary' => 'id_paypal_order',
         'multilang' => false,
-        'fields' => array(
-            'id_order' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_cart' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_transaction' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
-            'id_payment' => array('type' => self::TYPE_STRING),
-            'payment_method' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
-            'currency' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
-            'intent' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
-            'total_paid' => array('type' => self::TYPE_FLOAT, 'size' => 10, 'scale' => 2),
-            'payment_status' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
-            'total_prestashop' => array('type' => self::TYPE_FLOAT, 'size' => 10, 'scale' => 2),
-            'method' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
-            'payment_tool' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
-            'sandbox' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
-            'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
-        ),
-        'collation' => 'utf8_general_ci'
-    );
+        'fields' => [
+            'id_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'id_cart' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'id_transaction' => ['type' => self::TYPE_STRING, 'validate' => 'isString'],
+            'id_payment' => ['type' => self::TYPE_STRING],
+            'payment_method' => ['type' => self::TYPE_STRING, 'validate' => 'isString'],
+            'currency' => ['type' => self::TYPE_STRING, 'validate' => 'isString'],
+            'intent' => ['type' => self::TYPE_STRING, 'validate' => 'isString'],
+            'total_paid' => ['type' => self::TYPE_FLOAT, 'size' => 10, 'scale' => 2],
+            'payment_status' => ['type' => self::TYPE_STRING, 'validate' => 'isString'],
+            'total_prestashop' => ['type' => self::TYPE_FLOAT, 'size' => 10, 'scale' => 2],
+            'method' => ['type' => self::TYPE_STRING, 'validate' => 'isString'],
+            'payment_tool' => ['type' => self::TYPE_STRING, 'validate' => 'isString'],
+            'sandbox' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDateFormat'],
+            'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDateFormat'],
+        ],
+        'collation' => 'utf8_general_ci',
+    ];
 
     /**
      * Get Id of order by transaction
+     *
      * @param string $id_transaction Transaction ID
-     * @return integer Order id
+     *
+     * @return int Order id
      */
     public static function getIdOrderByTransactionId($id_transaction)
     {
         $sql = 'SELECT `id_order`
-			FROM `'._DB_PREFIX_.'paypal_order`
-			WHERE `id_transaction` = \''.pSQL($id_transaction).'\'';
+			FROM `' . _DB_PREFIX_ . 'paypal_order`
+			WHERE `id_transaction` = \'' . pSQL($id_transaction) . '\'';
         $result = Db::getInstance()->getRow($sql);
         if ($result != false) {
             return (int) $result['id_order'];
         }
+
         return 0;
     }
 
     /**
      * Get PaypalOrder by PrestaShop order ID
-     * @param integer $id_order Order ID
+     *
+     * @param int $id_order Order ID
+     *
      * @return array PaypalOrder
      */
     public static function getOrderById($id_order)
@@ -133,13 +138,15 @@ class PaypalOrder extends ObjectModel
         if (is_array($rowOrder)) {
             return $rowOrder;
         } else {
-            return array();
+            return [];
         }
     }
 
     /**
      * Load PaypalOrder object by PrestaShop order ID
-     * @param integer $id_order Order ID
+     *
+     * @param int $id_order Order ID
+     *
      * @return object PaypalOrder
      */
     public static function loadByOrderId($id_order)
@@ -147,13 +154,15 @@ class PaypalOrder extends ObjectModel
         $sql = new DbQuery();
         $sql->select('id_paypal_order');
         $sql->from('paypal_order');
-        $sql->where('id_order = '.(int)$id_order);
+        $sql->where('id_order = ' . (int) $id_order);
         $id_paypal_order = Db::getInstance()->getValue($sql);
+
         return new self($id_paypal_order);
     }
 
     /**
      * Get array of PaypalOrder for validation
+     *
      * @return array PaypalOrder
      */
     public static function getPaypalBtOrdersIds()
@@ -161,7 +170,8 @@ class PaypalOrder extends ObjectModel
         $collection = new PrestaShopCollection('PaypalOrder');
         $collection->where('payment_method', '=', 'sale');
         $collection->where('payment_tool', '=', 'paypal_account');
-        $collection->where('payment_status', 'in', array('settling', 'submitted_for_settlement'));
+        $collection->where('payment_status', 'in', ['settling', 'submitted_for_settlement']);
+
         return $collection->getResults();
     }
 }

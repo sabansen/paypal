@@ -24,16 +24,16 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
-use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use PaypalAddons\services\ServicePaypalIpn;
 use PaypalAddons\services\ServicePaypalOrder;
+use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 
 class PaypalIpnModuleFrontController extends PaypalAbstarctModuleFrontController
 {
-    /** @var ServicePaypalIpn*/
+    /** @var ServicePaypalIpn */
     protected $servicePaypalIpn;
 
-    /** @var ServicePaypalOrder*/
+    /** @var ServicePaypalOrder */
     protected $servicePaypalOrder;
 
     public function __construct()
@@ -48,7 +48,7 @@ class PaypalIpnModuleFrontController extends PaypalAbstarctModuleFrontController
         try {
             if ($this->requestIsValid()) {
                 if ($this->handleIpn(Tools::getAllValues())) {
-                    header("HTTP/1.1 200 OK");
+                    header('HTTP/1.1 200 OK');
                 } else {
                     header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
                 }
@@ -65,7 +65,7 @@ class PaypalIpnModuleFrontController extends PaypalAbstarctModuleFrontController
                 null,
                 null,
                 null,
-                (int)\Configuration::get('PAYPAL_SANDBOX'),
+                (int) \Configuration::get('PAYPAL_SANDBOX'),
                 null
             );
             ProcessLoggerHandler::closeLogger();
@@ -76,6 +76,7 @@ class PaypalIpnModuleFrontController extends PaypalAbstarctModuleFrontController
 
     /**
      * @param $data array Ipn message data
+     *
      * @return bool
      */
     protected function handleIpn($data)
@@ -84,10 +85,10 @@ class PaypalIpnModuleFrontController extends PaypalAbstarctModuleFrontController
             return true;
         }
 
-        $logResponse = array(
+        $logResponse = [
             'payment_status' => isset($data['payment_status']) ? $data['payment_status'] : null,
-            'ipn_track_id' => isset($data['ipn_track_id']) ? $data['ipn_track_id'] : null
-        );
+            'ipn_track_id' => isset($data['ipn_track_id']) ? $data['ipn_track_id'] : null,
+        ];
 
         if ($data['payment_status'] == 'Refunded' && isset($data['parent_txn_id'])) {
             $transactionRef = $data['parent_txn_id'];
@@ -112,7 +113,7 @@ class PaypalIpnModuleFrontController extends PaypalAbstarctModuleFrontController
                 $order->id_cart,
                 null,
                 'PayPal',
-                (int)Configuration::get('PAYPAL_SANDBOX')
+                (int) Configuration::get('PAYPAL_SANDBOX')
             );
         }
         ProcessLoggerHandler::closeLogger();
@@ -135,40 +136,40 @@ class PaypalIpnModuleFrontController extends PaypalAbstarctModuleFrontController
     protected function getPsOrderStatus($transactionStatus)
     {
         $orderStatus = 0;
-        if ((int)Configuration::get('PAYPAL_CUSTOMIZE_ORDER_STATUS')) {
+        if ((int) Configuration::get('PAYPAL_CUSTOMIZE_ORDER_STATUS')) {
             switch ($transactionStatus) {
                 case 'Completed':
-                    $orderStatus = (int)Configuration::get('PAYPAL_OS_ACCEPTED_TWO');
+                    $orderStatus = (int) Configuration::get('PAYPAL_OS_ACCEPTED_TWO');
                     break;
                 case 'Refunded':
-                    $orderStatus = (int)Configuration::get('PAYPAL_OS_REFUNDED_PAYPAL');
+                    $orderStatus = (int) Configuration::get('PAYPAL_OS_REFUNDED_PAYPAL');
                     break;
                 case 'Failed':
-                    $orderStatus = (int)Configuration::get('PAYPAL_OS_VALIDATION_ERROR');
+                    $orderStatus = (int) Configuration::get('PAYPAL_OS_VALIDATION_ERROR');
                     break;
                 case 'Reversed':
-                    $orderStatus = (int)Configuration::get('PAYPAL_OS_VALIDATION_ERROR');
+                    $orderStatus = (int) Configuration::get('PAYPAL_OS_VALIDATION_ERROR');
                     break;
                 case 'Denied':
-                    $orderStatus = (int)Configuration::get('PAYPAL_OS_VALIDATION_ERROR');
+                    $orderStatus = (int) Configuration::get('PAYPAL_OS_VALIDATION_ERROR');
                     break;
             }
         } else {
             switch ($transactionStatus) {
                 case 'Completed':
-                    $orderStatus = (int)Configuration::get('PS_OS_PAYMENT');
+                    $orderStatus = (int) Configuration::get('PS_OS_PAYMENT');
                     break;
                 case 'Refunded':
-                    $orderStatus = (int)Configuration::get('PS_OS_REFUND');
+                    $orderStatus = (int) Configuration::get('PS_OS_REFUND');
                     break;
                 case 'Failed':
-                    $orderStatus = (int)Configuration::get('PS_OS_CANCELED');
+                    $orderStatus = (int) Configuration::get('PS_OS_CANCELED');
                     break;
                 case 'Reversed':
-                    $orderStatus = (int)Configuration::get('PS_OS_CANCELED');
+                    $orderStatus = (int) Configuration::get('PS_OS_CANCELED');
                     break;
                 case 'Denied':
-                    $orderStatus = (int)Configuration::get('PS_OS_CANCELED');
+                    $orderStatus = (int) Configuration::get('PS_OS_CANCELED');
                     break;
             }
         }
@@ -198,13 +199,14 @@ class PaypalIpnModuleFrontController extends PaypalAbstarctModuleFrontController
     /**
      * @param $orders array
      * @param $idState int
+     *
      * @return bool
      */
     protected function setOrderStatus($orders, $idState)
     {
-        /** @var $order \Order*/
+        /** @var $order \Order */
         foreach ($orders as $order) {
-            $order->setCurrentState((int)$idState);
+            $order->setCurrentState((int) $idState);
         }
 
         return true;
@@ -212,6 +214,7 @@ class PaypalIpnModuleFrontController extends PaypalAbstarctModuleFrontController
 
     /**
      * @param $value mixed
+     *
      * @return string
      */
     public function jsonEncode($value)
@@ -231,9 +234,10 @@ class PaypalIpnModuleFrontController extends PaypalAbstarctModuleFrontController
             foreach ($mixed as $key => $value) {
                 $mixed[$key] = $this->utf8ize($value);
             }
-        } else if (is_string($mixed)) {
+        } elseif (is_string($mixed)) {
             return utf8_encode($mixed);
         }
+
         return $mixed;
     }
 }

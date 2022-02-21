@@ -24,43 +24,42 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
-use PaypalAddons\classes\API\PaypalApiManager;
 use PaypalAddons\classes\AbstractMethodPaypal;
-use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
+use PaypalAddons\classes\API\PaypalApiManager;
 
 /**
  * Class MethodEC.
+ *
  * @see https://developer.paypal.com/docs/classic/api/ NVP SOAP SDK
  * @see https://developer.paypal.com/docs/classic/api/nvpsoap-sdks/
  */
 class MethodEC extends AbstractMethodPaypal
 {
-
     const AUTHORIZE = 'AUTHORIZE';
 
     const SALE = 'CAPTURE';
 
-        /** @var boolean pay with card without pp account */
+    /** @var bool pay with card without pp account */
     public $credit_card;
 
-    /** @var boolean shortcut payment from product or cart page*/
+    /** @var bool shortcut payment from product or cart page */
     public $short_cut;
 
     protected $payment_method = 'PayPal';
 
     protected $transaction_detail;
 
-    public $errors = array();
+    public $errors = [];
 
-    public $advancedFormParametres = array(
+    public $advancedFormParametres = [
         'paypal_os_accepted_two',
-        'paypal_os_waiting_validation'
-    );
+        'paypal_os_waiting_validation',
+    ];
 
     /** payment Object IDl*/
     protected $paymentId;
 
-    /** @var bool*/
+    /** @var bool */
     protected $isSandbox;
 
     public function __construct()
@@ -97,6 +96,7 @@ class MethodEC extends AbstractMethodPaypal
     public function setShortCut($shortCut)
     {
         $this->short_cut = (bool) $shortCut;
+
         return $this;
     }
 
@@ -108,7 +108,7 @@ class MethodEC extends AbstractMethodPaypal
     /**
      * @see AbstractMethodPaypal::getConfig()
      */
-    public function getConfig(\PayPal $module)
+    public function getConfig(PayPal $module)
     {
     }
 
@@ -117,7 +117,7 @@ class MethodEC extends AbstractMethodPaypal
         if ($sandbox == null) {
             $mode = Configuration::get('PAYPAL_SANDBOX') ? 'SANDBOX' : 'LIVE';
         } else {
-            $mode = (int)$sandbox ? 'SANDBOX' : 'LIVE';
+            $mode = (int) $sandbox ? 'SANDBOX' : 'LIVE';
         }
 
         Configuration::updateValue('PAYPAL_EC_CLIENTID_' . $mode, '');
@@ -157,6 +157,7 @@ class MethodEC extends AbstractMethodPaypal
         $dateServer = new DateTime();
         $timeZonePayPal = new DateTimeZone('PST');
         $dateServer->setTimezone($timeZonePayPal);
+
         return $dateServer->format('Y-m-d H:i:s');
     }
 
@@ -174,6 +175,7 @@ class MethodEC extends AbstractMethodPaypal
     public function void($orderPayPal)
     {
         $response = $this->paypalApiManager->getAuthorizationVoidRequest($orderPayPal)->execute();
+
         return $response;
     }
 
@@ -186,12 +188,13 @@ class MethodEC extends AbstractMethodPaypal
             return false;
         }
 
-        if ((bool)Configuration::get('PAYPAL_CONNECTION_EC_CONFIGURED')) {
+        if ((bool) Configuration::get('PAYPAL_CONNECTION_EC_CONFIGURED')) {
             return true;
         }
 
         $this->checkCredentials();
-        return (bool)Configuration::get('PAYPAL_CONNECTION_EC_CONFIGURED');
+
+        return (bool) Configuration::get('PAYPAL_CONNECTION_EC_CONFIGURED');
     }
 
     public function checkCredentials()
@@ -203,7 +206,7 @@ class MethodEC extends AbstractMethodPaypal
         } else {
             $this->setConfig([
                 'clientId' => '',
-                'secret' => ''
+                'secret' => '',
             ]);
             Configuration::updateValue('PAYPAL_CONNECTION_EC_CONFIGURED', 0);
 
@@ -215,8 +218,8 @@ class MethodEC extends AbstractMethodPaypal
 
     public function getTplVars()
     {
-        $tplVars = array();
-        $countryDefault = new Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), Context::getContext()->language->id);
+        $tplVars = [];
+        $countryDefault = new Country((int) \Configuration::get('PS_COUNTRY_DEFAULT'), Context::getContext()->language->id);
 
         $tplVars['accountConfigured'] = $this->isConfigured();
         $tplVars['urlOnboarding'] = $this->getUrlOnboarding();
@@ -234,36 +237,36 @@ class MethodEC extends AbstractMethodPaypal
 
     public function getAdvancedFormInputs()
     {
-        $inputs = array();
+        $inputs = [];
         $module = Module::getInstanceByName($this->name);
         $orderStatuses = $module->getOrderStatuses();
 
         if ($this->getIntent() == 'AUTHORIZE') {
-            $inputs[] = array(
+            $inputs[] = [
                 'type' => 'select',
                 'label' => $module->l('Payment authorized and waiting for validation by admin', get_class($this)),
                 'name' => 'paypal_os_waiting_validation',
                 'hint' => $module->l('You are currently using the Authorize mode. It means that you separate the payment authorization from the capture of the authorized payment. By default the orders will be created in the "Waiting for PayPal payment" but you can customize it if needed.', get_class($this)),
                 'desc' => $module->l('Default status : Waiting for PayPal payment', get_class($this)),
-                'options' => array(
+                'options' => [
                     'query' => $orderStatuses,
                     'id' => 'id',
-                    'name' => 'name'
-                )
-            );
+                    'name' => 'name',
+                ],
+            ];
         } else {
-            $inputs[] = array(
+            $inputs[] = [
                 'type' => 'select',
                 'label' => $module->l('Payment accepted and transaction completed', get_class($this)),
                 'name' => 'paypal_os_accepted_two',
                 'hint' => $module->l('You are currently using the Sale mode (the authorization and capture occur at the same time as the sale). So the payement is accepted instantly and the new order is created in the "Payment accepted" status. You can customize the status for orders with completed transactions. Ex : you can create an additional status "Payment accepted via PayPal" and set it as the default status.', get_class($this)),
                 'desc' => $module->l('Default status : Payment accepted', get_class($this)),
-                'options' => array(
+                'options' => [
                     'query' => $orderStatuses,
                     'id' => 'id',
-                    'name' => 'name'
-                )
-            );
+                    'name' => 'name',
+                ],
+            ];
         }
 
         return $inputs;
@@ -322,7 +325,7 @@ class MethodEC extends AbstractMethodPaypal
     /** @return  string*/
     public function getLandingPage()
     {
-        if ((int)$this->credit_card) {
+        if ((int) $this->credit_card) {
             return 'BILLING';
         }
 

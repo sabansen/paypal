@@ -26,15 +26,12 @@
 
 namespace PaypalAddons\classes\API\Request\V_1;
 
-
 use PayPal\Api\Webhook;
 use PaypalAddons\classes\API\Response\Error as PaypalError;
 use PaypalAddons\classes\API\Response\Response;
-use Symfony\Component\VarDumper\VarDumper;
 
 class GetWebHooks extends RequestAbstract
 {
-
     public function execute()
     {
         $response = $this->getResponse();

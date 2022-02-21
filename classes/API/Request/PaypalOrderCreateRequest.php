@@ -26,14 +26,10 @@
 
 namespace PaypalAddons\classes\API\Request;
 
-use PaypalAddons\classes\AbstractMethodPaypal;
-use PaypalAddons\classes\API\Request\RequestAbstract;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\ResponseOrderCreate;
-use PayPalCheckoutSdk\Core\PayPalHttpClient;
 use PayPalCheckoutSdk\Orders\OrdersCreateRequest;
 use PayPalHttp\HttpException;
-use Symfony\Component\VarDumper\VarDumper;
 
 class PaypalOrderCreateRequest extends RequestAbstract
 {
@@ -81,12 +77,14 @@ class PaypalOrderCreateRequest extends RequestAbstract
             $response->setSuccess(false)
                 ->setError($error);
         }
+
         return $response;
     }
 
     /**
      * @param $nameLink string
      * @param $links array
+     *
      * @return string
      */
     protected function getLink($nameLink, $links)
@@ -117,7 +115,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
                 [
                     'amount' => $this->getAmount($currency),
                     'items' => $items,
-                    'custom_id' => $this->formatter->formatPaypalString($this->getCustomId())
+                    'custom_id' => $this->formatter->formatPaypalString($this->getCustomId()),
                 ],
             ],
         ];
@@ -146,7 +144,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
 
         $payer['name'] = [
             'given_name' => $this->formatter->formatPaypalString($this->context->customer->firstname),
-            'surname' => $this->formatter->formatPaypalString($this->context->customer->lastname)
+            'surname' => $this->formatter->formatPaypalString($this->context->customer->lastname),
         ];
         $payer['email'] = $this->context->customer->email;
 
@@ -189,6 +187,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
 
     /**
      * @param $currency string Iso code
+     *
      * @return array
      */
     protected function getProductItems($currency, $cache = false)
@@ -207,7 +206,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
             $productTax = $this->method->formatPrice($priceIncl - $priceExcl, null, false);
 
             if (isset($product['attributes']) && (empty($product['attributes']) === false)) {
-                $product['name'] .= ' - '.$product['attributes'];
+                $product['name'] .= ' - ' . $product['attributes'];
             }
 
             if (isset($product['reference']) && false === empty($product['reference'])) {
@@ -218,11 +217,11 @@ class PaypalOrderCreateRequest extends RequestAbstract
             $item['sku'] = $product['id_product'];
             $item['unit_amount'] = [
                 'currency_code' => $currency,
-                'value' => $priceExcl
+                'value' => $priceExcl,
             ];
             $item['tax'] = [
                 'currency_code' => $currency,
-                'value' => $productTax
+                'value' => $productTax,
             ];
             $item['quantity'] = $product['quantity'];
 
@@ -230,11 +229,13 @@ class PaypalOrderCreateRequest extends RequestAbstract
         }
 
         $this->products = $items;
+
         return $items;
     }
 
     /**
      * @param $currency string Iso code
+     *
      * @return array
      */
     protected function getAmount($currency)
@@ -248,8 +249,8 @@ class PaypalOrderCreateRequest extends RequestAbstract
         $handling = $this->getHandling($currency);
 
         foreach ($items as $item) {
-            $subTotalExcl += (float)$item['unit_amount']['value'] * (float)$item['quantity'];
-            $subTotalTax += (float)$item['tax']['value'] * (float)$item['quantity'];
+            $subTotalExcl += (float) $item['unit_amount']['value'] * (float) $item['quantity'];
+            $subTotalTax += (float) $item['tax']['value'] * (float) $item['quantity'];
         }
 
         $subTotalExcl = $this->method->formatPrice($subTotalExcl, null, false);
@@ -260,33 +261,32 @@ class PaypalOrderCreateRequest extends RequestAbstract
             false
         );
 
-        $amount = array(
+        $amount = [
             'currency_code' => $currency,
             'value' => $totalOrder,
-            'breakdown' =>
-                array(
-                    'item_total' => array(
+            'breakdown' => [
+                    'item_total' => [
                         'currency_code' => $currency,
                         'value' => $subTotalExcl,
-                    ),
-                    'shipping' => array(
+                    ],
+                    'shipping' => [
                         'currency_code' => $currency,
                         'value' => $shippingTotal,
-                    ),
-                    'tax_total' => array(
+                    ],
+                    'tax_total' => [
                         'currency_code' => $currency,
                         'value' => $subTotalTax,
-                    ),
-                    'discount' => array(
+                    ],
+                    'discount' => [
                         'currency_code' => $currency,
-                        'value' => $discountTotal
-                    ),
-                    'handling' => array(
+                        'value' => $discountTotal,
+                    ],
+                    'handling' => [
                         'currency_code' => $currency,
-                        'value' => $handling
-                    )
-                ),
-        );
+                        'value' => $handling,
+                    ],
+                ],
+        ];
 
         return $amount;
     }
@@ -309,11 +309,11 @@ class PaypalOrderCreateRequest extends RequestAbstract
             $item['sku'] = $this->context->cart->id;
             $item['unit_amount'] = [
                 'currency_code' => $currency,
-                'value' => $this->method->formatPrice($priceExcl)
+                'value' => $this->method->formatPrice($priceExcl),
             ];
             $item['tax'] = [
                 'currency_code' => $currency,
-                'value' => $this->method->formatPrice($tax)
+                'value' => $this->method->formatPrice($tax),
             ];
             $item['quantity'] = 1;
 
@@ -321,6 +321,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
         }
 
         $this->wrappings = $items;
+
         return $items;
     }
 
@@ -336,7 +337,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
             'return_url' => $this->method->getReturnUrl(),
             'cancel_url' => $this->method->getCancelUrl(),
             'brand_name' => $this->formatter->formatPaypalString($this->getBrandName()),
-            'user_action' => 'PAY_NOW'
+            'user_action' => 'PAY_NOW',
         ];
 
         if ($this->context->cart->isVirtualCart()) {
@@ -360,7 +361,7 @@ class PaypalOrderCreateRequest extends RequestAbstract
         }
 
         $shippingInfo = [
-            'address' => $this->getAddress()
+            'address' => $this->getAddress(),
         ];
 
         $name = $this->getShippingName();
@@ -389,9 +390,9 @@ class PaypalOrderCreateRequest extends RequestAbstract
                 ' ',
                 [
                     $address->firstname,
-                    $address->lastname
+                    $address->lastname,
                 ]
-            )
+            ),
         ];
     }
 

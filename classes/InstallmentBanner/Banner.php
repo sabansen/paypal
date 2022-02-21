@@ -26,39 +26,38 @@
 
 namespace PaypalAddons\classes\InstallmentBanner;
 
-use \Context;
-use \Module;
+use Configuration;
+use Context;
+use Module;
 use PaypalAddons\classes\AbstractMethodPaypal;
-use \Configuration;
-use PaypalAddons\classes\InstallmentBanner\ConfigurationMap;
 
 class Banner
 {
-    /** @var \PayPal*/
+    /** @var \PayPal */
     protected $module;
 
-    /** @var string*/
+    /** @var string */
     protected $placement;
 
-    /** @var string*/
+    /** @var string */
     protected $layout;
 
-    /** @var float*/
+    /** @var float */
     protected $amount;
 
-    /** @var string*/
+    /** @var string */
     protected $template;
 
-    /** @var array*/
+    /** @var array */
     protected $jsVars;
 
-    /** @var array*/
+    /** @var array */
     protected $tplVars;
 
-    /** @var AbstractMethodPaypal*/
+    /** @var AbstractMethodPaypal */
     protected $method;
 
-    /** @var string*/
+    /** @var string */
     protected $pageTypeAttribute;
 
     public function __construct()
@@ -81,7 +80,7 @@ class Banner
     {
         $vars = [];
 
-        if ((int)Configuration::get(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT)) {
+        if ((int) Configuration::get(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT)) {
             $vars['color'] = Configuration::get(ConfigurationMap::COLOR);
         } else {
             $vars['color'] = ConfigurationMap::COLOR_GRAY;
@@ -110,8 +109,8 @@ class Banner
                 'src' => $this->getPaypalSdkLib(),
                 'data-namespace' => 'totPaypalSdk',
                 'data-page-type' => $this->getPageTypeAttribute(),
-                'enable-funding' => 'paylater'
-            ]
+                'enable-funding' => 'paylater',
+            ],
         ];
 
         if (false === defined('_PS_ADMIN_DIR_')) {
@@ -134,7 +133,8 @@ class Banner
      */
     public function setPlacement($placement)
     {
-        $this->placement = (string)$placement;
+        $this->placement = (string) $placement;
+
         return $this;
     }
 
@@ -143,16 +143,18 @@ class Banner
      */
     public function getAmount()
     {
-        return (float)$this->amount;
+        return (float) $this->amount;
     }
 
     /**
      * @param float $amount
+     *
      * @return Banner
      */
     public function setAmount($amount)
     {
-        $this->amount = (float)$amount;
+        $this->amount = (float) $amount;
+
         return $this;
     }
 
@@ -166,11 +168,13 @@ class Banner
 
     /**
      * @param string $layout
+     *
      * @return Banner
      */
     public function setLayout($layout)
     {
-        $this->layout = (string)$layout ;
+        $this->layout = (string) $layout;
+
         return $this;
     }
 
@@ -184,17 +188,20 @@ class Banner
 
     /**
      * @param string $template
+     *
      * @return Banner
      */
     public function setTemplate($template)
     {
         $this->template = $template;
+
         return $this;
     }
 
     /**
      * @param string $name
      * @param mixed $value
+     *
      * @return Banner
      */
     public function addJsVar($name, $value)
@@ -204,6 +211,7 @@ class Banner
         }
 
         $this->jsVars[$name] = $value;
+
         return $this;
     }
 
@@ -222,6 +230,7 @@ class Banner
     /**
      * @param string $name
      * @param mixed $value
+     *
      * @return Banner
      */
     public function addTplVar($name, $value)
@@ -231,6 +240,7 @@ class Banner
         }
 
         $this->tplVars[$name] = $value;
+
         return $this;
     }
 
@@ -241,7 +251,7 @@ class Banner
     {
         $params = [
             'client-id' => $this->method->getClientId(),
-            'components' => 'messages'
+            'components' => 'messages',
         ];
 
         return 'https://www.paypal.com/sdk/js?' . http_build_query($params);

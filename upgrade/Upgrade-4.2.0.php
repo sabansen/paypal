@@ -23,14 +23,13 @@
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
 function upgrade_module_4_2_0($module)
 {
-    $sql = 'ALTER TABLE '._DB_PREFIX_.'paypal_order ADD method VARCHAR(255), ADD payment_tool VARCHAR(255)';
+    $sql = 'ALTER TABLE ' . _DB_PREFIX_ . 'paypal_order ADD method VARCHAR(255), ADD payment_tool VARCHAR(255)';
     if (!Db::getInstance()->execute($sql)) {
         return false;
     }
@@ -54,10 +53,10 @@ function upgrade_module_4_2_0($module)
         return false;
     }
 
-    if (Configuration::get('PAYPAL_METHOD') == "EXPRESS_CHECKOUT") {
+    if (Configuration::get('PAYPAL_METHOD') == 'EXPRESS_CHECKOUT') {
         if (Configuration::get('PAYPAL_LIVE_ACCESS') || Configuration::get('PAYPAL_SANDBOX_ACCESS')) {
             Configuration::updateValue('PAYPAL_METHOD', 'EC');
-            if (Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')) == "FR" || Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')) == "UK") {
+            if (Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')) == 'FR' || Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')) == 'UK') {
                 Configuration::updateValue('PAYPAL_API_CARD', 0);
             }
         } else {

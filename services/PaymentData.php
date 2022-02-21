@@ -23,23 +23,24 @@
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
+
 namespace PaypalAddons\services;
 
 class PaymentData
 {
-    /** @var string*/
+    /** @var string */
     protected $orderId;
 
-    /** @var string*/
+    /** @var string */
     protected $payerID;
 
-    /** @var string*/
+    /** @var string */
     protected $paymentID;
 
-    /** @var string*/
+    /** @var string */
     protected $billingToken;
 
-    /** @var string*/
+    /** @var string */
     protected $facilitatorAccessToken;
 
     public function fromArray($data)

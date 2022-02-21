@@ -30,28 +30,28 @@ use Context;
 
 class Select implements FieldInteface
 {
-    /** @var string*/
+    /** @var string */
     protected $name;
 
-    /** @var array*/
+    /** @var array */
     protected $options;
 
-    /** @var string*/
+    /** @var string */
     protected $label;
 
-    /** @var mixed*/
+    /** @var mixed */
     protected $value;
 
-    /** @var string*/
+    /** @var string */
     protected $type;
 
-    /** @var string*/
+    /** @var string */
     protected $afterSelectContent;
 
-    /** @var string*/
+    /** @var string */
     protected $css;
 
-    /** @var bool*/
+    /** @var bool */
     protected $hintSwitch;
 
     public function __construct($name, $options, $label = null, $value = null, $type = null, $hintSwitch = false, $css = null)
@@ -96,11 +96,13 @@ class Select implements FieldInteface
 
     /**
      * @param string $name
+     *
      * @return Select
      */
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -114,6 +116,7 @@ class Select implements FieldInteface
 
     /**
      * @param array $options
+     *
      * @return Select
      */
     public function setOptions($options)
@@ -133,11 +136,13 @@ class Select implements FieldInteface
 
     /**
      * @param SelectOption $option
+     *
      * @return Select
      */
     public function addOption(SelectOption $option)
     {
         $this->options[] = $option;
+
         return $this;
     }
 
@@ -151,11 +156,13 @@ class Select implements FieldInteface
 
     /**
      * @param string $label
+     *
      * @return Select
      */
     public function setLabel($label)
     {
         $this->label = $label;
+
         return $this;
     }
 
@@ -169,11 +176,13 @@ class Select implements FieldInteface
 
     /**
      * @param mixed $value
+     *
      * @return Select
      */
     public function setValue($value)
     {
         $this->value = $value;
+
         return $this;
     }
 
@@ -187,11 +196,13 @@ class Select implements FieldInteface
 
     /**
      * @param string $type
+     *
      * @return Select
      */
     public function setType($type)
     {
         $this->type = $type;
+
         return $this;
     }
 
@@ -205,11 +216,13 @@ class Select implements FieldInteface
 
     /**
      * @param string $afterSelectContent
+     *
      * @return Select
      */
     public function setAfterSelectContent($afterSelectContent)
     {
         $this->afterSelectContent = (string) $afterSelectContent;
+
         return $this;
     }
 
@@ -223,11 +236,13 @@ class Select implements FieldInteface
 
     /**
      * @param string $css
+     *
      * @return Select
      */
     public function setCss($css)
     {
         $this->css = $css;
+
         return $this;
     }
 
@@ -241,11 +256,13 @@ class Select implements FieldInteface
 
     /**
      * @param bool $hintSwitch
+     *
      * @return Select
      */
     public function setHintSwitch($hintSwitch)
     {
         $this->hintSwitch = $hintSwitch;
+
         return $this;
     }
 }

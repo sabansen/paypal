@@ -28,5 +28,4 @@ namespace PaypalAddons\classes\Exception;
 
 class RefundCalculationException extends \Exception
 {
-
 }

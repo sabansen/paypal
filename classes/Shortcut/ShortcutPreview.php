@@ -28,19 +28,19 @@ namespace PaypalAddons\classes\Shortcut;
 
 class ShortcutPreview extends ShortcutAbstract
 {
-    /** @var string*/
+    /** @var string */
     protected $label = null;
 
-    /** @var int*/
+    /** @var int */
     protected $height = null;
 
-    /** @var int*/
+    /** @var int */
     protected $width = null;
 
-    /** @var string*/
+    /** @var string */
     protected $color = null;
 
-    /** @var string*/
+    /** @var string */
     protected $shape = null;
 
     public function __construct(
@@ -66,13 +66,13 @@ class ShortcutPreview extends ShortcutAbstract
     {
         return [
             'shortcutID' => $this->getId(),
-            'styleSetting' => $this->getStyleSetting()
+            'styleSetting' => $this->getStyleSetting(),
         ];
     }
 
     protected function getTemplatePath()
     {
-        return 'extends:'._PS_MODULE_DIR_ . 'paypal/views/templates/shortcut/shortcut-layout.tpl|'._PS_MODULE_DIR_ . 'paypal/views/templates/shortcut/shortcut-preview.tpl';
+        return 'extends:' . _PS_MODULE_DIR_ . 'paypal/views/templates/shortcut/shortcut-layout.tpl|' . _PS_MODULE_DIR_ . 'paypal/views/templates/shortcut/shortcut-preview.tpl';
     }
 
     protected function getJS()
@@ -80,7 +80,7 @@ class ShortcutPreview extends ShortcutAbstract
         $jsScripts = [];
         $jsScripts['tot-paypal-sdk'] = [
             'src' => $this->method->getUrlJsSdkLib(),
-            'data-namespace' => 'totPaypalSdkButtons'
+            'data-namespace' => 'totPaypalSdkButtons',
         ];
 
         return $jsScripts;
@@ -93,7 +93,7 @@ class ShortcutPreview extends ShortcutAbstract
             'height' => $this->getHeight(),
             'width' => $this->getWidth(),
             'color' => $this->getColor(),
-            'shape' => $this->getShape()
+            'shape' => $this->getShape(),
         ];
     }
 
@@ -107,11 +107,13 @@ class ShortcutPreview extends ShortcutAbstract
 
     /**
      * @param string $label
+     *
      * @return ShortcutPreview
      */
     public function setLabel($label)
     {
         $this->label = (string) $label;
+
         return $this;
     }
 
@@ -125,11 +127,13 @@ class ShortcutPreview extends ShortcutAbstract
 
     /**
      * @param int $height
+     *
      * @return ShortcutPreview
      */
     public function setHeight($height)
     {
         $this->height = (int) $height;
+
         return $this;
     }
 
@@ -143,11 +147,13 @@ class ShortcutPreview extends ShortcutAbstract
 
     /**
      * @param int $width
+     *
      * @return ShortcutPreview
      */
     public function setWidth($width)
     {
         $this->width = $width;
+
         return $this;
     }
 
@@ -161,11 +167,13 @@ class ShortcutPreview extends ShortcutAbstract
 
     /**
      * @param string $color
+     *
      * @return ShortcutPreview
      */
     public function setColor($color)
     {
         $this->color = $color;
+
         return $this;
     }
 
@@ -179,11 +187,13 @@ class ShortcutPreview extends ShortcutAbstract
 
     /**
      * @param string $shape
+     *
      * @return ShortcutPreview
      */
     public function setShape($shape)
     {
         $this->shape = $shape;
+
         return $this;
     }
 }

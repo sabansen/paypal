@@ -32,11 +32,10 @@ use PaypalAddons\classes\API\Response\Response;
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
 use PayPalCheckoutSdk\Orders\OrdersPatchRequest;
 use PayPalHttp\HttpException;
-use Symfony\Component\VarDumper\VarDumper;
 
 class PaypalOrderPatchRequest extends PaypalOrderCreateRequest
 {
-    /** @var string*/
+    /** @var string */
     protected $idPayment;
 
     public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method, $idPayment)
@@ -91,8 +90,8 @@ class PaypalOrderPatchRequest extends PaypalOrderCreateRequest
             'value' => [
                 'amount' => $this->getAmount($currency),
                 'items' => $items,
-                'custom_id' => $this->getCustomId()
-            ]
+                'custom_id' => $this->getCustomId(),
+            ],
         ];
 
         if (false === empty($shippingInfo)) {

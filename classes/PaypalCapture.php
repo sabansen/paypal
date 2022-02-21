@@ -32,7 +32,7 @@ class PaypalCapture extends ObjectModel
     /** @var string Capture ID */
     public $id_capture;
 
-    /** @var integer PaypalOrder ID */
+    /** @var int PaypalOrder ID */
     public $id_paypal_order;
 
     /** @var float Captured amount */
@@ -50,24 +50,26 @@ class PaypalCapture extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'paypal_capture',
         'primary' => 'id_paypal_capture',
         'multilang' => false,
-        'fields' => array(
-            'id_capture' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
-            'id_paypal_order' => array('type' => self::TYPE_INT),
-            'capture_amount' => array('type' => self::TYPE_FLOAT, 'size' => 10, 'scale' => 2),
-            'result' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
-            'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
-        ),
-        'collation' => 'utf8_general_ci'
-    );
+        'fields' => [
+            'id_capture' => ['type' => self::TYPE_STRING, 'validate' => 'isString'],
+            'id_paypal_order' => ['type' => self::TYPE_INT],
+            'capture_amount' => ['type' => self::TYPE_FLOAT, 'size' => 10, 'scale' => 2],
+            'result' => ['type' => self::TYPE_STRING, 'validate' => 'isString'],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDateFormat'],
+            'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDateFormat'],
+        ],
+        'collation' => 'utf8_general_ci',
+    ];
 
     /**
      * Load Capture by PaypalOrder
-     * @param integer $orderPayPalId PaypalOrder ID
+     *
+     * @param int $orderPayPalId PaypalOrder ID
+     *
      * @return object PaypalCapture
      */
     public static function loadByOrderPayPalId($orderPayPalId)
@@ -75,7 +77,7 @@ class PaypalCapture extends ObjectModel
         $sql = new DbQuery();
         $sql->select('id_paypal_capture');
         $sql->from('paypal_capture');
-        $sql->where('id_paypal_order = '.(int)$orderPayPalId);
+        $sql->where('id_paypal_order = ' . (int) $orderPayPalId);
         $id_paypal_capture = Db::getInstance()->getValue($sql);
 
         return new self($id_paypal_capture);
@@ -83,7 +85,9 @@ class PaypalCapture extends ObjectModel
 
     /**
      * Get all datas from PaypalOrder and PaypalCapture
-     * @param integer $id_order PrestaShop order ID
+     *
+     * @param int $id_order PrestaShop order ID
+     *
      * @return array PaypalCapture
      */
     public static function getByOrderId($id_order)
@@ -92,33 +96,34 @@ class PaypalCapture extends ObjectModel
         $sql->select('*');
         $sql->from('paypal_order', 'po');
         $sql->innerJoin('paypal_capture', 'pc', 'po.`id_paypal_order` = pc.`id_paypal_order`');
-        $sql->where('po.id_order = '.(int)$id_order);
+        $sql->where('po.id_order = ' . (int) $id_order);
         $row = Db::getInstance()->getRow($sql);
 
         if (is_array($row)) {
             return $row;
         } else {
-            return array();
+            return [];
         }
     }
 
     /**
      * Update PaypalCapture
+     *
      * @param string $transaction_id New transaction ID that correspond to capture
      * @param float $amount Captured amount
      * @param string $status new payment status
-     * @param integer $id_paypal_order PaypalOrder ID
+     * @param int $id_paypal_order PaypalOrder ID
      */
     public static function updateCapture($transaction_id, $amount, $status, $id_paypal_order)
     {
         Db::getInstance()->update(
             'paypal_capture',
-            array(
+            [
                 'id_capture' => pSQL($transaction_id),
-                'capture_amount' => (float)$amount,
+                'capture_amount' => (float) $amount,
                 'result' => pSQL($status),
-            ),
-            'id_paypal_order = '.(int)$id_paypal_order
+            ],
+            'id_paypal_order = ' . (int) $id_paypal_order
         );
     }
 }

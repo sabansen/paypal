@@ -23,16 +23,13 @@
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
-
 require_once _PS_MODULE_DIR_ . 'paypal/vendor/autoload.php';
 
-use PaypalAddons\classes\API\Onboarding\PaypalGetAuthToken;
-use PaypalAddons\classes\Webhook\WebhookOption;
-use PaypalPPBTlib\Install\ModuleInstaller;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use PaypalAddons\classes\AdminPayPalController;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\AdminPayPalController;
+use PaypalAddons\classes\API\Onboarding\PaypalGetAuthToken;
 use PaypalAddons\classes\API\Onboarding\PaypalGetCredentials;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AdminPayPalSetupController extends AdminPayPalController
 {
@@ -41,7 +38,7 @@ class AdminPayPalSetupController extends AdminPayPalController
     public function __construct()
     {
         parent::__construct();
-        $this->parametres = array(
+        $this->parametres = [
             'paypal_api_intent',
             'paypal_sandbox',
             'paypal_ec_secret_sandbox',
@@ -55,8 +52,8 @@ class AdminPayPalSetupController extends AdminPayPalController
             'paypal_mb_sandbox_clientid',
             'paypal_mb_live_clientid',
             'paypal_mb_sandbox_secret',
-            'paypal_mb_live_secret'
-        );
+            'paypal_mb_live_secret',
+        ];
     }
 
     public function init()
@@ -66,7 +63,6 @@ class AdminPayPalSetupController extends AdminPayPalController
         if (Tools::getValue('useWithoutBraintree')) {
             Configuration::updateValue('PAYPAL_USE_WITHOUT_BRAINTREE', 1);
         }
-
 
         // Don't show somes tabs if a module is not configured
         $method = AbstractMethodPaypal::load();
@@ -90,6 +86,7 @@ class AdminPayPalSetupController extends AdminPayPalController
         if ($this->module->showWarningForUserBraintree()) {
             $this->content = $this->context->smarty->fetch($this->getTemplatePath() . '_partials/messages/forBraintreeUsers.tpl');
             $this->context->smarty->assign('content', $this->content);
+
             return;
         }
 
@@ -97,16 +94,16 @@ class AdminPayPalSetupController extends AdminPayPalController
             $this->warnings[] = $this->context->smarty->fetch($this->getTemplatePath() . '_partials/messages/forPayPalPlusUsers.tpl');
         }
 
-        $countryDefault = new Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
-        $tpl_vars = array(
-            'country_iso' => $countryDefault->iso_code
-        );
+        $countryDefault = new Country((int) \Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
+        $tpl_vars = [
+            'country_iso' => $countryDefault->iso_code,
+        ];
         $this->initAccountSettingsBlock();
         $formAccountSettings = $this->renderForm();
         $this->clearFieldsForm();
         $tpl_vars['formAccountSettings'] = $formAccountSettings;
 
-        if (in_array($this->method, array('EC', 'MB'))) {
+        if (in_array($this->method, ['EC', 'MB'])) {
             $this->initPaymentSettingsBlock();
             $formPaymentSettings = $this->renderForm();
             $this->clearFieldsForm();
@@ -132,31 +129,31 @@ class AdminPayPalSetupController extends AdminPayPalController
 
     public function initAccountSettingsBlock()
     {
-        $this->fields_form['form']['form'] = array(
-            'legend' => array(
+        $this->fields_form['form']['form'] = [
+            'legend' => [
                 'title' => $this->l('Account settings'),
                 'icon' => 'icon-cogs',
-            ),
-            'input' => array(
-                array(
+            ],
+            'input' => [
+                [
                     'type' => 'html',
                     'html_content' => $this->getHtmlBlockAccountSetting(),
                     'name' => '',
                     'col' => 12,
                     'label' => '',
-                )
-            ),
-            'id_form' => 'pp_config_account'
-        );
+                ],
+            ],
+            'id_form' => 'pp_config_account',
+        ];
 
-        $countryDefault = new Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
+        $countryDefault = new Country((int) \Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
 
-        if ($this->method == 'MB' || in_array($countryDefault->iso_code, array('IN', 'JP'))) {
-            $this->fields_form['form']['form']['submit'] = array(
+        if ($this->method == 'MB' || in_array($countryDefault->iso_code, ['IN', 'JP'])) {
+            $this->fields_form['form']['form']['submit'] = [
                 'title' => $this->l('Save'),
                 'class' => 'btn btn-default pull-right button',
-                'name' => 'saveMbCredentialsForm'
-            );
+                'name' => 'saveMbCredentialsForm',
+            ];
         }
     }
 
@@ -167,41 +164,42 @@ class AdminPayPalSetupController extends AdminPayPalController
         $tpl_vars['method'] = $this->method;
         $this->context->smarty->assign($tpl_vars);
         $html_content = $this->context->smarty->fetch($this->getTemplatePath() . '_partials/accountSettingsBlock.tpl');
+
         return $html_content;
     }
 
     public function initPaymentSettingsBlock()
     {
-        $inputGroup = array();
+        $inputGroup = [];
 
         if ($this->isPaymentModeSetted() == false) {
-            $inputGroup[] = array(
+            $inputGroup[] = [
                 'type' => 'html',
                 'html_content' => $this->module->displayWarning($this->l('An error occurred while saving "Payment action" configuration. Please save this configuration again for avoiding any payment errors.')),
                 'name' => '',
                 'col' => 12,
                 'label' => '',
-            );
+            ];
         }
 
-        $paymentModeInput = array(
+        $paymentModeInput = [
             'type' => 'select',
             'name' => 'paypal_api_intent',
-            'options' => array(
-                'query' => array(
-                    array(
+            'options' => [
+                'query' => [
+                    [
                         'id' => 'sale',
-                        'name' => $this->l('Sale')
-                    ),
-                    array(
+                        'name' => $this->l('Sale'),
+                    ],
+                    [
                         'id' => 'authorize',
-                        'name' => $this->l('Authorize')
-                    )
-                ),
+                        'name' => $this->l('Authorize'),
+                    ],
+                ],
                 'id' => 'id',
-                'name' => 'name'
-            ),
-        );
+                'name' => 'name',
+            ],
+        ];
 
         if ($this->method == 'MB') {
             $paymentModeInput['label'] = $this->l('Payment action (for PayPal Express Checkout only)');
@@ -211,77 +209,76 @@ class AdminPayPalSetupController extends AdminPayPalController
         }
 
         $inputGroup[] = $paymentModeInput;
-        $inputGroup[] = array(
+        $inputGroup[] = [
             'type' => 'html',
             'name' => '',
             'col' => 12,
             'label' => '',
-            'html_content' => $this->module->displayInformation($this->l('We recommend Authorize process only for lean manufacturers and craft products sellers.'))
-        );
+            'html_content' => $this->module->displayInformation($this->l('We recommend Authorize process only for lean manufacturers and craft products sellers.')),
+        ];
 
-
-        $this->fields_form['form']['form'] = array(
-            'legend' => array(
+        $this->fields_form['form']['form'] = [
+            'legend' => [
                 'title' => $this->l('Payment settings'),
                 'icon' => 'icon-cogs',
-            ),
+            ],
             'input' => $inputGroup,
-            'submit' => array(
+            'submit' => [
                 'title' => $this->l('Save'),
                 'class' => 'btn btn-default pull-right button',
-            ),
-            'id_form' => 'pp_config_payment'
-        );
+            ],
+            'id_form' => 'pp_config_payment',
+        ];
 
-        $values = array(
+        $values = [
             'paypal_api_intent' => Configuration::get('PAYPAL_API_INTENT'),
-        );
+        ];
         $this->tpl_form_vars = array_merge($this->tpl_form_vars, $values);
     }
 
     public function initEnvironmentSettings()
     {
-        $this->context->smarty->assign('sandbox', (int)\Configuration::get('PAYPAL_SANDBOX'));
+        $this->context->smarty->assign('sandbox', (int) \Configuration::get('PAYPAL_SANDBOX'));
         $html_content = $this->context->smarty->fetch($this->getTemplatePath() . '_partials/switchSandboxBlock.tpl');
-        $this->fields_form['form']['form'] = array(
-            'legend' => array(
+        $this->fields_form['form']['form'] = [
+            'legend' => [
                 'title' => $this->l('Environment Settings'),
                 'icon' => 'icon-cogs',
-            ),
-            'input' => array(
-                array(
+            ],
+            'input' => [
+                [
                     'type' => 'html',
                     'html_content' => $html_content,
                     'name' => '',
                     'col' => 12,
                     'label' => '',
-                ),
-                array(
+                ],
+                [
                     'type' => 'hidden',
                     'name' => 'paypal_sandbox',
                     'col' => 12,
                     'label' => '',
-                )
-                ),
-                'id_form' => 'pp_config_environment'
-        );
-        $values = array(
-            'paypal_sandbox' => !(int)Configuration::get('PAYPAL_SANDBOX')
-        );
+                ],
+                ],
+                'id_form' => 'pp_config_environment',
+        ];
+        $values = [
+            'paypal_sandbox' => !(int) Configuration::get('PAYPAL_SANDBOX'),
+        ];
         $this->tpl_form_vars = array_merge($this->tpl_form_vars, $values);
     }
 
     public function initStatusBlock()
     {
-        $countryDefault = new \Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
+        $countryDefault = new \Country((int) \Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
         $method = AbstractMethodPaypal::load($this->method);
 
-        $tpl_vars = array(
+        $tpl_vars = [
             'merchantCountry' => $countryDefault->name,
             'tlsVersion' => $this->_checkTLSVersion(),
             'accountConfigured' => $method == null ? false : $method->isConfigured(),
-            'sslActivated' => $this->module->isSslActive()
-        );
+            'sslActivated' => $this->module->isSslActive(),
+        ];
 
         if ($this->getWebhookOption()->isEnable()) {
             $webhookCheck = $this->_checkWebhook();
@@ -292,30 +289,30 @@ class AdminPayPalSetupController extends AdminPayPalController
 
         $this->context->smarty->assign($tpl_vars);
         $html_content = $this->context->smarty->fetch($this->getTemplatePath() . '_partials/statusBlock.tpl');
-        $this->fields_form[]['form'] = array(
-            'legend' => array(
+        $this->fields_form[]['form'] = [
+            'legend' => [
                 'title' => $this->l('Status'),
                 'icon' => 'icon-cogs',
-            ),
-            'input' => array(
-                array(
+            ],
+            'input' => [
+                [
                     'type' => 'html',
                     'html_content' => $html_content,
                     'name' => '',
                     'col' => 12,
                     'label' => '',
-                )
-            )
-        );
+                ],
+            ],
+        ];
     }
 
     public function displayAjaxLogoutAccount()
     {
         $response = new JsonResponse();
-        $content = array(
+        $content = [
             'status' => false,
-            'redirectUrl' => ''
-        );
+            'redirectUrl' => '',
+        ];
         if (Tools::getValue('token') == Tools::getAdminTokenLite($this->controller_name)) {
             $method = AbstractMethodPaypal::load($this->method);
             $method->logOut();
@@ -324,6 +321,7 @@ class AdminPayPalSetupController extends AdminPayPalController
         }
 
         $response->setContent(\Tools::jsonEncode($content));
+
         return $response->send();
     }
 
@@ -331,6 +329,7 @@ class AdminPayPalSetupController extends AdminPayPalController
     {
         $this->initStatusBlock();
         $response = new JsonResponse($this->renderForm());
+
         return $response->send();
     }
 
@@ -348,13 +347,12 @@ class AdminPayPalSetupController extends AdminPayPalController
         // We need use some functionality of EC method, so need also to configure MethodEC
         if (Tools::isSubmit('saveMbCredentialsForm')) {
             $methodEC = AbstractMethodPaypal::load('EC');
-            $methodEC->setConfig(array(
+            $methodEC->setConfig([
                 'clientId' => $method->getClientId(),
-                'secret' => $method->getSecret()
-            ));
+                'secret' => $method->getSecret(),
+            ]);
             $methodEC->checkCredentials();
         }
-
 
         return $result;
     }
@@ -370,6 +368,7 @@ class AdminPayPalSetupController extends AdminPayPalController
 
         if ($result->isSuccess() === false) {
             $this->log($result->getError()->getMessage());
+
             return;
         }
 
@@ -380,7 +379,7 @@ class AdminPayPalSetupController extends AdminPayPalController
         if ($result->isSuccess()) {
             $params = [
                 'clientId' => $result->getClientId(),
-                'secret' => $result->getSecret()
+                'secret' => $result->getSecret(),
             ];
             $method->setConfig($params);
         } else {
@@ -390,12 +389,12 @@ class AdminPayPalSetupController extends AdminPayPalController
 
     protected function isPaymentModeSetted()
     {
-        return in_array(Configuration::get('PAYPAL_API_INTENT'), array('sale', 'authorize'));
+        return in_array(Configuration::get('PAYPAL_API_INTENT'), ['sale', 'authorize']);
     }
 
     protected function isShowInstallmentPopup()
     {
-        $countryDefault = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT', null, null, $this->context->shop->id));
+        $countryDefault = new Country((int) Configuration::get('PS_COUNTRY_DEFAULT', null, null, $this->context->shop->id));
 
         if (Validate::isLoadedObject($countryDefault) === false) {
             return false;
@@ -405,11 +404,12 @@ class AdminPayPalSetupController extends AdminPayPalController
             return false;
         }
 
-        if (false == (int)Configuration::get('PAYPAL_SHOW_INSTALLMENT_POPUP', null, null, $this->context->shop->id)) {
+        if (false == (int) Configuration::get('PAYPAL_SHOW_INSTALLMENT_POPUP', null, null, $this->context->shop->id)) {
             return false;
         }
 
         Configuration::updateValue('PAYPAL_SHOW_INSTALLMENT_POPUP', 0, false, null, $this->context->shop->id);
+
         return true;
     }
 }

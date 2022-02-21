@@ -23,9 +23,8 @@
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
-
 global $_MODULE;
-$_MODULE = array();
+$_MODULE = [];
 $_MODULE['<{paypal}prestashop>paypal_ad69e733ebae8d264bccaa38d68830e8'] = 'PayPal';
 $_MODULE['<{paypal}prestashop>paypal_3ba4f49f76f54e9305261bc742a24d9b'] = 'Beneficie da plataforma PayPal Complete Payments e expanda a sua atividade online em dispositivos móveis e a nível internacional. Aceite cartões de crédito, cartões de débito e pagamentos com PayPal.';
 $_MODULE['<{paypal}prestashop>paypal_69a1a3ad8dd5da6db3c4da838a0cf9c7'] = 'Quer mesmo eliminar os seus detalhes?';
@@ -127,7 +126,7 @@ $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_6d77d17bd0f
 $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_935b666b914a3da3e0b1be2758b82a72'] = 'Deixar em branco para usar a sua configuração do Nome da loja na sua conta PayPal';
 $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_10a0bd9b814341d997541f060a338975'] = 'Uma etiqueta que substitui o nome da empresa na conta PayPal nas páginas do PayPal. Se estiver definido um logótipo, a marca não será apresentada.';
 $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_67b7eb3c13f50cd7dd2ac9b3dfd9701b'] = 'Logótipo da loja mostrado no canto superior direito no checkout com PayPal';
-$_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_a48a9c179058e00f4c4f9c6d442c2e47'] = 'A imagem deve estar armazenada num servidor seguro (https). Use um formato de gráfico válido, como .gif, .jpg ou .png. Limite a imagem a 190 pixels de largura por 60 pixels de altura. O PayPal corta as imagens maiores. Este logótipo substituirá a marca na parte superior da área de análise do carrinho se a experiência de checkout com PayPal estiver definida como REDIRECIONAMENTO.';
+$_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_a48a9c179058e00f4c4f9c6d442c2e47'] = 'A imagem deve estar armazenada num servidor seguro (https). Use um formato de gráfico válido, como .gif, .jpg ou .png. Limite a imagem a 190 pixels de largura por 60 pixels de altura. O PayPal corta as imagens maiores. Este logótipo substituirá a marca na parte superior da área de análise do carrinho se a experiência de checkout com PayPal estiver definida como REDIRECIONAMENTO.';
 $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_6ee1cc1d3eaf785b045b990369403ecb'] = 'Aceite pagamentos via Cartão de Crédito';
 $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_b8b3fb00541f20a0357f8a1588a21455'] = 'Os seus clientes podem pagar utilizando o seu Cartão de Crédito';
 $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_374e1c9cbba2f3e68214dfa554cfdc8c'] = 'Habilitar a funcionalidade \"Lembrar os meus cartões\"';
@@ -151,7 +150,7 @@ $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_06a4ae63012
 $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_afe70387e87a03e074c3181a5b7ecb36'] = 'Status padrão: Cancelado';
 $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_1c1c788e139b8d1574de72746183ed0f'] = 'Modo avançado';
 $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_f6d4c204b4375f370ae346ac19af224a'] = 'Use um formato de gráfico válido, como .gif, .jpg ou .png.';
-$_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_30e94012b686df7279f6a1db3c8a0684'] = 'Limite a imagem a 190 pixels de largura por 60 pixels de altura.';
+$_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_30e94012b686df7279f6a1db3c8a0684'] = 'Limite a imagem a 190 pixels de largura por 60 pixels de altura.';
 $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_06b778accab7c14a499bc6e7a68138ec'] = 'Ocorreu um erro ao copiar a imagem.';
 $_MODULE['<{paypal}prestashop>adminpaypalhelpcontroller_09a74d0b7e593735e8f2ed964e25bc52'] = 'Hooks registrados com sucesso';
 $_MODULE['<{paypal}prestashop>adminpaypalsetupcontroller_8af703b2bf59cc9742883ae7f4cb0e5b'] = 'Definições da conta';
@@ -256,8 +255,8 @@ $_MODULE['<{paypal}prestashop>block_info_0f1f01f9c2def9ea0e53bd7cc51934cb'] = 'S
 $_MODULE['<{paypal}prestashop>block_info_e287d4ed564774c343fdaf3bd1494ad6'] = 'Modo de arredondamento: Arredondar por excesso (recomendado)';
 $_MODULE['<{paypal}prestashop>block_info_27a3066cd34cd1e683f1c2d04483163a'] = 'Tipo de arredondamento: Arredondar em cada artigo';
 $_MODULE['<{paypal}prestashop>headerlogo_e269d95cbf9105896810d64a7307acdd'] = 'Ativar módulo PayPal para começar a vender a mais de 300 milhões de clientes do PayPal em todo o mundo';
-$_MODULE['<{paypal}prestashop>headerlogo_c3d2b0bfba763295a377b71aae0841f1'] = 'Ativar em 3 passos simples';
-$_MODULE['<{paypal}prestashop>headerlogo_536b624906878dc3954749a6cef3b0fa'] = 'Ativar em 2 passos simples';
+$_MODULE['<{paypal}prestashop>headerlogo_c3d2b0bfba763295a377b71aae0841f1'] = 'Ativar em 3 passos simples';
+$_MODULE['<{paypal}prestashop>headerlogo_536b624906878dc3954749a6cef3b0fa'] = 'Ativar em 2 passos simples';
 $_MODULE['<{paypal}prestashop>headerlogo_1193eddeac9b924352d0914cf8361758'] = 'Ligar à sua conta PayPal existente (abaixo) ou criar nova conta';
 $_MODULE['<{paypal}prestashop>headerlogo_dfe4283340c6369e764585c747cbd74a'] = 'Ajustar definição do PayPal para capturar pagamentos de imediato (Venda) ou depois de confirmar o pedido (Autorização)';
 $_MODULE['<{paypal}prestashop>headerlogo_ab527c36284b90820e085125a7a27c96'] = 'Certificar-se de que o módulo está definido para o modo de Produção';

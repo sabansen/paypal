@@ -27,7 +27,6 @@
 namespace PaypalAddons\classes\InstallmentBanner\BNPL;
 
 use Configuration;
-use Symfony\Component\VarDumper\VarDumper;
 use Tools;
 
 class BNPLProduct extends BNPLAbstract
@@ -49,18 +48,18 @@ class BNPLProduct extends BNPLAbstract
 
     protected function getTplVars()
     {
-        $environment = ($this->method->isSandbox() ? 'sandbox': 'live');
+        $environment = ($this->method->isSandbox() ? 'sandbox' : 'live');
         $shop_url = $this->context->link->getBaseLink($this->context->shop->id, true);
 
-        $return = array(
+        $return = [
             'shop_url' => $shop_url,
             'PayPal_payment_type' => $this->getMethodType(),
-            'action_url' => $this->context->link->getModuleLink($this->module->name, 'ScInit', array(), true),
+            'action_url' => $this->context->link->getModuleLink($this->module->name, 'ScInit', [], true),
             'ec_sc_in_context' => Configuration::get('PAYPAL_EXPRESS_CHECKOUT_IN_CONTEXT'),
-            'merchant_id' => Configuration::get('PAYPAL_MERCHANT_ID_'.Tools::strtoupper($environment)),
+            'merchant_id' => Configuration::get('PAYPAL_MERCHANT_ID_' . Tools::strtoupper($environment)),
             'environment' => $environment,
-            'paypalIdProduct' => $this->idProduct
-        );
+            'paypalIdProduct' => $this->idProduct,
+        ];
 
         return $return;
     }
