@@ -27,6 +27,7 @@
 namespace PaypalAddons\classes\Venmo;
 
 use Configuration;
+use Context;
 use Country;
 use PaypalAddons\classes\Constants\PaypalConfigurations;
 use Tools;
@@ -43,5 +44,14 @@ class VenmoFunctionality
     public function isEnabled()
     {
         return (int) Configuration::get(PaypalConfigurations::VENMO_OPTION);
+    }
+
+    public function isEligibleContext(Context $context)
+    {
+        if (empty($context->currency->iso_code)) {
+            return false;
+        }
+
+        return Tools::strtolower($context->currency->iso_code) == 'usd';
     }
 }

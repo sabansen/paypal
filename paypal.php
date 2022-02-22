@@ -829,7 +829,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 }
             }
 
-            if ($venmoFunctionality->isAvailable() && $venmoFunctionality->isEnabled()) {
+            if ($venmoFunctionality->isAvailable() && $venmoFunctionality->isEnabled() && $venmoFunctionality->isEligibleContext($this->context)) {
                 $payments_options[] = $this->buildVenmoPaymentOption($params);
             }
         }
