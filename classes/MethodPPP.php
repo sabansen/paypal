@@ -26,7 +26,6 @@
 
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\PaypalApiManager;
-use PaypalAddons\classes\API\PaypalApiManager;
 use PaypalAddons\classes\PUI\DataUserForm;
 use PaypalAddons\classes\PuiMethodInterface;
 

@@ -27,13 +27,10 @@ require_once _PS_MODULE_DIR_ . 'paypal/vendor/autoload.php';
 
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\AdminPayPalController;
-use PaypalAddons\classes\AdminPayPalController;
-use PaypalAddons\classes\API\Onboarding\PaypalGetAuthToken;
 use PaypalAddons\classes\API\Onboarding\PaypalGetAuthToken;
 use PaypalAddons\classes\API\Onboarding\PaypalGetCredentials;
 use PaypalAddons\classes\PUI\SignUpLinkButton;
 use PaypalAddons\classes\PuiMethodInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AdminPayPalSetupController extends AdminPayPalController
