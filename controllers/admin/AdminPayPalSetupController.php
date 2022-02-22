@@ -28,6 +28,7 @@ require_once _PS_MODULE_DIR_ . 'paypal/vendor/autoload.php';
 
 use PaypalAddons\classes\API\Onboarding\PaypalGetAuthToken;
 use PaypalAddons\classes\PUI\SignUpLinkButton;
+use PaypalAddons\classes\PuiMethodInterface;
 use PaypalAddons\classes\Webhook\WebhookOption;
 use PaypalPPBTlib\Install\ModuleInstaller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -166,7 +167,11 @@ class AdminPayPalSetupController extends AdminPayPalController
         $method = AbstractMethodPaypal::load($this->method);
         $tpl_vars = $method->getTplVars();
         $tpl_vars['method'] = $this->method;
-        $tpl_vars['SignUpLinkButton'] = $this->initSignUpLinkButton();
+
+        if ($method instanceof PuiMethodInterface) {
+            $tpl_vars['SignUpLinkButton'] = $this->initSignUpLinkButton($method);
+        }
+
         $this->context->smarty->assign($tpl_vars);
         $html_content = $this->context->smarty->fetch($this->getTemplatePath() . '_partials/accountSettingsBlock.tpl');
         return $html_content;
@@ -415,8 +420,8 @@ class AdminPayPalSetupController extends AdminPayPalController
         return true;
     }
 
-    protected function initSignUpLinkButton()
+    protected function initSignUpLinkButton(PuiMethodInterface $method)
     {
-        return new SignUpLinkButton(AbstractMethodPaypal::load('PPP'));
+        return new SignUpLinkButton($method);
     }
 }
