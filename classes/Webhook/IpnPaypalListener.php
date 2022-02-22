@@ -32,15 +32,16 @@ class IpnPaypalListener
 {
     /**
      * @param bool $sandbox
+     *
      * @return string
      */
     public function get($sandbox = null)
     {
         if ($sandbox === null) {
-            $sandbox = (int)Configuration::get('PAYPAL_SANDBOX');
+            $sandbox = (int) Configuration::get('PAYPAL_SANDBOX');
         }
 
-        if ((int)$sandbox) {
+        if ((int) $sandbox) {
             return 'https://ipnpb.sandbox.paypal.com/cgi-bin/webscr';
         } else {
             return 'https://ipnpb.paypal.com/cgi-bin/webscr';

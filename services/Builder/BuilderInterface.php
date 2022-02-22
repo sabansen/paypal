@@ -26,7 +26,6 @@
 
 namespace PaypalAddons\services\Builder;
 
-
 interface BuilderInterface
 {
     public function build();

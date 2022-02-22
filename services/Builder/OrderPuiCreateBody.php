@@ -28,15 +28,9 @@ namespace PaypalAddons\services\Builder;
 
 use Address;
 use Configuration;
-use Context;
 use Country;
-use Customer;
-use Module;
-use Paypal;
-use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\Constants\PaypalConfigurations;
 use PaypalAddons\classes\PUI\DataUserForm;
-use PaypalAddons\services\FormatterPaypal;
 
 class OrderPuiCreateBody extends OrderCreateBody
 {
@@ -51,20 +45,20 @@ class OrderPuiCreateBody extends OrderCreateBody
             'pay_upon_invoice' => [
                 'name' => [
                     'given_name' => $dataUser->getFirstName(),
-                    'surname' => $dataUser->getLastName()
+                    'surname' => $dataUser->getLastName(),
                 ],
                 'birth_date' => $dataUser->getBirth(),
                 'email' => $dataUser->getEmail(),
                 'billing_address' => $this->getAddress($billingAddress),
                 'phone' => [
                     'national_number' => $dataUser->getPhone(),
-                    'country_code' => $country->call_prefix
+                    'country_code' => $country->call_prefix,
                 ],
                 'experience_context' => [
                     'locale' => 'en-DE',
-                    'customer_service_instructions' => $this->getCustomerServiceInstructions()
-                ]
-            ]
+                    'customer_service_instructions' => $this->getCustomerServiceInstructions(),
+                ],
+            ],
         ];
 
         return $body;

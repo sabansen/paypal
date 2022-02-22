@@ -27,7 +27,6 @@
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\PUI\DataUserForm;
 use PaypalAddons\services\PaypalContext;
-use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * Prepare EC payment
@@ -43,6 +42,7 @@ class PaypalPuiInitModuleFrontController extends PaypalAbstarctModuleFrontContro
         PaypalContext::getContext()->set('client-session-id', Tools::getValue('sessionId'));
         $this->method = AbstractMethodPaypal::load('PPP');
     }
+
     /**
      * @see FrontController::postProcess()
      */

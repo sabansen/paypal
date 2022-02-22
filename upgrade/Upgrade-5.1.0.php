@@ -23,7 +23,6 @@
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -34,22 +33,23 @@ use PaypalPPBTlib\Install\ModuleInstaller;
 
 /**
  * @param $module PayPal
+ *
  * @return bool
  */
 function upgrade_module_5_1_0($module)
 {
-    $configs = array(
+    $configs = [
         'PAYPAL_CUSTOMIZE_ORDER_STATUS' => 0,
-        'PAYPAL_OS_REFUNDED' => (int)Configuration::get('PS_OS_REFUND'),
-        'PAYPAL_OS_CANCELED' => (int)Configuration::get('PS_OS_CANCELED'),
-        'PAYPAL_OS_ACCEPTED' => (int)Configuration::get('PS_OS_PAYMENT'),
-        'PAYPAL_OS_CAPTURE_CANCELED' => (int)Configuration::get('PS_OS_CANCELED'),
-        'PAYPAL_OS_ACCEPTED_TWO' => (int)Configuration::get('PS_OS_PAYMENT'),
-        'PAYPAL_OS_WAITING_VALIDATION' => (int)Configuration::get('PAYPAL_OS_WAITING'),
-        'PAYPAL_OS_PROCESSING' => (int)Configuration::get('PAYPAL_OS_WAITING'),
-        'PAYPAL_OS_VALIDATION_ERROR' => (int)Configuration::get('PS_OS_ERROR'),
-        'PAYPAL_OS_REFUNDED_PAYPAL' => (int)Configuration::get('PS_OS_REFUND')
-    );
+        'PAYPAL_OS_REFUNDED' => (int) Configuration::get('PS_OS_REFUND'),
+        'PAYPAL_OS_CANCELED' => (int) Configuration::get('PS_OS_CANCELED'),
+        'PAYPAL_OS_ACCEPTED' => (int) Configuration::get('PS_OS_PAYMENT'),
+        'PAYPAL_OS_CAPTURE_CANCELED' => (int) Configuration::get('PS_OS_CANCELED'),
+        'PAYPAL_OS_ACCEPTED_TWO' => (int) Configuration::get('PS_OS_PAYMENT'),
+        'PAYPAL_OS_WAITING_VALIDATION' => (int) Configuration::get('PAYPAL_OS_WAITING'),
+        'PAYPAL_OS_PROCESSING' => (int) Configuration::get('PAYPAL_OS_WAITING'),
+        'PAYPAL_OS_VALIDATION_ERROR' => (int) Configuration::get('PS_OS_ERROR'),
+        'PAYPAL_OS_REFUNDED_PAYPAL' => (int) Configuration::get('PS_OS_REFUND'),
+    ];
     $shops = Shop::getShops();
     $tab = Tab::getInstanceFromClassName('AdminParentPaypalConfiguration');
     $return = true;
@@ -66,7 +66,7 @@ function upgrade_module_5_1_0($module)
     foreach ($configs as $config => $value) {
         if (Shop::isFeatureActive()) {
             foreach ($shops as $shop) {
-                $return &= Configuration::updateValue($config, $value, false, null, (int)$shop['id_shop']);
+                $return &= Configuration::updateValue($config, $value, false, null, (int) $shop['id_shop']);
             }
         } else {
             $return &= Configuration::updateValue($config, $value);

@@ -26,12 +26,6 @@
 
 namespace PaypalAddons\services\Builder;
 
-use Context;
-use Module;
-use Paypal;
-use PaypalAddons\classes\AbstractMethodPaypal;
-use PaypalAddons\services\FormatterPaypal;
-
 class OrderPatchBody extends OrderCreateBody
 {
     public function build()
@@ -49,8 +43,8 @@ class OrderPatchBody extends OrderCreateBody
             'value' => [
                 'amount' => $this->getAmount($currency),
                 'items' => $items,
-                'custom_id' => $this->getCustomId()
-            ]
+                'custom_id' => $this->getCustomId(),
+            ],
         ];
 
         if (false === empty($shippingInfo)) {

@@ -23,13 +23,12 @@
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
-
 require_once _PS_MODULE_DIR_ . 'paypal/vendor/autoload.php';
 
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\AdminPayPalController;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use PaypalAddons\classes\AdminPayPalController;
 
 class AdminPayPalHelpController extends AdminPayPalController
 {
@@ -48,7 +47,7 @@ class AdminPayPalHelpController extends AdminPayPalController
     {
         parent::initContent();
 
-        $countryDefault = new Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
+        $countryDefault = new Country((int) \Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
         $method = AbstractMethodPaypal::load($this->method);
 
         if ($method->isSandbox()) {
@@ -58,11 +57,11 @@ class AdminPayPalHelpController extends AdminPayPalController
         }
 
         $this->context->smarty->assign('settingLink', $settingLink);
-        $tpl_vars = array(
+        $tpl_vars = [
             'psCheckoutBtnText' => $this->getCheckoutBtnText(),
             'showPsCheckout' => in_array($countryDefault->iso_code, $this->module->countriesApiCartUnavailable),
-            'settingLink' => $settingLink
-        );
+            'settingLink' => $settingLink,
+        ];
 
         $this->context->smarty->assign($tpl_vars);
         $this->content = $this->context->smarty->fetch($this->getTemplatePath() . 'help.tpl');
@@ -89,6 +88,7 @@ class AdminPayPalHelpController extends AdminPayPalController
     public function displayAjaxCheckCredentials()
     {
         $response = new JsonResponse($this->_checkRequirements());
+
         return $response->send();
     }
 

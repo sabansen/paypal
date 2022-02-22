@@ -27,14 +27,13 @@
 namespace PaypalAddons\classes\Form\Field;
 
 use Context;
-use PayPalHttp\Serializer\Text;
 
 class InputChain implements FieldInteface
 {
-    /** @var TextInput[]*/
+    /** @var TextInput[] */
     protected $inputs;
 
-    /** @var string*/
+    /** @var string */
     protected $label;
 
     public function __construct($inputs)
@@ -52,6 +51,7 @@ class InputChain implements FieldInteface
 
     /**
      * @param TextInput[] $inputs
+     *
      * @return InputChain
      */
     public function setInputs($inputs)
@@ -71,11 +71,13 @@ class InputChain implements FieldInteface
 
     /**
      * @param TextInput $input
+     *
      * @return InputChain
      */
     public function addInput(TextInput $input)
     {
         $this->inputs[] = $input;
+
         return $this;
     }
 
@@ -97,11 +99,13 @@ class InputChain implements FieldInteface
 
     /**
      * @param string $label
+     *
      * @return InputChain
      */
     public function setLabel($label)
     {
         $this->label = $label;
+
         return $this;
     }
 }

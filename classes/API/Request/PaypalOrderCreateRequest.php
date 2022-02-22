@@ -26,8 +26,6 @@
 
 namespace PaypalAddons\classes\API\Request;
 
-use PaypalAddons\classes\AbstractMethodPaypal;
-use PaypalAddons\classes\API\Request\RequestAbstract;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\ResponseOrderCreate;
 use PaypalAddons\services\Builder\BuilderInterface;
@@ -35,11 +33,10 @@ use PaypalAddons\services\Builder\OrderCreateBody;
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
 use PayPalCheckoutSdk\Orders\OrdersCreateRequest;
 use PayPalHttp\HttpException;
-use Symfony\Component\VarDumper\VarDumper;
 
 class PaypalOrderCreateRequest extends RequestAbstract
 {
-    /** @var BuilderInterface*/
+    /** @var BuilderInterface */
     protected $bodyBuilder;
 
     public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method)
@@ -87,12 +84,14 @@ class PaypalOrderCreateRequest extends RequestAbstract
             $response->setSuccess(false)
                 ->setError($error);
         }
+
         return $response;
     }
 
     /**
      * @param $nameLink string
      * @param $links array
+     *
      * @return string
      */
     protected function getLink($nameLink, $links)

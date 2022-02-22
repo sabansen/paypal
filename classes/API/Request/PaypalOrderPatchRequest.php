@@ -33,11 +33,10 @@ use PaypalAddons\services\Builder\OrderPatchBody;
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
 use PayPalCheckoutSdk\Orders\OrdersPatchRequest;
 use PayPalHttp\HttpException;
-use Symfony\Component\VarDumper\VarDumper;
 
 class PaypalOrderPatchRequest extends PaypalOrderCreateRequest
 {
-    /** @var string*/
+    /** @var string */
     protected $idPayment;
 
     public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method, $idPayment)

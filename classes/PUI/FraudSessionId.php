@@ -34,6 +34,7 @@ class FraudSessionId
 {
     /**
      * @param Customer|null $customer
+     *
      * @return string
      */
     public function buildSessionId($customer = null)
@@ -46,7 +47,8 @@ class FraudSessionId
             return '';
         }
 
-        $key = $customer->email.$customer->id.getmypid();
+        $key = $customer->email . $customer->id . getmypid();
+
         return md5($key);
     }
 }

@@ -26,8 +26,8 @@
 
 namespace PaypalAddons\services;
 
-use PaypalPPBTlib\Extensions\ProcessLogger\Classes\ProcessLoggerObjectModel;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalPPBTlib\Extensions\ProcessLogger\Classes\ProcessLoggerObjectModel;
 
 require_once dirname(__FILE__) . '/../classes/PaypalOrder.php';
 
@@ -35,6 +35,7 @@ class ServicePaypalLog
 {
     /**
      * @param $log ProcessLoggerObjectModel
+     *
      * @return url
      */
     public function getLinkToTransaction($log)
@@ -43,13 +44,14 @@ class ServicePaypalLog
             return '';
         }
 
-        /** @var $paypalOrder \PaypalOrder object*/
+        /** @var $paypalOrder \PaypalOrder object */
         $paypalOrder = $this->getPaypalOrderByLog($log);
 
         if (\Validate::isLoadedObject($paypalOrder) == false || $paypalOrder->method == 'BT') {
             return '';
         }
         $method = AbstractMethodPaypal::load($paypalOrder->method);
+
         return $method->getLinkToTransaction($log);
     }
 

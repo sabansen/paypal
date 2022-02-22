@@ -26,20 +26,18 @@
 
 namespace PaypalAddons\services\Builder;
 
-
+use Context;
+use Country;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\PUI\PsMerchantId;
 use State;
 use Store;
-use Context;
-use Country;
 use Tools;
 use Validate;
-use Symfony\Component\VarDumper\VarDumper;
 
 class PartnerReferralsRequestBody implements BuilderInterface
 {
-    /** @var AbstractMethodPaypal*/
+    /** @var AbstractMethodPaypal */
     protected $method;
 
     protected $context;
@@ -55,11 +53,11 @@ class PartnerReferralsRequestBody implements BuilderInterface
         $body = [
             'business_entity' => [
                 'business_type' => [
-                    'type' => $this->getBusinessType()
-                ]
+                    'type' => $this->getBusinessType(),
+                ],
             ],
             'partner_config_override' => [
-                'return_url' => $this->context->link->getAdminLink('AdminPayPalPUIListener')
+                'return_url' => $this->context->link->getAdminLink('AdminPayPalPUIListener'),
             ],
             'operations' => [
                 [
@@ -71,26 +69,26 @@ class PartnerReferralsRequestBody implements BuilderInterface
                             'third_party_details' => [
                                 'features' => [
                                     'PAYMENT',
-                                    'REFUND'
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
+                                    'REFUND',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
             ],
             'tracking_id' => $this->initPsMerchantId()->get(),
             'products' => [
-                'PAYMENT_METHODS'
+                'PAYMENT_METHODS',
             ],
             'capabilities' => [
-                'PAY_UPON_INVOICE'
+                'PAY_UPON_INVOICE',
             ],
             'legal_consents' => [
                 [
                     'type' => 'SHARE_DATA_CONSENT',
-                    'granted' => true
-                ]
-            ]
+                    'granted' => true,
+                ],
+            ],
         ];
 
         $businessAddress = $this->getBusinessAddresses();
@@ -119,11 +117,11 @@ class PartnerReferralsRequestBody implements BuilderInterface
         foreach ($stores as $store) {
             $country = new Country($store['id_country']);
             $address = [
-                "address_line_1" => $store['address1'],
-                "admin_area_2" => $store['city'],
-                "postal_code" => $store['postcode'],
-                "country_code" => Tools::strtoupper($country->iso_code),
-                "type" => "WORK"
+                'address_line_1' => $store['address1'],
+                'admin_area_2' => $store['city'],
+                'postal_code' => $store['postcode'],
+                'country_code' => Tools::strtoupper($country->iso_code),
+                'type' => 'WORK',
             ];
 
             if ($country->contains_states) {

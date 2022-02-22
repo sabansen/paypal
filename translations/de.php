@@ -23,9 +23,8 @@
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
-
 global $_MODULE;
-$_MODULE = array();
+$_MODULE = [];
 $_MODULE['<{paypal}prestashop>paypal_ad69e733ebae8d264bccaa38d68830e8'] = 'PayPal';
 $_MODULE['<{paypal}prestashop>paypal_3ba4f49f76f54e9305261bc742a24d9b'] = 'Nutzen Sie die gesamte Zahlungsplattform von PayPal und kurbeln Sie Ihr Geschäft an  online, unterwegs und international. Akzeptieren sie Kreditkarten- und PayPal-Zahlungen.';
 $_MODULE['<{paypal}prestashop>paypal_69a1a3ad8dd5da6db3c4da838a0cf9c7'] = 'Wollen Sie Ihre Daten wirklich löschen?';

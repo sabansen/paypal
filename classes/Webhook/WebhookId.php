@@ -31,7 +31,7 @@ use PaypalAddons\classes\AbstractMethodPaypal;
 
 class WebhookId
 {
-    /** @var AbstractMethodPaypal*/
+    /** @var AbstractMethodPaypal */
     protected $method;
 
     public function __construct(AbstractMethodPaypal $method)
@@ -55,11 +55,13 @@ class WebhookId
 
     /**
      * @param string $id
+     *
      * @return self
      */
     public function update($id)
     {
-        Configuration::updateValue($this->getConfName(), (string)$id);
+        Configuration::updateValue($this->getConfName(), (string) $id);
+
         return $this;
     }
 

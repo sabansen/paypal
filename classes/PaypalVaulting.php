@@ -29,10 +29,10 @@
  */
 class PaypalVaulting extends ObjectModel
 {
-    /** @var integer id of the Prestashop Customer object*/
+    /** @var int id of the Prestashop Customer object */
     public $id_customer;
 
-    /** @var string hash of the remembered card ids*/
+    /** @var string hash of the remembered card ids */
     public $rememberedCards;
 
     /** @var bool mode of payment (sandbox or live) */
@@ -50,18 +50,18 @@ class PaypalVaulting extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'paypal_vaulting',
         'primary' => 'id_paypal_vaulting',
         'multilang' => false,
-        'fields' => array(
-            'id_customer' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'rememberedCards' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
-            'profile_key' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
-            'sandbox' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
-            'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
-        ),
-        'collation' => 'utf8_general_ci'
-    );
+        'fields' => [
+            'id_customer' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'rememberedCards' => ['type' => self::TYPE_STRING, 'validate' => 'isString'],
+            'profile_key' => ['type' => self::TYPE_STRING, 'validate' => 'isString'],
+            'sandbox' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDateFormat'],
+            'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDateFormat'],
+        ],
+        'collation' => 'utf8_general_ci',
+    ];
 }

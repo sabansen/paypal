@@ -30,7 +30,7 @@ use Configuration;
 
 class ShortcutSignup extends ShortcutCart
 {
-    /** @var bool*/
+    /** @var bool */
     protected $isWidget;
 
     public function __construct()
@@ -81,11 +81,13 @@ class ShortcutSignup extends ShortcutCart
 
     /**
      * @param bool $isWidget
+     *
      * @return ShortcutSignup
      */
     public function setIsWidget($isWidget)
     {
         $this->isWidget = $isWidget;
+
         return $this;
     }
 }

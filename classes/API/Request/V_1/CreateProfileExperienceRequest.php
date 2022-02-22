@@ -30,12 +30,10 @@ use Configuration;
 use Module;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\ResponseCreateProfileExperience;
-use Symfony\Component\VarDumper\VarDumper;
 use Tools;
 
 class CreateProfileExperienceRequest extends RequestAbstractMB
 {
-
     /**
      * @return ResponseCreateProfileExperience
      */

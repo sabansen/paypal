@@ -32,11 +32,10 @@ use PaypalAddons\classes\API\Response\ResponseAuthorizationVoid;
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
 use PayPalCheckoutSdk\Payments\AuthorizationsVoidRequest;
 use PayPalHttp\HttpException;
-use Symfony\Component\VarDumper\VarDumper;
 
 class PaypalAuthorizationVoidRequest extends RequestAbstract
 {
-    /** @var \PaypalOrder*/
+    /** @var \PaypalOrder */
     protected $paypalOrder;
 
     public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method, \PaypalOrder $paypalOrder)

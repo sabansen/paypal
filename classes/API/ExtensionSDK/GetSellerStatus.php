@@ -26,21 +26,19 @@
 
 namespace PaypalAddons\classes\API\ExtensionSDK;
 
-
 use PayPalHttp\HttpRequest;
 
 class GetSellerStatus extends HttpRequest
 {
-    function __construct($partnerMerchantId, $sellerMerchantId)
+    public function __construct($partnerMerchantId, $sellerMerchantId)
     {
         parent::__construct(
             sprintf(
-                "/v1/customer/partners/%s/merchant-integrations/%s",
-                (string)$partnerMerchantId,
-                (string)$sellerMerchantId
-
+                '/v1/customer/partners/%s/merchant-integrations/%s',
+                (string) $partnerMerchantId,
+                (string) $sellerMerchantId
             ),
-            "GET");
-        $this->headers["Content-Type"] = "application/json";
+            'GET');
+        $this->headers['Content-Type'] = 'application/json';
     }
 }

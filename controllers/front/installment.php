@@ -35,7 +35,7 @@ class PaypalInstallmentModuleFrontController extends ModuleFrontController
     {
         $response = new JsonResponse();
         $response->setData([
-            'cartTotal' => $this->context->cart->getOrderTotal(true)
+            'cartTotal' => $this->context->cart->getOrderTotal(true),
         ]);
 
         return $response->send();

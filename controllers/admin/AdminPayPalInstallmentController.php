@@ -23,21 +23,19 @@
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
-
 require_once _PS_MODULE_DIR_ . 'paypal/vendor/autoload.php';
 
 use PaypalAddons\classes\AdminPayPalController;
-use PaypalAddons\classes\AbstractMethodPaypal;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use PaypalAddons\classes\Form\FormInterface;
 use PaypalAddons\classes\Form\Controller\AdminPayPalInstallment\FormInstallment;
+use PaypalAddons\classes\Form\FormInterface;
 use PaypalAddons\classes\InstallmentBanner\Banner;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AdminPayPalInstallmentController extends AdminPayPalController
 {
     protected $headerToolBar = true;
 
-    /** @var array<string, FormInterface>*/
+    /** @var array<string, FormInterface> */
     protected $forms;
 
     public function __construct()
@@ -78,8 +76,9 @@ class AdminPayPalInstallmentController extends AdminPayPalController
         $banner = new Banner();
         $jsonResponse->setData([
             'success' => true,
-            'content' => $banner->render()
+            'content' => $banner->render(),
         ]);
+
         return $jsonResponse->send();
     }
 }

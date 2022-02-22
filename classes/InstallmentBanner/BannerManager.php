@@ -26,23 +26,19 @@
 
 namespace PaypalAddons\classes\InstallmentBanner;
 
-use \Context;
-use \Configuration;
-use \Country;
+use Configuration;
+use Context;
+use Country;
 use PaypalAddons\services\CurrencyConverter;
-use Symfony\Component\VarDumper\VarDumper;
-use \ProductController;
-use \CartController;
-use \IndexController;
-use \Categorycontroller;
-use \OrderController;
+use ProductController;
+use Validate;
 
 class BannerManager
 {
-    /** @var Banner*/
+    /** @var Banner */
     protected $banner;
 
-    /** @var Context*/
+    /** @var Context */
     protected $context;
 
     public function __construct()
@@ -74,7 +70,7 @@ class BannerManager
     public function isEligiblePage()
     {
         foreach (ConfigurationMap::getPageConfMap() as $page => $conf) {
-            if (is_a($this->context->controller, $page) && (int)Configuration::get($conf)) {
+            if (is_a($this->context->controller, $page) && (int) Configuration::get($conf)) {
                 return true;
             }
         }
@@ -87,7 +83,7 @@ class BannerManager
      */
     public function isEligibleConf()
     {
-        if (false === (bool)Configuration::get(ConfigurationMap::ENABLE_INSTALLMENT)) {
+        if (false === (bool) Configuration::get(ConfigurationMap::ENABLE_INSTALLMENT)) {
             return false;
         }
 
@@ -101,7 +97,7 @@ class BannerManager
     public function isEligibleCountry()
     {
         $isoCountryDefault = Country::getIsoById(
-            (int)Configuration::get(
+            (int) Configuration::get(
                 'PS_COUNTRY_DEFAULT',
                 null,
                 null,
@@ -154,6 +150,7 @@ class BannerManager
     public function renderForCartPage()
     {
         $amount = $this->getCurrencyConverter()->convert($this->context->cart->getOrderTotal(true));
+
         return $this->banner
             ->setPlacement('cart')
             ->setLayout('text')
@@ -175,6 +172,7 @@ class BannerManager
     public function renderForCheckoutPage()
     {
         $amount = $this->getCurrencyConverter()->convert($this->context->cart->getOrderTotal(true));
+
         return $this->banner
             ->setPlacement('payment')
             ->setLayout('text')
@@ -190,9 +188,19 @@ class BannerManager
      */
     public function renderForProductPage()
     {
+        $idProduct = 0;
+
+        if ($this->context->controller instanceof ProductController) {
+            if (Validate::isLoadedObject($this->context->controller->getProduct())) {
+                $idProduct = (int) $this->context->controller->getProduct()->id;
+            }
+        }
+
         return $this->banner
             ->setPlacement('product')
             ->setLayout('text')
+            ->addJsVar('paypalBanner_IdProduct', $idProduct)
+            ->addJsVar('paypalBanner_scInitController', $this->context->link->getModuleLink('paypal', 'ScInit'))
             ->setPageTypeAttribute(ConfigurationMap::PAGE_TYPE_PRODUCT)
             ->setTemplate(_PS_MODULE_DIR_ . 'paypal/views/templates/installmentBanner/product-banner.tpl')
             ->render();

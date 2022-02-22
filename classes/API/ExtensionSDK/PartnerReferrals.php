@@ -30,9 +30,9 @@ use PayPalHttp\HttpRequest;
 
 class PartnerReferrals extends HttpRequest
 {
-    function __construct()
+    public function __construct()
     {
-        parent::__construct("/v2/customer/partner-referrals?", "POST");
-        $this->headers["Content-Type"] = "application/json";
+        parent::__construct('/v2/customer/partner-referrals?', 'POST');
+        $this->headers['Content-Type'] = 'application/json';
     }
 }

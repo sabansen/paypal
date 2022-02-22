@@ -28,21 +28,19 @@ namespace PaypalAddons\classes\API\Request\V_1;
 
 use DateTime;
 use PayPal;
+use PayPal\Api\Amount;
 use PayPal\Api\DetailedRefund;
 use PayPal\Api\Payment;
-use PayPal\Api\Sale;
-use PayPal\Api\Amount;
 use PayPal\Api\RefundRequest;
-use PayPal\Api\Transaction;
+use PayPal\Api\Sale;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\ResponseOrderRefund;
-use \PaypalOrder;
-use Symfony\Component\VarDumper\VarDumper;
+use PaypalOrder;
 
 class PaypalOrderRefundRequest extends RequestAbstractMB
 {
-    /** @var PaypalOrder*/
+    /** @var PaypalOrder */
     protected $paypalOrder;
 
     public function __construct(AbstractMethodPaypal $method, PaypalOrder $paypalOrder)
@@ -87,11 +85,13 @@ class PaypalOrderRefundRequest extends RequestAbstractMB
     protected function getDateTransaction(DetailedRefund $detailedRefund)
     {
         $date = DateTime::createFromFormat(DateTime::ISO8601, $detailedRefund->update_time);
+
         return $date->format('Y-m-d TH:i:s');
     }
 
     /**
      * @param Sale $sale
+     *
      * @return Amount
      */
     protected function getAmount(Sale $sale)
@@ -115,17 +115,18 @@ class PaypalOrderRefundRequest extends RequestAbstractMB
                 continue;
             }
 
-            if (is_callable(array($resource, 'amount'), true)) {
+            if (is_callable([$resource, 'amount'], true)) {
                 $transactionAmount = $resource->amount;
-                if (is_callable(array($transactionAmount, 'total'), true)) {
+                if (is_callable([$transactionAmount, 'total'], true)) {
                     $amount += $transactionAmount->total;
                 }
             }
         }
 
         $amt = new Amount();
+
         return $amt
             ->setCurrency($sale->getAmount()->getCurrency())
-            ->setTotal(number_format($amount, Paypal::getDecimal($this->paypalOrder->currency), ".", ''));
+            ->setTotal(number_format($amount, Paypal::getDecimal($this->paypalOrder->currency), '.', ''));
     }
 }

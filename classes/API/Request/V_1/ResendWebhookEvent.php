@@ -26,16 +26,15 @@
 
 namespace PaypalAddons\classes\API\Request\V_1;
 
-
+use Exception;
 use PayPal\Api\WebhookEvent;
 use PaypalAddons\classes\AbstractMethodPaypal;
-use Exception;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\Response;
 
 class ResendWebhookEvent extends RequestAbstract
 {
-    /** @var WebhookEvent*/
+    /** @var WebhookEvent */
     protected $webhookEvent;
 
     public function __construct(AbstractMethodPaypal $method, WebhookEvent $webhookEvent)

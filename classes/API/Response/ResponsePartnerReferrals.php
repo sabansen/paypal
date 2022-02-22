@@ -26,13 +26,12 @@
 
 namespace PaypalAddons\classes\API\Response;
 
-
 class ResponsePartnerReferrals extends Response
 {
-    /** @var string*/
+    /** @var string */
     protected $actionLink;
 
-    /** @var string*/
+    /** @var string */
     protected $selfLink;
 
     /**
@@ -40,16 +39,18 @@ class ResponsePartnerReferrals extends Response
      */
     public function getActionLink()
     {
-        return (string)$this->actionLink;
+        return (string) $this->actionLink;
     }
 
     /**
      * @param string $actionLink
+     *
      * @return self
      */
     public function setActionLink($actionLink)
     {
-        $this->actionLink = (string)$actionLink;
+        $this->actionLink = (string) $actionLink;
+
         return $this;
     }
 
@@ -58,16 +59,18 @@ class ResponsePartnerReferrals extends Response
      */
     public function getSelfLink()
     {
-        return (string)$this->selfLink;
+        return (string) $this->selfLink;
     }
 
     /**
      * @param string $selfLink
+     *
      * @return self
      */
     public function setSelfLink($selfLink)
     {
-        $this->selfLink = (string)$selfLink;
+        $this->selfLink = (string) $selfLink;
+
         return $this;
     }
 }

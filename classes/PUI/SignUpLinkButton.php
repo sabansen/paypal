@@ -26,14 +26,11 @@
 
 namespace PaypalAddons\classes\PUI;
 
-use Composer\Package\Loader\ValidatingArrayLoader;
 use Configuration;
 use Context;
-use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Response\ResponsePartnerReferrals;
 use PaypalAddons\classes\Constants\PUI;
 use PaypalAddons\classes\PuiMethodInterface;
-use Symfony\Component\VarDumper\VarDumper;
 
 class SignUpLinkButton
 {
@@ -50,6 +47,7 @@ class SignUpLinkButton
     public function render()
     {
         $this->context->smarty->assign('actionUrl', $this->getActionUrl());
+
         return $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'paypal/views/templates/pui/signUpLinkButton.tpl');
     }
 
@@ -61,7 +59,7 @@ class SignUpLinkButton
             return $link;
         }
 
-        /** @var ResponsePartnerReferrals $response*/
+        /** @var ResponsePartnerReferrals $response */
         $response = $this->method->createPartnerReferrals();
 
         if ($response->isSuccess() == false) {

@@ -26,17 +26,13 @@
 
 namespace PaypalAddons\classes\API\Request\V_1;
 
-
+use Exception;
 use PayPal\Api\Webhook;
 use PayPal\Api\WebhookEventType;
-use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Response\Error as PaypalError;
 use PaypalAddons\classes\API\Response\Response;
 use PaypalAddons\classes\Constants\WebHookType;
 use PaypalAddons\classes\Webhook\WebhookHandlerUrl;
-use Symfony\Component\VarDumper\VarDumper;
-use Context;
-use Exception;
 
 class CreateWebHookRequest extends RequestAbstract
 {
@@ -48,7 +44,7 @@ class CreateWebHookRequest extends RequestAbstract
 
         foreach (WebHookType::getAll() as $type) {
             $eventTypes[] = new WebhookEventType(json_encode([
-                'name' => $type
+                'name' => $type,
             ]));
         }
 

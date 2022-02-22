@@ -32,11 +32,10 @@ use PaypalAddons\classes\API\Response\ResponseOrderCapture;
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
 use PayPalCheckoutSdk\Orders\OrdersAuthorizeRequest;
 use PayPalHttp\HttpException;
-use Symfony\Component\VarDumper\VarDumper;
 
 class PaypalOrderAuthorizeRequest extends RequestAbstract
 {
-    /** @var string*/
+    /** @var string */
     protected $paymentId;
 
     public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method, $paymentId)

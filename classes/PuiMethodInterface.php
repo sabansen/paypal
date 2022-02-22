@@ -26,7 +26,6 @@
 
 namespace PaypalAddons\classes;
 
-
 interface PuiMethodInterface
 {
     public function createPartnerReferrals();

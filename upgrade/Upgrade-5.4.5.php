@@ -23,15 +23,13 @@
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-use PaypalPPBTlib\Install\ModuleInstaller;
-
 /**
  * @param $module PayPal
+ *
  * @return bool
  */
 function upgrade_module_5_4_5($module)
@@ -43,19 +41,20 @@ function upgrade_module_5_4_5($module)
                 1,
                 false,
                 null,
-                (int)$shop['id_shop']
+                (int) $shop['id_shop']
             );
             Configuration::updateValue(
                 \PaypalAddons\classes\InstallmentBanner\ConfigurationMap::BNPL_CART_PAGE,
                 1,
                 false,
                 null,
-                (int)$shop['id_shop']
+                (int) $shop['id_shop']
             );
         }
     } else {
         Configuration::updateValue(\PaypalAddons\classes\InstallmentBanner\ConfigurationMap::ENABLE_BNPL, 1);
         Configuration::updateValue(\PaypalAddons\classes\InstallmentBanner\ConfigurationMap::BNPL_CART_PAGE, 1);
     }
+
     return true;
 }

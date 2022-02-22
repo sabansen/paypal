@@ -26,11 +26,9 @@
 
 namespace PaypalAddons\classes\Webhook;
 
-
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\Response;
 use PaypalAddons\classes\Constants\WebhookHandler;
-use Symfony\Component\VarDumper\VarDumper;
 
 class WebhookAvailability
 {

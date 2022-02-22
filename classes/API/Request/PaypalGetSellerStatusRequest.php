@@ -26,18 +26,13 @@
 
 namespace PaypalAddons\classes\API\Request;
 
-use PaypalAddons\classes\AbstractMethodPaypal;
+use PayPal;
 use PaypalAddons\classes\API\ExtensionSDK\GetSellerStatus;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\services\Core\PaypalMerchantId;
-use PayPalCheckoutSdk\Core\PayPalHttpClient;
-use PayPalHttp\HttpException;
-use PayPal;
-use Symfony\Component\VarDumper\VarDumper;
 
 class PaypalGetSellerStatusRequest extends RequestAbstract
 {
-
     public function execute()
     {
         $response = $this->getResponse();
@@ -50,6 +45,7 @@ class PaypalGetSellerStatusRequest extends RequestAbstract
             $error = new Error();
             $error->setMessage($e->getMessage())
                 ->setErrorCode($e->getCode());
+
             return $response->setSuccess(false)->setError($error);
         }
 

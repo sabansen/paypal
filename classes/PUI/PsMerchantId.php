@@ -26,12 +26,11 @@
 
 namespace PaypalAddons\classes\PUI;
 
-
 use PaypalAddons\classes\AbstractMethodPaypal;
 
 class PsMerchantId
 {
-    /** @var AbstractMethodPaypal*/
+    /** @var AbstractMethodPaypal */
     protected $method;
 
     public function __construct($method = null)
@@ -45,6 +44,6 @@ class PsMerchantId
 
     public function get()
     {
-        return 'PrestaShop_'.md5($this->method->getClientId());
+        return 'PrestaShop_' . md5($this->method->getClientId());
     }
 }

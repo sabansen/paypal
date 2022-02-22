@@ -26,22 +26,21 @@
 
 namespace PaypalAddons\classes\PUI;
 
-
 class DataUserForm
 {
-    /** @var string*/
+    /** @var string */
     protected $firstName;
 
-    /** @var string*/
+    /** @var string */
     protected $lastName;
 
-    /** @var string*/
+    /** @var string */
     protected $phone;
 
-    /** @var string*/
+    /** @var string */
     protected $email;
 
-    /** @var string*/
+    /** @var string */
     protected $birth;
 
     /**
@@ -49,16 +48,18 @@ class DataUserForm
      */
     public function getFirstName()
     {
-        return (string)$this->firstName;
+        return (string) $this->firstName;
     }
 
     /**
      * @param string $firstName
+     *
      * @return self
      */
     public function setFirstName($firstName)
     {
-        $this->firstName = (string)$firstName;
+        $this->firstName = (string) $firstName;
+
         return $this;
     }
 
@@ -67,16 +68,18 @@ class DataUserForm
      */
     public function getLastName()
     {
-        return (string)$this->lastName;
+        return (string) $this->lastName;
     }
 
     /**
      * @param string $lastName
+     *
      * @return self
      */
     public function setLastName($lastName)
     {
-        $this->lastName = (string)$lastName;
+        $this->lastName = (string) $lastName;
+
         return $this;
     }
 
@@ -85,16 +88,18 @@ class DataUserForm
      */
     public function getPhone()
     {
-        return (string)$this->phone;
+        return (string) $this->phone;
     }
 
     /**
      * @param string $phone
+     *
      * @return self
      */
     public function setPhone($phone)
     {
-        $this->phone = (string)$phone;
+        $this->phone = (string) $phone;
+
         return $this;
     }
 
@@ -103,16 +108,18 @@ class DataUserForm
      */
     public function getEmail()
     {
-        return (string)$this->email;
+        return (string) $this->email;
     }
 
     /**
      * @param string $email
+     *
      * @return self
      */
     public function setEmail($email)
     {
-        $this->email = (string)$email;
+        $this->email = (string) $email;
+
         return $this;
     }
 
@@ -121,16 +128,18 @@ class DataUserForm
      */
     public function getBirth()
     {
-        return (string)$this->birth;
+        return (string) $this->birth;
     }
 
     /**
      * @param string $birth
+     *
      * @return self
      */
     public function setBirth($birth)
     {
-        $this->birth = (string)$birth;
+        $this->birth = (string) $birth;
+
         return $this;
     }
 }

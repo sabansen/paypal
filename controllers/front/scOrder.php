@@ -33,7 +33,7 @@ class PaypalScOrderModuleFrontController extends PaypalAbstarctModuleFrontContro
 {
     protected $paymentData;
 
-    /** @var AbstractMethodPaypal*/
+    /** @var AbstractMethodPaypal */
     protected $method;
 
     public function init()
@@ -58,7 +58,7 @@ class PaypalScOrderModuleFrontController extends PaypalAbstarctModuleFrontContro
         $paypal = Module::getInstanceByName($this->name);
 
         try {
-            $this->redirectUrl = $this->context->link->getPageLink('order', null, null, array('step'=>2));
+            $this->redirectUrl = $this->context->link->getPageLink('order', null, null, ['step' => 2]);
             $this->method->setPaymentId($this->paymentData->orderID);
             $info = $this->method->getInfo();
             $this->prepareOrder($info);
@@ -115,7 +115,7 @@ class PaypalScOrderModuleFrontController extends PaypalAbstarctModuleFrontContro
         $this->context->cart->id_customer = $customer->id;
         $this->context->cart->update();
 
-        Hook::exec('actionAuthentication', array('customer' => $this->context->customer));
+        Hook::exec('actionAuthentication', ['customer' => $this->context->customer]);
         // Login information have changed, so we check if the cart rules still apply
         CartRule::autoRemoveFromCart($this->context);
         CartRule::autoAddToCart($this->context);
@@ -128,8 +128,6 @@ class PaypalScOrderModuleFrontController extends PaypalAbstarctModuleFrontContro
             $this->context->cookie->__set('paypal_pSc_email', $info->getClient()->getEmail());
         }
 
-
-
         $addresses = $this->context->customer->getAddresses($this->context->language->id);
         $address_exist = false;
         $count = 1;
@@ -137,7 +135,7 @@ class PaypalScOrderModuleFrontController extends PaypalAbstarctModuleFrontContro
         $id_state = PayPal::getIdStateByPaypalCode($info->getAddress()->getStateCode(), $info->getAddress()->getCountryCode());
 
         foreach ($addresses as $address) {
-            if ($address['firstname'].' '.$address['lastname'] == $info->getAddress()->getFullName()
+            if ($address['firstname'] . ' ' . $address['lastname'] == $info->getAddress()->getFullName()
                 && $address['address1'] == $info->getAddress()->getAddress1()
                 && $address['address2'] == $info->getAddress()->getAddress2()
                 && $address['id_country'] == Country::getByIso($info->getAddress()->getCountryCode())
@@ -151,12 +149,12 @@ class PaypalScOrderModuleFrontController extends PaypalAbstarctModuleFrontContro
                 break;
             } else {
                 if ((strrpos($address['alias'], 'Paypal_Address')) !== false) {
-                    $count = (int)(Tools::substr($address['alias'], -1)) + 1;
+                    $count = (int) (Tools::substr($address['alias'], -1)) + 1;
                 }
             }
         }
         if (!$address_exist) {
-            $nameArray = explode(" ", $info->getAddress()->getFullName());
+            $nameArray = explode(' ', $info->getAddress()->getFullName());
             $firstName = implode(' ', array_slice($nameArray, 0, count($nameArray) - 1));
             $lastName = $nameArray[count($nameArray) - 1];
 
@@ -176,7 +174,7 @@ class PaypalScOrderModuleFrontController extends PaypalAbstarctModuleFrontContro
             $orderAddress->phone = $info->getAddress()->getPhone();
 
             $orderAddress->id_customer = $customer->id;
-            $orderAddress->alias = 'Paypal_Address '.($count);
+            $orderAddress->alias = 'Paypal_Address ' . ($count);
             $validationMessage = $orderAddress->validateFields(false, true);
             if (Country::containsStates($orderAddress->id_country) && $orderAddress->id_state == false) {
                 $validationMessage = $module->l('State is required in order to process payment. Please fill in state field.', pathinfo(__FILE__)['filename']);
@@ -187,7 +185,7 @@ class PaypalScOrderModuleFrontController extends PaypalAbstarctModuleFrontContro
             }
 
             if (is_string($validationMessage)) {
-                $vars = array(
+                $vars = [
                     'newAddress' => 'delivery',
                     'address1' => $orderAddress->address1,
                     'firstname' => $orderAddress->firstname,
@@ -197,12 +195,13 @@ class PaypalScOrderModuleFrontController extends PaypalAbstarctModuleFrontContro
                     'city' => $orderAddress->city,
                     'phone' => $orderAddress->phone,
                     'address2' => $orderAddress->address2,
-                    'id_state' => $orderAddress->id_state
-                );
+                    'id_state' => $orderAddress->id_state,
+                ];
 
                 $this->_errors[] = $validationMessage;
                 $url = Context::getContext()->link->getPageLink('order', null, null, $vars);
                 $this->redirectUrl = $url;
+
                 return;
             }
             $orderAddress->save();
@@ -220,14 +219,15 @@ class PaypalScOrderModuleFrontController extends PaypalAbstarctModuleFrontContro
         }
 
         if (empty($invalidAddressIds) == false) {
-            $vars = array(
+            $vars = [
                 'id_address' => $id_address,
-                'editAddress' => 'delivery'
-            );
+                'editAddress' => 'delivery',
+            ];
 
             $this->_errors[] = $this->l('Your address is incomplete, please update it.');
             $url = Context::getContext()->link->getPageLink('order', null, null, $vars);
             $this->redirectUrl = $url;
+
             return;
         }
 
@@ -242,6 +242,7 @@ class PaypalScOrderModuleFrontController extends PaypalAbstarctModuleFrontContro
     public function setPaymentData($paymentData)
     {
         $this->paymentData = $paymentData;
+
         return $this;
     }
 }

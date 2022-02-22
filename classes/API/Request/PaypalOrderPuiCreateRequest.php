@@ -26,15 +26,7 @@
 
 namespace PaypalAddons\classes\API\Request;
 
-use PaypalAddons\classes\AbstractMethodPaypal;
-use PaypalAddons\classes\API\Response\Error;
-use PaypalAddons\classes\API\Response\Response;
-use PaypalAddons\services\Builder\OrderPatchBody;
 use PaypalAddons\services\Builder\OrderPuiCreateBody;
-use PayPalCheckoutSdk\Core\PayPalHttpClient;
-use PayPalCheckoutSdk\Orders\OrdersPatchRequest;
-use PayPalHttp\HttpException;
-use Symfony\Component\VarDumper\VarDumper;
 
 class PaypalOrderPuiCreateRequest extends PaypalOrderCreateRequest
 {
@@ -55,6 +47,7 @@ class PaypalOrderPuiCreateRequest extends PaypalOrderCreateRequest
         //This header is required for PUI payment
         $headers['PayPal-Client-Metadata-Id'] = $sessionId;
         $headers['PayPal-Request-Id'] = uniqid();
+
         return $headers;
     }
 }

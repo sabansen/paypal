@@ -45,12 +45,13 @@ class SandboxMode
 
     public function isSandbox()
     {
-        return (bool)$this->mode;
+        return (bool) $this->mode;
     }
 
     public function setMode($mode)
     {
-        Configuration::updateValue(self::NAME, (int)$mode);
+        Configuration::updateValue(self::NAME, (int) $mode);
+
         return $this;
     }
 }

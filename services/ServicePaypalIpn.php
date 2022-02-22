@@ -33,6 +33,7 @@ class ServicePaypalIpn
     /**
      * @param $idTransaction string
      * @param $status string
+     *
      * @return bool
      */
     public function exists($idTransaction, $status)
@@ -41,11 +42,12 @@ class ServicePaypalIpn
         $collection->where('id_transaction', '=', pSQL($idTransaction));
         $collection->where('status', '=', pSQL($status));
 
-        return (bool)$collection->count();
+        return (bool) $collection->count();
     }
 
     /**
      * @param $idTransaction string
+     *
      * @return array of the Prestashop Order objects
      */
     public function getOrdersPsByTransaction($idTransaction)
@@ -53,23 +55,24 @@ class ServicePaypalIpn
         $cart = $this->getCartByTransaction($idTransaction);
 
         if (\Validate::isLoadedObject($cart) == false) {
-            return array();
+            return [];
         }
 
         $orderCollection = new \PrestaShopCollection(\Order::class);
-        $orderCollection->where('id_cart', '=', (int)$cart->id);
+        $orderCollection->where('id_cart', '=', (int) $cart->id);
 
         return $orderCollection->getResults();
     }
 
     /**
      * @param $idTransaction string
+     *
      * @return \Cart
      */
     public function getCartByTransaction($idTransaction)
     {
         if ($idCart = $this->getIdCartByTransaction($idTransaction)) {
-            $cart = new \Cart((int)$idCart);
+            $cart = new \Cart((int) $idCart);
             if (\Validate::isLoadedObject($cart)) {
                 return $cart;
             }
@@ -80,6 +83,7 @@ class ServicePaypalIpn
 
     /**
      * @param $idTransaction string
+     *
      * @return int
      */
     public function getIdCartByTransaction($idTransaction)

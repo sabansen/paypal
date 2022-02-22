@@ -26,7 +26,6 @@
 
 namespace PaypalAddons\services;
 
-
 use Exception;
 use PayPal\Api\WebhookEvent;
 use PaypalAddons\classes\AbstractMethodPaypal;
@@ -40,6 +39,7 @@ class PaymentRefundAmount
 {
     /**
      * @param PaypalOrder $paypalOrder
+     *
      * @return float
      */
     public function calculateTotalRefunded(PaypalOrder $paypalOrder)
@@ -60,11 +60,12 @@ class PaymentRefundAmount
             throw new RefundCalculationException($e->getMessage());
         }
 
-        return (float)$totalRefund;
+        return (float) $totalRefund;
     }
 
     /**
      * @param PaypalOrder $paypalOrder
+     *
      * @return float
      */
     public function calculateReceivedWebhookEvent(PaypalOrder $paypalOrder)
@@ -81,26 +82,27 @@ class PaymentRefundAmount
 
             try {
                 $totalRefunded += $webhookEvent->resource->amount->value;
-            } catch (Exception $e) {}
+            } catch (Exception $e) {
+            }
         }
 
-        return (float)$totalRefunded;
+        return (float) $totalRefunded;
     }
 
     /**
      * @param PaypalOrder $paypalOrder
+     *
      * @return PaypalWebhook[]
      */
     protected function getWebhookEvents(PaypalOrder $paypalOrder)
     {
         try {
             $collection = (new PrestaShopCollection(PaypalWebhook::class))
-                ->where('id_paypal_order', '=', (int)$paypalOrder->id);
+                ->where('id_paypal_order', '=', (int) $paypalOrder->id);
 
             return $collection->getResults();
         } catch (\Throwable $e) {
             return [];
         }
-
     }
 }

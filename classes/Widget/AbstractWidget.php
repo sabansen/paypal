@@ -26,23 +26,24 @@
 
 namespace PaypalAddons\classes\Widget;
 
-use \Module;
-use \Context;
+use Context;
+use Module;
 
 abstract class AbstractWidget
 {
-    /** @var Module*/
+    /** @var Module */
     protected $module;
 
-    /** @var array*/
+    /** @var array */
     protected $configuratons;
 
-    /** @var Context*/
+    /** @var Context */
     protected $context;
 
     /**
      * @param Module $module
      * @param array $configuratons
+     *
      * @return void
      */
     public function __construct(Module $module, $configuratons = [])

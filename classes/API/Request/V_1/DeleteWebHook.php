@@ -26,20 +26,15 @@
 
 namespace PaypalAddons\classes\API\Request\V_1;
 
-
+use Exception;
 use PayPal\Api\Webhook;
-use PayPal\Api\WebhookEventType;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\Response;
-use PaypalAddons\classes\Constants\WebHookType;
-use Symfony\Component\VarDumper\VarDumper;
-use Context;
-use Exception;
 
 class DeleteWebHook extends RequestAbstract
 {
-    /** @var Webhook*/
+    /** @var Webhook */
     protected $webhook;
 
     /**
@@ -79,6 +74,7 @@ class DeleteWebHook extends RequestAbstract
     public function setWebhook(Webhook $webhook)
     {
         $this->webhook = $webhook;
+
         return $this;
     }
 }

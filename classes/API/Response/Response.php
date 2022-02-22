@@ -28,10 +28,10 @@ namespace PaypalAddons\classes\API\Response;
 
 class Response
 {
-    /** @var $success bool*/
+    /** @var bool */
     protected $success;
 
-    /** @var $error Error*/
+    /** @var Error */
     protected $error;
 
     protected $data;
@@ -44,7 +44,6 @@ class Response
         return $this->success;
     }
 
-
     public function getError()
     {
         if ($this->error instanceof Error) {
@@ -56,7 +55,8 @@ class Response
 
     public function setSuccess($success)
     {
-        $this->success = (bool)$success;
+        $this->success = (bool) $success;
+
         return $this;
     }
 
@@ -68,12 +68,14 @@ class Response
     public function setData($data)
     {
         $this->data = $data;
+
         return $this;
     }
 
     public function setError(Error $error)
     {
         $this->error = $error;
+
         return $this;
     }
 }

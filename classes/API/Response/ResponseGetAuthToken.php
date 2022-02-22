@@ -28,16 +28,16 @@ namespace PaypalAddons\classes\API\Response;
 
 class ResponseGetAuthToken extends Response
 {
-    /** @var string*/
+    /** @var string */
     protected $authToken;
 
-    /** @var string*/
+    /** @var string */
     protected $refreshToken;
 
-    /** @var string*/
+    /** @var string */
     protected $tokenType;
 
-    /** @var string*/
+    /** @var string */
     protected $nonce;
 
     /**
@@ -54,6 +54,7 @@ class ResponseGetAuthToken extends Response
     public function setAuthToken($authToken)
     {
         $this->authToken = $authToken;
+
         return $this;
     }
 
@@ -71,6 +72,7 @@ class ResponseGetAuthToken extends Response
     public function setRefreshToken($refreshToken)
     {
         $this->refreshToken = $refreshToken;
+
         return $this;
     }
 
@@ -88,6 +90,7 @@ class ResponseGetAuthToken extends Response
     public function setTokenType($tokenType)
     {
         $this->tokenType = $tokenType;
+
         return $this;
     }
 
@@ -105,6 +108,7 @@ class ResponseGetAuthToken extends Response
     public function setNonce($nonce)
     {
         $this->nonce = $nonce;
+
         return $this;
     }
 }

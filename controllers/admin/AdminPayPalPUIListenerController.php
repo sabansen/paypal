@@ -24,7 +24,6 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
-use PaypalAddons\classes\Constants\Account;
 use PaypalAddons\classes\Constants\PUI;
 use PaypalAddons\classes\PUI\PsMerchantId;
 use PaypalAddons\services\Core\PaypalMerchantId;

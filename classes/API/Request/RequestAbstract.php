@@ -36,19 +36,19 @@ abstract class RequestAbstract implements RequestInteface
     /** PayPalHttpClient*/
     protected $client;
 
-    /** @var \Context*/
+    /** @var \Context */
     protected $context;
 
-    /** @var AbstractMethodPaypal*/
+    /** @var AbstractMethodPaypal */
     protected $method;
 
-    /** @var \Module*/
+    /** @var \Module */
     protected $module;
 
-    /** @var FormatterPaypal*/
+    /** @var FormatterPaypal */
     protected $formatter;
 
-    /** @var PaypalContext*/
+    /** @var PaypalContext */
     protected $paypalContext;
 
     public function __construct(PayPalHttpClient $client, AbstractMethodPaypal $method)
@@ -67,7 +67,7 @@ abstract class RequestAbstract implements RequestInteface
     protected function getHeaders()
     {
         $headers = [
-            'PayPal-Partner-Attribution-Id' => $this->method->getPaypalPartnerId()
+            'PayPal-Partner-Attribution-Id' => $this->method->getPaypalPartnerId(),
         ];
 
         return $headers;

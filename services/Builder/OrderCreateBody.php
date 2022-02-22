@@ -34,16 +34,16 @@ use PaypalAddons\services\FormatterPaypal;
 
 class OrderCreateBody implements BuilderInterface
 {
-    /** @var Context*/
+    /** @var Context */
     protected $context;
 
-    /** @var Paypal*/
+    /** @var Paypal */
     protected $module;
 
-    /** @var AbstractMethodPaypal*/
+    /** @var AbstractMethodPaypal */
     protected $method;
 
-    /** @var FormatterPaypal*/
+    /** @var FormatterPaypal */
     protected $formatter;
 
     protected $items = [];
@@ -84,7 +84,7 @@ class OrderCreateBody implements BuilderInterface
                 [
                     'amount' => $this->getAmount($currency),
                     'items' => $items,
-                    'custom_id' => $this->formatter->formatPaypalString($this->getCustomId())
+                    'custom_id' => $this->formatter->formatPaypalString($this->getCustomId()),
                 ],
             ],
         ];
@@ -124,6 +124,7 @@ class OrderCreateBody implements BuilderInterface
 
     /**
      * @param $currency string Iso code
+     *
      * @return array
      */
     protected function getProductItems($currency, $cache = false)
@@ -142,7 +143,7 @@ class OrderCreateBody implements BuilderInterface
             $productTax = $this->method->formatPrice($priceIncl - $priceExcl, null, false);
 
             if (isset($product['attributes']) && (empty($product['attributes']) === false)) {
-                $product['name'] .= ' - '.$product['attributes'];
+                $product['name'] .= ' - ' . $product['attributes'];
             }
 
             if (isset($product['reference']) && false === empty($product['reference'])) {
@@ -153,11 +154,11 @@ class OrderCreateBody implements BuilderInterface
             $item['sku'] = $product['id_product'];
             $item['unit_amount'] = [
                 'currency_code' => $currency,
-                'value' => $priceExcl
+                'value' => $priceExcl,
             ];
             $item['tax'] = [
                 'currency_code' => $currency,
-                'value' => $productTax
+                'value' => $productTax,
             ];
             $item['quantity'] = $product['quantity'];
 
@@ -165,6 +166,7 @@ class OrderCreateBody implements BuilderInterface
         }
 
         $this->products = $items;
+
         return $items;
     }
 
@@ -178,7 +180,7 @@ class OrderCreateBody implements BuilderInterface
 
         $payer['name'] = [
             'given_name' => $this->formatter->formatPaypalString($this->context->customer->firstname),
-            'surname' => $this->formatter->formatPaypalString($this->context->customer->lastname)
+            'surname' => $this->formatter->formatPaypalString($this->context->customer->lastname),
         ];
         $payer['email'] = $this->context->customer->email;
 
@@ -208,8 +210,8 @@ class OrderCreateBody implements BuilderInterface
         $handling = $this->getHandling($currency);
 
         foreach ($items as $item) {
-            $subTotalExcl += (float)$item['unit_amount']['value'] * (float)$item['quantity'];
-            $subTotalTax += (float)$item['tax']['value'] * (float)$item['quantity'];
+            $subTotalExcl += (float) $item['unit_amount']['value'] * (float) $item['quantity'];
+            $subTotalTax += (float) $item['tax']['value'] * (float) $item['quantity'];
         }
 
         $subTotalExcl = $this->method->formatPrice($subTotalExcl, null, false);
@@ -220,33 +222,32 @@ class OrderCreateBody implements BuilderInterface
             false
         );
 
-        $amount = array(
+        $amount = [
             'currency_code' => $currency,
             'value' => $totalOrder,
-            'breakdown' =>
-                array(
-                    'item_total' => array(
+            'breakdown' => [
+                    'item_total' => [
                         'currency_code' => $currency,
                         'value' => $subTotalExcl,
-                    ),
-                    'shipping' => array(
+                    ],
+                    'shipping' => [
                         'currency_code' => $currency,
                         'value' => $shippingTotal,
-                    ),
-                    'tax_total' => array(
+                    ],
+                    'tax_total' => [
                         'currency_code' => $currency,
                         'value' => $subTotalTax,
-                    ),
-                    'discount' => array(
+                    ],
+                    'discount' => [
                         'currency_code' => $currency,
-                        'value' => $discountTotal
-                    ),
-                    'handling' => array(
+                        'value' => $discountTotal,
+                    ],
+                    'handling' => [
                         'currency_code' => $currency,
-                        'value' => $handling
-                    )
-                ),
-        );
+                        'value' => $handling,
+                    ],
+                ],
+        ];
 
         return $amount;
     }
@@ -269,11 +270,11 @@ class OrderCreateBody implements BuilderInterface
             $item['sku'] = $this->context->cart->id;
             $item['unit_amount'] = [
                 'currency_code' => $currency,
-                'value' => $this->method->formatPrice($priceExcl)
+                'value' => $this->method->formatPrice($priceExcl),
             ];
             $item['tax'] = [
                 'currency_code' => $currency,
-                'value' => $this->method->formatPrice($tax)
+                'value' => $this->method->formatPrice($tax),
             ];
             $item['quantity'] = 1;
 
@@ -281,6 +282,7 @@ class OrderCreateBody implements BuilderInterface
         }
 
         $this->wrappings = $items;
+
         return $items;
     }
 
@@ -296,7 +298,7 @@ class OrderCreateBody implements BuilderInterface
             'return_url' => $this->method->getReturnUrl(),
             'cancel_url' => $this->method->getCancelUrl(),
             'brand_name' => $this->formatter->formatPaypalString($this->getBrandName()),
-            'user_action' => 'PAY_NOW'
+            'user_action' => 'PAY_NOW',
         ];
 
         if ($this->context->cart->isVirtualCart()) {
@@ -320,7 +322,7 @@ class OrderCreateBody implements BuilderInterface
         }
 
         $shippingInfo = [
-            'address' => $this->getAddress()
+            'address' => $this->getAddress(),
         ];
 
         $name = $this->getShippingName();
@@ -349,9 +351,9 @@ class OrderCreateBody implements BuilderInterface
                 ' ',
                 [
                     $address->firstname,
-                    $address->lastname
+                    $address->lastname,
                 ]
-            )
+            ),
         ];
     }
 

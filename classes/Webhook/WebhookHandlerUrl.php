@@ -44,7 +44,7 @@ class WebhookHandlerUrl
             'paypal',
             'webhookhandler',
             [
-                'checkAvailability' => 1
+                'checkAvailability' => 1,
             ]
         );
         $url = str_replace('http://', 'https://', $url);

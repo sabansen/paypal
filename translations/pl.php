@@ -23,9 +23,8 @@
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
-
 global $_MODULE;
-$_MODULE = array();
+$_MODULE = [];
 $_MODULE['<{paypal}prestashop>paypal_ad69e733ebae8d264bccaa38d68830e8'] = 'PayPal';
 $_MODULE['<{paypal}prestashop>paypal_3ba4f49f76f54e9305261bc742a24d9b'] = 'Korzystaj z usługi PayPal Complete Payments i rozwijaj swoją działalność w Internecie, na urządzeniach mobilnych i za granicą. Akceptuj karty kredytowe, karty debetowe i płatności PayPal.';
 $_MODULE['<{paypal}prestashop>paypal_69a1a3ad8dd5da6db3c4da838a0cf9c7'] = 'Czy na pewno chcesz usunąć swoje dane?';
@@ -39,7 +38,7 @@ $_MODULE['<{paypal}prestashop>paypal_8f5d16bffc9dc4d54c301c82782916b1'] = 'Zapł
 $_MODULE['<{paypal}prestashop>paypal_a1547872d7311425dfeefcd1983c5add'] = 'Zamierzasz zapłacić za pomocą konta PayPal ';
 $_MODULE['<{paypal}prestashop>paypal_907bfea30d3ce7ffec31c04a4b0110c0'] = 'Nie możemy dokonać weryfikacji, jeśli płatność została zrealizowana. Sprawdź, czy masz na koncie potwierdzenie od firmy PayPal.';
 $_MODULE['<{paypal}prestashop>paypal_a94e9e59a8274948ecadafc8180dbadf'] = 'Błąd weryfikacji zamówienia: ';
-$_MODULE['<{paypal}prestashop>paypal_993e08bfbc05df0d2c64d09426a541db'] = 'Uwaga, Twoja płatność została dokonana. Skontaktuj się z obsługą klienta. Twój numer transakcji: ';
+$_MODULE['<{paypal}prestashop>paypal_993e08bfbc05df0d2c64d09426a541db'] = 'Uwaga, Twoja płatność została dokonana. Skontaktuj się z obsługą klienta. Twój numer transakcji: ';
 $_MODULE['<{paypal}prestashop>paypal_b43a85a981c07a998c6677d4f60d4fd7'] = 'Zwróć pieniądze w systemie PayPal';
 $_MODULE['<{paypal}prestashop>paypal_8756c9664336622be99fa31786816349'] = 'To zamówienie zostało opłacone za pośrednictwem rozwiązania płatniczego Braintree udostępnionego w ramach modułu PayPal w wersji starszej niż v5.0. ';
 $_MODULE['<{paypal}prestashop>paypal_7e5aba00822dba7e7b5a9bf3b5735b4e'] = 'Począwszy od modułu PayPal w wersji v5.0.0, rozwiązanie płatnicze Braintree nie będzie już dostępne w ramach modułu PayPal. Możesz nadal korzystać z Braintree, instalując nowy moduł Braintree dostępny na stronie ';
@@ -309,8 +308,8 @@ $_MODULE['<{paypal}prestashop>blockpreviewbuttoncontext_b401397858880fcfe0c8da19
 $_MODULE['<{paypal}prestashop>blockpreviewbuttoncontext_0fcaf0531dd6d6a53f7bde67adafd035'] = 'Strony produktowe';
 $_MODULE['<{paypal}prestashop>paypal_112cee51bc7d0712033e013bf5154d97'] = 'Zapłać kartą kredytową lub debetową';
 $_MODULE['<{paypal}prestashop>paypal_9b9cf9f8778f69b4c6cf37e66f886be8'] = 'Wybierz status';
-$_MODULE['<{paypal}prestashop>abstractmethodpaypal_01c6e0e36101786cfcfa6dd13cfbb099'] = 'Identyfikator koszyka: ';
-$_MODULE['<{paypal}prestashop>abstractmethodpaypal_194c2a3181dd5484df19ff3548b4a019'] = 'Nazwa sklepu: ';
+$_MODULE['<{paypal}prestashop>abstractmethodpaypal_01c6e0e36101786cfcfa6dd13cfbb099'] = 'Identyfikator koszyka: ';
+$_MODULE['<{paypal}prestashop>abstractmethodpaypal_194c2a3181dd5484df19ff3548b4a019'] = 'Nazwa sklepu: ';
 $_MODULE['<{paypal}prestashop>methodec_b98521e63d9c5a52990b450965ab2878'] = 'Płatność została autoryzowana i oczekuje na zatwierdzenie przez administratora';
 $_MODULE['<{paypal}prestashop>methodec_915901b766a8e732f41c87693184fa89'] = 'Obecnie używasz trybu autoryzacji. Oznacza to, że autoryzacja płatności przebiega oddzielnie od pobrania środków z autoryzowanej płatności. Domyślnie utworzone zamówienia będą miały status „Oczekuje na płatność PayPal”, ale w razie potrzeby możesz go dostosować.';
 $_MODULE['<{paypal}prestashop>methodec_658c65a11f676a58088cdb35e0c2c3ab'] = 'Status domyślny: oczekuje na płatność PayPal';
@@ -353,7 +352,7 @@ $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_8abcd7b8009
 $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_0f9907c62d585faaab3efaf95a3406ac'] = 'Status domyślny: zwrócono';
 $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_c158783b379b395205a91a6270a52ff4'] = 'Status zamówienia aktywujący anulowanie w systemie PayPal';
 $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_da78fd8363ff268d8d8694cdb2dd62c4'] = 'Zamówienia opłacone za pośrednictwem systemu PayPal można anulować bezpośrednio przez system zaplecza platformy PrestaShop. W tym miejscu możesz wybrać status zamówienia, który ma wywoływać anulowanie przez PayPal autoryzowanej transakcji w systemie PayPal. Jeśli chcesz zmienić status zamówienia bez wywoływania automatycznego anulowania w systemie PayPal, wybierz opcję „Brak działań”.';
-$_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_87ad1179406b568d2f8fd6f8ddb44d15'] = ' Status domyślny: anulowano';
+$_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_87ad1179406b568d2f8fd6f8ddb44d15'] = ' Status domyślny: anulowano';
 $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_41a81fcc63d6a78a0d22630b2e4b1e6c'] = 'Płatność zaakceptowana przez system zaplecza (zadzwoń do firmy PayPal, aby otrzymać płatność)';
 $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_36500501ab89967d20b1beb686880d44'] = 'Obecnie używasz trybu autoryzacji. Oznacza to, że autoryzacja płatności przebiega oddzielnie od pobrania środków z autoryzowanej płatności. Aby pobrać środki z autoryzowanej płatności, musisz zmienić status zamówienia na „płatność zaakceptowana” (lub na status niestandardowy o tym samym znaczeniu). W tym miejscu możesz wybrać niestandardowy status zamówienia w celu zaakceptowania zamówienia i zatwierdzenia transakcji w trybie autoryzowania.';
 $_MODULE['<{paypal}prestashop>adminpaypalcustomizecheckoutcontroller_c6a9094c053f62817cf82c904082378e'] = 'Status domyślny: płatność zaakceptowana';
@@ -409,9 +408,9 @@ $_MODULE['<{paypal}prestashop>formadvancedhelptwo_06393d7bb6f3fb29efee8938c7cd2f
 $_MODULE['<{paypal}prestashop>formadvancedhelptwo_5a5a6c0531d6207c84a2ce8d0f99b74f'] = 'Statusami zamówienia możesz zarządzać poniżej:';
 $_MODULE['<{paypal}prestashop>unregisteredhooksmessage_8855bfb68164e4dfb070572ac3bf62d5'] = 'Moduł nie został zarejestrowany za pomocą następujących elementów „hook”:';
 $_MODULE['<{paypal}prestashop>unregisteredhooksmessage_84bb5767918a71a8d7451f116c681857'] = 'Zainstaluj wymagane elementy „hook” automatycznie';
-$_MODULE['<{paypal}prestashop>messageforcustomerone_952f622b6cbe191f3d9abb6d6f34b71d'] = '[b]Sfinalizuj płatność[/b] za pomocą konta PayPal, ';
+$_MODULE['<{paypal}prestashop>messageforcustomerone_952f622b6cbe191f3d9abb6d6f34b71d'] = '[b]Sfinalizuj płatność[/b] za pomocą konta PayPal, ';
 $_MODULE['<{paypal}prestashop>messageforcustomerone_b3e985da8b5a176abfb74c4c1ca960f9'] = 'akceptując warunki usługi i klikając przycisk zatwierdzenia zamówienia poniżej.';
-$_MODULE['<{paypal}prestashop>messageforcustomertwo_952f622b6cbe191f3d9abb6d6f34b71d'] = '[b]Sfinalizuj płatność[/b] za pomocą konta PayPal, ';
+$_MODULE['<{paypal}prestashop>messageforcustomertwo_952f622b6cbe191f3d9abb6d6f34b71d'] = '[b]Sfinalizuj płatność[/b] za pomocą konta PayPal, ';
 $_MODULE['<{paypal}prestashop>messageforcustomertwo_b3e985da8b5a176abfb74c4c1ca960f9'] = 'akceptując warunki usługi i klikając przycisk zatwierdzenia zamówienia poniżej.';
 $_MODULE['<{paypal}prestashop>messageforcustomertwo_768073dd22a31e3489fad6543b7301b1'] = 'Zwracamy uwagę, że zastosowano dodatkowe opłaty za dostawę (%1s). Aby uzyskać więcej informacji, zapoznaj się z podsumowaniem zamówienia.';
 $_MODULE['<{paypal}prestashop>adminpaypalhelpcontroller_8c2c1e868f50c5b477d3f6d985aeaa2f'] = 'Skonfiguruj PrestaShop Checkout';

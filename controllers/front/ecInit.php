@@ -25,7 +25,6 @@
  */
 
 use PaypalAddons\classes\AbstractMethodPaypal;
-use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * Prepare EC payment
@@ -43,6 +42,7 @@ class PaypalEcInitModuleFrontController extends PaypalAbstarctModuleFrontControl
         $this->values['short_cut'] = 0;
         $this->setMethod(AbstractMethodPaypal::load('EC'));
     }
+
     /**
      * @see FrontController::postProcess()
      */
@@ -53,7 +53,7 @@ class PaypalEcInitModuleFrontController extends PaypalAbstarctModuleFrontControl
             $url = $this->method->init()->getApproveLink();
 
             if ($this->values['getToken']) {
-                $this->jsonValues = array('success' => true, 'token' => $this->method->getPaymentId());
+                $this->jsonValues = ['success' => true, 'token' => $this->method->getPaymentId()];
             } else {
                 //$this->redirectUrl = $url.'&useraction=commit';
                 $this->redirectUrl = $url;
@@ -75,7 +75,7 @@ class PaypalEcInitModuleFrontController extends PaypalAbstarctModuleFrontControl
 
         if (!empty($this->_errors)) {
             if ($this->values['getToken']) {
-                $this->jsonValues = array('success' => false, 'redirect_link' => Context::getContext()->link->getModuleLink($this->name, 'error', $this->_errors));
+                $this->jsonValues = ['success' => false, 'redirect_link' => Context::getContext()->link->getModuleLink($this->name, 'error', $this->_errors)];
             } else {
                 $this->redirectUrl = Context::getContext()->link->getModuleLink($this->name, 'error', $this->_errors);
             }

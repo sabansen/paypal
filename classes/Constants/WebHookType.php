@@ -51,8 +51,7 @@ class WebHookType
             self::CAPTURE_REVERSED,
             self::CAPTURE_REFUNDED,
             self::CAPTURE_PENDING,
-            self::CHECKOUT_PAYMENT_RESERVED
+            self::CHECKOUT_PAYMENT_RESERVED,
         ];
     }
-
 }

@@ -54,6 +54,65 @@
         this.amount = quantity * productPrice;
     };
 
+    Banner.prototype.getProductInfo = function() {
+        var data = {
+            idProduct: paypalBanner_IdProduct,
+            quantity: 1, //default quantity
+            combination: this.getCombination().join('|'),
+            page: 'product'
+        };
+
+        var qty = document.querySelector('input[name="qty"]');
+
+        if (qty instanceof Element) {
+            data.quantity = qty.value;
+        }
+
+
+        return data;
+    };
+
+    Banner.prototype.getCombination = function() {
+        var combination = [];
+        var re = /group\[([0-9]+)\]/;
+
+        $.each($('#add-to-cart-or-refresh').serializeArray(), function (key, item) {
+            if (res = item.name.match(re)) {
+                combination.push("".concat(res[1], " : ").concat(item.value));
+            }
+        });
+
+        return combination;
+    };
+
+    Banner.prototype.checkProductAvailability = function() {
+        if (typeof paypalBanner_scInitController == 'undefined') {
+            return;
+        }
+
+        var url = new URL(paypalBanner_scInitController);
+        url.searchParams.append('ajax', '1');
+        url.searchParams.append('action', 'CheckAvailability');
+
+        fetch(url.toString(), {
+            method: 'post',
+            headers: {
+                'content-type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(this.getProductInfo())
+        }).then(function (res) {
+            return res.json();
+        }).then(function (json) {
+            var banner = document.querySelector(this.container);
+
+            if (json.success) {
+                banner.style.display = 'block';
+            } else {
+                banner.style.display = 'none';
+            }
+        }.bind(this));
+    };
+
     window.addEventListener('load', function() {
         var paypalBanner = new Banner({
             layout: layout,
@@ -62,10 +121,12 @@
         });
         paypalBanner.updateAmount();
         paypalBanner.initBanner();
+        paypalBanner.checkProductAvailability();
 
         prestashop.on('updatedProduct', function() {
             paypalBanner.updateAmount();
             paypalBanner.initBanner();
+            paypalBanner.checkProductAvailability();
         });
     });
 </script>

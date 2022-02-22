@@ -26,8 +26,8 @@
 
 namespace PaypalAddons\classes\InstallmentBanner;
 
-use Country;
 use Configuration;
+use Country;
 
 class ConfigurationMap
 {
@@ -85,7 +85,7 @@ class ConfigurationMap
             self::COLOR_WHITE => '#ffffff',
             self::COLOR_MONOCHROME => '#ffffff',
             self::COLOR_GRAYSCALE => '#ffffff',
-            self::COLOR_GRAY => '#ebecee'
+            self::COLOR_GRAY => '#ebecee',
         ];
         $isoCountryDefault = \Tools::strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
 
@@ -161,7 +161,7 @@ class ConfigurationMap
             'CartController' => self::CART_PAGE,
             'ProductController' => self::PRODUCT_PAGE,
             'IndexController' => self::HOME_PAGE,
-            'CategoryController' => self::CATEGORY_PAGE
+            'CategoryController' => self::CATEGORY_PAGE,
         ];
     }
 
@@ -175,7 +175,7 @@ class ConfigurationMap
             'white' => 'white',
             'blue' => 'blue',
             'black' => 'black',
-            'gold' => 'gold'
+            'gold' => 'gold',
         ];
     }
 }
