@@ -36,8 +36,8 @@ use PaypalAddons\classes\Form\Field\TextInput;
 use PaypalAddons\classes\Shortcut\Form\Definition\CustomizeButtonStyleSectionDefinition;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Shortcut\ShortcutPreview;
-use PaypalAddons\classes\Webhook\CreateWebhook;
 use PaypalAddons\classes\Venmo\VenmoFunctionality;
+use PaypalAddons\classes\Webhook\CreateWebhook;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
@@ -62,8 +62,8 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             'paypal_vaulting',
             'paypal_mb_ec_enabled',
             'paypal_merchant_installment',
-            PaypalConfigurations::VENMO_OPTION
-        );
+            PaypalConfigurations::VENMO_OPTION,
+        ];
 
         $this->advanceFormParametres = [
             'paypal_customize_order_status',
@@ -299,25 +299,25 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
         }
 
         if ($this->initVenmoFunctionalityService()->isAvailable()) {
-            $this->fields_form['form']['form']['input'][] = array(
+            $this->fields_form['form']['form']['input'][] = [
                 'type' => 'switch',
                 'label' => $this->l('Venmo'),
                 'name' => PaypalConfigurations::VENMO_OPTION,
                 'is_bool' => true,
                 'hint' => $this->l(''),
-                'values' => array(
-                    array(
+                'values' => [
+                    [
                         'id' => PaypalConfigurations::VENMO_OPTION . '_on',
                         'value' => 1,
                         'label' => $this->l('Enabled'),
-                    ),
-                    array(
+                    ],
+                    [
                         'id' => PaypalConfigurations::VENMO_OPTION . '_off',
                         'value' => 0,
                         'label' => $this->l('Disabled'),
-                    )
-                ),
-            );
+                    ],
+                ],
+            ];
         }
 
         $values = [];

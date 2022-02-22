@@ -32,14 +32,65 @@ class Venmo {
     } else {
       this.container = null;
     }
+
+    if (conf['controller']) {
+      this.controller = conf['controller'];
+    } else {
+      this.controller = null;
+    }
+
+    if (conf['validationController']) {
+      this.validationController = conf['validationController'];
+    } else {
+      this.validationController = null;
+    }
   }
 
   getIdOrder() {
-    //todo: to implement
+    if (this.controller == null) {
+      return '';
+    }
+
+    let url = new URL(this.controller);
+    url.searchParams.append('ajax', '1');
+    url.searchParams.append('action', 'CreateOrder');
+    let data = {
+      page: 'cart'
+    };
+
+
+    return fetch(url.toString(), {
+      method: 'post',
+      headers: {
+        'content-type': 'application/json;charset=utf-8'
+      },
+      body: JSON.stringify(data)
+    }).then(function(res) {
+      return res.json();
+    }).then(function(data) {
+      if (data.success) {
+        return data.idOrder;
+      }
+    });
   }
 
-  sendData() {
-    //todo: to implement
+  sendData(data) {
+    if (this.validationController == null) {
+      return;
+    }
+
+    let form = document.createElement('form');
+    let input = document.createElement('input');
+
+    input.name = "paymentData";
+    input.value = JSON.stringify(data);
+
+    form.method = "POST";
+    form.action = this.validationController;
+
+    form.appendChild(input);
+    document.body.appendChild(form);
+    form.submit();
   }
 
   initButton() {
@@ -56,7 +107,7 @@ class Venmo {
       }.bind(this),
 
       onApprove: function(data, actions) {
-        //todo:
+        this.sendData(data);
       }.bind(this),
 
     }).render(this.container);
