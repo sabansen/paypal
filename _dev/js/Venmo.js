@@ -95,12 +95,12 @@ class Venmo {
 
   initButton() {
 
-    if (typeof totPaypalSdkButtons == 'undefined') {
+    if (typeof totVenmoPaypalSdkButtons == 'undefined') {
       return;
     }
 
-    totPaypalSdkButtons.Buttons({
-      fundingSource: totPaypalSdkButtons.FUNDING.VENMO,
+    totVenmoPaypalSdkButtons.Buttons({
+      fundingSource: totVenmoPaypalSdkButtons.FUNDING.VENMO,
 
       createOrder: function(data, actions) {
         return this.getIdOrder();

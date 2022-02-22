@@ -52,13 +52,19 @@ class VenmoButton
 
     protected function getJSscripts()
     {
+        $srcLib = $this->method->getUrlJsSdkLib() . '&enable-funding=venmo';
+
+        if ($this->method->isSandbox()) {
+            $srcLib .= '&buyer-country=US';
+        }
+
         $JSscripts = [
             'tot-paypal-sdk' => [
-                'src' => $this->method->getUrlJsSdkLib(),
-                'data-namespace' => 'totPaypalSdkButtons',
+                'src' => $srcLib,
+                'data-namespace' => 'totVenmoPaypalSdkButtons',
             ],
             'venmo' => [
-                'src' => $this->context->shop->getBaseURL() . 'modules/paypal/views/js/Venmo.js',
+                'src' => $this->context->shop->getBaseURL(true) . 'modules/paypal/views/js/Venmo.js',
             ],
         ];
 
