@@ -165,7 +165,7 @@ class AdminPayPalSetupController extends AdminPayPalController
         $tpl_vars = $method->getTplVars();
         $tpl_vars['method'] = $this->method;
 
-        if ($method instanceof PuiMethodInterface) {
+        if ($method instanceof PuiMethodInterface && $method->isConfigured()) {
             $tpl_vars['SignUpLinkButton'] = $this->initSignUpLinkButton($method);
         }
 

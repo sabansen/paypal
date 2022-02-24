@@ -33,6 +33,7 @@ use PaypalAddons\classes\API\Response\ResponsePartnerReferrals;
 use PaypalAddons\services\Builder\PartnerReferralsRequestBody;
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
 use PayPalHttp\HttpException;
+use Symfony\Component\VarDumper\VarDumper;
 
 class PaypalPartnerReferralsRequest extends RequestAbstract
 {
@@ -60,7 +61,7 @@ class PaypalPartnerReferralsRequest extends RequestAbstract
             $error = new Error();
             $resultDecoded = json_decode($e->getMessage());
             $error->setMessage($resultDecoded->details[0]->description)->setErrorCode($e->getCode());
-            $response->setSuccess(false)
+            return $response->setSuccess(false)
                 ->setError($error);
         } catch (\Throwable $e) {
             $error = new Error();

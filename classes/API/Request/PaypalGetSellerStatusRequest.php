@@ -29,6 +29,7 @@ namespace PaypalAddons\classes\API\Request;
 use PayPal;
 use PaypalAddons\classes\API\ExtensionSDK\GetSellerStatus;
 use PaypalAddons\classes\API\Response\Error;
+use PaypalAddons\classes\PUI\PsMerchantId;
 use PaypalAddons\services\Core\PaypalMerchantId;
 
 class PaypalGetSellerStatusRequest extends RequestAbstract
@@ -63,11 +64,7 @@ class PaypalGetSellerStatusRequest extends RequestAbstract
 
     protected function getPartnerMerchantId()
     {
-        if ($this->method->isSandbox()) {
-            return PayPal::PAYPAL_PARTNER_ID_SANDBOX;
-        } else {
-            return PayPal::PAYPAL_PARTNER_ID_LIVE;
-        }
+        return $this->initPaypalMerchantId()->get();
     }
 
     protected function getSellerMerchantId()
