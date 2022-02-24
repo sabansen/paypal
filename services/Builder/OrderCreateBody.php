@@ -93,7 +93,7 @@ class OrderCreateBody implements BuilderInterface
             $body['payer'] = $payer;
         }
 
-        if (empty($shippingInfo) == false) {
+        if (empty($shippingInfo) == false && $this->isShortcut() == false) {
             $body['purchase_units'][0]['shipping'] = $shippingInfo;
         }
 
