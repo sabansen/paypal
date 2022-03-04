@@ -59,7 +59,7 @@ class VenmoButton
         }
 
         $JSscripts = [
-            'tot-paypal-sdk' => [
+            'tot-paypal-venmo-sdk' => [
                 'src' => $srcLib,
                 'data-namespace' => 'totVenmoPaypalSdkButtons',
             ],

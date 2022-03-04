@@ -7,9 +7,9 @@
 
 {literal}
 <script>
-    function waitPaypalSDKIsLoaded() {
+    function waitPaypalVenmoSDKIsLoaded() {
         if (typeof totVenmoPaypalSdkButtons === 'undefined' || typeof Venmo === 'undefined') {
-            setTimeout(waitPaypalSDKIsLoaded, 200);
+            setTimeout(waitPaypalVenmoSDKIsLoaded, 200);
             return;
         }
 
@@ -23,6 +23,6 @@
         venmoButton.initButton();
     }
 
-    waitPaypalSDKIsLoaded();
+    waitPaypalVenmoSDKIsLoaded();
 </script>
 {/literal}
