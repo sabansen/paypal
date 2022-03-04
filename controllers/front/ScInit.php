@@ -88,6 +88,11 @@ class PaypalScInitModuleFrontController extends PaypalAbstarctModuleFrontControl
 
         foreach ($temp_group as $item) {
             $temp = explode(':', $item);
+
+            if (count($temp) == 1) {
+                continue;
+            }
+
             $temp = array_map(
                 function ($value) {
                     return trim($value);
