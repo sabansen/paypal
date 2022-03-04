@@ -70,7 +70,11 @@ class PaypalScInitModuleFrontController extends PaypalAbstarctModuleFrontControl
             case 'product':
                 $product = new Product((int) $request->idProduct);
                 $group = $this->parseCombination($request->combination);
-                $product->id_product_attribute = $this->module->getIdProductAttributeByIdAttributes($request->idProduct, $group);
+
+                if (false == empty($group)) {
+                    $product->id_product_attribute = $this->module->getIdProductAttributeByIdAttributes($request->idProduct, $group);
+                }
+
                 if ($product->checkQty($request->quantity)) {
                     $this->jsonValues = ['success' => true];
                 } else {
