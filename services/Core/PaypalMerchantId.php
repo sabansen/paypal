@@ -49,7 +49,7 @@ class PaypalMerchantId
 
     public function set($id, $sandboxMode = null)
     {
-        if ($sandboxMode instanceof SandboxMode) {
+        if ($sandboxMode instanceof SandboxMode == false) {
             $sandboxMode = $this->getSandboxMode();
         }
 
