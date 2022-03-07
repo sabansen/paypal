@@ -47,27 +47,27 @@ class SignUpLinkButton
     public function render()
     {
         $this->context->smarty->assign('actionUrl', $this->getActionUrl());
+        $this->context->smarty->assign('paypalOnboardingLib', $this->getOnboardingLib());
 
         return $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'paypal/views/templates/pui/signUpLinkButton.tpl');
     }
 
     protected function getActionUrl()
     {
-        $link = Configuration::get(PUI::PARTNER_REFERRAL_ACTION_URL);
+        return $this->initSignupLink()->get();
+    }
 
-        if ($link) {
-            return $link;
+    protected function getOnboardingLib()
+    {
+        if ($this->method->isSandbox()) {
+            return 'https://www.sandbox.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js';
+        } else {
+            return 'https://www.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js';
         }
+    }
 
-        /** @var ResponsePartnerReferrals $response */
-        $response = $this->method->createPartnerReferrals();
-
-        if ($response->isSuccess() == false) {
-            return '';
-        }
-
-        Configuration::updateValue(PUI::PARTNER_REFERRAL_ACTION_URL, $response->getActionLink());
-
-        return $response->getActionLink();
+    protected function initSignupLink()
+    {
+        return new SignupLink($this->method);
     }
 }

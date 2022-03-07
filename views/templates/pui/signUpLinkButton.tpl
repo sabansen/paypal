@@ -26,11 +26,27 @@
 <!-- Start modules/paypal/views/templates/pui/signUpLinkButton.tpl -->
 
 {if empty($actionUrl)}
+
   <div class="alert alert-danger">
       {l s='Error occured during generating sign-up link' mod='paypal'}
   </div>
+
 {else}
-  <a href="{$actionUrl}" class="btn btn-default">{l s='Partner referral sign-up link' mod='paypal'}</a>
+
+  <a href="{$actionUrl|addslashes}"
+     target="_blank"
+     data-paypal-button
+     class="btn btn-default spinner-button"
+  >
+    <i class="icon-signin"></i>
+    <div class="spinner pp__mr-1"></div>
+      {l s='Partner referral sign-up link' mod='paypal'}
+  </a>
+
+{/if}
+
+{if isset($paypalOnboardingLib)}
+  <script src="{$paypalOnboardingLib|addslashes}"></script>
 {/if}
 
 <!-- End modules/paypal/views/templates/pui/signUpLinkButton.tpl -->
