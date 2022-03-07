@@ -27,6 +27,7 @@ require_once _PS_MODULE_DIR_ . 'paypal/vendor/autoload.php';
 
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\AdminPayPalController;
+use PaypalAddons\classes\Constants\PaypalConfigurations;
 use PaypalAddons\classes\Constants\WebHookConf;
 use PaypalAddons\classes\Form\Field\InputChain;
 use PaypalAddons\classes\Form\Field\Select;
@@ -60,6 +61,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             'paypal_vaulting',
             'paypal_mb_ec_enabled',
             'paypal_merchant_installment',
+            PaypalConfigurations::APM_OPTION,
         ];
 
         $this->advanceFormParametres = [
@@ -294,6 +296,26 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
                 ],
             ];
         }
+
+        $this->fields_form['form']['form']['input'][] = [
+            'type' => 'switch',
+            'label' => $this->l('Alternative Payment Methods'),
+            'name' => PaypalConfigurations::APM_OPTION,
+            'is_bool' => true,
+            'hint' => $this->l('Enable this option if you want to enable installments. If enabled, your clients will be able to change the number of installments (by default, 1x payment will be offered). This option can be available only for registered users.'),
+            'values' => [
+                [
+                    'id' => PaypalConfigurations::APM_OPTION . '_on',
+                    'value' => 1,
+                    'label' => $this->l('Enabled'),
+                ],
+                [
+                    'id' => PaypalConfigurations::APM_OPTION . '_off',
+                    'value' => 0,
+                    'label' => $this->l('Disabled'),
+                ],
+            ],
+        ];
 
         $values = [];
         foreach ($this->parametres as $parametre) {
