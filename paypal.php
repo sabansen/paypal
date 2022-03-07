@@ -30,6 +30,8 @@ if (!defined('_PS_VERSION_')) {
 include_once _PS_MODULE_DIR_ . 'paypal/vendor/autoload.php';
 
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\APM\ApmButton;
+use PaypalAddons\classes\APM\ApmFunctionality;
 use PaypalAddons\classes\Constants\WebHookConf;
 use PaypalAddons\classes\InstallmentBanner\BannerManager;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BnplAvailabilityManager;
@@ -820,6 +822,10 @@ class PayPal extends \PaymentModule implements WidgetInterface
                     $payments_options[] = $this->buildBnplPaymentOption($params);
                 }
             }
+
+            if ($this->initApmFunctionality()->isEnabled()) {
+                $payments_options[] = $this->buildApmPaymentOption($params);
+            }
         }
 
         if ($method->isSandbox() && false === empty($payments_options)) {
@@ -837,6 +843,34 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
 
         return $payments_options;
+    }
+
+    protected function initApmFunctionality()
+    {
+        return new ApmFunctionality();
+    }
+
+    protected function buildApmPaymentOption($params)
+    {
+        $paymentOption = new PaymentOption();
+        $action_text = $this->l('Pay with alternative payment method'); // todo: specify message
+        $paymentOption->setCallToActionText($action_text);
+        $paymentOption->setAction(
+            sprintf(
+                'javascript:alert(\'%s\');',
+                $this->l('Should use the alternative payment button') // todo: specify message
+            )
+        );
+        $paymentOption->setModuleName('paypal_apm');
+        $paymentOption->setAdditionalInformation($this->initApmButton()->render());
+        $paymentOption->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/paypal_logo.png'));
+
+        return $paymentOption;
+    }
+
+    protected function initApmButton()
+    {
+        return new ApmButton();
     }
 
     /**
