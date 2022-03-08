@@ -1,5 +1,4 @@
-<?php
-/**
+/*
  * 2007-2022 PayPal
  *
  *  NOTICE OF LICENSE
@@ -23,18 +22,41 @@
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
+// init incontext
 
-namespace PaypalAddons\classes\APM;
+const ApmButton = function(conf) {
+
+    this.method = typeof conf['method'] != 'undefined' ? conf['method'] : null;
+
+    this.button = typeof conf['button'] != 'undefined' ? conf['button'] : null;
+
+    this.controller = typeof conf['controller'] != 'undefined' ? conf['controller'] : null;
+};
+
+ApmButton.prototype.initButton = function() {
+  totPaypalApmSdkButtons.Buttons({
+    fundingSource: this.method,
+
+    createOrder: function(data, actions) {
+      return this.getIdOrder();
+    }.bind(this),
+
+    onApprove: function(data, actions) {
+      this.sendData(data);
+    }.bind(this),
+
+  }).render(this.button);
+};
+
+ApmButton.prototype.getIdOrder = function() {
+  //todo: to implement
+  return '';
+};
+
+ApmButton.prototype.sendData = function() {
+  //todo: to implement
+};
+
+window.ApmButton = ApmButton;
 
 
-class ApmButton
-{
-    public function __construct()
-    {
-    }
-
-    public function render()
-    {
-        return '';
-    }
-}

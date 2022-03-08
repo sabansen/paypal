@@ -30,7 +30,7 @@ if (!defined('_PS_VERSION_')) {
 include_once _PS_MODULE_DIR_ . 'paypal/vendor/autoload.php';
 
 use PaypalAddons\classes\AbstractMethodPaypal;
-use PaypalAddons\classes\APM\ApmButton;
+use PaypalAddons\classes\APM\ApmCollection;
 use PaypalAddons\classes\APM\ApmFunctionality;
 use PaypalAddons\classes\Constants\WebHookConf;
 use PaypalAddons\classes\InstallmentBanner\BannerManager;
@@ -862,15 +862,15 @@ class PayPal extends \PaymentModule implements WidgetInterface
             )
         );
         $paymentOption->setModuleName('paypal_apm');
-        $paymentOption->setAdditionalInformation($this->initApmButton()->render());
+        $paymentOption->setAdditionalInformation($this->initApmCollection()->render());
         $paymentOption->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/paypal_logo.png'));
 
         return $paymentOption;
     }
 
-    protected function initApmButton()
+    protected function initApmCollection()
     {
-        return new ApmButton();
+        return new ApmCollection();
     }
 
     /**
