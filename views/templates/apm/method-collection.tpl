@@ -49,7 +49,9 @@
             console.log(method);
             var apmObj = new ApmButton({
                 method: method,
-                button: '#paypal-apm-'+method
+                button: '#paypal-apm-'+method,
+                controller: '{Context::getContext()->link->getModuleLink('paypal', 'ScInit')}',
+                validationController: '{Context::getContext()->link->getModuleLink('paypal', 'pppValidation')}'
             });
             apmObj.initButton();
         }

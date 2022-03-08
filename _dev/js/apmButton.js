@@ -31,6 +31,8 @@ const ApmButton = function(conf) {
     this.button = typeof conf['button'] != 'undefined' ? conf['button'] : null;
 
     this.controller = typeof conf['controller'] != 'undefined' ? conf['controller'] : null;
+
+    this.validationController = typeof conf['validationController'] != 'undefined' ? conf['validationController'] : null;
 };
 
 ApmButton.prototype.initButton = function() {
@@ -49,12 +51,39 @@ ApmButton.prototype.initButton = function() {
 };
 
 ApmButton.prototype.getIdOrder = function() {
-  //todo: to implement
-  return '';
+
+  let url = new URL(this.controller);
+  url.searchParams.append('ajax', '1');
+  url.searchParams.append('action', 'CreateOrder');
+
+  return fetch(url.toString(), {
+    method: 'post',
+    headers: {
+      'content-type': 'application/json;charset=utf-8'
+    },
+    body: JSON.stringify({page: 'cart'})
+  }).then(function(res) {
+    return res.json();
+  }).then(function(data) {
+    if (data.success) {
+      return data.idOrder;
+    }
+  });
 };
 
-ApmButton.prototype.sendData = function() {
-  //todo: to implement
+ApmButton.prototype.sendData = function(data) {
+  let form = document.createElement('form');
+  let input = document.createElement('input');
+
+  input.name = "paymentData";
+  input.value = JSON.stringify(data);
+
+  form.method = "POST";
+  form.action = this.validationController;
+
+  form.appendChild(input);
+  document.body.appendChild(form);
+  form.submit();
 };
 
 window.ApmButton = ApmButton;
