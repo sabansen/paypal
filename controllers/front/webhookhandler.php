@@ -55,7 +55,6 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
         parent::__construct();
 
         $this->servicePaypalOrder = new ServicePaypalOrder();
-        $this->initContainer();
         $this->request = file_get_contents('php://input');
     }
 
