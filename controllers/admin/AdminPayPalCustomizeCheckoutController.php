@@ -297,25 +297,27 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             ];
         }
 
-        $this->fields_form['form']['form']['input'][] = [
-            'type' => 'switch',
-            'label' => $this->l('Alternative Payment Methods'),
-            'name' => PaypalConfigurations::APM_OPTION,
-            'is_bool' => true,
-            'hint' => $this->l('Enable this option if you want to enable installments. If enabled, your clients will be able to change the number of installments (by default, 1x payment will be offered). This option can be available only for registered users.'),
-            'values' => [
-                [
-                    'id' => PaypalConfigurations::APM_OPTION . '_on',
-                    'value' => 1,
-                    'label' => $this->l('Enabled'),
+        if ($this->method == 'PPP') {
+            $this->fields_form['form']['form']['input'][] = [
+                'type' => 'switch',
+                'label' => $this->l('Alternative Payment Methods'),
+                'name' => PaypalConfigurations::APM_OPTION,
+                'is_bool' => true,
+                'hint' => $this->l('Enable this option if you want to enable installments. If enabled, your clients will be able to change the number of installments (by default, 1x payment will be offered). This option can be available only for registered users.'),
+                'values' => [
+                    [
+                        'id' => PaypalConfigurations::APM_OPTION . '_on',
+                        'value' => 1,
+                        'label' => $this->l('Enabled'),
+                    ],
+                    [
+                        'id' => PaypalConfigurations::APM_OPTION . '_off',
+                        'value' => 0,
+                        'label' => $this->l('Disabled'),
+                    ],
                 ],
-                [
-                    'id' => PaypalConfigurations::APM_OPTION . '_off',
-                    'value' => 0,
-                    'label' => $this->l('Disabled'),
-                ],
-            ],
-        ];
+            ];
+        }
 
         $values = [];
         foreach ($this->parametres as $parametre) {

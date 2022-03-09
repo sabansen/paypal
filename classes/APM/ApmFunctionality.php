@@ -27,10 +27,19 @@
 namespace PaypalAddons\classes\APM;
 
 use Configuration;
+use Country;
 use PaypalAddons\classes\Constants\PaypalConfigurations;
+use Tools;
 
 class ApmFunctionality
 {
+    public function isAvailable()
+    {
+        $isoCountryDefault = Country::getIsoById((int) Configuration::get('PS_COUNTRY_DEFAULT'));
+
+        return Tools::strtolower($isoCountryDefault) == 'de';
+    }
+
     public function isEnabled()
     {
         return (int)Configuration::get(PaypalConfigurations::APM_OPTION);

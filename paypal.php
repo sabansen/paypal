@@ -823,7 +823,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 }
             }
 
-            if ($this->initApmFunctionality()->isEnabled()) {
+            if ($this->initApmFunctionality()->isEnabled() && $this->initApmFunctionality()->isAvailable()) {
                 $payments_options[] = $this->buildApmPaymentOption($params);
             }
         }
