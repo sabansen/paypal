@@ -29,4 +29,6 @@ namespace PaypalAddons\classes\Constants;
 class PaypalConfigurations
 {
     const INTENT = 'PAYPAL_API_INTENT';
+
+    const ACDC_OPTION = 'PAYPAL_ACDC_OPTION';
 }

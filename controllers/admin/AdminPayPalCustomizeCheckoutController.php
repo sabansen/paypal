@@ -27,6 +27,7 @@ require_once _PS_MODULE_DIR_ . 'paypal/vendor/autoload.php';
 
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\AdminPayPalController;
+use PaypalAddons\classes\Constants\PaypalConfigurations;
 use PaypalAddons\classes\Constants\WebHookConf;
 use PaypalAddons\classes\Form\Field\InputChain;
 use PaypalAddons\classes\Form\Field\Select;
@@ -60,6 +61,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             'paypal_vaulting',
             'paypal_mb_ec_enabled',
             'paypal_merchant_installment',
+            PaypalConfigurations::ACDC_OPTION,
         ];
 
         $this->advanceFormParametres = [
@@ -288,6 +290,28 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
                     ],
                     [
                         'id' => 'paypal_merchant_installment_off',
+                        'value' => 0,
+                        'label' => $this->l('Disabled'),
+                    ],
+                ],
+            ];
+        }
+
+        if ($this->method == 'PPP') {
+            $this->fields_form['form']['form']['input'][] = [
+                'type' => 'switch',
+                'label' => $this->l('ACDC'),
+                'name' => PaypalConfigurations::ACDC_OPTION,
+                'is_bool' => true,
+                'hint' => $this->l(''),
+                'values' => [
+                    [
+                        'id' => PaypalConfigurations::ACDC_OPTION . '_on',
+                        'value' => 1,
+                        'label' => $this->l('Enabled'),
+                    ],
+                    [
+                        'id' => PaypalConfigurations::ACDC_OPTION . '_off',
                         'value' => 0,
                         'label' => $this->l('Disabled'),
                     ],
