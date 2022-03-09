@@ -27,6 +27,7 @@ require_once _PS_MODULE_DIR_ . 'paypal/vendor/autoload.php';
 
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\AdminPayPalController;
+use PaypalAddons\classes\APM\ApmFunctionality;
 use PaypalAddons\classes\Constants\PaypalConfigurations;
 use PaypalAddons\classes\Constants\WebHookConf;
 use PaypalAddons\classes\Form\Field\InputChain;
@@ -297,7 +298,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             ];
         }
 
-        if ($this->method == 'PPP') {
+        if ($this->initApmFunctionality()->isAvailable()) {
             $this->fields_form['form']['form']['input'][] = [
                 'type' => 'switch',
                 'label' => $this->l('Alternative Payment Methods'),
@@ -324,6 +325,11 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             $values[$parametre] = Configuration::get(Tools::strtoupper($parametre));
         }
         $this->tpl_form_vars = array_merge($this->tpl_form_vars, $values);
+    }
+
+    protected function initApmFunctionality()
+    {
+        return new ApmFunctionality();
     }
 
     public function initAdvancedForm()
