@@ -28,6 +28,7 @@ namespace PaypalAddons\classes\API;
 
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Request\PaypalAccessTokenRequest;
+use PaypalAddons\classes\API\Request\PaypalAcdcGenerateTokenRequest;
 use PaypalAddons\classes\API\Request\PaypalAuthorizationVoidRequest;
 use PaypalAddons\classes\API\Request\PaypalCaptureAuthorizeRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderAuthorizeRequest;
@@ -100,5 +101,10 @@ class PaypalApiManager implements PaypalApiManagerInterface
     public function getOrderPatchRequest($idPayment)
     {
         return new PaypalOrderPatchRequest($this->client, $this->method, $idPayment);
+    }
+
+    public function getAcdcGenerateTokenRequest()
+    {
+        return new PaypalAcdcGenerateTokenRequest($this->client, $this->method);
     }
 }

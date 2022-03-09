@@ -318,4 +318,9 @@ class MethodPPP extends AbstractMethodPaypal
 
         return $this;
     }
+
+    public function acdcGenerateToken()
+    {
+        return $this->paypalApiManager->getAcdcGenerateTokenRequest()->execute();
+    }
 }
