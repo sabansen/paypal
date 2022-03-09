@@ -30,6 +30,8 @@ if (!defined('_PS_VERSION_')) {
 include_once _PS_MODULE_DIR_ . 'paypal/vendor/autoload.php';
 
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\ACDC\AcdcFunctionality;
+use PaypalAddons\classes\ACDC\AcdcPaymentMethod;
 use PaypalAddons\classes\Constants\WebHookConf;
 use PaypalAddons\classes\InstallmentBanner\BannerManager;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BnplAvailabilityManager;
@@ -836,7 +838,38 @@ class PayPal extends \PaymentModule implements WidgetInterface
             }
         }
 
+        if ($this->initAcdcFunctionality()->isAvailable() && $this->initAcdcFunctionality()->isEnabled()) {
+            $payments_options[] = $this->buildAcdcPaymentOption($params);
+        }
+
         return $payments_options;
+    }
+
+    protected function initAcdcFunctionality()
+    {
+        return new AcdcFunctionality();
+    }
+
+    protected function buildAcdcPaymentOption($params)
+    {
+        $paymentOption = new PaymentOption();
+        $paymentOption->setCallToActionText($this->l('ACDC'));
+        $paymentOption->setAction(
+            sprintf(
+                'javascript:alert(\'%s\');',
+                $this->l('Should use the ACDC button') // todo: specify message
+            )
+        );
+        $paymentOption->setModuleName('paypal_acdc');
+        $paymentOption->setAdditionalInformation($this->initAcdcPaymentMethod()->render());
+        $paymentOption->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/paypal_logo.png'));
+
+        return $paymentOption;
+    }
+
+    protected function initAcdcPaymentMethod()
+    {
+        return new AcdcPaymentMethod();
     }
 
     /**
