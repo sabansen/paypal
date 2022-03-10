@@ -23,6 +23,7 @@
 *
 *}
 
+<!-- Start views/templates/acdc/payment-option.tpl. Module Paypal -->
 {assign var=scInitController value=Context::getContext()->link->getModuleLink('paypal', 'ScInit')}
 {assign var=validationController value=Context::getContext()->link->getModuleLink('paypal', 'pppValidation')}
 
@@ -40,6 +41,33 @@
   <tr><td colspan="2">&nbsp;</td></tr>
 </table>
 
+<div align="center"> or </div>
+
+<!-- Advanced credit and debit card payments form -->
+<div class="paypal-acdc-card_container">
+  <form id="card-form">
+
+    <div>
+      <label for="card-number">Card Number</label>
+      <div id="card-number" class="card_field"></div>
+    </div>
+
+    <div>
+      <label for="expiration-date">Expiration Date</label>
+      <div id="expiration-date" class="card_field"></div>
+    </div>
+
+    <div>
+      <label for="cvv">CVV</label>
+      <div id="cvv" class="card_field"></div>
+    </div>
+
+    <div>
+      <button value="submit" id="submit" class="btn">Pay</button>
+    </div>
+  </form>
+</div>
+
 
 <script>
     function waitPaypalAcdcSDKIsLoaded() {
@@ -55,7 +83,10 @@
             validationController: '{$validationController nofilter}'
         });
         acdcObj.initButton();
+        acdcObj.initHostedFields();
     }
 
     waitPaypalAcdcSDKIsLoaded();
 </script>
+
+<!-- End views/templates/acdc/payment-option.tpl. Module Paypal -->

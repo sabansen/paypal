@@ -81,6 +81,61 @@ ACDC.prototype.sendData = function(data) {
   form.submit();
 };
 
+ACDC.prototype.initHostedFields = function() {
+  if (totPaypalAcdcSdk.HostedFields.isEligible()) {
+
+    // Renders card fields
+    totPaypalAcdcSdk.HostedFields.render({
+      // Call your server to set up the transaction
+      createOrder: function () {
+        return this.getIdOrder();
+      }.bind(this),
+
+      styles: {
+        '.valid': {
+          'color': 'green'
+        },
+        '.invalid': {
+          'color': 'red'
+        }
+      },
+
+      fields: {
+        number: {
+          selector: "#card-number",
+          placeholder: "4111 1111 1111 1111"
+        },
+        cvv: {
+          selector: "#cvv",
+          placeholder: "123"
+        },
+        expirationDate: {
+          selector: "#expiration-date",
+          placeholder: "MM/YY"
+        }
+      }
+    }).then(function (cardFields) {
+      document.querySelector("#card-form").addEventListener('submit', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.submitHostedFields(cardFields);
+      }.bind(this));
+    }.bind(this));
+  } else {
+    // Hides card fields if the merchant isn't eligible
+    document.querySelector("#card-form").style = 'display: none';
+  }
+};
+
+ACDC.prototype.submitHostedFields = function(cardFields) {
+
+  cardFields.submit().then(function(res) {
+    this.sendData({
+      orderID: res['orderId']
+    });
+  }.bind(this))
+};
+
 window.ACDC = ACDC;
 
 
