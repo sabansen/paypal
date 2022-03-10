@@ -41,6 +41,8 @@ class AcdcPaymentMethod
     {
         if ($method instanceof AbstractMethodPaypal) {
             $this->method = $method;
+        } else {
+            $this->method = AbstractMethodPaypal::load();
         }
 
         $this->context = Context::getContext();
@@ -48,7 +50,55 @@ class AcdcPaymentMethod
 
     public function render()
     {
+        $this->context->smarty->assign($this->getTplVars());
         //todo: to implement
+        return $this->context->smarty->fetch('module:paypal/views/templates/acdc/payment-option.tpl');
+    }
+
+    protected function getTplVars()
+    {
+        $vars = [
+            'psPaypalDir' => _PS_MODULE_DIR_ . 'paypal',
+            'JSvars' => [],
+            'JSscripts' => $this->getScripts()
+        ];
+
+        return $vars;
+    }
+
+    protected function getScripts()
+    {
+        $scripts = [];
+
+        $srcLib = $this->method->getUrlJsSdkLib(['components' => 'buttons,hosted-fields']);
+
+        $scripts['tot-paypal-acdc-sdk'] = [
+            'src' => $srcLib,
+            'data-namespace' => 'totPaypalAcdcSdk',
+            'data-partner-attribution-id' => $this->getPartnerId(),
+            'data-client-token' => $this->getClientToken()
+        ];
+
+        $scripts['acdc'] = [
+            'src' => __PS_BASE_URI__ . 'modules/paypal/views/js/acdc.js',
+        ];
+
+        return $scripts;
+    }
+
+    protected function getPartnerId()
+    {
+        return 'PRESTASHOP_Cart_SPB';
+    }
+
+    protected function getClientToken()
+    {
+        $response = $this->method->acdcGenerateToken();
+
+        if ($response->isSuccess()) {
+            return $response->getToken();
+        }
+
         return '';
     }
 }
