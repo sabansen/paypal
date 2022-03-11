@@ -24,6 +24,49 @@
 *}
 
 <!-- Start views/templates/acdc/payment-option.tpl. Module Paypal -->
+
+<style>
+  .pp-input {
+    border: solid;
+    border-width: thin;
+    height: 30px;
+    padding: 0 10px;
+  }
+
+  .pp-flex {
+    display: flex;
+  }
+
+  .pp-space-between {
+    justify-content: space-between;
+  }
+
+  .pp-center {
+    justify-content: center;
+  }
+
+  .pp-field-wrapper {
+    padding: 10px;
+  }
+
+  .pp-field-wrapper label {
+    padding: 0 0 10px 0;
+    font-weight: bold;
+  }
+
+  .pp-flex-direction-column {
+    flex-direction: column;
+  }
+
+  [paypal-acdc-wrapper] {
+    max-width: 300px;
+  }
+
+  .pp-padding-1 {
+    padding: 10px
+  }
+</style>
+
 {assign var=scInitController value=Context::getContext()->link->getModuleLink('paypal', 'ScInit')}
 {assign var=validationController value=Context::getContext()->link->getModuleLink('paypal', 'pppValidation')}
 
@@ -32,41 +75,43 @@
     {$javascriptBlock nofilter}
 {/block}
 
-<table border="0" align="center" valign="top" bgcolor="#FFFFFF" style="width: 39%">
-  <tr>
-    <td colspan="2">
-      <div id="paypal-acdc-button-container"></div>
-    </td>
-  </tr>
-  <tr><td colspan="2">&nbsp;</td></tr>
-</table>
+<div paypal-acdc-wrapper class="pp-flex pp-flex-direction-column">
 
-<div align="center"> or </div>
+  <div paypal-acdc-button-wrapper class="pp-flex pp-center">
+    <div id="paypal-acdc-button-container"></div>
+  </div>
 
-<!-- Advanced credit and debit card payments form -->
-<div class="paypal-acdc-card_container">
-  <form id="card-form">
+  <div class="pp-flex pp-center pp-padding-1"> or </div>
 
-    <div>
-      <label for="card-number">Card Number</label>
-      <div id="card-number" class="card_field"></div>
-    </div>
+  <!-- Advanced credit and debit card payments form -->
+  <div paypal-acdc-card-wrapper class="pp-flex pp-center">
+    <form id="card-form" class="pp-flex pp-flex-direction-column">
 
-    <div>
-      <label for="expiration-date">Expiration Date</label>
-      <div id="expiration-date" class="card_field"></div>
-    </div>
+      <div class="pp-field-wrapper">
+        <label for="card-number">Card Number</label>
+        <div id="card-number" class="pp-input"></div>
+      </div>
 
-    <div>
-      <label for="cvv">CVV</label>
-      <div id="cvv" class="card_field"></div>
-    </div>
+      <div class="pp-flex pp-space-between">
+        <div class="pp-field-wrapper">
+          <label for="expiration-date">Expiration Date</label>
+          <div id="expiration-date" class="pp-input"></div>
+        </div>
 
-    <div>
-      <button value="submit" id="submit" class="btn">Pay</button>
-    </div>
-  </form>
+        <div class="pp-field-wrapper">
+          <label for="cvv">CVV</label>
+          <div id="cvv" class="pp-input"></div>
+        </div>
+      </div>
+
+      <div class="pp-padding-1">
+        <button value="submit" id="submit" class="btn btn-primary">Pay</button>
+      </div>
+    </form>
+  </div>
+
 </div>
+
 
 
 <script>
