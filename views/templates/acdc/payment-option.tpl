@@ -88,24 +88,24 @@
     <form id="card-form" class="pp-flex pp-flex-direction-column">
 
       <div class="pp-field-wrapper">
-        <label for="card-number">Card Number</label>
+        <label for="card-number">{l s='Card Number' mod='paypal'}</label>
         <div id="card-number" class="pp-input"></div>
       </div>
 
       <div class="pp-flex pp-space-between">
         <div class="pp-field-wrapper">
-          <label for="expiration-date">Expiration Date</label>
+          <label for="expiration-date">{l s='Expiration Date' mod='paypal'}</label>
           <div id="expiration-date" class="pp-input"></div>
         </div>
 
         <div class="pp-field-wrapper">
-          <label for="cvv">CVV</label>
+          <label for="cvv">{l s='CVV' mod='paypal'}</label>
           <div id="cvv" class="pp-input"></div>
         </div>
       </div>
 
       <div class="pp-padding-1">
-        <button value="submit" id="submit" class="btn btn-primary">Pay</button>
+        <button value="submit" id="submit" class="btn btn-primary">{l s='Pay' mod='paypal'}</button>
       </div>
     </form>
   </div>
