@@ -29,6 +29,7 @@ namespace PaypalAddons\classes\PUI;
 
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\services\Core\PaypalMerchantId;
+use PayPal;
 
 class SignupLink
 {
@@ -58,8 +59,8 @@ class SignupLink
         }
 
         $params = [
-            'partnerClientId' => $this->method->getClientId(),
-            'partnerId' => $this->initMerchantId()->get(),
+            'partnerClientId' => $this->getPartnerClientId(),
+            'partnerId' => $this->getPartnerId(),
             'integrationType' => 'FO',
             'features' => 'PAYMENT,REFUND,ACCESS_MERCHANT_INFORMATION',
             'returnToPartnerUrl' => \Context::getContext()->link->getAdminLink('AdminPaypalGetCredentials'),
@@ -68,7 +69,8 @@ class SignupLink
             'secondaryProducts' => 'payment_methods',
             'capabilities' => 'PAY_UPON_INVOICE',
             'country.x' => 'DE',
-            'locale.x' => 'de-DE'
+            'locale.x' => 'de-DE',
+            'sellerNonce' => $this->getSellerNonce()
         ];
 
         return $urlLink . http_build_query($params);
@@ -77,5 +79,28 @@ class SignupLink
     protected function initMerchantId()
     {
         return new PaypalMerchantId();
+    }
+
+    protected function getPartnerClientId()
+    {
+        if ($this->method->isSandbox()) {
+            return PayPal::PAYPAL_PARTNER_CLIENT_ID_SANDBOX;
+        } else {
+            return PayPal::PAYPAL_PARTNER_CLIENT_ID_LIVE;
+        }
+    }
+
+    protected function getPartnerId()
+    {
+        if ($this->method->isSandbox()) {
+            return PayPal::PAYPAL_PARTNER_ID_SANDBOX;
+        } else {
+            return PayPal::PAYPAL_PARTNER_ID_LIVE;
+        }
+    }
+
+    protected function getSellerNonce()
+    {
+        return $this->method->getSellerNonce();
     }
 }
