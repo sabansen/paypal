@@ -22,7 +22,8 @@
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
-// init incontext
+
+import {Tools} from './tools.js';
 
 const ACDC = function(conf) {
   this.button = typeof conf['button'] != 'undefined' ? conf['button'] : null;
@@ -125,6 +126,11 @@ ACDC.prototype.initHostedFields = function() {
     // Hides card fields if the merchant isn't eligible
     document.querySelector("#card-form").style = 'display: none';
   }
+
+  Tools.disableTillConsenting(
+    document.querySelector('[paypal-acdc-card-wrapper] button'),
+    document.getElementById('conditions_to_approve[terms-and-conditions]')
+  )
 };
 
 ACDC.prototype.submitHostedFields = function(cardFields) {

@@ -57,5 +57,25 @@ export const Tools = {
       style.opacity !== "0" &&
       style.display!=='none' &&
       style.visibility!== 'hidden';
-  }
+  },
+
+  disableTillConsenting(disabledElement, checkBox) {
+    if (disabledElement instanceof Element == false) {
+      return;
+    }
+
+    if (checkBox instanceof Element == false) {
+      return;
+    }
+
+    disabledElement.setAttribute('disabled', true);
+
+    checkBox.addEventListener('click', function() {
+      if (checkBox.checked) {
+        disabledElement.removeAttribute('disabled');
+      } else {
+        disabledElement.setAttribute('disabled', true);
+      }
+    })
+  },
 }
