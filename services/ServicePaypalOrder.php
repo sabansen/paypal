@@ -113,24 +113,17 @@ class ServicePaypalOrder
 
     public function getPaypalOrderByPaymentId($paymentId)
     {
-        $paypalOrder = new \PaypalOrder();
         $query = (new DbQuery())
+            ->select('id_paypal_order')
             ->from('paypal_order', 'po')
-            ->leftJoin('paypal_capture', 'pc', 'po.id_paypal_order = pc.id_paypal_order')
-            ->where(implode(
-                    ' OR ',
-                    [
-                        'po.id_transaction = "' . pSQL($transactionId) . '"',
-                        'pc.id_capture = "' . pSQL($transactionId) . '"',
-                    ])
-            );
-        $data = (int) Db::getInstance()->getRow($query);
+            ->where('id_payment = \'' . pSQL($paymentId) . '\'');
+        $id = (int)Db::getInstance()->getValue($query);
 
-        if ($data) {
-            $paypalOrder::hydrate($data);
+        if ($id) {
+            return new \PaypalOrder($id);
         }
 
-        return $paypalOrder;
+        return new \PaypalOrder();
     }
 
     /**
