@@ -80,13 +80,12 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
                     header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
                 }
             } else {
-                $transaction = $this->getTransactionRef($this->getRequestData());
-                $paypalOrder = $this->servicePaypalOrder->getPaypalOrderByTransaction($transaction);
+                $paypalOrder = $this->initPaypalOrder($this->getRequest());
 
                 ProcessLoggerHandler::openLogger();
                 ProcessLoggerHandler::logError(
                     Tools::substr('Invalid webhook event. Data: ' . $this->getRequest(), 0, 999),
-                    $transaction,
+                    $paypalOrder->id_transaction,
                     Validate::isLoadedObject($paypalOrder) ? $paypalOrder->id_order : null,
                     Validate::isLoadedObject($paypalOrder) ? $paypalOrder->id_cart : null,
                     null,
@@ -100,13 +99,12 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
         } catch (\Exception $e) {
             $message = 'Error code: ' . $e->getCode() . '.';
             $message .= 'Short message: ' . $e->getMessage() . '.';
-            $transaction = $this->getTransactionRef($this->getRequestData());
-            $paypalOrder = $this->servicePaypalOrder->getPaypalOrderByTransaction($transaction);
+            $paypalOrder = $this->initPaypalOrder($this->getRequestData());
 
             ProcessLoggerHandler::openLogger();
             ProcessLoggerHandler::logError(
                 $message,
-                $transaction,
+                $paypalOrder->id_transaction,
                 Validate::isLoadedObject($paypalOrder) ? $paypalOrder->id_order : null,
                 Validate::isLoadedObject($paypalOrder) ? $paypalOrder->id_cart : null,
                 null,
@@ -192,7 +190,7 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
         foreach ($orders as $order) {
             ProcessLoggerHandler::logInfo(
                 $msg,
-                $transaction,
+                $paypalOrder->id_transaction,
                 $order->id,
                 $order->id_cart,
                 $order->id_shop,
@@ -286,8 +284,7 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
      */
     protected function getPaymentTotal($data)
     {
-        $transaction = $this->getTransactionRef($data);
-        $paypalOrder = $this->servicePaypalOrder->getPaypalOrderByTransaction($transaction);
+        $paypalOrder = $this->initPaypalOrder($data);
 
         return $this->getPaymentTotalAmountService()->get($paypalOrder);
     }
