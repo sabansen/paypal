@@ -60,6 +60,7 @@ use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use PaypalPPBTlib\Install\ModuleInstaller;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
+use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerExtension;
 
 define('BT_CARD_PAYMENT', 'card-braintree');
 define('BT_PAYPAL_PAYMENT', 'paypal-braintree');
@@ -196,7 +197,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
      * List of ppbtlib extentions
      */
     public $extensions = [
-        PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerExtension::class,
+        ProcessLoggerExtension::class,
     ];
 
     /**

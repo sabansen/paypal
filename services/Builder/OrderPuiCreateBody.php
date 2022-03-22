@@ -31,6 +31,7 @@ use Configuration;
 use Country;
 use PaypalAddons\classes\Constants\PaypalConfigurations;
 use PaypalAddons\classes\PUI\DataUserForm;
+use Product;
 
 class OrderPuiCreateBody extends OrderCreateBody
 {
@@ -60,6 +61,9 @@ class OrderPuiCreateBody extends OrderCreateBody
                 ],
             ],
         ];
+        $body = $this->addTaxRate($body);
+        $body = $this->addItemCategory($body);
+        $body['processing_instruction'] = 'ORDER_COMPLETE_ON_PAYMENT_APPROVAL';
 
         return $body;
     }
@@ -79,5 +83,51 @@ class OrderPuiCreateBody extends OrderCreateBody
     protected function getDataUser()
     {
         return $this->method->getPuiDataUser();
+    }
+
+    protected function addTaxRate($body)
+    {
+        if (empty($body['purchase_units'][0]['items'])) {
+            return $body;
+        }
+
+        foreach($body['purchase_units'][0]['items'] as $index => $item) {
+            if (empty($item['tax']['value'])) {
+                continue;
+            }
+
+            if (empty($item['unit_amount']['value'])){
+                continue;
+            }
+
+            $taxRate = ((float)$item['tax']['value'] / (float)$item['unit_amount']['value']);
+            $taxRate = number_format($taxRate, 2, '.', '');
+            $body['purchase_units'][0]['items'][$index]['tax_rate'] = $taxRate;
+        }
+
+        return $body;
+    }
+
+    protected function addItemCategory($body)
+    {
+        if (empty($body['purchase_units'][0]['items'])) {
+            return $body;
+        }
+
+        foreach($body['purchase_units'][0]['items'] as $index => $item) {
+            if (empty($item['sku'])) {
+                $body['purchase_units'][0]['items'][$index]['category'] = 'PHYSICAL_GOODS';
+            }
+
+            $product = new Product((int)$item['sku']);
+
+            if ($product->is_virtual) {
+                $body['purchase_units'][0]['items'][$index]['category'] = 'DIGITAL_GOODS';
+            } else {
+                $body['purchase_units'][0]['items'][$index]['category'] = 'PHYSICAL_GOODS';
+            }
+        }
+
+        return $body;
     }
 }

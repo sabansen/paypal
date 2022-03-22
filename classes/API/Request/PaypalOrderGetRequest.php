@@ -28,6 +28,7 @@ namespace PaypalAddons\classes\API\Request;
 
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Response\Error;
+use PaypalAddons\classes\API\Response\PurchaseUnit;
 use PaypalAddons\classes\API\Response\ResponseOrderGet;
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
 use PayPalCheckoutSdk\Orders\OrdersGetRequest;
@@ -68,6 +69,8 @@ class PaypalOrderGetRequest extends RequestAbstract
                     ->setEmail($this->getEmail($exec))
                     ->setFirstName($this->getFirstName($exec))
                     ->setLastName($this->getLastName($exec));
+                $response->setPurchaseUnit($this->getPurchaseUnit($exec));
+                $response->setStatus($this->getStatus($exec));
             } else {
                 $error = new Error();
                 $resultDecoded = json_decode($exec->message);
@@ -133,12 +136,11 @@ class PaypalOrderGetRequest extends RequestAbstract
 
     protected function getPhone(\PayPalHttp\HttpResponse $exec)
     {
-        $payer = $exec->result->payer;
-        if (isset($payer->phone)) {
-            return $payer->phone->phone_number->national_number;
-        } else {
+        if (empty($exec->result->payer->phone->phone_number->national_number)) {
             return '';
         }
+
+        return $exec->result->payer->phone->phone_number->national_number;
     }
 
     protected function getFullName(\PayPalHttp\HttpResponse $exec)
@@ -148,16 +150,55 @@ class PaypalOrderGetRequest extends RequestAbstract
 
     protected function getEmail(\PayPalHttp\HttpResponse $exec)
     {
-        return $exec->result->payer->email_address;
+        if (false == empty($exec->result->payer->email_address)) {
+            return $exec->result->payer->email_address;
+        }
+        return '';
     }
 
     protected function getFirstName(\PayPalHttp\HttpResponse $exec)
     {
-        return $exec->result->payer->name->given_name;
+        if (false == empty($exec->result->payer->name->given_name)) {
+            return $exec->result->payer->name->given_name;
+        }
+
+        return '';
     }
 
     protected function getLastName(\PayPalHttp\HttpResponse $exec)
     {
-        return $exec->result->payer->name->surname;
+        if (false == empty($exec->result->payer->name->surname)) {
+            return $exec->result->payer->name->surname;
+        }
+
+        return '';
+    }
+
+    protected function getPurchaseUnit(\PayPalHttp\HttpResponse $exec)
+    {
+        if (empty($exec->result->purchase_units)) {
+            return new PurchaseUnit();
+        }
+
+        $purchaseUnit = new PurchaseUnit();
+
+        if (false == empty($exec->result->purchase_units[0]->amount->value)) {
+            $purchaseUnit->setAmount($exec->result->purchase_units[0]->amount->value);
+        }
+
+        if (false == empty($exec->result->purchase_units[0]->amount->currency_code)) {
+            $purchaseUnit->setCurrency($exec->result->purchase_units[0]->amount->currency_code);
+        }
+
+        return $purchaseUnit;
+    }
+
+    protected function getStatus(\PayPalHttp\HttpResponse $exec)
+    {
+        if (empty($exec->result->status)) {
+            return '';
+        }
+
+        return $exec->result->status;
     }
 }

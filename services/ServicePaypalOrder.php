@@ -111,6 +111,28 @@ class ServicePaypalOrder
         return false;
     }
 
+    public function getPaypalOrderByPaymentId($paymentId)
+    {
+        $paypalOrder = new \PaypalOrder();
+        $query = (new DbQuery())
+            ->from('paypal_order', 'po')
+            ->leftJoin('paypal_capture', 'pc', 'po.id_paypal_order = pc.id_paypal_order')
+            ->where(implode(
+                    ' OR ',
+                    [
+                        'po.id_transaction = "' . pSQL($transactionId) . '"',
+                        'pc.id_capture = "' . pSQL($transactionId) . '"',
+                    ])
+            );
+        $data = (int) Db::getInstance()->getRow($query);
+
+        if ($data) {
+            $paypalOrder::hydrate($data);
+        }
+
+        return $paypalOrder;
+    }
+
     /**
      * @param $paypalOrder \PaypalOrder object
      *

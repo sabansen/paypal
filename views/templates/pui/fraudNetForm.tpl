@@ -45,7 +45,7 @@
 
 <form
         class="form"
-        action="{Context::getContext()->link->getModuleLink('paypal','puiInit',['sessionId' => $sessionId], true)}"
+        action="{Context::getContext()->link->getModuleLink('paypal','puiValidate',['sessionId' => $sessionId], true)}"
         method="POST"
 >
 

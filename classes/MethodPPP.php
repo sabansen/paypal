@@ -342,10 +342,32 @@ class MethodPPP extends AbstractMethodPaypal implements PuiMethodInterface
             throw new \Exception($response->getError()->getMessage());
         }
 
-        $this->setPaymentId($response->getPaymentId());
-        $this->updateCartTrace(Context::getContext()->cart, $response->getPaymentId());
+        $getOrderResponse = $this->paypalApiManager->getOrderGetRequest($response->getPaymentId())->execute();
 
-        return $response;
+        if ($getOrderResponse->isSuccess() == false) {
+            throw new \Exception($getOrderResponse->getError()->getMessage());
+        }
+
+        $transactionDetails = [
+            'method' => 'PPP',
+            'transaction_id' => null,
+            'id_payment' => $response->getPaymentId(),
+            'payment_method' => $this->getPaymentMethod(),
+            'currency' => $getOrderResponse->getPurchaseUnit()->getCurrency(),
+            'payment_status' => $getOrderResponse->getStatus(),
+            'payment_tool' => 'PUI',
+            'intent' => $this->getIntent(),
+            'capture' => false,
+        ];
+        $paypal = Module::getInstanceByName($this->name);
+        $paypal->validateOrder(
+            Context::getContext()->cart->id,
+            $this->getOrderStatus(),
+            $getOrderResponse->getPurchaseUnit()->getAmount(),
+            $this->getPaymentMethod(),
+            null,
+            $transactionDetails
+        );
     }
 
     public function getPuiDataUser()

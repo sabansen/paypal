@@ -31,7 +31,7 @@ use PaypalAddons\services\PaypalContext;
 /**
  * Prepare EC payment
  */
-class PaypalPuiInitModuleFrontController extends PaypalAbstarctModuleFrontController
+class PaypalPuiValidateModuleFrontController extends PaypalAbstarctModuleFrontController
 {
     /* @var $method MethodPPP*/
     protected $method;
@@ -49,9 +49,12 @@ class PaypalPuiInitModuleFrontController extends PaypalAbstarctModuleFrontContro
     public function postProcess()
     {
         try {
+            $paypal = Module::getInstanceByName($this->name);
             $this->method->setPuiDataUser($this->getUserDataFromRequest());
-            $response = $this->method->initPui();
-            $this->redirectUrl = $response->getApproveLink();
+            $this->method->initPui();
+            $cart = Context::getContext()->cart;
+            $customer = new Customer($cart->id_customer);
+            $this->redirectUrl = 'index.php?controller=order-confirmation&id_cart=' . $cart->id . '&id_module=' . $paypal->id . '&id_order=' . $paypal->currentOrder . '&key=' . $customer->secure_key;
         } catch (PayPal\Exception\PPConnectionException $e) {
             $this->_errors['error_msg'] = $this->module->l('Error connecting to ', pathinfo(__FILE__)['filename']) . $e->getUrl();
         } catch (PayPal\Exception\PPMissingCredentialException $e) {
@@ -66,6 +69,9 @@ class PaypalPuiInitModuleFrontController extends PaypalAbstarctModuleFrontContro
             $this->_errors['error_code'] = $e->getCode();
             $this->_errors['error_msg'] = $e->getMessage();
         }
+
+        Context::getContext()->cookie->__unset('paypal_pSc');
+        Context::getContext()->cookie->__unset('paypal_pSc_email');
 
         if (!empty($this->_errors)) {
             $this->redirectUrl = Context::getContext()->link->getModuleLink($this->name, 'error', $this->_errors);

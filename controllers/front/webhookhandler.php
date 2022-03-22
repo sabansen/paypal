@@ -180,9 +180,7 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
                 'data' => $data,
             ]);
         $msg = Tools::substr($msg, 0, 999);
-
-        $transaction = $this->getTransactionRef($data);
-        $paypalOrder = $this->servicePaypalOrder->getPaypalOrderByTransaction($transaction);
+        $paypalOrder = $this->initPaypalOrder($data);
 
         if (Validate::isLoadedObject($paypalOrder) == false) {
             return false;
@@ -502,5 +500,21 @@ class PaypalWebhookhandlerModuleFrontController extends PaypalAbstarctModuleFron
         foreach ($webhookEvents as $webhookEvent) {
             $webhookEvent->delete();
         }
+    }
+
+    protected function initPaypalOrder(array $data)
+    {
+        if (false == empty($data['resource']['supplementary_data']['related_ids']['order_id'])) {
+            $paymentId = $data['resource']['supplementary_data']['related_ids']['order_id'];
+            return $this->servicePaypalOrder->getPaypalOrderByPaymentId($paymentId);
+        }
+
+        $transaction = $this->getTransactionRef($data);
+
+        if (false == empty($transaction)) {
+            return $this->servicePaypalOrder->getPaypalOrderByTransaction($transaction);
+        }
+
+        return new PaypalOrder();
     }
 }
