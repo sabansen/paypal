@@ -27,6 +27,7 @@
 namespace PaypalAddons\classes\API\Request;
 
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\API\Response\DepositBankDetails;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\PurchaseUnit;
 use PaypalAddons\classes\API\Response\ResponseOrderGet;
@@ -71,6 +72,7 @@ class PaypalOrderGetRequest extends RequestAbstract
                     ->setLastName($this->getLastName($exec));
                 $response->setPurchaseUnit($this->getPurchaseUnit($exec));
                 $response->setStatus($this->getStatus($exec));
+                $response->setDepositBankDetails($this->getDepositBankDetails($exec));
             } else {
                 $error = new Error();
                 $resultDecoded = json_decode($exec->message);
@@ -200,5 +202,32 @@ class PaypalOrderGetRequest extends RequestAbstract
         }
 
         return $exec->result->status;
+    }
+
+    protected function getDepositBankDetails(\PayPalHttp\HttpResponse $exec)
+    {
+        if (empty($exec->result->payment_source->pay_upon_invoice->deposit_bank_details)) {
+            return new DepositBankDetails();
+        }
+
+        $bankDetails = new DepositBankDetails();
+
+        if (false == empty($exec->result->payment_source->pay_upon_invoice->deposit_bank_details->bic)) {
+            $bankDetails->setBic($exec->result->payment_source->pay_upon_invoice->deposit_bank_details->bic);
+        }
+
+        if (false == empty($exec->result->payment_source->pay_upon_invoice->deposit_bank_details->bank_name)) {
+            $bankDetails->setBankName($exec->result->payment_source->pay_upon_invoice->deposit_bank_details->bank_name);
+        }
+
+        if (false == empty($exec->result->payment_source->pay_upon_invoice->deposit_bank_details->iban)) {
+            $bankDetails->setIban($exec->result->payment_source->pay_upon_invoice->deposit_bank_details->iban);
+        }
+
+        if (false == empty($exec->result->payment_source->pay_upon_invoice->deposit_bank_details->account_holder_name)) {
+            $bankDetails->setAccountHolderName($exec->result->payment_source->pay_upon_invoice->deposit_bank_details->account_holder_name);
+        }
+
+        return $bankDetails;
     }
 }

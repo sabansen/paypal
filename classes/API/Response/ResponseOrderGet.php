@@ -36,6 +36,8 @@ class ResponseOrderGet extends Response
 
     protected $purchaseUnit;
 
+    protected $depositBankDetails;
+
     /** @var string*/
     protected $status;
 
@@ -44,6 +46,7 @@ class ResponseOrderGet extends Response
         $this->setClient(new Client());
         $this->setAddress(new Address());
         $this->setPurchaseUnit(new PurchaseUnit());
+        $this->setDepositBankDetails(new DepositBankDetails());
     }
 
     /**
@@ -107,6 +110,12 @@ class ResponseOrderGet extends Response
     public function setStatus($status)
     {
         $this->status = (string)$status;
+        return $this;
+    }
+
+    public function setDepositBankDetails(DepositBankDetails $bankDetails)
+    {
+        $this->depositBankDetails = $bankDetails;
         return $this;
     }
 }
