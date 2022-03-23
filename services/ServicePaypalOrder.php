@@ -28,6 +28,7 @@ namespace PaypalAddons\services;
 
 use Db;
 use DbQuery;
+use Order;
 
 require_once dirname(__FILE__) . '/../classes/PaypalOrder.php';
 require_once dirname(__FILE__) . '/../classes/PaypalCapture.php';
@@ -69,6 +70,22 @@ class ServicePaypalOrder
         }
 
         return true;
+    }
+
+    public function setTransactionId(\PaypalOrder $paypalOrder, $transactionId)
+    {
+        $paypalOrder->id_transaction = $transactionId;
+        $paypalOrder->save();
+        $order = new Order($paypalOrder->id_order);
+
+        $data = [
+            'transaction_id' => $transactionId
+        ];
+        $where = sprintf(
+            'order_reference = \'%s\' AND (transaction_id IS NULL OR transaction_id = \'\')',
+            $order->reference
+        );
+        Db::getInstance()->update('order_payment', $data, $where);
     }
 
     /**

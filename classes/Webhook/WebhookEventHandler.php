@@ -53,7 +53,7 @@ class WebhookEventHandler
         foreach ($orders as $order) {
             ProcessLoggerHandler::logInfo(
                 $msg,
-                $paypalOrder->id_transaction,
+                empty($event->getResource()->id) ? '' : $event->getResource()->id,
                 $order->id,
                 $order->id_cart,
                 $order->id_shop,
@@ -92,6 +92,10 @@ class WebhookEventHandler
         $paypalWebhook->data = $event->toJSON();
         $paypalWebhook->date_completed = date(PaypalWebhook::DATE_FORMAT);
         $paypalWebhook->save();
+
+        if ($psOrderStatus == $this->getStatusMapping()->getAcceptedStatus() && empty($paypalOrder->id_transaction)) {
+            $this->servicePaypalOrder->setTransactionId($paypalOrder, $event->getResource()->id);
+        }
 
         return true;
     }
@@ -199,7 +203,7 @@ class WebhookEventHandler
     {
     }
 
-    protected function actualizeOrder(PaypalOrder $paypalOrder, PayPal\Api\WebhookEvent $webhookEvent)
+    protected function actualizeOrder(PaypalOrder $paypalOrder, WebhookEvent $webhookEvent)
     {
         $orders = $this->servicePaypalOrder->getPsOrders($paypalOrder);
 
