@@ -31,6 +31,7 @@ use Context;
 use PaypalAddons\classes\API\Response\ResponsePartnerReferrals;
 use PaypalAddons\classes\Constants\PUI;
 use PaypalAddons\classes\PuiMethodInterface;
+use Tools;
 
 class SignUpLinkButton
 {
@@ -48,6 +49,7 @@ class SignUpLinkButton
     {
         $this->context->smarty->assign('actionUrl', $this->getActionUrl());
         $this->context->smarty->assign('paypalOnboardingLib', $this->getOnboardingLib());
+        $this->context->smarty->assign('isPuiAvailable', $this->isPuiAvailable());
 
         return $this->context->smarty->fetch(_PS_MODULE_DIR_ . 'paypal/views/templates/pui/signUpLinkButton.tpl');
     }
@@ -69,5 +71,26 @@ class SignUpLinkButton
     protected function initSignupLink()
     {
         return new SignupLink($this->method);
+    }
+
+    protected function isPuiAvailable()
+    {
+        $sellerStatus = $this->method->getSellerStatus();
+
+        if ($sellerStatus->isSuccess() == false) {
+            return false;
+        }
+
+        if (empty($sellerStatus->getCapabilities())) {
+            return false;
+        }
+
+        foreach ($sellerStatus->getCapabilities() as $capability) {
+            if (Tools::strtoupper($capability) == 'PAY_UPON_INVOICE') {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

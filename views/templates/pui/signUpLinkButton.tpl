@@ -45,6 +45,12 @@
 
 {/if}
 
+{if isset($isPuiAvailable) && $isPuiAvailable}
+  <div class="alert alert-success pp__mt-3">
+      {l s='Pay upon invoice feature is availabe' mod='paypal'}
+  </div>
+{/if}
+
 {if isset($paypalOnboardingLib)}
   <script src="{$paypalOnboardingLib|addslashes}"></script>
 {/if}

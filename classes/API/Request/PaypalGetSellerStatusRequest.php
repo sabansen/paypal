@@ -31,6 +31,7 @@ use PaypalAddons\classes\API\ExtensionSDK\GetSellerStatus;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\PUI\PsMerchantId;
 use PaypalAddons\services\Core\PaypalMerchantId;
+use Tools;
 
 class PaypalGetSellerStatusRequest extends RequestAbstract
 {
@@ -51,6 +52,8 @@ class PaypalGetSellerStatusRequest extends RequestAbstract
         }
 
         $response->setSuccess(true);
+        $response->setCapabilities($this->getCapabilities($exec));
+        $response->setProducts($this->getProducts($exec));
         $response->setData($exec);
 
         return $response;
@@ -59,7 +62,7 @@ class PaypalGetSellerStatusRequest extends RequestAbstract
     /** @return ResponsePartnerReferrals*/
     protected function getResponse()
     {
-        return new \PaypalAddons\classes\API\Response\Response();
+        return new \PaypalAddons\classes\API\Response\ResponseGetSellerStatus();
     }
 
     protected function getPartnerMerchantId()
@@ -79,5 +82,51 @@ class PaypalGetSellerStatusRequest extends RequestAbstract
     protected function initPaypalMerchantId()
     {
         return new PaypalMerchantId();
+    }
+
+    protected function getCapabilities(\PayPalHttp\HttpResponse $data)
+    {
+        $capabilities = [];
+
+        if (empty($data->result->capabilities)) {
+            return $capabilities;
+        }
+
+        foreach ($data->result->capabilities as $capability) {
+            if (empty($capability->name)) {
+                continue;
+            }
+
+            if (empty($capability->status)) {
+                continue;
+            }
+
+            if (Tools::strtoupper($capability->status) != 'ACTIVE') {
+                continue;
+            }
+
+            $capabilities[] = $capability->name;
+        }
+
+        return $capabilities;
+    }
+
+    protected function getProducts(\PayPalHttp\HttpResponse $data)
+    {
+        $products = [];
+
+        if (empty($data->result->products)) {
+            return $products;
+        }
+
+        foreach ($data->result->products as $product) {
+            if (empty($product->name)) {
+                continue;
+            }
+
+            $products[] = $product->name;
+        }
+
+        return $products;
     }
 }
