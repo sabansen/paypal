@@ -118,4 +118,9 @@ class ResponseOrderGet extends Response
         $this->depositBankDetails = $bankDetails;
         return $this;
     }
+
+    public function getDepositBankDetails()
+    {
+        return $this->depositBankDetails;
+    }
 }

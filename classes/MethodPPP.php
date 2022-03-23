@@ -355,7 +355,7 @@ class MethodPPP extends AbstractMethodPaypal implements PuiMethodInterface
             'payment_method' => $this->getPaymentMethod(),
             'currency' => $getOrderResponse->getPurchaseUnit()->getCurrency(),
             'payment_status' => $getOrderResponse->getStatus(),
-            'payment_tool' => 'PUI',
+            'payment_tool' => 'PAY_UPON_INVOICE',
             'intent' => $this->getIntent(),
             'capture' => false,
         ];

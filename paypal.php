@@ -1032,6 +1032,31 @@ class PayPal extends \PaymentModule implements WidgetInterface
         return $returnContent;
     }
 
+    public function hookDisplayInvoiceLegalFreeText($params)
+    {
+        $paypal_order = PaypalOrder::loadByOrderId($params['order']->id);
+
+        if (!Validate::isLoadedObject($paypal_order) || $paypal_order->method != 'PPP'
+            || $paypal_order->payment_tool != 'PAY_UPON_INVOICE') {
+            return '';
+        }
+
+        $method = AbstractMethodPaypal::load();
+        $response = $method->getInfo($paypal_order->id_payment);
+
+        if ($response->isSuccess() == false) {
+            return '';
+        }
+
+        $bankDetails = $response->getDepositBankDetails();
+        $tab = $this->l('The bank name').' : ' . $bankDetails->getBankName() . '; 
+        ' . $this->l('Account holder name').' : ' . $bankDetails->getAccountHolderName() . '; 
+        ' . $this->l('IBAN').' : ' . $bankDetails->getIban() . '; 
+        ' . $this->l('BIC').' : ' . $bankDetails->getBic();
+
+        return $tab;
+    }
+
     public function checkActiveModule()
     {
         $active = false;
