@@ -122,10 +122,13 @@
             return;
         }
 
+        var messages = new Object();
+        messages['INVALID_REQUEST'] = '{l s='There was a problem with your request' mod='paypal'}';
         acdcObj = new ACDC({
             button: '#paypal-acdc-button-container',
             controller: '{$scInitController nofilter}',
-            validationController: '{$validationController nofilter}'
+            validationController: '{$validationController nofilter}',
+            messages: messages
         });
         acdcObj.initButton();
         acdcObj.initHostedFields();

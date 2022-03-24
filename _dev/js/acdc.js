@@ -31,6 +31,8 @@ const ACDC = function(conf) {
   this.controller = typeof conf['controller'] != 'undefined' ? conf['controller'] : null;
 
   this.validationController = typeof conf['validationController'] != 'undefined' ? conf['validationController'] : null;
+
+  this.messages = typeof conf['messages'] != "undefined" ? conf['messages'] : [];
 };
 
 ACDC.prototype.initButton = function() {
@@ -108,7 +110,8 @@ ACDC.prototype.initHostedFields = function() {
         },
         cvv: {
           selector: "#cvv",
-          placeholder: "123"
+          placeholder: "123",
+          type: 'password'
         },
         expirationDate: {
           selector: "#expiration-date",
@@ -119,7 +122,19 @@ ACDC.prototype.initHostedFields = function() {
       document.querySelector("#card-form").addEventListener('submit', function(event) {
         event.preventDefault();
         event.stopPropagation();
+
+        if (typeof cardFields['_state'] != 'undefined') {
+          if (typeof cardFields['_state']['fields'] != 'undefined') {
+            for (let nameField in cardFields['_state']['fields']) {
+              if (cardFields['_state']['fields'][nameField]['isEmpty']) {
+                return;
+              }
+            }
+          }
+        }
+
         this.submitHostedFields(cardFields);
+        document.querySelector('#card-form #submit').setAttribute('disabled', true);
       }.bind(this));
     }.bind(this));
   } else {
@@ -135,11 +150,22 @@ ACDC.prototype.initHostedFields = function() {
 
 ACDC.prototype.submitHostedFields = function(cardFields) {
 
-  cardFields.submit().then(function(res) {
-    this.sendData({
-      orderID: res['orderId']
-    });
-  }.bind(this))
+  cardFields.submit()
+    .then(function(res) {
+      this.sendData({
+        orderID: res['orderId']
+      });
+    }.bind(this))
+    .catch(function(reason) {
+      document.querySelector('#card-form #submit').removeAttribute('disabled');
+
+      if (reason['name'] == 'INVALID_REQUEST') {
+        if (typeof this.messages['INVALID_REQUEST'] != 'undefined') {
+          alert(this.messages['INVALID_REQUEST']);
+        }
+      }
+      console.log(reason);
+    }.bind(this))
 };
 
 window.ACDC = ACDC;
