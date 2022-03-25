@@ -107,6 +107,10 @@
       <div class="pp-padding-1">
         <button value="submit" id="submit" class="btn btn-primary">{l s='Pay' mod='paypal'}</button>
       </div>
+
+      <div paypal-acdc-card-error>
+
+      </div>
     </form>
   </div>
 
@@ -124,6 +128,9 @@
 
         var messages = new Object();
         messages['INVALID_REQUEST'] = '{l s='There was a problem with your request' mod='paypal'}';
+        messages['CVV_IS_EMPTY'] = '{l s='Please enter a valid cvv' mod='paypal'}';
+        messages['NUMBER_IS_EMPTY'] = '{l s='Please enter a valid number' mod='paypal'}';
+        messages['DATE_IS_EMPTY'] = '{l s='Please enter a valid date' mod='paypal'}';
         acdcObj = new ACDC({
             button: '#paypal-acdc-button-container',
             controller: '{$scInitController nofilter}',
