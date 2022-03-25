@@ -60,6 +60,7 @@ use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use PaypalPPBTlib\Install\ModuleInstaller;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
+use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerExtension;
 
 define('BT_CARD_PAYMENT', 'card-braintree');
 define('BT_PAYPAL_PAYMENT', 'paypal-braintree');
@@ -196,7 +197,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
      * List of ppbtlib extentions
      */
     public $extensions = [
-        PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerExtension::class,
+        ProcessLoggerExtension::class,
     ];
 
     /**
@@ -1799,6 +1800,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
     {
         /** @var $orderPayPal PaypalOrder */
         $orderPayPal = PaypalOrder::loadByOrderId($params['id_order']);
+        $isRequestSent = false;
 
         if (!Validate::isLoadedObject($orderPayPal) || $orderPayPal->method == 'BT') {
             return false;
@@ -1843,6 +1845,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $response = $method->void($orderPayPal);
 
             if ($response->isSuccess()) {
+                $isRequestSent = true;
                 if (Validate::isLoadedObject($paypalCapture)) {
                     $paypalCapture->result = 'voided';
                     $paypalCapture->save();
@@ -1914,6 +1917,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $refundResponse = $method->refund($orderPayPal);
 
             if ($refundResponse->isSuccess()) {
+                $isRequestSent = true;
                 if (Validate::isLoadedObject($capture)) {
                     $capture->result = 'refunded';
                     $capture->save();
@@ -1968,6 +1972,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $response = $method->confirmCapture($orderPayPal);
 
             if ($response->isSuccess()) {
+                $isRequestSent = true;
                 $orderPayPal->payment_status = $response->getStatus();
                 $capture->id_capture = $response->getIdTransaction();
                 $capture->result = $response->getStatus();
@@ -2007,7 +2012,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             }
         }
 
-        if ($this->getWebhookOption()->isEnable() && $this->getWebhookOption()->isAvailable()) {
+        if ($this->getWebhookOption()->isEnable() && $this->getWebhookOption()->isAvailable() && $isRequestSent) {
             try {
                 $this->getWebhookService()->createForOrder($orderPayPal, $params['newOrderStatus']->id);
             } catch (Exception $e) {
