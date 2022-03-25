@@ -1801,6 +1801,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
     {
         /** @var $orderPayPal PaypalOrder */
         $orderPayPal = PaypalOrder::loadByOrderId($params['id_order']);
+        $isRequestSent = false;
 
         if (!Validate::isLoadedObject($orderPayPal) || $orderPayPal->method == 'BT') {
             return false;
@@ -1845,6 +1846,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $response = $method->void($orderPayPal);
 
             if ($response->isSuccess()) {
+                $isRequestSent = true;
                 if (Validate::isLoadedObject($paypalCapture)) {
                     $paypalCapture->result = 'voided';
                     $paypalCapture->save();
@@ -1916,6 +1918,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $refundResponse = $method->refund($orderPayPal);
 
             if ($refundResponse->isSuccess()) {
+                $isRequestSent = true;
                 if (Validate::isLoadedObject($capture)) {
                     $capture->result = 'refunded';
                     $capture->save();
@@ -1970,6 +1973,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $response = $method->confirmCapture($orderPayPal);
 
             if ($response->isSuccess()) {
+                $isRequestSent = true;
                 $orderPayPal->payment_status = $response->getStatus();
                 $capture->id_capture = $response->getIdTransaction();
                 $capture->result = $response->getStatus();
@@ -2009,7 +2013,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             }
         }
 
-        if ($this->getWebhookOption()->isEnable() && $this->getWebhookOption()->isAvailable()) {
+        if ($this->getWebhookOption()->isEnable() && $this->getWebhookOption()->isAvailable() && $isRequestSent) {
             try {
                 $this->getWebhookService()->createForOrder($orderPayPal, $params['newOrderStatus']->id);
             } catch (Exception $e) {
