@@ -124,6 +124,7 @@
     <target name="npm" depends="clean-npm,npm-install" description="Install or update node dependencies" />
     <target name="clean-npm" description="Empty node_modules folder">
         <delete dir="${basedir}/202/node_modules" />
+        <delete dir="${basedir}/node_modules" />
     </target>
     <target name="npm-install" description="Installing node deps">
         <exec executable="npm">
