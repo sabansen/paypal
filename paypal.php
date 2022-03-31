@@ -805,7 +805,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
                         }
                     }
 
-                    if ($method->isConfigured() && (int) Configuration::get('PAYPAL_API_CARD')) {
+                    if ($method->isConfigured() && (int) Configuration::get('PAYPAL_API_CARD') && (in_array($isoCountryDefault, $this->countriesApiCartUnavailable) == false)) {
                         $payment_option = new PaymentOption();
                         $action_text = $this->l('Pay with credit or debit card');
                         $payment_option->setCallToActionText($action_text);
