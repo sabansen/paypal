@@ -2,6 +2,7 @@
 namespace PaypalAddons\classes\Webhook;
 
 use Configuration;
+use Context;
 use Db;
 use DbQuery;
 use Exception;
@@ -24,9 +25,12 @@ class WebhookEventHandler
 {
     protected $servicePaypalOrder;
 
+    protected $context;
+
     public function __construct()
     {
         $this->servicePaypalOrder = new ServicePaypalOrder();
+        $this->context = Context::getContext();
     }
 
     public function handle(WebhookEvent $event)
@@ -51,6 +55,12 @@ class WebhookEventHandler
 
         ProcessLoggerHandler::openLogger();
         foreach ($orders as $order) {
+            //If there are several shops, then PayPal sends webhook event to each shop. The module should
+            //handle the event once.
+            if ($order->id_shop == $this->context->shop->id) {
+                return false;
+            }
+
             ProcessLoggerHandler::logInfo(
                 $msg,
                 empty($event->getResource()->id) ? '' : $event->getResource()->id,
