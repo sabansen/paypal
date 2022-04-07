@@ -22,6 +22,7 @@
 *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
 *
 *}
+{assign var='currentDate' value=date('Y-m-d')}
 
 {literal}
 <script type="application/json" fncls="fnparams-dede7cc5-15fd-4c75-a9f4-36c430ee3a99">
@@ -108,6 +109,7 @@
               required
               class="form-control"
               type="date"
+              max="{$currentDate nofilter}"
               name="paypal_pui_birhday"
               id="paypal_pui_birhday"
               {literal}pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"{/literal}
