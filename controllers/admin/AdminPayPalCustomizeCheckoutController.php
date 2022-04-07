@@ -244,7 +244,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             ];
         }
 
-        if (in_array($countryDefault->iso_code, $this->module->countriesApiCartUnavailable) == false || $this->method == 'MB') {
+        if (in_array($countryDefault->iso_code, $this->module->countriesApiCartUnavailable) == false && in_array($this->method, ['MB', 'EC'])) {
             $this->fields_form['form']['form']['input'][] = [
                 'type' => 'switch',
                 'label' => $this->l('Accept credit and debit card payment'),
