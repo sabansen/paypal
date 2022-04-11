@@ -101,12 +101,12 @@ class ConfigurationMap
      */
     public static function getAllowedCountries()
     {
-        return ['fr', 'de', 'gb', 'us', 'au'];
+        return ['fr', 'de', 'gb', 'us', 'au', 'it', 'es'];
     }
 
     public static function getBnplAvailableCountries()
     {
-        return ['fr', 'de', 'gb', 'us', 'au'];
+        return ['fr', 'de', 'gb', 'us', 'au', 'it', 'es'];
     }
 
     public static function getLanguageCurrencyMap()
@@ -128,6 +128,14 @@ class ConfigurationMap
             ['en' => 'usd'],
             ['en' => 'aud'],
             ['en' => 'eur'],
+            ['it' => 'eur'],
+            ['it' => 'gbp'],
+            ['it' => 'usd'],
+            ['it' => 'aud'],
+            ['es' => 'eur'],
+            ['es' => 'gbp'],
+            ['es' => 'usd'],
+            ['es' => 'aud'],
         ];
     }
 
@@ -150,6 +158,14 @@ class ConfigurationMap
             ['en' => 'usd'],
             ['en' => 'aud'],
             ['en' => 'eur'],
+            ['it' => 'eur'],
+            ['it' => 'gbp'],
+            ['it' => 'usd'],
+            ['it' => 'aud'],
+            ['es' => 'eur'],
+            ['es' => 'gbp'],
+            ['es' => 'usd'],
+            ['es' => 'aud'],
         ];
     }
 
