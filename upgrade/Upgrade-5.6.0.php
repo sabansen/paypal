@@ -27,8 +27,6 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-use PaypalPPBTlib\Install\ModuleInstaller;
-
 /**
  * @param $module PayPal
  *
@@ -37,5 +35,6 @@ use PaypalPPBTlib\Install\ModuleInstaller;
 function upgrade_module_5_6_0($module)
 {
     $module->hookActionLocalizationPageSave([]);
+
     return true;
 }
