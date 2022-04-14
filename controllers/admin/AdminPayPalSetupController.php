@@ -280,7 +280,7 @@ class AdminPayPalSetupController extends AdminPayPalController
             'sslActivated' => $this->module->isSslActive(),
         ];
 
-        if ($this->getWebhookOption()->isEnable()) {
+        if ($this->getWebhookOption()->isEnable() && $this->getWebhookOption()->isEligibleContext()) {
             $webhookCheck = $this->_checkWebhook();
             $tpl_vars['showWebhookState'] = true;
             $tpl_vars['webhookState'] = $webhookCheck['state'];

@@ -556,25 +556,28 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
 
         $inputs = array_merge($inputs, $inputsMethod);
 
-        $inputs[] = [
-            'type' => 'switch',
-            'label' => $this->l('Enable PayPal webhooks'),
-            'name' => WebHookConf::ENABLE,
-            'hint' => $this->l('PayPal webhooks allow you to automatically update the order status on PrestaShop once the status of transaction on PayPal is changed.'),
-            'is_bool' => true,
-            'values' => [
-                [
-                    'id' => WebHookConf::ENABLE . '_on',
-                    'value' => 1,
-                    'label' => $this->l('Enabled'),
+        if ($this->getWebhookOption()->isEligibleContext()) {
+            $inputs[] = [
+                'type' => 'switch',
+                'label' => $this->l('Enable PayPal webhooks'),
+                'name' => WebHookConf::ENABLE,
+                'hint' => $this->l('PayPal webhooks allow you to automatically update the order status on PrestaShop once the status of transaction on PayPal is changed.'),
+                'is_bool' => true,
+                'values' => [
+                    [
+                        'id' => WebHookConf::ENABLE . '_on',
+                        'value' => 1,
+                        'label' => $this->l('Enabled'),
+                    ],
+                    [
+                        'id' => WebHookConf::ENABLE . '_off',
+                        'value' => 0,
+                        'label' => $this->l('Disabled'),
+                    ],
                 ],
-                [
-                    'id' => WebHookConf::ENABLE . '_off',
-                    'value' => 0,
-                    'label' => $this->l('Disabled'),
-                ],
-            ],
-        ];
+            ];
+        }
+
 
         $this->fields_form['form']['form'] = [
             'legend' => [
