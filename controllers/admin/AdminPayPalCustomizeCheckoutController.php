@@ -578,7 +578,6 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             ];
         }
 
-
         $this->fields_form['form']['form'] = [
             'legend' => [
                 'title' => $this->l('Advanced mode'),

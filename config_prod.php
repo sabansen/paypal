@@ -23,7 +23,6 @@
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
-
 if (false == defined('PAYPAL_VENMO_ADD_BUYER_COUNTRY')) {
     define('PAYPAL_VENMO_ADD_BUYER_COUNTRY', false);
 }
