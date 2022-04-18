@@ -54,8 +54,10 @@ class VenmoButton
     {
         $srcLib = $this->method->getUrlJsSdkLib() . '&enable-funding=venmo';
 
-        if ($this->method->isSandbox()) {
-            $srcLib .= '&buyer-country=US';
+        if (defined('PAYPAL_VENMO_ADD_BUYER_COUNTRY') && PAYPAL_VENMO_ADD_BUYER_COUNTRY) {
+            if ($this->method->isSandbox()) {
+                $srcLib .= '&buyer-country=US';
+            }
         }
 
         $JSscripts = [

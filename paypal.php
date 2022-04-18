@@ -27,6 +27,7 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+require_once _PS_MODULE_DIR_ . 'paypal/config_dev.php';
 include_once _PS_MODULE_DIR_ . 'paypal/vendor/autoload.php';
 
 use PaypalAddons\classes\AbstractMethodPaypal;
