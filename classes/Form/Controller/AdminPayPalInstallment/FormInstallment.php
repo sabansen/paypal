@@ -26,20 +26,19 @@
 
 namespace PaypalAddons\classes\Form\Controller\AdminPayPalInstallment;
 
-use PaypalAddons\classes\Form\FormInterface;
-use \Module;
-use \Configuration;
-use PaypalAddons\classes\InstallmentBanner\Banner;
-use \Tools;
-use \Context;
+use Configuration;
+use Context;
 use Country;
+use Module;
 use PaypalAddons\classes\Form\Field\Select;
 use PaypalAddons\classes\Form\Field\SelectOption;
+use PaypalAddons\classes\Form\FormInterface;
 use PaypalAddons\classes\InstallmentBanner\ConfigurationMap;
+use Tools;
 
 class FormInstallment implements FormInterface
 {
-    /** @var \Paypal*/
+    /** @var \Paypal */
     protected $module;
 
     protected $className;
@@ -59,116 +58,116 @@ class FormInstallment implements FormInterface
     {
         $isoCountryDefault = Tools::strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
         $input = [];
-        $input[] = array(
+        $input[] = [
             'type' => 'html',
             'html_content' => $this->getDisclaimerHtml(),
             'name' => '',
             'col' => 12,
             'label' => '',
-        );
+        ];
 
         if (in_array($isoCountryDefault, ConfigurationMap::getBnplAvailableCountries())) {
-            $input[] = array(
+            $input[] = [
                 'type' => 'switch',
                 'label' => $this->module->l('Enable \'Pay in X times\' in your checkout', $this->className),
                 'name' => ConfigurationMap::ENABLE_BNPL,
                 'is_bool' => true,
-                'values' => array(
-                    array(
+                'values' => [
+                    [
                         'id' => ConfigurationMap::ENABLE_BNPL . '_on',
                         'value' => 1,
                         'label' => $this->module->l('Enabled', $this->className),
-                    ),
-                    array(
+                    ],
+                    [
                         'id' => ConfigurationMap::ENABLE_BNPL . '_off',
                         'value' => 0,
                         'label' => $this->module->l('Disabled', $this->className),
-                    )
-                ),
-            );
+                    ],
+                ],
+            ];
 
-            $input[] = array(
+            $input[] = [
                 'type' => 'html',
                 'html_content' => $this->getHtmlBnplPageDisplayingSetting(),
                 'name' => '',
                 'label' => $this->module->l('\'Pay in X times\' is active on', $this->className),
-            );
+            ];
         }
 
-        $input[] = array(
+        $input[] = [
             'type' => 'switch',
             'label' => $this->module->l('Enable the display of banners', $this->className),
             'name' => ConfigurationMap::ENABLE_INSTALLMENT,
             'is_bool' => true,
             'hint' => $this->module->l('Let your customers know about the option \'Pay 4x PayPal\' by displaying banners on your site.', $this->className),
-            'values' => array(
-                array(
+            'values' => [
+                [
                     'id' => ConfigurationMap::ENABLE_INSTALLMENT . '_on',
                     'value' => 1,
                     'label' => $this->module->l('Enabled', $this->className),
-                ),
-                array(
+                ],
+                [
                     'id' => ConfigurationMap::ENABLE_INSTALLMENT . '_off',
                     'value' => 0,
                     'label' => $this->module->l('Disabled', $this->className),
-                )
-            ),
-        );
+                ],
+            ],
+        ];
 
-        $input[] = array(
+        $input[] = [
             'type' => 'html',
             'html_content' => $this->getHtmlBlockPageDisplayingSetting(),
             'name' => '',
             'label' => '',
-        );
+        ];
 
-        $input[] = array(
+        $input[] = [
             'type' => 'switch',
             'label' => $this->module->l('Advanced options', $this->className),
             'name' => ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT,
             'is_bool' => true,
-            'values' => array(
-                array(
+            'values' => [
+                [
                     'id' => ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT . '_on',
                     'value' => 1,
                     'label' => $this->module->l('Enabled', $this->className),
-                ),
-                array(
+                ],
+                [
                     'id' => ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT . '_off',
                     'value' => 0,
                     'label' => $this->module->l('Disabled', $this->className),
-                )
-            ),
-        );
+                ],
+            ],
+        ];
 
-        $input[] = array(
+        $input[] = [
             'type' => 'html',
             'label' => $this->module->l('Widget code', $this->className),
             'hint' => $this->module->l('By default, PayPal 4x banner is displayed on your web site via PrestaShop native hook. If you choose to use widgets, you will be able to copy widget code and insert it wherever you want in the web site template.', $this->className),
             'name' => '',
-            'html_content' => $this->getWidgetField()
-        );
+            'html_content' => $this->getWidgetField(),
+        ];
 
-        $input[] = array(
+        $input[] = [
             'type' => 'html',
             'html_content' => $this->getBannerStyleSection(),
             'name' => '',
             'label' => $this->module->l('Home page and category page styles', $this->className),
-        );
+        ];
 
-        $fields = array(
-            'legend' => array(
+        $fields = [
+            'legend' => [
                 'title' => $this->module->l('Settings', $this->className),
                 'icon' => 'icon-cogs',
-            ),
+            ],
             'input' => $input,
-            'submit' => array(
+            'submit' => [
                 'title' => $this->module->l('Save', $this->className),
                 'class' => 'btn btn-default pull-right button',
-                'name' => 'installmentForm'
-            ),
-            'id_form' => 'pp_config_installment'
-        );
+                'name' => 'installmentForm',
+            ],
+            'id_form' => 'pp_config_installment',
+        ];
 
         return $fields;
     }
@@ -179,9 +178,9 @@ class FormInstallment implements FormInterface
     public function getValues()
     {
         return [
-            ConfigurationMap::ENABLE_INSTALLMENT => (int)Configuration::get(ConfigurationMap::ENABLE_INSTALLMENT),
-            ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT => (int)Configuration::get(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT),
-            ConfigurationMap::ENABLE_BNPL => (int)Configuration::get(ConfigurationMap::ENABLE_BNPL)
+            ConfigurationMap::ENABLE_INSTALLMENT => (int) Configuration::get(ConfigurationMap::ENABLE_INSTALLMENT),
+            ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT => (int) Configuration::get(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT),
+            ConfigurationMap::ENABLE_BNPL => (int) Configuration::get(ConfigurationMap::ENABLE_BNPL),
         ];
     }
 
@@ -196,21 +195,21 @@ class FormInstallment implements FormInterface
             return $return;
         }
 
-        $return &= Configuration::updateValue(ConfigurationMap::ENABLE_INSTALLMENT, (int)Tools::getValue(ConfigurationMap::ENABLE_INSTALLMENT));
-        $return &= Configuration::updateValue(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT, (int)Tools::getValue(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT));
-        $return &= Configuration::updateValue(ConfigurationMap::PRODUCT_PAGE, (int)Tools::getValue(ConfigurationMap::PRODUCT_PAGE));
-        $return &= Configuration::updateValue(ConfigurationMap::CART_PAGE, (int)Tools::getValue(ConfigurationMap::CART_PAGE));
+        $return &= Configuration::updateValue(ConfigurationMap::ENABLE_INSTALLMENT, (int) Tools::getValue(ConfigurationMap::ENABLE_INSTALLMENT));
+        $return &= Configuration::updateValue(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT, (int) Tools::getValue(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT));
+        $return &= Configuration::updateValue(ConfigurationMap::PRODUCT_PAGE, (int) Tools::getValue(ConfigurationMap::PRODUCT_PAGE));
+        $return &= Configuration::updateValue(ConfigurationMap::CART_PAGE, (int) Tools::getValue(ConfigurationMap::CART_PAGE));
         $return &= Configuration::updateValue(ConfigurationMap::CHECKOUT_PAGE, Tools::getValue(ConfigurationMap::CHECKOUT_PAGE));
-        $return &= Configuration::updateValue(ConfigurationMap::HOME_PAGE, (int)Tools::getValue(ConfigurationMap::HOME_PAGE));
-        $return &= Configuration::updateValue(ConfigurationMap::CATEGORY_PAGE, (int)Tools::getValue(ConfigurationMap::CATEGORY_PAGE));
+        $return &= Configuration::updateValue(ConfigurationMap::HOME_PAGE, (int) Tools::getValue(ConfigurationMap::HOME_PAGE));
+        $return &= Configuration::updateValue(ConfigurationMap::CATEGORY_PAGE, (int) Tools::getValue(ConfigurationMap::CATEGORY_PAGE));
         $return &= Configuration::updateValue(ConfigurationMap::COLOR, Tools::getValue(ConfigurationMap::COLOR));
 
         // BNPL configurations
-        $return &= Configuration::updateValue(ConfigurationMap::ENABLE_BNPL, (int)Tools::getValue(ConfigurationMap::ENABLE_BNPL));
-        $return &= Configuration::updateValue(ConfigurationMap::BNPL_CHECKOUT_PAGE, (int)Tools::getValue(ConfigurationMap::BNPL_CHECKOUT_PAGE));
-        $return &= Configuration::updateValue(ConfigurationMap::BNPL_CART_PAGE, (int)Tools::getValue(ConfigurationMap::BNPL_CART_PAGE));
-        $return &= Configuration::updateValue(ConfigurationMap::BNPL_PRODUCT_PAGE, (int)Tools::getValue(ConfigurationMap::BNPL_PRODUCT_PAGE));
-        $return &= Configuration::updateValue(ConfigurationMap::BNPL_PAYMENT_STEP_PAGE, (int)Tools::getValue(ConfigurationMap::BNPL_PAYMENT_STEP_PAGE));
+        $return &= Configuration::updateValue(ConfigurationMap::ENABLE_BNPL, (int) Tools::getValue(ConfigurationMap::ENABLE_BNPL));
+        $return &= Configuration::updateValue(ConfigurationMap::BNPL_CHECKOUT_PAGE, (int) Tools::getValue(ConfigurationMap::BNPL_CHECKOUT_PAGE));
+        $return &= Configuration::updateValue(ConfigurationMap::BNPL_CART_PAGE, (int) Tools::getValue(ConfigurationMap::BNPL_CART_PAGE));
+        $return &= Configuration::updateValue(ConfigurationMap::BNPL_PRODUCT_PAGE, (int) Tools::getValue(ConfigurationMap::BNPL_PRODUCT_PAGE));
+        $return &= Configuration::updateValue(ConfigurationMap::BNPL_PAYMENT_STEP_PAGE, (int) Tools::getValue(ConfigurationMap::BNPL_PAYMENT_STEP_PAGE));
 
         return $return;
     }
@@ -224,7 +223,7 @@ class FormInstallment implements FormInterface
             ConfigurationMap::BNPL_PRODUCT_PAGE => Configuration::get(ConfigurationMap::BNPL_PRODUCT_PAGE),
             ConfigurationMap::BNPL_PAYMENT_STEP_PAGE => Configuration::get(ConfigurationMap::BNPL_PAYMENT_STEP_PAGE),
             ConfigurationMap::BNPL_CART_PAGE => Configuration::get(ConfigurationMap::BNPL_CART_PAGE),
-            ConfigurationMap::BNPL_CHECKOUT_PAGE => Configuration::get(ConfigurationMap::BNPL_CHECKOUT_PAGE)
+            ConfigurationMap::BNPL_CHECKOUT_PAGE => Configuration::get(ConfigurationMap::BNPL_CHECKOUT_PAGE),
         ]);
 
         return Context::getContext()->smarty->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/_partials/paypalBanner/bnplPageDisplayingSetting.tpl');
@@ -240,7 +239,7 @@ class FormInstallment implements FormInterface
             ConfigurationMap::HOME_PAGE => Configuration::get(ConfigurationMap::HOME_PAGE),
             ConfigurationMap::CATEGORY_PAGE => Configuration::get(ConfigurationMap::CATEGORY_PAGE),
             ConfigurationMap::CART_PAGE => Configuration::get(ConfigurationMap::CART_PAGE),
-            ConfigurationMap::CHECKOUT_PAGE => Configuration::get(ConfigurationMap::CHECKOUT_PAGE)
+            ConfigurationMap::CHECKOUT_PAGE => Configuration::get(ConfigurationMap::CHECKOUT_PAGE),
         ]);
 
         return Context::getContext()->smarty->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/_partials/paypalBanner/installmentPageDisplayingSetting.tpl');
@@ -264,7 +263,7 @@ class FormInstallment implements FormInterface
             new SelectOption(ConfigurationMap::COLOR_GRAY, $this->module->l('gray', $this->className)),
             new SelectOption(ConfigurationMap::COLOR_BLUE, $this->module->l('blue', $this->className)),
             new SelectOption(ConfigurationMap::COLOR_BLACK, $this->module->l('black', $this->className)),
-            new SelectOption(ConfigurationMap::COLOR_WHITE, $this->module->l('white', $this->className))
+            new SelectOption(ConfigurationMap::COLOR_WHITE, $this->module->l('white', $this->className)),
         ];
 
         if ($isoCountryDefault !== 'de') {
@@ -287,6 +286,7 @@ class FormInstallment implements FormInterface
     protected function getDisclaimerHtml()
     {
         $isoCountryDefault = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
+
         return Context::getContext()->smarty
             ->assign('isoCountryDefault', Tools::strtolower($isoCountryDefault))
             ->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/_partials/paypalBanner/installmentDisclaimer.tpl');

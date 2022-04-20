@@ -26,20 +26,14 @@
 
 namespace PaypalAddons\classes\InstallmentBanner\BNPL;
 
-use \Context;
-use \Configuration;
-use \Country;
+use Configuration;
+use Context;
+use Country;
 use PaypalAddons\classes\InstallmentBanner\ConfigurationMap;
-use Symfony\Component\VarDumper\VarDumper;
-use \ProductController;
-use \CartController;
-use \IndexController;
-use \Categorycontroller;
-use \OrderController;
 
 class BnplAvailabilityManager
 {
-    /** @var Context*/
+    /** @var Context */
     protected $context;
 
     public function __construct($context = null)
@@ -71,7 +65,7 @@ class BnplAvailabilityManager
     public function isEligibleCountryConfiguration()
     {
         $isoCountryDefault = Country::getIsoById(
-            (int)Configuration::get(
+            (int) Configuration::get(
                 'PS_COUNTRY_DEFAULT',
                 null,
                 null,

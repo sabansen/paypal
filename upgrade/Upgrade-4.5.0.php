@@ -23,7 +23,6 @@
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -31,6 +30,7 @@ use PaypalPPBTlib\Install\ModuleInstaller;
 
 /**
  * @param $module PayPal
+ *
  * @return bool
  */
 function upgrade_module_4_5_0($module)
@@ -40,5 +40,6 @@ function upgrade_module_4_5_0($module)
     $installer->installObjectModel('PaypalOrder');
     $installer->installAdminControllers();
     $installer->installExtensions();
+
     return true;
 }

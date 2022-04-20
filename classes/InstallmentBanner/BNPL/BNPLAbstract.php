@@ -28,24 +28,24 @@ namespace PaypalAddons\classes\InstallmentBanner\BNPL;
 
 use Configuration;
 use Context;
-use Media;
+use Country;
 use Module;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\InstallmentBanner\ConfigurationMap;
-use Symfony\Component\VarDumper\VarDumper;
+use Tools;
 
 abstract class BNPLAbstract
 {
-    /** @var Context*/
+    /** @var Context */
     protected $context;
 
-    /** @var Module*/
+    /** @var Module */
     protected $module;
 
-    /** @var AbstractMethodPaypal*/
+    /** @var AbstractMethodPaypal */
     protected $method;
 
-    /** @var string*/
+    /** @var string */
     protected $id;
 
     public function __construct()
@@ -65,6 +65,7 @@ abstract class BNPLAbstract
         $this->context->smarty->assign('JSvars', $this->getJSvars());
         $this->context->smarty->assign('JSscripts', $this->getJS());
         $this->context->smarty->assign('psPaypalDir', _PS_MODULE_DIR_ . 'paypal');
+
         return $this->context->smarty->fetch($this->getTemplatePath());
     }
 
@@ -74,8 +75,8 @@ abstract class BNPLAbstract
     protected function getJSvars()
     {
         $JSvars = [];
-        $JSvars['sc_init_url'] = $this->context->link->getModuleLink($this->module->name, 'ScInit', array(), true);
-        $JSvars['scOrderUrl'] = $this->context->link->getModuleLink($this->module->name, 'scOrder', array(), true);
+        $JSvars['sc_init_url'] = $this->context->link->getModuleLink($this->module->name, 'ScInit', [], true);
+        $JSvars['scOrderUrl'] = $this->context->link->getModuleLink($this->module->name, 'scOrder', [], true);
         $JSvars['bnplColor'] = $this->getColor();
 
         return $JSvars;
@@ -90,16 +91,20 @@ abstract class BNPLAbstract
         $srcLib = $this->method->getUrlJsSdkLib() . '&enable-funding=paylater';
 
         if ($this->method->isSandbox()) {
-            $srcLib .= '&buyer-country=FR';
+            $buyerCountry = $this->getBuyerCountry();
+
+            if (false == empty($buyerCountry)) {
+                $srcLib .= '&buyer-country=' . $buyerCountry;
+            }
         }
 
         $JSscripts['tot-paypal-bnpl-sdk'] = [
             'src' => $srcLib,
             'data-namespace' => 'totPaypalBnplSdkButtons',
-            'data-partner-attribution-id' => $this->getPartnerId()
+            'data-partner-attribution-id' => $this->getPartnerId(),
         ];
         $JSscripts['bnpl'] = [
-            'src' => __PS_BASE_URI__ . 'modules/' . $this->module->name . '/views/js/bnpl.js?v=' . $this->module->version
+            'src' => __PS_BASE_URI__ . 'modules/' . $this->module->name . '/views/js/bnpl.js?v=' . $this->module->version,
         ];
 
         return $JSscripts;
@@ -150,24 +155,38 @@ abstract class BNPLAbstract
 
     /**
      * @param string $id
+     *
      * @return self
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
     /** @return string*/
     public function getColor()
     {
-        if ((int)Configuration::get(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT)) {
+        if ((int) Configuration::get(ConfigurationMap::ADVANCED_OPTIONS_INSTALLMENT)) {
             $bannerColor = Configuration::get(ConfigurationMap::COLOR);
         } else {
             $bannerColor = ConfigurationMap::COLOR_GRAY;
         }
 
-
         return isset(ConfigurationMap::getBnplColorMapping()[$bannerColor]) ? ConfigurationMap::getBnplColorMapping()[$bannerColor] : 'white';
+    }
+
+    public function getBuyerCountry()
+    {
+        $buyerCountry = Tools::strtoupper(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
+        // https://developer.paypal.com/docs/regional/th/checkout/reference/customize-sdk/
+        // According a documentation the available countries are following 'US', 'CA', 'GB', 'DE', 'FR', 'IT', 'ES'
+        // But an error was occurring using 'US', 'CA', 'GB' during the test
+        if (in_array($buyerCountry, ['DE', 'FR', 'IT', 'ES'])) {
+            return $buyerCountry;
+        }
+
+        return '';
     }
 }

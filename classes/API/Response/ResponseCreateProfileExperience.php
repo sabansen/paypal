@@ -28,7 +28,7 @@ namespace PaypalAddons\classes\API\Response;
 
 class ResponseCreateProfileExperience extends Response
 {
-    /** @var string*/
+    /** @var string */
     protected $idProfileExperience;
 
     /**
@@ -41,16 +41,19 @@ class ResponseCreateProfileExperience extends Response
 
     /**
      * @param string $idProdileExperience
+     *
      * @return ResponseCreateProfileExperience
      */
     public function setIdProfileExperience($idProfileExperience)
     {
         if (is_string($idProfileExperience) === false) {
             $this->idProfileExperience = '';
+
             return $this;
         }
 
         $this->idProfileExperience = $idProfileExperience;
+
         return $this;
     }
 }

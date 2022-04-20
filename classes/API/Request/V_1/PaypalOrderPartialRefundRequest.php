@@ -26,20 +26,15 @@
 
 namespace PaypalAddons\classes\API\Request\V_1;
 
-use DateTime;
 use PayPal;
-use PayPal\Api\DetailedRefund;
-use PayPal\Api\Sale;
 use PayPal\Api\Amount;
-use PayPal\Api\RefundRequest;
+use PayPal\Api\Sale;
 use PaypalAddons\classes\AbstractMethodPaypal;
-use PaypalAddons\classes\API\Response\Error;
-use PaypalAddons\classes\API\Response\ResponseOrderRefund;
-use \PaypalOrder;
+use PaypalOrder;
 
 class PaypalOrderPartialRefundRequest extends PaypalOrderRefundRequest
 {
-    /** @var float*/
+    /** @var float */
     protected $amount;
 
     public function __construct(AbstractMethodPaypal $method, PaypalOrder $paypalOrder, $amount)
@@ -50,13 +45,15 @@ class PaypalOrderPartialRefundRequest extends PaypalOrderRefundRequest
 
     /**
      * @param Sale $sale
+     *
      * @return Amount
      */
     protected function getAmount(Sale $sale)
     {
         $amt = new Amount();
+
         return $amt
             ->setCurrency($sale->getAmount()->getCurrency())
-            ->setTotal(number_format($this->amount, Paypal::getDecimal($this->paypalOrder->currency), ".", ''));
+            ->setTotal(number_format($this->amount, Paypal::getDecimal($this->paypalOrder->currency), '.', ''));
     }
 }

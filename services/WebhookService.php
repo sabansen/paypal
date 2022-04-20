@@ -26,7 +26,6 @@
 
 namespace PaypalAddons\services;
 
-
 use Db;
 use DbQuery;
 use Exception;
@@ -35,7 +34,9 @@ class WebhookService
 {
     /**
      * @param \PaypalOrder $paypalOrder
+     *
      * @return \PaypalWebhook
+     *
      * @throws \PrestaShopException
      */
     public function createForOrder(\PaypalOrder $paypalOrder, $idState = 0)
@@ -43,14 +44,14 @@ class WebhookService
         $query = (new DbQuery())
             ->select('id_paypal_webhook')
             ->from(\PaypalWebhook::$definition['table'])
-            ->where('id_paypal_order = ' . (int)$paypalOrder->id)
+            ->where('id_paypal_order = ' . (int) $paypalOrder->id)
             ->where('id_webhook IS NULL OR id_webhook = ""');
 
         if ($idState) {
-            $query->where('id_state = ' . (int)$idState);
+            $query->where('id_state = ' . (int) $idState);
         }
 
-        $idPaypalWebhook = (int)Db::getInstance()->getValue($query);
+        $idPaypalWebhook = (int) Db::getInstance()->getValue($query);
 
         if ($idPaypalWebhook) {
             $webhook = new \PaypalWebhook($idPaypalWebhook);
@@ -58,7 +59,7 @@ class WebhookService
             $webhook = new \PaypalWebhook();
         }
 
-        $webhook->id_paypal_order = (int)$paypalOrder->id;
+        $webhook->id_paypal_order = (int) $paypalOrder->id;
         $webhook->id_state = $idState;
         $webhook->save();
 
@@ -67,6 +68,7 @@ class WebhookService
 
     /**
      * @param \PaypalOrder $paypalOrder
+     *
      * @return \PaypalWebhook[]
      */
     public function getPendingWebhooks(\PaypalOrder $paypalOrder, $delay = null)
@@ -74,7 +76,7 @@ class WebhookService
         $webhooks = [];
         $query = (new DbQuery())
             ->from(\PaypalWebhook::$definition['table'])
-            ->where('id_paypal_order = ' . (int)$paypalOrder->id)
+            ->where('id_paypal_order = ' . (int) $paypalOrder->id)
             ->where('id_webhook IS NULL OR id_webhook = ""');
 
         if (false == is_null($delay)) {
@@ -82,7 +84,7 @@ class WebhookService
                 sprintf(
                     'date_add < DATE_SUB(STR_TO_DATE(\'%s\', GET_FORMAT(DATETIME,\'ISO\')), INTERVAL %d HOUR)',
                     date(\PaypalWebhook::DATE_FORMAT),
-                    (int)$delay
+                    (int) $delay
                 )
             );
         }
@@ -93,7 +95,6 @@ class WebhookService
             return $webhooks;
         }
 
-
         if (empty($result)) {
             return $webhooks;
         }
@@ -103,7 +104,8 @@ class WebhookService
                 $webhook = new \PaypalWebhook();
                 $webhook->hydrate($row);
                 $webhooks[] = $webhook;
-            } catch (Exception $e) {}
+            } catch (Exception $e) {
+            }
         }
 
         return $webhooks;

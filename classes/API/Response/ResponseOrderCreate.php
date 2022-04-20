@@ -28,13 +28,13 @@ namespace PaypalAddons\classes\API\Response;
 
 class ResponseOrderCreate extends Response
 {
-    /** @var string*/
+    /** @var string */
     protected $approveLink;
 
-    /** @var string*/
+    /** @var string */
     protected $paymentId;
 
-    /** @var int*/
+    /** @var int */
     protected $statusCode;
 
     /**
@@ -51,6 +51,7 @@ class ResponseOrderCreate extends Response
     public function setApproveLink($approveLink)
     {
         $this->approveLink = $approveLink;
+
         return $this;
     }
 
@@ -68,6 +69,7 @@ class ResponseOrderCreate extends Response
     public function setPaymentId($paymentId)
     {
         $this->paymentId = $paymentId;
+
         return $this;
     }
 
@@ -85,6 +87,7 @@ class ResponseOrderCreate extends Response
     public function setStatusCode($statusCode)
     {
         $this->statusCode = $statusCode;
+
         return $this;
     }
 }

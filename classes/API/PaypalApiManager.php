@@ -30,9 +30,9 @@ use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Request\PaypalAccessTokenRequest;
 use PaypalAddons\classes\API\Request\PaypalAuthorizationVoidRequest;
 use PaypalAddons\classes\API\Request\PaypalCaptureAuthorizeRequest;
+use PaypalAddons\classes\API\Request\PaypalOrderAuthorizeRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderCaptureRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderCreateRequest;
-use PaypalAddons\classes\API\Request\PaypalOrderAuthorizeRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderGetRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderPartialRefundRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderPatchRequest;
@@ -40,10 +40,10 @@ use PaypalAddons\classes\API\Request\PaypalOrderRefundRequest;
 
 class PaypalApiManager implements PaypalApiManagerInterface
 {
-    /** @var AbstractMethodPaypal*/
+    /** @var AbstractMethodPaypal */
     protected $method;
 
-    /** @var PaypalClient*/
+    /** @var PaypalClient */
     protected $client;
 
     public function __construct(AbstractMethodPaypal $method)

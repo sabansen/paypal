@@ -28,24 +28,22 @@ namespace PaypalAddons\classes\Shortcut;
 
 use Context;
 use Hook;
-use Media;
 use Module;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\services\PaypalMedia;
-use Symfony\Component\VarDumper\VarDumper;
 
 abstract class ShortcutAbstract
 {
-    /** @var Context*/
+    /** @var Context */
     protected $context;
 
-    /** @var Module*/
+    /** @var Module */
     protected $module;
 
-    /** @var AbstractMethodPaypal*/
+    /** @var AbstractMethodPaypal */
     protected $method;
 
-    /** @var string*/
+    /** @var string */
     protected $id;
 
     public function __construct()
@@ -65,6 +63,7 @@ abstract class ShortcutAbstract
         $this->context->smarty->assign('JSvars', $this->getJSvars());
         $this->context->smarty->assign('JSscripts', $this->getJS());
         $this->context->smarty->assign('psPaypalDir', _PS_MODULE_DIR_ . 'paypal');
+
         return $this->context->smarty->fetch($this->getTemplatePath());
     }
 
@@ -74,8 +73,8 @@ abstract class ShortcutAbstract
     protected function getJSvars()
     {
         $JSvars = [];
-        $JSvars['sc_init_url'] = $this->context->link->getModuleLink($this->module->name, 'ScInit', array(), true);
-        $JSvars['scOrderUrl'] = $this->context->link->getModuleLink($this->module->name, 'scOrder', array(), true);
+        $JSvars['sc_init_url'] = $this->context->link->getModuleLink($this->module->name, 'ScInit', [], true);
+        $JSvars['scOrderUrl'] = $this->context->link->getModuleLink($this->module->name, 'scOrder', [], true);
         $JSvars['styleSetting'] = $this->getStyleSetting();
 
         return $JSvars;
@@ -96,10 +95,10 @@ abstract class ShortcutAbstract
 
         $JSscripts['tot-paypal-sdk'] = [
             'src' => $this->method->getUrlJsSdkLib(),
-            'data-namespace' => 'totPaypalSdkButtons'
+            'data-namespace' => 'totPaypalSdkButtons',
         ];
         $JSscripts['shortcut'] = [
-            'src' => __PS_BASE_URI__ . 'modules/' . $this->module->name . '/views/js/shortcut.js?v=' . $this->module->version
+            'src' => __PS_BASE_URI__ . 'modules/' . $this->module->name . '/views/js/shortcut.js?v=' . $this->module->version,
         ];
 
         return $JSscripts;
@@ -145,11 +144,13 @@ abstract class ShortcutAbstract
 
     /**
      * @param string $id
+     *
      * @return ShortcutAbstract
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -173,7 +174,6 @@ abstract class ShortcutAbstract
             Hook::exec('actionPaypalShortcutIsAddJquery', ['isAddJquery' => &$isAddJquery]);
         } catch (\Throwable $e) {
         }
-
 
         return $isAddJquery;
     }

@@ -28,19 +28,19 @@ namespace PaypalAddons\classes\API\Response;
 
 class ResponseOrderRefund extends Response
 {
-    /** @var string*/
+    /** @var string */
     protected $idTransaction;
 
-    /** @var string*/
+    /** @var string */
     protected $status;
 
-    /** @var float*/
+    /** @var float */
     protected $amount;
 
-    /** @var string*/
+    /** @var string */
     protected $dateTransaction;
 
-    /** @var bool*/
+    /** @var bool */
     protected $alreadyRefunded;
 
     /**
@@ -57,6 +57,7 @@ class ResponseOrderRefund extends Response
     public function setIdTransaction($idTransaction)
     {
         $this->idTransaction = $idTransaction;
+
         return $this;
     }
 
@@ -74,6 +75,7 @@ class ResponseOrderRefund extends Response
     public function setStatus($status)
     {
         $this->status = $status;
+
         return $this;
     }
 
@@ -91,6 +93,7 @@ class ResponseOrderRefund extends Response
     public function setAmount($amount)
     {
         $this->amount = $amount;
+
         return $this;
     }
 
@@ -108,6 +111,7 @@ class ResponseOrderRefund extends Response
     public function setDateTransaction($dateTransaction)
     {
         $this->dateTransaction = $dateTransaction;
+
         return $this;
     }
 
@@ -132,11 +136,13 @@ class ResponseOrderRefund extends Response
 
     /**
      * @param bool $alreadyRefunded
+     *
      * @return ResponseOrderRefund
      */
     public function setAlreadyRefunded($alreadyRefunded)
     {
         $this->alreadyRefunded = (bool) $alreadyRefunded;
+
         return $this;
     }
 }

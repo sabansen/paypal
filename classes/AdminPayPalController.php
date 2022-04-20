@@ -26,8 +26,6 @@
 
 namespace PaypalAddons\classes;
 
-use PaypalAddons\classes\AbstractMethodPaypal;
-use PaypalAddons\classes\API\Onboarding\PaypalGetCredentials;
 use PaypalAddons\classes\Constants\WebHookConf;
 use PaypalAddons\classes\Webhook\CreateWebhook;
 use PaypalAddons\classes\Webhook\WebhookAvailability;
@@ -36,11 +34,10 @@ use PaypalAddons\classes\Webhook\WebhookOption;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\VarDumper\VarDumper;
 
 class AdminPayPalController extends \ModuleAdminController
 {
-    protected $parametres = array();
+    protected $parametres = [];
 
     protected $method;
 
@@ -50,34 +47,34 @@ class AdminPayPalController extends \ModuleAdminController
     {
         parent::__construct();
         $this->bootstrap = true;
-        $countryDefault = new \Country((int)\Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
+        $countryDefault = new \Country((int) \Configuration::get('PS_COUNTRY_DEFAULT'), $this->context->language->id);
 
         switch ($countryDefault->iso_code) {
-            case "DE":
-                $this->method = "PPP";
+            case 'DE':
+                $this->method = 'PPP';
                 break;
-            case "BR":
-                $this->method = "MB";
+            case 'BR':
+                $this->method = 'MB';
                 break;
-            case "MX":
-                $this->method = "MB";
+            case 'MX':
+                $this->method = 'MB';
                 break;
             default:
-                $this->method = "EC";
+                $this->method = 'EC';
         }
     }
 
     public function init()
     {
         if (\Tools::getValue('action') === 'set_sandbox_mode') {
-            \Configuration::updateValue('PAYPAL_SANDBOX', (int)\Tools::getValue('sandbox_mode'));
+            \Configuration::updateValue('PAYPAL_SANDBOX', (int) \Tools::getValue('sandbox_mode'));
             $methodObj = AbstractMethodPaypal::load($this->method);
             $methodObj->isConfigured();
         }
 
         parent::init();
 
-        if ((int)\Configuration::getGlobalValue(\PayPal::NEED_INSTALL_MODELS) === 1) {
+        if ((int) \Configuration::getGlobalValue(\PayPal::NEED_INSTALL_MODELS) === 1) {
             if ($this->module->installModels()) {
                 \Configuration::updateGlobalValue(\PayPal::NEED_INSTALL_MODELS, 0);
             }
@@ -93,14 +90,14 @@ class AdminPayPalController extends \ModuleAdminController
 
         $method = AbstractMethodPaypal::load();
 
-        if ((int)\Configuration::get('PAYPAL_SANDBOX') == 1) {
+        if ((int) \Configuration::get('PAYPAL_SANDBOX') == 1) {
             $message = $this->module->l('Your PayPal account is currently configured to accept payments on Sandbox.', 'AdminPayPalController');
             $message .= ' (<b>' . $this->module->l('test environment', 'AdminPayPalController') . '</b>). ';
             $message .= $this->module->l('Any transaction will be fictitious. Disable the option to accept actual payments (live environment) and log in with your PayPal credentials.', 'AdminPayPalController');
             $this->warnings[] = $message;
         }
 
-        if ((int)\Configuration::get('PAYPAL_NEED_CHECK_CREDENTIALS')) {
+        if ((int) \Configuration::get('PAYPAL_NEED_CHECK_CREDENTIALS')) {
             $method->checkCredentials();
             \Configuration::updateValue('PAYPAL_NEED_CHECK_CREDENTIALS', 0);
         }
@@ -124,7 +121,7 @@ class AdminPayPalController extends \ModuleAdminController
             'showRestApiIntegrationMessage' => $this->isShowRestApiIntegrationMessage(),
             'psVersion' => _PS_VERSION_,
             'need_rounding' => $need_rounding,
-            'isModeSandbox' => $method->isSandbox()
+            'isModeSandbox' => $method->isSandbox(),
         ]);
     }
 
@@ -137,44 +134,45 @@ class AdminPayPalController extends \ModuleAdminController
         $helper->token = \Tools::getAdminTokenLite($this->controller_name);
         $helper->currentIndex = \AdminController::$currentIndex;
         $helper->submit_action = $this->controller_name . '_config';
-        $default_lang = (int)\Configuration::get('PS_LANG_DEFAULT');
+        $default_lang = (int) \Configuration::get('PS_LANG_DEFAULT');
         $helper->default_form_language = $default_lang;
         $helper->allow_employee_form_lang = $default_lang;
-        $helper->tpl_vars = array(
+        $helper->tpl_vars = [
             'fields_value' => $this->tpl_form_vars,
             'id_language' => $this->context->language->id,
-        );
+        ];
+
         return $helper->generateForm($fields_form);
     }
 
     public function clearFieldsForm()
     {
-        $this->fields_form = array();
-        $this->tpl_form_vars = array();
+        $this->fields_form = [];
+        $this->tpl_form_vars = [];
     }
 
     public function setMedia($isNewTheme = false)
     {
         parent::setMedia($isNewTheme);
-        \Media::addJsDef(array(
+        \Media::addJsDef([
             'controllerUrl' => \AdminController::$currentIndex . '&token=' . \Tools::getAdminTokenLite($this->controller_name),
-        ));
+        ]);
         $this->addCSS(_PS_MODULE_DIR_ . $this->module->name . '/views/css/paypal_bo.css');
     }
 
     protected function _checkRequirements()
     {
-        $response = array(
+        $response = [
             'success' => true,
-            'message' => array()
-        );
+            'message' => [],
+        ];
         $hooksUnregistered = $this->module->getHooksUnregistered();
         if (empty($hooksUnregistered) == false) {
             $response['success'] = false;
             $response['message'][] = $this->getHooksUnregisteredMessage($hooksUnregistered);
         }
 
-        if ((int)\Configuration::get('PS_COUNTRY_DEFAULT') == false) {
+        if ((int) \Configuration::get('PS_COUNTRY_DEFAULT') == false) {
             $response['success'] = false;
             $response['message'][] = $this->module->l('To activate a payment solution, please select your default country.', 'AdminPayPalController');
         }
@@ -187,7 +185,7 @@ class AdminPayPalController extends \ModuleAdminController
         $tls_check = $this->_checkTLSVersion();
         if ($tls_check['status'] == false) {
             $response['success'] = false;
-            $response['message'][] = $this->module->l('Tls verification failed.', 'AdminPayPalController').' '.$tls_check['error_message'];
+            $response['message'][] = $this->module->l('Tls verification failed.', 'AdminPayPalController') . ' ' . $tls_check['error_message'];
         }
 
         if ($this->getWebhookOption()->isEnable()) {
@@ -197,7 +195,6 @@ class AdminPayPalController extends \ModuleAdminController
                 $response['success'] = false;
                 $response['message'][] = $webhookCheck['message'];
             }
-
         }
 
         if ($response['success']) {
@@ -212,10 +209,10 @@ class AdminPayPalController extends \ModuleAdminController
      */
     protected function _checkTLSVersion()
     {
-        $return = array(
+        $return = [
             'status' => false,
-            'error_message' => ''
-        );
+            'error_message' => '',
+        ];
 
         if (defined('CURL_SSLVERSION_TLSv1_2') == false) {
             define('CURL_SSLVERSION_TLSv1_2', 6);
@@ -245,7 +242,7 @@ class AdminPayPalController extends \ModuleAdminController
 
     public function postProcess()
     {
-        if (\Tools::isSubmit("checkCredentials")) {
+        if (\Tools::isSubmit('checkCredentials')) {
             $method = AbstractMethodPaypal::load($this->method);
             $method->checkCredentials();
             $this->errors = array_merge($this->errors, $method->errors);
@@ -283,12 +280,13 @@ class AdminPayPalController extends \ModuleAdminController
     public function log($message)
     {
         ProcessLoggerHandler::openLogger();
-        ProcessLoggerHandler::logError($message, null, null, null, null, null, (int)\Configuration::get('PAYPAL_SANDBOX'));
+        ProcessLoggerHandler::logError($message, null, null, null, null, null, (int) \Configuration::get('PAYPAL_SANDBOX'));
         ProcessLoggerHandler::closeLogger();
     }
 
     /**
      *  @param array $hooks array of the hooks name
+     *
      *  @return string
      */
     public function getHooksUnregisteredMessage($hooks)
@@ -298,13 +296,14 @@ class AdminPayPalController extends \ModuleAdminController
         }
 
         $this->context->smarty->assign('hooks', $hooks);
+
         return $this->context->smarty->fetch($this->getTemplatePath() . '_partials/messages/unregisteredHooksMessage.tpl');
     }
 
     public function displayAjaxHandlePsCheckoutAction()
     {
         $action = \Tools::getValue('actionHandled');
-        $response = array();
+        $response = [];
 
         switch ($action) {
             case 'close':
@@ -312,27 +311,28 @@ class AdminPayPalController extends \ModuleAdminController
                 break;
             case 'install':
                 if (is_dir(_PS_MODULE_DIR_ . 'ps_checkout') == false) {
-                    $response = array(
+                    $response = [
                         'redirect' => true,
-                        'url' => 'https://addons.prestashop.com/en/payment-card-wallet/46347-prestashop-checkout-built-with-paypal.html'
-                    );
+                        'url' => 'https://addons.prestashop.com/en/payment-card-wallet/46347-prestashop-checkout-built-with-paypal.html',
+                    ];
                 } else {
                     if ($this->installPsCheckout()) {
-                        $response = array(
+                        $response = [
                             'redirect' => true,
-                            'url' => $this->context->link->getAdminLink('AdminModules', true, [], ['configure' => 'ps_checkout'])
-                        );
+                            'url' => $this->context->link->getAdminLink('AdminModules', true, [], ['configure' => 'ps_checkout']),
+                        ];
                     } else {
-                        $response = array(
+                        $response = [
                             'redirect' => false,
-                            'url' => 'someUrl'
-                        );
+                            'url' => 'someUrl',
+                        ];
                     }
                 }
                 break;
         }
 
         $jsonResponse = new JsonResponse($response);
+
         return $jsonResponse->send();
     }
 
@@ -404,13 +404,13 @@ class AdminPayPalController extends \ModuleAdminController
         $query = [
             'token' => $this->token,
             'action' => 'set_sandbox_mode',
-            'sandbox_mode' => \Configuration::get('PAYPAL_SANDBOX') ? 0 : 1
+            'sandbox_mode' => \Configuration::get('PAYPAL_SANDBOX') ? 0 : 1,
         ];
         $this->page_header_toolbar_btn['switch_sandbox'] = [
             'desc' => $this->l('Sandbox mode', 'AdminPayPalController'),
             'icon' => 'process-icon-toggle-' . (\Configuration::get('PAYPAL_SANDBOX') ? 'on' : 'off'),
             'help' => $this->l('Sandbox mode is the test environment where you\'ll be not able to collect any real payments.', 'AdminPayPalController'),
-            'href' => self::$currentIndex . '?' . http_build_query($query)
+            'href' => self::$currentIndex . '?' . http_build_query($query),
         ];
 
         parent::initPageHeaderToolbar();
@@ -449,7 +449,7 @@ class AdminPayPalController extends \ModuleAdminController
     {
         $return = [
             'state' => true,
-            'message' => $this->l('PayPal webhooks are enabled with success.', get_class($this))
+            'message' => $this->l('PayPal webhooks are enabled with success.', get_class($this)),
         ];
 
         $webhookAvailable = $this->getWebhookAvalability()->check();
@@ -466,7 +466,8 @@ class AdminPayPalController extends \ModuleAdminController
             $return['message'] = $this->l('PayPal webhooks can not be enabled. The webhook listener was not created. Webhooks are not used by the module until the moment the problem will be fixed. Please try to refresh the page and click on \'check requirements\' again.', get_class($this));
         }
 
-        \Configuration::updateValue(WebHookConf::AVAILABLE, (int)$return['state']);
+        \Configuration::updateValue(WebHookConf::AVAILABLE, (int) $return['state']);
+
         return $return;
     }
 

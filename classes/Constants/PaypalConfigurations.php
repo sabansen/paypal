@@ -29,4 +29,6 @@ namespace PaypalAddons\classes\Constants;
 class PaypalConfigurations
 {
     const INTENT = 'PAYPAL_API_INTENT';
+
+    const VENMO_OPTION = 'PAYPAL_VENMO_ENABLED';
 }

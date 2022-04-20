@@ -26,15 +26,10 @@
 
 namespace PaypalAddons\classes\API\Request\V_1;
 
-use Context;
 use Customer;
-use Exception;
 use PayPal\Api\Payment;
 use PayPal\Api\PaymentExecution;
 use PaypalAddons\classes\API\Response\ResponseOrderCapture;
-use PaypalAddons\services\ServicePaypalVaulting;
-use Symfony\Component\VarDumper\VarDumper;
-use Validate;
 
 class PaypalOrderCaptureRequest extends RequestAbstractMB
 {
@@ -77,6 +72,7 @@ class PaypalOrderCaptureRequest extends RequestAbstractMB
 
     /**
      * @param Payment $payment
+     *
      * @return string
      */
     protected function getPaymentId(Payment $payment)
@@ -86,26 +82,31 @@ class PaypalOrderCaptureRequest extends RequestAbstractMB
 
     /**
      * @param Payment $payment
+     *
      * @return string
      */
     protected function getTransactionId(Payment $payment)
     {
         $paymentInfo = $payment->transactions[0];
+
         return (string) $paymentInfo->related_resources[0]->sale->id;
     }
 
     /**
      * @param Payment $payment
+     *
      * @return string
      */
     protected function getCurrency(Payment $payment)
     {
         $paymentInfo = $payment->transactions[0];
+
         return (string) $paymentInfo->amount->currency;
     }
 
     /**
      * @param Payment $payment
+     *
      * @return bool
      */
     protected function getCapture(Payment $payment)
@@ -115,16 +116,19 @@ class PaypalOrderCaptureRequest extends RequestAbstractMB
 
     /**
      * @param Payment $payment
+     *
      * @return float
      */
     protected function getTotalPaid(Payment $payment)
     {
         $paymentInfo = $payment->transactions[0];
+
         return (float) $paymentInfo->amount->total;
     }
 
     /**
      * @param Payment $payment
+     *
      * @return string
      */
     protected function getPaymentMethod(Payment $payment)
@@ -134,6 +138,7 @@ class PaypalOrderCaptureRequest extends RequestAbstractMB
 
     /**
      * @param Payment $payment
+     *
      * @return string
      */
     protected function getPaymentStatus(Payment $payment)
@@ -143,11 +148,12 @@ class PaypalOrderCaptureRequest extends RequestAbstractMB
 
     /**
      * @param Payment $payment
+     *
      * @return string
      */
     protected function getPaymentTool(Payment $payment)
     {
-        return (string) isset($payment->payment_instruction)? $payment->payment_instruction->instruction_type:'';
+        return (string) isset($payment->payment_instruction) ? $payment->payment_instruction->instruction_type : '';
     }
 
     /**
@@ -160,11 +166,13 @@ class PaypalOrderCaptureRequest extends RequestAbstractMB
 
     /**
      * @param Payment $payment
+     *
      * @return \DateTime
      */
     protected function getDateTransaction($payment)
     {
         $date = \DateTime::createFromFormat(\DateTime::ISO8601, $payment->update_time);
+
         return $date;
     }
 }

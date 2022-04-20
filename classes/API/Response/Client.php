@@ -28,13 +28,13 @@ namespace PaypalAddons\classes\API\Response;
 
 class Client
 {
-    /** @var string*/
+    /** @var string */
     protected $firstName;
 
-    /** @var string*/
+    /** @var string */
     protected $lastName;
 
-    /** @var string*/
+    /** @var string */
     protected $email;
 
     /**
@@ -51,6 +51,7 @@ class Client
     public function setFirstName($firstName)
     {
         $this->firstName = $firstName;
+
         return $this;
     }
 
@@ -68,6 +69,7 @@ class Client
     public function setLastName($lastName)
     {
         $this->lastName = $lastName;
+
         return $this;
     }
 
@@ -85,6 +87,7 @@ class Client
     public function setEmail($email)
     {
         $this->email = $email;
+
         return $this;
     }
 }

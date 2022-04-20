@@ -30,13 +30,13 @@ use Context;
 
 class SelectOption implements FieldInteface
 {
-    /** @var string*/
+    /** @var string */
     protected $description;
 
-    /** @var string*/
+    /** @var string */
     protected $value;
 
-    /** @var bool*/
+    /** @var bool */
     protected $isSelected;
 
     public function __construct($value, $description)
@@ -64,11 +64,13 @@ class SelectOption implements FieldInteface
 
     /**
      * @param string $description
+     *
      * @return SelectOption
      */
     public function setDescription($description)
     {
         $this->description = $description;
+
         return $this;
     }
 
@@ -82,11 +84,13 @@ class SelectOption implements FieldInteface
 
     /**
      * @param string $value
+     *
      * @return SelectOption
      */
     public function setValue($value)
     {
         $this->value = $value;
+
         return $this;
     }
 
@@ -100,11 +104,13 @@ class SelectOption implements FieldInteface
 
     /**
      * @param bool $isSelected
+     *
      * @return SelectOption
      */
     public function setIsSelected($isSelected)
     {
         $this->isSelected = (bool) $isSelected;
+
         return $this;
     }
 }

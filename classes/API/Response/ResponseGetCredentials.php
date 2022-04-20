@@ -28,10 +28,10 @@ namespace PaypalAddons\classes\API\Response;
 
 class ResponseGetCredentials extends Response
 {
-    /** @var string*/
+    /** @var string */
     protected $clientId;
 
-    /** @var string*/
+    /** @var string */
     protected $secret;
 
     /**
@@ -48,6 +48,7 @@ class ResponseGetCredentials extends Response
     public function setClientId($clientId)
     {
         $this->clientId = $clientId;
+
         return $this;
     }
 
@@ -65,6 +66,7 @@ class ResponseGetCredentials extends Response
     public function setSecret($secret)
     {
         $this->secret = $secret;
+
         return $this;
     }
 }

@@ -26,23 +26,18 @@
 
 namespace PaypalAddons\classes\API\Request\V_1;
 
-
+use Exception;
 use PayPal\Api\Patch;
 use PayPal\Api\PatchRequest;
 use PayPal\Api\Webhook;
-use PayPal\Api\WebhookEventType;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Response\Error  as PaypalError;
 use PaypalAddons\classes\API\Response\Response;
 use PaypalAddons\classes\Constants\WebHookType;
-use PaypalAddons\classes\Webhook\WebhookHandlerUrl;
-use Symfony\Component\VarDumper\VarDumper;
-use Context;
-use Exception;
 
 class UpdateWebHookEventType extends RequestAbstract
 {
-    /** @var Webhook*/
+    /** @var Webhook */
     protected $webhook;
 
     /**
@@ -78,10 +73,10 @@ class UpdateWebHookEventType extends RequestAbstract
         return $response;
     }
 
-    /** */
     public function setWebhook(Webhook $webhook)
     {
         $this->webhook = $webhook;
+
         return $this;
     }
 
@@ -96,7 +91,6 @@ class UpdateWebHookEventType extends RequestAbstract
             $eventType->name = $type;
             $eventTypes[] = $eventType;
         }
-
 
         $patch
             ->setOp('replace')

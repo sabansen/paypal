@@ -24,6 +24,7 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
+use PaypalAddons\services\PaymentData;
 use PaypalPPBTlib\CommonAbstarctModuleFrontController;
 
 /**
@@ -31,5 +32,25 @@ use PaypalPPBTlib\CommonAbstarctModuleFrontController;
  */
 abstract class PaypalAbstarctModuleFrontController extends CommonAbstarctModuleFrontController
 {
+    /**
+     * @return PaymentData
+     */
+    protected function parsePaymentData($data)
+    {
+        $paymentDataObj = new PaymentData();
 
+        try {
+            $paymentData = json_decode($data, true);
+        } catch (Exception $e) {
+            $paymentData = [];
+        }
+
+        if (false == is_array($paymentData)) {
+            return $paymentDataObj;
+        }
+
+        $paymentDataObj->fromArray($paymentData);
+
+        return $paymentDataObj;
+    }
 }

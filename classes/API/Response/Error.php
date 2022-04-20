@@ -45,12 +45,14 @@ class Error
     public function setErrorCode($errorCode)
     {
         $this->errorCode = $errorCode;
+
         return $this;
     }
 
     public function setMessage($message)
     {
         $this->message = $message;
+
         return $this;
     }
 }

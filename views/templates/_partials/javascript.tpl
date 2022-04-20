@@ -24,9 +24,11 @@
 *}
 
 <script>
+  {if isset($JSvars)}
     {foreach from=$JSvars key=varName item=varValue}
-      var {$varName} = {$varValue|json_encode nofilter};
+    var {$varName} = {$varValue|json_encode nofilter};
     {/foreach}
+  {/if}
 </script>
 
 {if isset($JSscripts) && is_array($JSscripts) && false === empty($JSscripts)}

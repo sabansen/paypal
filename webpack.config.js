@@ -50,6 +50,7 @@ const config = {
     'js/payment_mb': './_dev/js/payment_mb.js',
     'js/paypal-info': './_dev/js/paypal-info.js',
     'js/adminInstallment': './_dev/js/adminInstallment.js',
+    'js/Venmo': './_dev/js/Venmo.js',
 
     'css/paypal_bo': './_dev/scss/paypal_bo.scss',
     'css/paypal_fo': './_dev/scss/paypal_fo.scss',

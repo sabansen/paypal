@@ -28,13 +28,13 @@ namespace PaypalAddons\classes\API\Response;
 
 class ResponseCaptureAuthorize extends Response
 {
-    /** @var string*/
+    /** @var string */
     protected $idTransaction;
 
-    /** @var string*/
+    /** @var string */
     protected $status;
 
-    /** @var string*/
+    /** @var string */
     protected $dateTransaction;
 
     /**
@@ -51,6 +51,7 @@ class ResponseCaptureAuthorize extends Response
     public function setIdTransaction($idTransaction)
     {
         $this->idTransaction = $idTransaction;
+
         return $this;
     }
 
@@ -68,6 +69,7 @@ class ResponseCaptureAuthorize extends Response
     public function setStatus($status)
     {
         $this->status = $status;
+
         return $this;
     }
 
@@ -85,6 +87,7 @@ class ResponseCaptureAuthorize extends Response
     public function setDateTransaction($dateTransaction)
     {
         $this->dateTransaction = $dateTransaction;
+
         return $this;
     }
 

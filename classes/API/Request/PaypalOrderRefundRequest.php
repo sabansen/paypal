@@ -37,7 +37,6 @@ use PayPalCheckoutSdk\Core\PayPalHttpClient;
 use PayPalCheckoutSdk\Payments\CapturesRefundRequest;
 use PayPalHttp\HttpException;
 use Validate;
-use Symfony\Component\VarDumper\VarDumper;
 
 class PaypalOrderRefundRequest extends RequestAbstract
 {
@@ -100,6 +99,7 @@ class PaypalOrderRefundRequest extends RequestAbstract
     protected function getDateTransaction($exec)
     {
         $date = \DateTime::createFromFormat(\DateTime::ATOM, $exec->result->create_time);
+
         return $date->format('Y-m-d H:i:s');
     }
 
@@ -110,12 +110,12 @@ class PaypalOrderRefundRequest extends RequestAbstract
     {
         $amount = $this->getAmount();
 
-        if ((float)$amount['value'] == (float)$this->paypalOrder->total_paid) {
+        if ((float) $amount['value'] == (float) $this->paypalOrder->total_paid) {
             return [];
         }
 
         $body = [
-            'amount' => $this->getAmount()
+            'amount' => $this->getAmount(),
         ];
 
         return $body;
@@ -123,6 +123,7 @@ class PaypalOrderRefundRequest extends RequestAbstract
 
     /**
      * @return array
+     *
      * @throws OrderFullyRefundedException
      * @throws RefundCalculationException
      */
@@ -138,7 +139,7 @@ class PaypalOrderRefundRequest extends RequestAbstract
 
         $amount = [
             'currency_code' => $this->paypalOrder->currency,
-            'value' => $refundValue
+            'value' => $refundValue,
         ];
 
         return $amount;

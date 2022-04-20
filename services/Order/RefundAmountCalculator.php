@@ -1,4 +1,5 @@
 <?php
+
 namespace PaypalAddons\services\Order;
 
 use Order;
@@ -8,6 +9,7 @@ class RefundAmountCalculator
 {
     /**
      * @param mixed $params
+     *
      * @return float
      */
     public function calculate($params)
@@ -39,6 +41,7 @@ class RefundAmountCalculator
 
     /**
      * @param mixed $params
+     *
      * @return float
      */
     public function calculateDiscount($params)
@@ -55,7 +58,7 @@ class RefundAmountCalculator
         if (false == empty($params['cancel_product']['voucher_refund_type'])) {
             if ($params['cancel_product']['voucher_refund_type'] == 1) {
                 if ($params['order'] instanceof Order) {
-                    return (float)$params['order']->total_discounts_tax_incl;
+                    return (float) $params['order']->total_discounts_tax_incl;
                 }
             }
         }

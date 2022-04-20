@@ -26,7 +26,6 @@
 
 namespace PaypalAddons\services;
 
-
 class ContainerService
 {
     public static function init()
