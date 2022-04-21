@@ -808,6 +808,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
                         $payment_option->setAction($this->context->link->getModuleLink($this->name, 'pppValidation', ['short_cut' => '1', 'token' => $this->context->cookie->paypal_pSc], true));
                         $payments_options[] = $payment_option;
                     }
+
+                    $payments_options[] = $this->buildPaypalWallet($params);
                 }
 
                 break;
@@ -975,6 +977,23 @@ class PayPal extends \PaymentModule implements WidgetInterface
     protected function initAcdcPaymentMethod()
     {
         return new AcdcPaymentMethod();
+    }
+
+    protected function buildPaypalWallet($params)
+    {
+        $paymentOption = new PaymentOption();
+        $paymentOption->setCallToActionText($this->l('PayPal wallet'));
+        $paymentOption->setAction(
+            sprintf(
+                'javascript:alert(\'%s\');',
+                $this->l('Should use the PayPal wallet button ') // todo: specify message
+            )
+        );
+        $paymentOption->setModuleName('paypal_pp_wallet');
+        $paymentOption->setAdditionalInformation($this->getShortcutPaymentStep()->render());
+        $paymentOption->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/paypal_logo.png'));
+
+        return $paymentOption;
     }
 
     /**
