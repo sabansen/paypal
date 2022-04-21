@@ -31,6 +31,8 @@ require_once _PS_MODULE_DIR_ . 'paypal/config_dev.php';
 include_once _PS_MODULE_DIR_ . 'paypal/vendor/autoload.php';
 
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\APM\ApmCollection;
+use PaypalAddons\classes\APM\ApmFunctionality;
 use PaypalAddons\classes\Constants\WebHookConf;
 use PaypalAddons\classes\InstallmentBanner\BannerManager;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BnplAvailabilityManager;
@@ -845,6 +847,10 @@ class PayPal extends \PaymentModule implements WidgetInterface
             if ($venmoFunctionality->isAvailable() && $venmoFunctionality->isEnabled() && $venmoFunctionality->isEligibleContext($this->context)) {
                 $payments_options[] = $this->buildVenmoPaymentOption($params);
             }
+
+            if ($this->initApmFunctionality()->isEnabled() && $this->initApmFunctionality()->isAvailable()) {
+                $payments_options[] = $this->buildApmPaymentOption($params);
+            }
         }
 
         if ($method->isSandbox() && false === empty($payments_options)) {
@@ -908,6 +914,34 @@ class PayPal extends \PaymentModule implements WidgetInterface
     public function getFraudNetForm()
     {
         return new FraudNetForm();
+    }
+
+    protected function initApmFunctionality()
+    {
+        return new ApmFunctionality();
+    }
+
+    protected function buildApmPaymentOption($params)
+    {
+        $paymentOption = new PaymentOption();
+        $action_text = $this->l('Pay with alternative payment method'); // todo: specify message
+        $paymentOption->setCallToActionText($action_text);
+        $paymentOption->setAction(
+            sprintf(
+                'javascript:alert(\'%s\');',
+                $this->l('Should use the alternative payment button') // todo: specify message
+            )
+        );
+        $paymentOption->setModuleName('paypal_apm');
+        $paymentOption->setAdditionalInformation($this->initApmCollection()->render());
+        $paymentOption->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/paypal_logo.png'));
+
+        return $paymentOption;
+    }
+
+    protected function initApmCollection()
+    {
+        return new ApmCollection();
     }
 
     /**

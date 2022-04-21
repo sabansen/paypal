@@ -27,6 +27,7 @@ require_once _PS_MODULE_DIR_ . 'paypal/vendor/autoload.php';
 
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\AdminPayPalController;
+use PaypalAddons\classes\APM\ApmFunctionality;
 use PaypalAddons\classes\Constants\PaypalConfigurations;
 use PaypalAddons\classes\Constants\WebHookConf;
 use PaypalAddons\classes\Form\Field\InputChain;
@@ -64,6 +65,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             'paypal_merchant_installment',
             PaypalConfigurations::VENMO_OPTION,
             PaypalConfigurations::PUI_CUSTOMER_SERVICE_INSTRUCTIONS,
+            PaypalConfigurations::APM_OPTION,
         ];
 
         $this->advanceFormParametres = [
@@ -332,6 +334,28 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             ];
         }
 
+        if ($this->initApmFunctionality()->isAvailable()) {
+            $this->fields_form['form']['form']['input'][] = [
+                'type' => 'switch',
+                'label' => $this->l('Alternative Payment Methods'),
+                'name' => PaypalConfigurations::APM_OPTION,
+                'is_bool' => true,
+                'hint' => $this->l('Enable this option if you want to enable installments. If enabled, your clients will be able to change the number of installments (by default, 1x payment will be offered). This option can be available only for registered users.'),
+                'values' => [
+                    [
+                        'id' => PaypalConfigurations::APM_OPTION . '_on',
+                        'value' => 1,
+                        'label' => $this->l('Enabled'),
+                    ],
+                    [
+                        'id' => PaypalConfigurations::APM_OPTION . '_off',
+                        'value' => 0,
+                        'label' => $this->l('Disabled'),
+                    ],
+                ],
+            ];
+        }
+
         $values = [];
         foreach ($this->parametres as $parametre) {
             $values[$parametre] = Configuration::get(Tools::strtoupper($parametre));
@@ -342,6 +366,11 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
     public function initVenmoFunctionalityService()
     {
         return new VenmoFunctionality();
+    }
+
+    protected function initApmFunctionality()
+    {
+        return new ApmFunctionality();
     }
 
     public function initAdvancedForm()
