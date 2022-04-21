@@ -26,6 +26,7 @@
 require_once _PS_MODULE_DIR_ . 'paypal/vendor/autoload.php';
 
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\services\Core\PaypalMerchantId;
 
 class AdminPaypalGetCredentialsController extends ModuleAdminController
 {
@@ -43,6 +44,7 @@ class AdminPaypalGetCredentialsController extends ModuleAdminController
             Configuration::clearConfigurationCacheForTesting();
             if ($method->isCredentialsSetted()) {
                 $wait = false;
+                $this->initPaypalMerchantId()->set(Tools::getValue('merchantIdInPayPal'));
             }
 
             $duration = time() - $start;
@@ -53,5 +55,10 @@ class AdminPaypalGetCredentialsController extends ModuleAdminController
         } while ($wait);
 
         Tools::redirectAdmin($this->context->link->getAdminLink('AdminPayPalSetup', true, [], ['checkCredentials' => 1]));
+    }
+
+    protected function initPaypalMerchantId()
+    {
+        return new PaypalMerchantId();
     }
 }

@@ -114,3 +114,9 @@
     {/if}
 </div>
 
+{if isset($SignUpLinkButton)}
+    <div class="pp__mt-5">
+        {$SignUpLinkButton->render() nofilter} {* html. cannot be escaped*}
+    </div>
+{/if}
+

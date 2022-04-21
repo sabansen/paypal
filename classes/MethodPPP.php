@@ -26,6 +26,8 @@
 
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\PaypalApiManager;
+use PaypalAddons\classes\PUI\DataUserForm;
+use PaypalAddons\classes\PuiMethodInterface;
 
 /**
  * Class MethodPPP
@@ -33,7 +35,7 @@ use PaypalAddons\classes\API\PaypalApiManager;
  * @see https://paypal.github.io/PayPal-PHP-SDK/ REST API sdk doc
  * @see https://developer.paypal.com/docs/api/payments/v1/ REST API references
  */
-class MethodPPP extends AbstractMethodPaypal
+class MethodPPP extends AbstractMethodPaypal implements PuiMethodInterface
 {
     public $errors = [];
 
@@ -45,6 +47,9 @@ class MethodPPP extends AbstractMethodPaypal
 
     /** payment Object IDl*/
     public $paymentId;
+
+    /** @var \PaypalAddons\classes\PUI\DataUserForm */
+    protected $puiDataUser;
 
     /**
      * @return mixed
@@ -317,5 +322,66 @@ class MethodPPP extends AbstractMethodPaypal
         $this->short_cut = (bool) $shortCut;
 
         return $this;
+    }
+
+    public function createPartnerReferrals()
+    {
+        return $this->paypalApiManager->getPartnerReferralsRequest()->execute();
+    }
+
+    public function initPui()
+    {
+        if ($this->isConfigured() == false) {
+            throw new Exception('Module is not configured');
+        }
+
+        /** @var $response \PaypalAddons\classes\API\Response\ResponseOrderCreate */
+        $response = $this->paypalApiManager->getOrderPuiRequest()->execute();
+
+        if ($response->isSuccess() == false) {
+            throw new \Exception($response->getError()->getMessage());
+        }
+
+        $getOrderResponse = $this->paypalApiManager->getOrderGetRequest($response->getPaymentId())->execute();
+
+        if ($getOrderResponse->isSuccess() == false) {
+            throw new \Exception($getOrderResponse->getError()->getMessage());
+        }
+
+        $transactionDetails = [
+            'method' => 'PPP',
+            'transaction_id' => null,
+            'id_payment' => $response->getPaymentId(),
+            'payment_method' => $this->getPaymentMethod(),
+            'currency' => $getOrderResponse->getPurchaseUnit()->getCurrency(),
+            'payment_status' => $getOrderResponse->getStatus(),
+            'payment_tool' => 'PAY_UPON_INVOICE',
+            'intent' => $this->getIntent(),
+            'capture' => false,
+        ];
+        $paypal = Module::getInstanceByName($this->name);
+        $paypal->validateOrder(
+            Context::getContext()->cart->id,
+            $this->getOrderStatus(),
+            $getOrderResponse->getPurchaseUnit()->getAmount(),
+            $this->getPaymentMethod(),
+            null,
+            $transactionDetails
+        );
+    }
+
+    public function getPuiDataUser()
+    {
+        return $this->puiDataUser;
+    }
+
+    public function setPuiDataUser(DataUserForm $data)
+    {
+        $this->puiDataUser = $data;
+    }
+
+    public function getSellerStatus()
+    {
+        return $this->paypalApiManager->getSellerStatusRequest()->execute();
     }
 }

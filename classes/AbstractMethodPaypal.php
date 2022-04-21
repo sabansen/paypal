@@ -109,11 +109,13 @@ abstract class AbstractMethodPaypal extends AbstractMethod
 
     /**
      * @return \PaypalAddons\classes\API\Response\ResponseOrderCreate
+     *
+     * @throws Exception
      */
     public function init()
     {
         if ($this->isConfigured() == false) {
-            return '';
+            throw new Exception('Module is not configured');
         }
 
         /** @var $response \PaypalAddons\classes\API\Response\ResponseOrderCreate */

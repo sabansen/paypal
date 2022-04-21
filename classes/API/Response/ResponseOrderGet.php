@@ -34,10 +34,19 @@ class ResponseOrderGet extends Response
     /** @var Address */
     protected $address;
 
+    protected $purchaseUnit;
+
+    protected $depositBankDetails;
+
+    /** @var string*/
+    protected $status;
+
     public function __construct()
     {
         $this->setClient(new Client());
         $this->setAddress(new Address());
+        $this->setPurchaseUnit(new PurchaseUnit());
+        $this->setDepositBankDetails(new DepositBankDetails());
     }
 
     /**
@@ -74,5 +83,44 @@ class ResponseOrderGet extends Response
         $this->address = $address;
 
         return $this;
+    }
+
+    public function setPurchaseUnit(PurchaseUnit $purchaseUnit)
+    {
+        $this->purchaseUnit = $purchaseUnit;
+    }
+
+    public function getPurchaseUnit()
+    {
+        return $this->purchaseUnit;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return (string)$this->status;
+    }
+
+    /**
+     * @param string $status
+     * @return ResponseOrderGet
+     */
+    public function setStatus($status)
+    {
+        $this->status = (string)$status;
+        return $this;
+    }
+
+    public function setDepositBankDetails(DepositBankDetails $bankDetails)
+    {
+        $this->depositBankDetails = $bankDetails;
+        return $this;
+    }
+
+    public function getDepositBankDetails()
+    {
+        return $this->depositBankDetails;
     }
 }

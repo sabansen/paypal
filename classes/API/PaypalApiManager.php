@@ -30,13 +30,16 @@ use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Request\PaypalAccessTokenRequest;
 use PaypalAddons\classes\API\Request\PaypalAuthorizationVoidRequest;
 use PaypalAddons\classes\API\Request\PaypalCaptureAuthorizeRequest;
+use PaypalAddons\classes\API\Request\PaypalGetSellerStatusRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderAuthorizeRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderCaptureRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderCreateRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderGetRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderPartialRefundRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderPatchRequest;
+use PaypalAddons\classes\API\Request\PaypalOrderPuiCreateRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderRefundRequest;
+use PaypalAddons\classes\API\Request\PaypalPartnerReferralsRequest;
 
 class PaypalApiManager implements PaypalApiManagerInterface
 {
@@ -100,5 +103,20 @@ class PaypalApiManager implements PaypalApiManagerInterface
     public function getOrderPatchRequest($idPayment)
     {
         return new PaypalOrderPatchRequest($this->client, $this->method, $idPayment);
+    }
+
+    public function getPartnerReferralsRequest()
+    {
+        return new PaypalPartnerReferralsRequest($this->client, $this->method);
+    }
+
+    public function getOrderPuiRequest()
+    {
+        return new PaypalOrderPuiCreateRequest($this->client, $this->method);
+    }
+
+    public function getSellerStatusRequest()
+    {
+        return new PaypalGetSellerStatusRequest($this->client, $this->method);
     }
 }

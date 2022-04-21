@@ -63,6 +63,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             'paypal_mb_ec_enabled',
             'paypal_merchant_installment',
             PaypalConfigurations::VENMO_OPTION,
+            PaypalConfigurations::PUI_CUSTOMER_SERVICE_INSTRUCTIONS,
         ];
 
         $this->advanceFormParametres = [
@@ -233,6 +234,17 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             'placeholder' => $this->l('Leave it empty to use your Shop name setup on your PayPal account'),
             'hint' => $this->l('A label that overrides the business name in the PayPal account on the PayPal pages. If logo is set, then brand name won\'t be shown.', get_class($this)),
         ];
+
+        if ($this->method == 'PPP') {
+            $this->fields_form['form']['form']['input'][] = [
+                'type' => 'text',
+                'label' => $this->l('Customer service instructions', get_class($this)),
+                'name' => PaypalConfigurations::PUI_CUSTOMER_SERVICE_INSTRUCTIONS,
+                'placeholder' => $this->l('Example: Customer service phone is +49 6912345678'),
+                'required' => true,
+                'hint' => $this->l('Required message for using Pay upon invoice payment method', get_class($this)),
+            ];
+        }
 
         if (in_array($countryDefault->iso_code, $this->module->countriesApiCartUnavailable) == false && in_array($this->method, ['MB', 'EC'])) {
             $this->fields_form['form']['form']['input'][] = [

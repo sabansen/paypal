@@ -43,6 +43,8 @@ use PaypalAddons\classes\InstallmentBanner\BNPL\BNPLSignup;
 use PaypalAddons\classes\InstallmentBanner\ConfigurationMap;
 use PaypalAddons\classes\InstallmentBanner\ConfigurationMap as InstallmentConfiguration;
 use PaypalAddons\classes\PaypalPaymentMode;
+use PaypalAddons\classes\PUI\FraudNetForm;
+use PaypalAddons\classes\PUI\FraudSessionId;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Shortcut\ShortcutPaymentStep;
 use PaypalAddons\classes\Shortcut\ShortcutSignup;
@@ -347,6 +349,14 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 'en' => 'Get Credentials',
             ],
             'class_name' => 'AdminPaypalGetCredentials',
+            'parent_class_name' => 'AdminParentPaypalConfiguration',
+            'visible' => false,
+        ],
+        [
+            'name' => [
+                'en' => 'PUI listener',
+            ],
+            'class_name' => 'AdminPayPalPUIListener',
             'parent_class_name' => 'AdminParentPaypalConfiguration',
             'visible' => false,
         ],
@@ -767,6 +777,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 break;
             case 'PPP':
                 if ($method->isConfigured()) {
+                    $payments_options[] = $this->renderPuiOption($params);
                     $payment_option = new PaymentOption();
                     $action_text = $this->l('Pay with PayPal Plus');
                     if (Configuration::get('PAYPAL_API_ADVANTAGES')) {
@@ -874,6 +885,29 @@ class PayPal extends \PaymentModule implements WidgetInterface
     protected function initVenmoButton()
     {
         return new VenmoButton();
+    }
+
+    public function renderPuiOption($params)
+    {
+        $paymentOption = new PaymentOption();
+        $action_text = $this->l('Pay upon invoice with Paypal');
+        $paymentOption->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/paypal_logo.png'));
+        $paymentOption->setModuleName('paypal_pui');
+        $paymentOption->setCallToActionText($action_text);
+        $paymentOption->setAdditionalInformation($this->getFraudNetForm()->render());
+
+        return $paymentOption;
+    }
+
+    protected function getFraudSessionId()
+    {
+        return new FraudSessionId();
+    }
+
+    /** @return FraudNetForm*/
+    public function getFraudNetForm()
+    {
+        return new FraudNetForm();
     }
 
     /**
@@ -1032,6 +1066,31 @@ class PayPal extends \PaymentModule implements WidgetInterface
         $returnContent .= $this->context->smarty->fetch('module:paypal/views/templates/front/prefetch.tpl');
 
         return $returnContent;
+    }
+
+    public function hookDisplayInvoiceLegalFreeText($params)
+    {
+        $paypal_order = PaypalOrder::loadByOrderId($params['order']->id);
+
+        if (!Validate::isLoadedObject($paypal_order) || $paypal_order->method != 'PPP'
+            || $paypal_order->payment_tool != 'PAY_UPON_INVOICE') {
+            return '';
+        }
+
+        $method = AbstractMethodPaypal::load();
+        $response = $method->getInfo($paypal_order->id_payment);
+
+        if ($response->isSuccess() == false) {
+            return '';
+        }
+
+        $bankDetails = $response->getDepositBankDetails();
+        $tab = $this->l('The bank name').' : ' . $bankDetails->getBankName() . '; 
+        ' . $this->l('Account holder name').' : ' . $bankDetails->getAccountHolderName() . '; 
+        ' . $this->l('IBAN').' : ' . $bankDetails->getIban() . '; 
+        ' . $this->l('BIC').' : ' . $bankDetails->getBic();
+
+        return $tab;
     }
 
     public function checkActiveModule()
