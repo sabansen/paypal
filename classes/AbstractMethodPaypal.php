@@ -46,7 +46,6 @@ use PaypalAddons\services\Order\RefundAmountCalculator;
 use PaypalAddons\services\StatusMapping;
 use PaypalPPBTlib\AbstractMethod;
 use PrestaShopLogger;
-use Symfony\Component\VarDumper\VarDumper;
 use Tools;
 use Validate;
 

@@ -42,6 +42,6 @@ class AcdcFunctionality
 
     public function isEnabled()
     {
-        return (int)Configuration::get(PaypalConfigurations::ACDC_OPTION);
+        return (int) Configuration::get(PaypalConfigurations::ACDC_OPTION);
     }
 }

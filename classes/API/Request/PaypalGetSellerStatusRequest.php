@@ -29,7 +29,6 @@ namespace PaypalAddons\classes\API\Request;
 use PayPal;
 use PaypalAddons\classes\API\ExtensionSDK\GetSellerStatus;
 use PaypalAddons\classes\API\Response\Error;
-use PaypalAddons\classes\PUI\PsMerchantId;
 use PaypalAddons\services\Core\PaypalMerchantId;
 use Tools;
 

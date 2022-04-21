@@ -26,7 +26,6 @@
 
 namespace PaypalAddons\classes\API\Response;
 
-
 class ResponseGetSellerStatus extends Response
 {
     protected $products = [];
@@ -43,6 +42,7 @@ class ResponseGetSellerStatus extends Response
 
     /**
      * @param array $products
+     *
      * @return ResponseGetSellerStatus
      */
     public function setProducts($products)
@@ -52,6 +52,7 @@ class ResponseGetSellerStatus extends Response
         }
 
         $this->products = $products;
+
         return $this;
     }
 
@@ -65,6 +66,7 @@ class ResponseGetSellerStatus extends Response
 
     /**
      * @param array $capabilities
+     *
      * @return ResponseGetSellerStatus
      */
     public function setCapabilities($capabilities)
@@ -74,7 +76,7 @@ class ResponseGetSellerStatus extends Response
         }
 
         $this->capabilities = $capabilities;
+
         return $this;
     }
-
 }

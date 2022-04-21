@@ -155,6 +155,7 @@ class PaypalOrderGetRequest extends RequestAbstract
         if (false == empty($exec->result->payer->email_address)) {
             return $exec->result->payer->email_address;
         }
+
         return '';
     }
 

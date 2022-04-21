@@ -26,10 +26,9 @@
 
 namespace PaypalAddons\classes\PUI;
 
-
+use PayPal;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\services\Core\PaypalMerchantId;
-use PayPal;
 
 class SignupLink
 {
@@ -70,7 +69,7 @@ class SignupLink
             'capabilities' => 'PAY_UPON_INVOICE',
             'country.x' => 'DE',
             'locale.x' => 'de-DE',
-            'sellerNonce' => $this->getSellerNonce()
+            'sellerNonce' => $this->getSellerNonce(),
         ];
 
         return $urlLink . http_build_query($params);

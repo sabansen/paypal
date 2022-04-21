@@ -1,21 +1,19 @@
 <?php
 
-
 namespace PaypalAddons\classes\API\Response;
-
 
 class DepositBankDetails
 {
-    /** @var string*/
+    /** @var string */
     protected $bic;
 
-    /** @var string*/
+    /** @var string */
     protected $bankName;
 
-    /** @var string*/
+    /** @var string */
     protected $iban;
 
-    /** @var string*/
+    /** @var string */
     protected $accountHolderName;
 
     /**
@@ -23,16 +21,18 @@ class DepositBankDetails
      */
     public function getBic()
     {
-        return (string)$this->bic;
+        return (string) $this->bic;
     }
 
     /**
      * @param string $bic
+     *
      * @return DepositBankDetails
      */
     public function setBic($bic)
     {
         $this->bic = $bic;
+
         return $this;
     }
 
@@ -41,16 +41,18 @@ class DepositBankDetails
      */
     public function getBankName()
     {
-        return (string)$this->bankName;
+        return (string) $this->bankName;
     }
 
     /**
      * @param string $bankName
+     *
      * @return DepositBankDetails
      */
     public function setBankName($bankName)
     {
         $this->bankName = $bankName;
+
         return $this;
     }
 
@@ -59,16 +61,18 @@ class DepositBankDetails
      */
     public function getIban()
     {
-        return (string)$this->iban;
+        return (string) $this->iban;
     }
 
     /**
      * @param string $iban
+     *
      * @return DepositBankDetails
      */
     public function setIban($iban)
     {
         $this->iban = $iban;
+
         return $this;
     }
 
@@ -77,16 +81,18 @@ class DepositBankDetails
      */
     public function getAccountHolderName()
     {
-        return (string)$this->accountHolderName;
+        return (string) $this->accountHolderName;
     }
 
     /**
      * @param string $accountHolderName
+     *
      * @return DepositBankDetails
      */
     public function setAccountHolderName($accountHolderName)
     {
         $this->accountHolderName = $accountHolderName;
+
         return $this;
     }
 }

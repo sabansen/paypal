@@ -38,7 +38,7 @@ class ResponseOrderGet extends Response
 
     protected $depositBankDetails;
 
-    /** @var string*/
+    /** @var string */
     protected $status;
 
     public function __construct()
@@ -100,22 +100,25 @@ class ResponseOrderGet extends Response
      */
     public function getStatus()
     {
-        return (string)$this->status;
+        return (string) $this->status;
     }
 
     /**
      * @param string $status
+     *
      * @return ResponseOrderGet
      */
     public function setStatus($status)
     {
-        $this->status = (string)$status;
+        $this->status = (string) $status;
+
         return $this;
     }
 
     public function setDepositBankDetails(DepositBankDetails $bankDetails)
     {
         $this->depositBankDetails = $bankDetails;
+
         return $this;
     }
 

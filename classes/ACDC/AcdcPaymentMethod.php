@@ -31,10 +31,10 @@ use PaypalAddons\classes\AbstractMethodPaypal;
 
 class AcdcPaymentMethod
 {
-    /** @var AbstractMethodPaypal*/
+    /** @var AbstractMethodPaypal */
     protected $method;
 
-    /** @var Context*/
+    /** @var Context */
     protected $context;
 
     public function __construct($method = null)
@@ -60,7 +60,7 @@ class AcdcPaymentMethod
         $vars = [
             'psPaypalDir' => _PS_MODULE_DIR_ . 'paypal',
             'JSvars' => [],
-            'JSscripts' => $this->getScripts()
+            'JSscripts' => $this->getScripts(),
         ];
 
         return $vars;
@@ -76,7 +76,7 @@ class AcdcPaymentMethod
             'src' => $srcLib,
             'data-namespace' => 'totPaypalAcdcSdk',
             'data-partner-attribution-id' => $this->getPartnerId(),
-            'data-client-token' => $this->getClientToken()
+            'data-client-token' => $this->getClientToken(),
         ];
 
         $scripts['acdc'] = [

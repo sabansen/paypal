@@ -54,12 +54,12 @@ class ResponseAcdcGenerateToken extends Response
 
     public function getIdToken()
     {
-        return (string)$this->idToken;
+        return (string) $this->idToken;
     }
 
     public function setIdToken($idToken)
     {
-        $this->idToken = (string)$idToken;
+        $this->idToken = (string) $idToken;
 
         return $this;
     }

@@ -26,14 +26,13 @@
 
 namespace PaypalAddons\classes\API\ExtensionSDK;
 
-
 use PayPalHttp\HttpRequest;
 
 class AcdcGenerateTokenRequest extends HttpRequest
 {
-    function __construct()
+    public function __construct()
     {
-        parent::__construct("/v1/identity/generate-token", "POST");
-        $this->headers["Content-Type"] = "application/json";
+        parent::__construct('/v1/identity/generate-token', 'POST');
+        $this->headers['Content-Type'] = 'application/json';
     }
 }

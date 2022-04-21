@@ -1,4 +1,5 @@
 <?php
+
 namespace PaypalAddons\classes\Webhook;
 
 use Configuration;
@@ -17,7 +18,6 @@ use PaypalCapture;
 use PaypalOrder;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use PaypalWebhook;
-use Symfony\Component\VarDumper\VarDumper;
 use Tools;
 use Validate;
 
@@ -128,6 +128,7 @@ class WebhookEventHandler
     {
         if (false == empty($event->getResource()->supplementary_data->related_ids->order_id)) {
             $paymentId = $event->getResource()->supplementary_data->related_ids->order_id;
+
             return $this->servicePaypalOrder->getPaypalOrderByPaymentId($paymentId);
         }
 
@@ -154,7 +155,7 @@ class WebhookEventHandler
             }
         }
 
-        return empty($event->getResource()->id) ? '' : (string)$event->getResource()->id;
+        return empty($event->getResource()->id) ? '' : (string) $event->getResource()->id;
     }
 
     /**
@@ -193,7 +194,7 @@ class WebhookEventHandler
     protected function getAmount(WebhookEvent $event)
     {
         try {
-            return (float)$event->getResource()->amount->value;
+            return (float) $event->getResource()->amount->value;
         } catch (Exception $e) {
             return 0;
         }
@@ -292,7 +293,6 @@ class WebhookEventHandler
 
     protected function getPsOrderStatus(WebhookEvent $event)
     {
-
         if ($event->getEventType() == WebHookType::CAPTURE_REFUNDED) {
             $paymentTotal = $this->getPaymentTotal($event);
 
@@ -310,6 +310,7 @@ class WebhookEventHandler
 
         return $this->getPaymentTotalAmountService()->get($paypalOrder);
     }
+
     protected function getPaymentTotalAmountService()
     {
         return new PaymentTotalAmount();

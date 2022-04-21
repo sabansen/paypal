@@ -26,18 +26,13 @@
 
 namespace PaypalAddons\classes\API\Request;
 
-use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\ExtensionSDK\AcdcGenerateTokenRequest;
 use PaypalAddons\classes\API\Response\Error;
 use PaypalAddons\classes\API\Response\ResponseAcdcGenerateToken;
-use PayPalCheckoutSdk\Core\PayPalHttpClient;
-use PayPalCheckoutSdk\Orders\OrdersGetRequest;
 use PayPalHttp\HttpException;
-use Symfony\Component\VarDumper\VarDumper;
 
 class PaypalAcdcGenerateTokenRequest extends RequestAbstract
 {
-
     public function execute()
     {
         $response = $this->initResponse();
@@ -78,6 +73,4 @@ class PaypalAcdcGenerateTokenRequest extends RequestAbstract
     {
         return new ResponseAcdcGenerateToken();
     }
-
-
 }

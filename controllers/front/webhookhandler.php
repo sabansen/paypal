@@ -28,15 +28,8 @@ use PayPal\Api\WebhookEvent;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Request\V_1\GetWebhookEvents;
 use PaypalAddons\classes\Constants\WebhookHandler;
-use PaypalAddons\classes\Constants\WebHookType;
-use PaypalAddons\classes\Exception\RefundCalculationException;
 use PaypalAddons\classes\Webhook\WebhookEventHandler;
-use PaypalAddons\services\ActualizeTotalPaid;
-use PaypalAddons\services\ContainerService;
-use PaypalAddons\services\PaymentTotalAmount;
 use PaypalAddons\services\ServicePaypalOrder;
-use PaypalAddons\services\StatusMapping;
-use PaypalAddons\services\WebhookService;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 
 /**

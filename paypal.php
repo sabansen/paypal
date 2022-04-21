@@ -31,10 +31,10 @@ require_once _PS_MODULE_DIR_ . 'paypal/config_dev.php';
 include_once _PS_MODULE_DIR_ . 'paypal/vendor/autoload.php';
 
 use PaypalAddons\classes\AbstractMethodPaypal;
-use PaypalAddons\classes\APM\ApmCollection;
-use PaypalAddons\classes\APM\ApmFunctionality;
 use PaypalAddons\classes\ACDC\AcdcFunctionality;
 use PaypalAddons\classes\ACDC\AcdcPaymentMethod;
+use PaypalAddons\classes\APM\ApmCollection;
+use PaypalAddons\classes\APM\ApmFunctionality;
 use PaypalAddons\classes\Constants\WebHookConf;
 use PaypalAddons\classes\InstallmentBanner\BannerManager;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BnplAvailabilityManager;
@@ -1171,10 +1171,10 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
 
         $bankDetails = $response->getDepositBankDetails();
-        $tab = $this->l('The bank name').' : ' . $bankDetails->getBankName() . '; 
-        ' . $this->l('Account holder name').' : ' . $bankDetails->getAccountHolderName() . '; 
-        ' . $this->l('IBAN').' : ' . $bankDetails->getIban() . '; 
-        ' . $this->l('BIC').' : ' . $bankDetails->getBic();
+        $tab = $this->l('The bank name') . ' : ' . $bankDetails->getBankName() . '; 
+        ' . $this->l('Account holder name') . ' : ' . $bankDetails->getAccountHolderName() . '; 
+        ' . $this->l('IBAN') . ' : ' . $bankDetails->getIban() . '; 
+        ' . $this->l('BIC') . ' : ' . $bankDetails->getBic();
 
         return $tab;
     }

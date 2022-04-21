@@ -79,7 +79,7 @@ class ServicePaypalOrder
         $order = new Order($paypalOrder->id_order);
 
         $data = [
-            'transaction_id' => $transactionId
+            'transaction_id' => $transactionId,
         ];
         $where = sprintf(
             'order_reference = \'%s\' AND (transaction_id IS NULL OR transaction_id = \'\')',
@@ -134,7 +134,7 @@ class ServicePaypalOrder
             ->select('id_paypal_order')
             ->from('paypal_order', 'po')
             ->where('id_payment = \'' . pSQL($paymentId) . '\'');
-        $id = (int)Db::getInstance()->getValue($query);
+        $id = (int) Db::getInstance()->getValue($query);
 
         if ($id) {
             return new \PaypalOrder($id);

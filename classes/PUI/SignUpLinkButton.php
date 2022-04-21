@@ -26,10 +26,7 @@
 
 namespace PaypalAddons\classes\PUI;
 
-use Configuration;
 use Context;
-use PaypalAddons\classes\API\Response\ResponsePartnerReferrals;
-use PaypalAddons\classes\Constants\PUI;
 use PaypalAddons\classes\PuiMethodInterface;
 use Tools;
 

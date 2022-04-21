@@ -42,6 +42,6 @@ class ApmFunctionality
 
     public function isEnabled()
     {
-        return (int)Configuration::get(PaypalConfigurations::APM_OPTION);
+        return (int) Configuration::get(PaypalConfigurations::APM_OPTION);
     }
 }

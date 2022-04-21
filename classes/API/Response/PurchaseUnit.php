@@ -26,7 +26,6 @@
 
 namespace PaypalAddons\classes\API\Response;
 
-
 class PurchaseUnit
 {
     protected $currency;
@@ -38,16 +37,18 @@ class PurchaseUnit
      */
     public function getCurrency()
     {
-        return (string)$this->currency;
+        return (string) $this->currency;
     }
 
     /**
      * @param mixed $currency
+     *
      * @return self
      */
     public function setCurrency($currency)
     {
-        $this->currency = (string)$currency;
+        $this->currency = (string) $currency;
+
         return $this;
     }
 
@@ -56,16 +57,18 @@ class PurchaseUnit
      */
     public function getAmount()
     {
-        return (float)$this->amount;
+        return (float) $this->amount;
     }
 
     /**
      * @param mixed $amount
+     *
      * @return self
      */
     public function setAmount($amount)
     {
-        $this->amount = (float)$amount;
+        $this->amount = (float) $amount;
+
         return $this;
     }
 }

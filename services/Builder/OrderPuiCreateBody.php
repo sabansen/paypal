@@ -91,16 +91,16 @@ class OrderPuiCreateBody extends OrderCreateBody
             return $body;
         }
 
-        foreach($body['purchase_units'][0]['items'] as $index => $item) {
+        foreach ($body['purchase_units'][0]['items'] as $index => $item) {
             if (empty($item['tax']['value'])) {
                 continue;
             }
 
-            if (empty($item['unit_amount']['value'])){
+            if (empty($item['unit_amount']['value'])) {
                 continue;
             }
 
-            $taxRate = ((float)$item['tax']['value'] / (float)$item['unit_amount']['value']);
+            $taxRate = ((float) $item['tax']['value'] / (float) $item['unit_amount']['value']);
             $taxRate = number_format($taxRate, 2, '.', '');
             $body['purchase_units'][0]['items'][$index]['tax_rate'] = $taxRate;
         }
@@ -114,12 +114,12 @@ class OrderPuiCreateBody extends OrderCreateBody
             return $body;
         }
 
-        foreach($body['purchase_units'][0]['items'] as $index => $item) {
+        foreach ($body['purchase_units'][0]['items'] as $index => $item) {
             if (empty($item['sku'])) {
                 $body['purchase_units'][0]['items'][$index]['category'] = 'PHYSICAL_GOODS';
             }
 
-            $product = new Product((int)$item['sku']);
+            $product = new Product((int) $item['sku']);
 
             if ($product->is_virtual) {
                 $body['purchase_units'][0]['items'][$index]['category'] = 'DIGITAL_GOODS';

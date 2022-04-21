@@ -26,13 +26,12 @@
 
 namespace PaypalAddons\classes\APM;
 
-
 use Configuration;
 use Context;
+use Country;
 use Module;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use Tools;
-use Country;
 
 class ApmCollection
 {
@@ -84,7 +83,7 @@ class ApmCollection
     protected function getJSvars()
     {
         return [
-            'apmMethodCollection' => $this->methodCollection
+            'apmMethodCollection' => $this->methodCollection,
         ];
     }
 
@@ -183,7 +182,6 @@ class ApmCollection
 
     protected function getNameSpace()
     {
-
     }
 
     protected function initDefaultCollection()
@@ -196,7 +194,7 @@ class ApmCollection
             'ideal',
             'mybank',
             'p24',
-            'sofort'
+            'sofort',
         ];
     }
 }
