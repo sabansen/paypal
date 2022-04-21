@@ -46,6 +46,7 @@ use PaypalAddons\services\Order\RefundAmountCalculator;
 use PaypalAddons\services\StatusMapping;
 use PaypalPPBTlib\AbstractMethod;
 use PrestaShopLogger;
+use Symfony\Component\VarDumper\VarDumper;
 use Tools;
 use Validate;
 
@@ -362,7 +363,7 @@ abstract class AbstractMethodPaypal extends AbstractMethod
     /**
      * @return string
      */
-    public function getUrlJsSdkLib()
+    public function getUrlJsSdkLib($parameters = null)
     {
         $paypal = \Module::getInstanceByName($this->name);
 
@@ -373,6 +374,10 @@ abstract class AbstractMethodPaypal extends AbstractMethod
             'locale' => str_replace('-', '_', \Context::getContext()->language->locale),
             'components' => 'buttons',
         ];
+
+        if (false == empty($parameters)) {
+            $params = array_merge($params, $parameters);
+        }
 
         return 'https://www.paypal.com/sdk/js?' . http_build_query($params);
     }

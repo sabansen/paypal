@@ -384,4 +384,9 @@ class MethodPPP extends AbstractMethodPaypal implements PuiMethodInterface
     {
         return $this->paypalApiManager->getSellerStatusRequest()->execute();
     }
+
+    public function acdcGenerateToken()
+    {
+        return $this->paypalApiManager->getAcdcGenerateTokenRequest()->execute();
+    }
 }

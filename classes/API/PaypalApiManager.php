@@ -28,6 +28,7 @@ namespace PaypalAddons\classes\API;
 
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\Request\PaypalAccessTokenRequest;
+use PaypalAddons\classes\API\Request\PaypalAcdcGenerateTokenRequest;
 use PaypalAddons\classes\API\Request\PaypalAuthorizationVoidRequest;
 use PaypalAddons\classes\API\Request\PaypalCaptureAuthorizeRequest;
 use PaypalAddons\classes\API\Request\PaypalGetSellerStatusRequest;
@@ -118,5 +119,10 @@ class PaypalApiManager implements PaypalApiManagerInterface
     public function getSellerStatusRequest()
     {
         return new PaypalGetSellerStatusRequest($this->client, $this->method);
+    }
+
+    public function getAcdcGenerateTokenRequest()
+    {
+        return new PaypalAcdcGenerateTokenRequest($this->client, $this->method);
     }
 }

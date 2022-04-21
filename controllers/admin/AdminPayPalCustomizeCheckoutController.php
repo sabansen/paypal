@@ -26,6 +26,7 @@
 require_once _PS_MODULE_DIR_ . 'paypal/vendor/autoload.php';
 
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\ACDC\AcdcFunctionality;
 use PaypalAddons\classes\AdminPayPalController;
 use PaypalAddons\classes\APM\ApmFunctionality;
 use PaypalAddons\classes\Constants\PaypalConfigurations;
@@ -66,6 +67,7 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             PaypalConfigurations::VENMO_OPTION,
             PaypalConfigurations::PUI_CUSTOMER_SERVICE_INSTRUCTIONS,
             PaypalConfigurations::APM_OPTION,
+            PaypalConfigurations::ACDC_OPTION,
         ];
 
         $this->advanceFormParametres = [
@@ -312,6 +314,28 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             ];
         }
 
+        if ($this->initAcdcFunctionality()->isAvailable()) {
+            $this->fields_form['form']['form']['input'][] = [
+                'type' => 'switch',
+                'label' => $this->l('ACDC'),
+                'name' => PaypalConfigurations::ACDC_OPTION,
+                'is_bool' => true,
+                'hint' => $this->l(''),
+                'values' => [
+                    [
+                        'id' => PaypalConfigurations::ACDC_OPTION . '_on',
+                        'value' => 1,
+                        'label' => $this->l('Enabled'),
+                    ],
+                    [
+                        'id' => PaypalConfigurations::ACDC_OPTION . '_off',
+                        'value' => 0,
+                        'label' => $this->l('Disabled'),
+                    ],
+                ],
+            ];
+        }
+
         if ($this->initVenmoFunctionalityService()->isAvailable()) {
             $this->fields_form['form']['form']['input'][] = [
                 'type' => 'switch',
@@ -371,6 +395,11 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
     protected function initApmFunctionality()
     {
         return new ApmFunctionality();
+    }
+
+    protected function initAcdcFunctionality()
+    {
+        return new AcdcFunctionality();
     }
 
     public function initAdvancedForm()

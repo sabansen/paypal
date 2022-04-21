@@ -52,6 +52,7 @@ const config = {
     'js/adminInstallment': './_dev/js/adminInstallment.js',
     'js/Venmo': './_dev/js/Venmo.js',
     'js/apmButton': './_dev/js/apmButton.js',
+    'js/acdc': './_dev/js/acdc.js',
 
     'css/paypal_bo': './_dev/scss/paypal_bo.scss',
     'css/paypal_fo': './_dev/scss/paypal_fo.scss',

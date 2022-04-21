@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2021 PayPal
+ * 2007-2022 PayPal
  *
  *  NOTICE OF LICENSE
  *
@@ -18,23 +18,22 @@
  *  versions in the future. If you wish to customize PrestaShop for your
  *  needs please refer to http://www.prestashop.com for more information.
  *
- *  @author 2007-2021 PayPal
+ *  @author 2007-2022 PayPal
  *  @author 202 ecommerce <tech@202-ecommerce.com>
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 
-namespace PaypalAddons\classes\Constants;
+namespace PaypalAddons\classes\API\ExtensionSDK;
 
-class PaypalConfigurations
+
+use PayPalHttp\HttpRequest;
+
+class AcdcGenerateTokenRequest extends HttpRequest
 {
-    const INTENT = 'PAYPAL_API_INTENT';
-
-    const VENMO_OPTION = 'PAYPAL_VENMO_ENABLED';
-
-    const PUI_CUSTOMER_SERVICE_INSTRUCTIONS = 'PAYPAL_PUI_CUSTOMER_SERVICE_INSTRUCTIONS';
-
-    const APM_OPTION = 'PAYPAL_APM_OPTION';
-
-    const ACDC_OPTION = 'PAYPAL_ACDC_OPTION';
+    function __construct()
+    {
+        parent::__construct("/v1/identity/generate-token", "POST");
+        $this->headers["Content-Type"] = "application/json";
+    }
 }
