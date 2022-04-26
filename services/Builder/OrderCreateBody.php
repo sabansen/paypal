@@ -26,6 +26,7 @@
 
 namespace PaypalAddons\services\Builder;
 
+use Configuration;
 use Context;
 use Group;
 use Module;
@@ -52,6 +53,8 @@ class OrderCreateBody implements BuilderInterface
     protected $wrappings = [];
 
     protected $products = [];
+
+    protected $useTax = null;
 
     public function __construct($context = null, $method = null)
     {
@@ -123,6 +126,21 @@ class OrderCreateBody implements BuilderInterface
         return $this->items;
     }
 
+    protected function isUseTax()
+    {
+        if (is_null($this->useTax) == false) {
+            return $this->useTax;
+        }
+
+        $this->useTax = (int) Configuration::get('PS_TAX') == 1;
+
+        if (version_compare(_PS_VERSION_, '1.7.6', '<')) {
+            $this->useTax = (Group::getPriceDisplayMethod($this->context->customer->id_default_group) == PS_TAX_INC) && $this->useTax;
+        }
+
+        return $this->useTax;
+    }
+
     /**
      * @param $currency string Iso code
      *
@@ -136,17 +154,16 @@ class OrderCreateBody implements BuilderInterface
 
         $items = [];
         $products = $this->context->cart->getProducts();
-        $customerGroup = new Group($this->context->customer->id_default_group);
 
         foreach ($products as $product) {
             $item = [];
             $priceExcl = $this->method->formatPrice($product['price']);
             $priceIncl = $this->method->formatPrice($product['price_wt']);
 
-            if ($customerGroup->price_display_method == PS_TAX_EXC) {
-                $productTax = 0;
-            } else {
+            if ($this->isUseTax()) {
                 $productTax = $this->method->formatPrice($priceIncl - $priceExcl, null, false);
+            } else {
+                $productTax = 0;
             }
 
             if (isset($product['attributes']) && (empty($product['attributes']) === false)) {
@@ -271,7 +288,12 @@ class OrderCreateBody implements BuilderInterface
             $item = [];
             $priceIncl = $this->context->cart->getGiftWrappingPrice(true);
             $priceExcl = $this->context->cart->getGiftWrappingPrice(false);
-            $tax = $priceIncl - $priceExcl;
+
+            if ($this->isUseTax()) {
+                $tax = $priceIncl - $priceExcl;
+            } else {
+                $tax = 0;
+            }
 
             $item['name'] = $this->module->l('Gift wrapping', get_class($this));
             $item['sku'] = $this->context->cart->id;
@@ -474,6 +496,6 @@ class OrderCreateBody implements BuilderInterface
 
     protected function getTotalShipping()
     {
-        return $this->context->cart->getOrderTotal(true, \Cart::ONLY_SHIPPING);
+        return $this->context->cart->getOrderTotal($this->isUseTax(), \Cart::ONLY_SHIPPING);
     }
 }
