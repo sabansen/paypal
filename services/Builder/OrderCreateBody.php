@@ -27,6 +27,7 @@
 namespace PaypalAddons\services\Builder;
 
 use Context;
+use Group;
 use Module;
 use Paypal;
 use PaypalAddons\classes\AbstractMethodPaypal;
@@ -135,12 +136,18 @@ class OrderCreateBody implements BuilderInterface
 
         $items = [];
         $products = $this->context->cart->getProducts();
+        $customerGroup = new Group($this->context->customer->id_default_group);
 
         foreach ($products as $product) {
             $item = [];
             $priceExcl = $this->method->formatPrice($product['price']);
             $priceIncl = $this->method->formatPrice($product['price_wt']);
-            $productTax = $this->method->formatPrice($priceIncl - $priceExcl, null, false);
+
+            if ($customerGroup->price_display_method == PS_TAX_EXC) {
+                $productTax = 0;
+            } else {
+                $productTax = $this->method->formatPrice($priceIncl - $priceExcl, null, false);
+            }
 
             if (isset($product['attributes']) && (empty($product['attributes']) === false)) {
                 $product['name'] .= ' - ' . $product['attributes'];
