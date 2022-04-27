@@ -5,7 +5,7 @@ config.xml
 api/Results.txt
 .idea/
 /sdk/paypalREST/vendor/paypal/rest-api-sdk-php/var/*
-vendor/
+vendor/*
 !vendor/ppbtlib
 node_modules/
 package-lock.json
