@@ -28,7 +28,7 @@
 {if empty($actionUrl)}
 
   <div class="alert alert-danger">
-      {l s='Error occured during generating sign-up link' mod='paypal'}
+      {l s='Error occurred during generating sign-up link. Please, try re-configure the connection with PayPal account' mod='paypal'}
   </div>
 
 {else}
