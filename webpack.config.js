@@ -53,6 +53,7 @@ const config = {
     'js/Venmo': './_dev/js/Venmo.js',
     'js/apmButton': './_dev/js/apmButton.js',
     'js/acdc': './_dev/js/acdc.js',
+    'js/tools': './_dev/js/tools.js',
 
     'css/paypal_bo': './_dev/scss/paypal_bo.scss',
     'css/paypal_fo': './_dev/scss/paypal_fo.scss',

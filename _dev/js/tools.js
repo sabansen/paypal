@@ -96,4 +96,8 @@ export const Tools = {
     element.style.pointerEvents = '';
     element.style.opacity = '1';
   },
-}
+};
+
+window.PaypalTools = Tools;
+let event = new Event('paypal-tools-loaded');
+document.dispatchEvent(event);

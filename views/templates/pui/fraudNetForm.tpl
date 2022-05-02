@@ -22,6 +22,8 @@
 *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
 *
 *}
+{include file = "{$psPaypalDir}/views/templates/_partials/javascript.tpl" assign=javascriptBlock}
+{$javascriptBlock nofilter}
 {assign var='currentDate' value=date('Y-m-d')}
 
 {literal}
@@ -40,6 +42,7 @@
         class="form"
         action="{Context::getContext()->link->getModuleLink('paypal','puiValidate',['sessionId' => $sessionId], true)}"
         method="POST"
+        pui-form
 >
 
   <div class="form-group row">
@@ -138,3 +141,19 @@
     </div>
   </div>
 </form>
+
+<script>
+    if (typeof PaypalTools != 'undefined') {
+        PaypalTools.disableTillConsenting(
+            document.querySelector('[pui-form] button'),
+            document.getElementById('conditions_to_approve[terms-and-conditions]')
+        );
+    } else {
+        document.addEventListener('paypal-tools-loaded', function() {
+            PaypalTools.disableTillConsenting(
+                document.querySelector('[pui-form] button'),
+                document.getElementById('conditions_to_approve[terms-and-conditions]')
+            );
+        });
+    }
+</script>

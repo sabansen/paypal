@@ -51,6 +51,8 @@ class FraudNetForm
         $this->context->smarty->assign('sourceId', $this->getSourceId());
         $this->context->smarty->assign('isSandbox', $this->method->isSandbox());
         $this->context->smarty->assign('userData', $this->getUserData());
+        $this->context->smarty->assign('JSscripts', $this->getScripts());
+        $this->context->smarty->assign('psPaypalDir', _PS_MODULE_DIR_ . 'paypal');
 
         try {
             return Context::getContext()->smarty->fetch('module:paypal/views/templates/pui/fraudNetForm.tpl');
@@ -81,5 +83,14 @@ class FraudNetForm
         $userData->setPhone($billingAddress->phone);
 
         return $userData;
+    }
+
+    protected function getScripts()
+    {
+        return [
+            'paypal-tools' => [
+                'src' => __PS_BASE_URI__ . 'modules/paypal/views/js/tools.js',
+            ]
+        ];
     }
 }
