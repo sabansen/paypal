@@ -90,7 +90,7 @@ class FraudNetForm
         return [
             'paypal-tools' => [
                 'src' => __PS_BASE_URI__ . 'modules/paypal/views/js/tools.js',
-            ]
+            ],
         ];
     }
 }
