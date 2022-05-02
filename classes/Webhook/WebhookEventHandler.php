@@ -18,6 +18,7 @@ use PaypalCapture;
 use PaypalOrder;
 use PaypalPPBTlib\Extensions\ProcessLogger\ProcessLoggerHandler;
 use PaypalWebhook;
+use Shop;
 use Tools;
 use Validate;
 
@@ -57,8 +58,10 @@ class WebhookEventHandler
         foreach ($orders as $order) {
             //If there are several shops, then PayPal sends webhook event to each shop. The module should
             //handle the event once.
-            if ($order->id_shop == $this->context->shop->id) {
-                return false;
+            if ($this->isMultishop()) {
+                if ($order->id_shop != $this->context->shop->id) {
+                    return false;
+                }
             }
 
             ProcessLoggerHandler::logInfo(
@@ -320,5 +323,10 @@ class WebhookEventHandler
     protected function getStatusMapping()
     {
         return new StatusMapping();
+    }
+
+    protected function isMultishop()
+    {
+        return Shop::isFeatureActive();
     }
 }
