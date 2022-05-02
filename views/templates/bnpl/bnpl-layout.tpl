@@ -38,7 +38,6 @@
       function waitPaypalSDKIsLoaded() {
           if (typeof totPaypalBnplSdkButtons === 'undefined' || typeof BNPL === 'undefined') {
               setTimeout(waitPaypalSDKIsLoaded, 200);
-              // console.log('here');
               return;
           }
 

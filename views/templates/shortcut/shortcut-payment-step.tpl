@@ -64,6 +64,14 @@
               }
           });
       });
+
+      if (typeof Shortcut != "undefined") {
+          Shortcut.disableTillConsenting();
+      } else {
+          document.addEventListener('paypal-after-init-shortcut-button', function (event) {
+              Shortcut.disableTillConsenting();
+          })
+      }
   </script>
 {/block}
 

@@ -24,6 +24,8 @@
  */
 // init incontext
 
+import {Tools} from './tools.js';
+
 const ApmButton = function(conf) {
 
     this.method = typeof conf['method'] != 'undefined' ? conf['method'] : null;
@@ -48,6 +50,11 @@ ApmButton.prototype.initButton = function() {
     }.bind(this),
 
   }).render(this.button);
+
+  Tools.disableTillConsenting(
+    document.querySelector(this.button),
+    document.getElementById('conditions_to_approve[terms-and-conditions]')
+  );
 };
 
 ApmButton.prototype.getIdOrder = function() {

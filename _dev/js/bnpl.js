@@ -23,6 +23,7 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 // init incontext
+import {Tools} from './tools.js';
 
 const BNPL = {
 
@@ -94,6 +95,9 @@ const BNPL = {
       },
 
     }).render(this.button);
+
+    let event = new Event('paypal-after-init-bnpl-button');
+    document.dispatchEvent(event);
   },
 
   getColor() {
@@ -200,6 +204,13 @@ const BNPL = {
 
     return this.styleSetting;
   },
+
+  disableTillConsenting() {
+    Tools.disableTillConsenting(
+      this.button,
+      document.getElementById('conditions_to_approve[terms-and-conditions]')
+    );
+  }
 
 };
 

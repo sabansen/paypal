@@ -47,6 +47,11 @@ ACDC.prototype.initButton = function() {
     }.bind(this),
 
   }).render(this.button);
+
+  Tools.disableTillConsenting(
+    document.querySelector(this.button),
+    document.getElementById('conditions_to_approve[terms-and-conditions]')
+  );
 };
 
 ACDC.prototype.getIdOrder = function() {
@@ -159,7 +164,7 @@ ACDC.prototype.initHostedFields = function() {
   Tools.disableTillConsenting(
     document.querySelector('[paypal-acdc-card-wrapper] button'),
     document.getElementById('conditions_to_approve[terms-and-conditions]')
-  )
+  );
 };
 
 ACDC.prototype.submitHostedFields = function(cardFields) {

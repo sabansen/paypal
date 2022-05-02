@@ -64,6 +64,14 @@
             }
         });
     });
+
+    if (typeof BNPL != "undefined") {
+        BNPL.disableTillConsenting();
+    } else {
+        document.addEventListener('paypal-after-init-bnpl-button', function (event) {
+            BNPL.disableTillConsenting();
+        })
+    }
   </script>
 {/block}
 

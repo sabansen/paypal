@@ -23,6 +23,7 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 // init incontext
+import {Tools} from './tools.js';
 
 const Shortcut = {
 
@@ -92,6 +93,9 @@ const Shortcut = {
       },
 
     }).render(this.button);
+
+    let event = new Event('paypal-after-init-shortcut-button');
+    document.dispatchEvent(event);
   },
 
   sendData(data) {
@@ -182,6 +186,13 @@ const Shortcut = {
 
     return this.styleSetting;
   },
+
+  disableTillConsenting() {
+    Tools.disableTillConsenting(
+      this.button,
+      document.getElementById('conditions_to_approve[terms-and-conditions]')
+    );
+  }
 
 };
 

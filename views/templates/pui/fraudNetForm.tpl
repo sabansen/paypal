@@ -36,14 +36,6 @@
 
 <script type="text/javascript" src="https://c.paypal.com/da/r/fb.js"></script>
 
-{*<script>*}
-{*  window.addEventListener('load', function() {*}
-{*      var script = document.createElement('script');*}
-{*      script.src = 'https://c.paypal.com/da/r/fb.js';*}
-{*      document.body.appendChild(script);*}
-{*  })*}
-{*</script>*}
-
 <form
         class="form"
         action="{Context::getContext()->link->getModuleLink('paypal','puiValidate',['sessionId' => $sessionId], true)}"

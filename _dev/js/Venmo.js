@@ -23,6 +23,7 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
 // init incontext
+import {Tools} from './tools.js';
 
 class Venmo {
 
@@ -111,6 +112,11 @@ class Venmo {
       }.bind(this),
 
     }).render(this.container);
+
+    Tools.disableTillConsenting(
+      document.querySelector(this.container),
+      document.getElementById('conditions_to_approve[terms-and-conditions]')
+    );
   }
 
 

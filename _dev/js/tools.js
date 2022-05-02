@@ -68,14 +68,32 @@ export const Tools = {
       return;
     }
 
-    disabledElement.setAttribute('disabled', true);
+    Tools.disable(disabledElement);
 
     checkBox.addEventListener('click', function() {
       if (checkBox.checked) {
-        disabledElement.removeAttribute('disabled');
+        Tools.enable(disabledElement);
       } else {
-        disabledElement.setAttribute('disabled', true);
+        Tools.disable(disabledElement);
       }
     })
+  },
+
+  disable(element) {
+    if (element instanceof Element == false) {
+      return;
+    }
+
+    element.style.pointerEvents = 'none';
+    element.style.opacity = '0.5';
+  },
+
+  enable(element) {
+    if (element instanceof Element == false) {
+      return;
+    }
+
+    element.style.pointerEvents = '';
+    element.style.opacity = '1';
   },
 }
