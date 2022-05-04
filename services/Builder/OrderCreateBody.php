@@ -468,30 +468,14 @@ class OrderCreateBody implements BuilderInterface
     {
         $discountTotal = $this->context->cart->getOrderTotal($this->isUseTax(), \Cart::ONLY_DISCOUNTS);
 
-        if (version_compare(_PS_VERSION_, '1.7.6', '<')) {
-            $discountTotal = 0;
+        if (version_compare(_PS_VERSION_, '1.7.5', '>=') && version_compare(_PS_VERSION_, '1.7.6', '<')) {
             $summaryDetails = $this->context->cart->getSummaryDetails();
             $gifts = isset($summaryDetails['gift_products']) ? $summaryDetails['gift_products'] : [];
-            $discounts = isset($summaryDetails['discounts']) ? $summaryDetails['discounts'] : [];
 
             if (is_array($gifts)) {
                 foreach ($gifts as $gift) {
                     if (isset($gift['price_with_reduction'])) {
                         $discountTotal += $gift['price_with_reduction'];
-                    }
-                }
-            }
-
-            if (is_array($discounts)) {
-                foreach ($discounts as $discount) {
-                    if ($this->isUseTax()) {
-                        if (isset($discount['value_real'])) {
-                            $discountTotal += $discount['value_real'];
-                        }
-                    } else {
-                        if (isset($discount['value_tax_exc'])) {
-                            $discountTotal += $discount['value_tax_exc'];
-                        }
                     }
                 }
             }
