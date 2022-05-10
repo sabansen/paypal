@@ -64,6 +64,7 @@ const BNPL = {
 
   getCombination() {
     let combination = [],
+      res = false,
       re = /group\[([0-9]+)\]/;
 
     $.each($('#add-to-cart-or-refresh').serializeArray(), (key, item) => {
