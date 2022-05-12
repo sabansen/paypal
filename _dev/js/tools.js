@@ -96,6 +96,50 @@ export const Tools = {
     element.style.pointerEvents = '';
     element.style.opacity = '1';
   },
+
+  hideElementTillPaymentOptionChecked(checkElementSelector, hideElementSelector) {
+    const checkElement = document.querySelector(checkElementSelector);
+    const hideElement = document.querySelector(hideElementSelector);
+
+    if (checkElement instanceof Element == false) {
+      return;
+    }
+
+    if (hideElement instanceof Element == false) {
+      return;
+    }
+
+    if ('paypalToolsHiddenElemenList' in window == false) {
+      window.paypalToolsHiddenElemenList = {};
+    }
+
+    if (hideElementSelector in window.paypalToolsHiddenElemenList) {
+      Tools.hideElements[hideElementSelector].push(checkElementSelector);
+      return;
+    }
+
+    window.paypalToolsHiddenElemenList[hideElementSelector] = [checkElement];
+    const options = checkElement.closest('.payment-options');
+
+    if (options instanceof Element == false) {
+      return;
+    }
+
+    options.addEventListener('input', function(event) {
+      let isHide = false;
+      window.paypalToolsHiddenElemenList[hideElementSelector].forEach(function(elem) {
+        if (elem.checked) {
+          isHide = true;
+        }
+      });
+
+      if (isHide) {
+        hideElement.style.visibility = 'hidden';
+      } else {
+        hideElement.style.visibility = 'initial';
+      }
+    })
+  }
 };
 
 window.PaypalTools = Tools;

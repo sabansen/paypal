@@ -139,6 +139,10 @@
         });
         acdcObj.initButton();
         acdcObj.initHostedFields();
+        acdcObj.hideElementTillPaymentOptionChecked(
+            '[data-module-name="paypal_acdc"]',
+            '#payment-confirmation'
+        );
     }
 
     waitPaypalAcdcSDKIsLoaded();

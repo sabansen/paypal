@@ -193,6 +193,10 @@ ACDC.prototype.setError = function(message) {
   document.querySelector('[paypal-acdc-card-error]').appendChild(alert);
 };
 
+ACDC.prototype.hideElementTillPaymentOptionChecked = function(paymentOptionSelector, hideElementSelector) {
+  Tools.hideElementTillPaymentOptionChecked(paymentOptionSelector, hideElementSelector);
+};
+
 window.ACDC = ACDC;
 
 
