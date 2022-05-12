@@ -169,8 +169,23 @@ ACDC.prototype.initHostedFields = function() {
 
 ACDC.prototype.submitHostedFields = function(cardFields) {
 
-  cardFields.submit()
+  cardFields.submit({
+    // Trigger 3D Secure authentication
+    contingencies: ['SCA_WHEN_REQUIRED']
+  })
     .then(function(res) {
+      if (res.liabilityShift != undefined) {
+        if (res.liabilityShift !== "POSSIBLE") {
+          if (typeof this.messages['3DS_FAILED'] != 'undefined') {
+            this.setError(this.messages['3DS_FAILED']);
+          }
+
+          document.querySelector('#card-form #submit').removeAttribute('disabled');
+          return;
+        }
+      }
+
+      // 3D Secure passed successfully
       this.sendData({
         orderID: res['orderId']
       });
@@ -178,7 +193,7 @@ ACDC.prototype.submitHostedFields = function(cardFields) {
     .catch(function(reason) {
       document.querySelector('#card-form #submit').removeAttribute('disabled');
 
-      if (reason['name'] == 'INVALID_REQUEST') {
+      if (reason['name'] == 'INVALID_REQUEST' || reason['name'] == 'VALIDATION_ERROR') {
         if (typeof this.messages['INVALID_REQUEST'] != 'undefined') {
           this.setError(this.messages['INVALID_REQUEST']);
         }
