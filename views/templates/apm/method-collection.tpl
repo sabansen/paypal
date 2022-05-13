@@ -54,7 +54,7 @@
 
               for (var key in apmMethodCollection) {
                   var method = apmMethodCollection[key];
-                  console.log(method);
+
                   var apmObj = new ApmButton({
                       method: method,
                       button: '#paypal-apm-'+method,
@@ -63,6 +63,10 @@
                       paypal: window[skdNameSpace]
                   });
                   apmObj.initButton();
+                  apmObj.hideElementTillPaymentOptionChecked(
+                      '[data-module-name="paypal_' + method + '"]',
+                      '#payment-confirmation'
+                  )
               }
           }
 

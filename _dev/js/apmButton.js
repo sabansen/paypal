@@ -99,6 +99,10 @@ ApmButton.prototype.sendData = function(data) {
   form.submit();
 };
 
+ApmButton.prototype.hideElementTillPaymentOptionChecked = function(paymentOptionSelector, hideElementSelector) {
+  Tools.hideElementTillPaymentOptionChecked(paymentOptionSelector, hideElementSelector);
+};
+
 window.ApmButton = ApmButton;
 
 

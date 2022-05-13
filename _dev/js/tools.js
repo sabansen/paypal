@@ -114,7 +114,7 @@ export const Tools = {
     }
 
     if (hideElementSelector in window.paypalToolsHiddenElemenList) {
-      Tools.hideElements[hideElementSelector].push(checkElementSelector);
+      window.paypalToolsHiddenElemenList[hideElementSelector].push(checkElement);
       return;
     }
 
