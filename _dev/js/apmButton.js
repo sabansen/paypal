@@ -35,10 +35,16 @@ const ApmButton = function(conf) {
     this.controller = typeof conf['controller'] != 'undefined' ? conf['controller'] : null;
 
     this.validationController = typeof conf['validationController'] != 'undefined' ? conf['validationController'] : null;
+
+    this.paypal = conf['paypal'] === undefined ? null : conf['paypal'];
 };
 
 ApmButton.prototype.initButton = function() {
-  totPaypalApmSdkButtons.Buttons({
+  if (this.paypal == null) {
+    return;
+  }
+
+  this.paypal.Buttons({
     fundingSource: this.method,
 
     createOrder: function(data, actions) {

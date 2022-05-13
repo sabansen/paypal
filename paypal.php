@@ -35,6 +35,7 @@ use PaypalAddons\classes\ACDC\AcdcFunctionality;
 use PaypalAddons\classes\ACDC\AcdcPaymentMethod;
 use PaypalAddons\classes\APM\ApmCollection;
 use PaypalAddons\classes\APM\ApmFunctionality;
+use PaypalAddons\classes\Constants\APM;
 use PaypalAddons\classes\Constants\WebHookConf;
 use PaypalAddons\classes\InstallmentBanner\BannerManager;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BnplAvailabilityManager;
@@ -853,7 +854,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             }
 
             if ($this->initApmFunctionality()->isEnabled() && $this->initApmFunctionality()->isAvailable()) {
-                $payments_options[] = $this->buildApmPaymentOption($params);
+                $payments_options = array_merge($this->buildApmPaymentOptions($params));
             }
         }
 
@@ -929,27 +930,46 @@ class PayPal extends \PaymentModule implements WidgetInterface
         return new ApmFunctionality();
     }
 
-    protected function buildApmPaymentOption($params)
+    protected function buildApmPaymentOptions($params)
     {
-        $paymentOption = new PaymentOption();
-        $action_text = $this->l('Pay with alternative payment method'); // todo: specify message
-        $paymentOption->setCallToActionText($action_text);
-        $paymentOption->setAction(
-            sprintf(
-                'javascript:alert(\'%s\');',
-                $this->l('Should use the alternative payment button') // todo: specify message
-            )
-        );
-        $paymentOption->setModuleName('paypal_apm');
-        $paymentOption->setAdditionalInformation($this->initApmCollection()->render());
-        $paymentOption->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/paypal_logo.png'));
+        $paymentOptions = [];
+        $optionsMap = [
+            [
+                'method' => APM::GIROPAY,
+                'label' => $this->l('giropay')
+            ],
+            [
+                'method' => APM::SOFORT,
+                'label' => $this->l('Sofort')
+            ],
+            [
+                'method' => APM::SEPA,
+                'label' => $this->l('SEPA')
+            ],
+        ];
 
-        return $paymentOption;
+        foreach ($optionsMap as $optionMap) {
+            $paymentOption = new PaymentOption();
+            $paymentOption->setCallToActionText($optionMap['label']);
+            $paymentOption->setAction(
+                sprintf(
+                    'javascript:alert(\'%s\');',
+                    $this->l('Should use the alternative payment button') // todo: specify message
+                )
+            );
+            $paymentOption->setModuleName('paypal_' . $optionMap['method']);
+            $paymentOption->setAdditionalInformation($this->initApmCollection([$optionMap['method']])->render());
+            $paymentOption->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/paypal_logo.png'));
+
+            $paymentOptions[] = $paymentOption;
+        }
+
+        return $paymentOptions;
     }
 
-    protected function initApmCollection()
+    protected function initApmCollection($method = null)
     {
-        return new ApmCollection();
+        return new ApmCollection($method);
     }
 
     protected function initAcdcFunctionality()

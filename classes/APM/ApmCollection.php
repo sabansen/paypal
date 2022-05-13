@@ -31,6 +31,7 @@ use Context;
 use Country;
 use Module;
 use PaypalAddons\classes\AbstractMethodPaypal;
+use PaypalAddons\classes\Constants\APM;
 use Tools;
 
 class ApmCollection
@@ -82,9 +83,7 @@ class ApmCollection
      */
     protected function getJSvars()
     {
-        return [
-            'apmMethodCollection' => $this->methodCollection,
-        ];
+        return [];
     }
 
     /**
@@ -103,9 +102,9 @@ class ApmCollection
             }
         }
 
-        $JSscripts['tot-paypal-apm-sdk'] = [
+        $JSscripts[$this->getSdkNameSpace()] = [
             'src' => $srcLib,
-            'data-namespace' => 'totPaypalApmSdkButtons',
+            'data-namespace' => $this->getSdkNameSpace(),
             'data-partner-attribution-id' => $this->getPartnerId(),
         ];
         $JSscripts['apmButton'] = [
@@ -113,6 +112,11 @@ class ApmCollection
         ];
 
         return $JSscripts;
+    }
+
+    protected function getSdkNameSpace()
+    {
+        return 'totPaypalApmSdkButtons_' . md5(implode('', $this->methodCollection));
     }
 
     protected function getPartnerId()
@@ -144,6 +148,7 @@ class ApmCollection
         return [
             'psPaypalDir' => _PS_MODULE_DIR_ . 'paypal',
             'methodCollection' => $this->methodCollection,
+            'sdkNameSpace' => $this->getSdkNameSpace(),
         ];
     }
 
@@ -187,14 +192,9 @@ class ApmCollection
     protected function initDefaultCollection()
     {
         return [
-            'bancontact',
-            'blik',
-            'eps',
-            'giropay',
-            'ideal',
-            'mybank',
-            'p24',
-            'sofort',
+            APM::GIROPAY,
+            APM::SOFORT,
+            APM::SEPA,
         ];
     }
 }
