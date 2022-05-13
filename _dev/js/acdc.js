@@ -176,6 +176,7 @@ ACDC.prototype.submitHostedFields = function(cardFields) {
     .then(function(res) {
       if (res.liabilityShift != undefined) {
         if (res.liabilityShift !== "POSSIBLE") {
+          // 3D Secure is failed
           if (typeof this.messages['3DS_FAILED'] != 'undefined') {
             this.setError(this.messages['3DS_FAILED']);
           }
@@ -185,7 +186,6 @@ ACDC.prototype.submitHostedFields = function(cardFields) {
         }
       }
 
-      // 3D Secure passed successfully
       this.sendData({
         orderID: res['orderId']
       });

@@ -960,7 +960,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
     protected function buildAcdcPaymentOption($params)
     {
         $paymentOption = new PaymentOption();
-        $paymentOption->setCallToActionText($this->l('ACDC'));
+        $paymentOption->setCallToActionText($this->l('Credit/Debit card'));
         $paymentOption->setAction(
             sprintf(
                 'javascript:alert(\'%s\');',
