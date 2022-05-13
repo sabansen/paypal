@@ -858,6 +858,10 @@ class PayPal extends \PaymentModule implements WidgetInterface
             }
         }
 
+        if ($this->initAcdcFunctionality()->isAvailable() && $this->initAcdcFunctionality()->isEnabled()) {
+            $payments_options[] = $this->buildAcdcPaymentOption($params);
+        }
+
         if ($method->isSandbox() && false === empty($payments_options)) {
             foreach ($payments_options as $paymentOption) {
                 if ($paymentOption instanceof PaymentOption) {
@@ -870,10 +874,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
                     $paymentOption->setAdditionalInformation($additionalInformantion);
                 }
             }
-        }
-
-        if ($this->initAcdcFunctionality()->isAvailable() && $this->initAcdcFunctionality()->isEnabled()) {
-            $payments_options[] = $this->buildAcdcPaymentOption($params);
         }
 
         return $payments_options;
@@ -1009,7 +1009,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 $this->l('Should use the PayPal wallet button ') // todo: specify message
             )
         );
-        $paymentOption->setModuleName('paypal_pp_wallet');
+        $paymentOption->setModuleName($this->name);
         $paymentOption->setAdditionalInformation($this->getShortcutPaymentStep()->render());
         $paymentOption->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/paypal_logo.png'));
 
