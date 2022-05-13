@@ -70,14 +70,14 @@
           Shortcut.hideElementTillPaymentOptionChecked(
               '[data-module-name="paypal"]',
               '#payment-confirmation'
-          )
+          );
       } else {
           document.addEventListener('paypal-after-init-shortcut-button', function (event) {
               Shortcut.disableTillConsenting();
               Shortcut.hideElementTillPaymentOptionChecked(
                   '[data-module-name="paypal"]',
                   '#payment-confirmation'
-              )
+              );
           })
       }
   </script>

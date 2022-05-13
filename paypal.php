@@ -856,10 +856,10 @@ class PayPal extends \PaymentModule implements WidgetInterface
             if ($this->initApmFunctionality()->isEnabled() && $this->initApmFunctionality()->isAvailable()) {
                 $payments_options = array_merge($payments_options, $this->buildApmPaymentOptions($params));
             }
-        }
 
-        if ($this->initAcdcFunctionality()->isAvailable() && $this->initAcdcFunctionality()->isEnabled()) {
-            $payments_options[] = $this->buildAcdcPaymentOption($params);
+            if ($this->initAcdcFunctionality()->isAvailable() && $this->initAcdcFunctionality()->isEnabled()) {
+                $payments_options[] = $this->buildAcdcPaymentOption($params);
+            }
         }
 
         if ($method->isSandbox() && false === empty($payments_options)) {
