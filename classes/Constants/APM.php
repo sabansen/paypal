@@ -26,7 +26,6 @@
 
 namespace PaypalAddons\classes\Constants;
 
-
 class APM
 {
     const SEPA = 'sepa';

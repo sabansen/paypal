@@ -919,15 +919,15 @@ class PayPal extends \PaymentModule implements WidgetInterface
         $optionsMap = [
             [
                 'method' => APM::GIROPAY,
-                'label' => $this->l('giropay')
+                'label' => $this->l('giropay'),
             ],
             [
                 'method' => APM::SOFORT,
-                'label' => $this->l('Sofort')
+                'label' => $this->l('Sofort'),
             ],
             [
                 'method' => APM::SEPA,
-                'label' => $this->l('SEPA')
+                'label' => $this->l('SEPA'),
             ],
         ];
 
@@ -985,7 +985,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
     protected function buildPaypalWallet($params)
     {
         $paymentOption = new PaymentOption();
-        $paymentOption->setCallToActionText($this->l('PayPal wallet'));
+        $paymentOption->setCallToActionText($this->l('PayPal'));
         $paymentOption->setAction(
             sprintf(
                 'javascript:alert(\'%s\');',

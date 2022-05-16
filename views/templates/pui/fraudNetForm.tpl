@@ -80,7 +80,7 @@
 
   <div class="form-group row">
     <div class="col-lg-2">
-      <label class="form-label" for="paypal_pui_email">{l s='Email' mod='paypal'}</label>
+      <label class="form-label" for="paypal_pui_email">{l s='E-Mail' mod='paypal'}</label>
     </div>
 
     <div class="col-lg-6">
@@ -104,7 +104,7 @@
               required
               class="form-control"
               type="date"
-              data-date="TT.MM.JJJJ"
+              data-date={l s='DD.MM.YYYY' mod='paypal'}
               max="{$currentDate nofilter}"
               name="paypal_pui_birhday"
               id="paypal_pui_birhday"
