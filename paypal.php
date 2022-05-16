@@ -783,24 +783,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             case 'PPP':
                 if ($method->isConfigured()) {
                     $payments_options[] = $this->renderPuiOption($params);
-                    $payment_option = new PaymentOption();
-                    $action_text = $this->l('Pay with PayPal Plus');
-                    if (Configuration::get('PAYPAL_API_ADVANTAGES')) {
-                        $action_text .= ' | ' . $this->l('It\'s simple, fast and secure');
-                    }
-                    $payment_option->setCallToActionText($action_text);
-                    $payment_option->setModuleName('paypal_plus');
-                    try {
-                        $this->context->smarty->assign('path', $this->_path);
-                        $payment_option->setAdditionalInformation(
-                            $this->context->smarty
-                                ->assign('showAdvantage', Configuration::get('PAYPAL_API_ADVANTAGES'))
-                                ->fetch('module:paypal/views/templates/front/payment_ppp.tpl')
-                        );
-                    } catch (Exception $e) {
-                        exit($e);
-                    }
-                    $payments_options[] = $payment_option;
+
                     if ((Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART')) && isset($this->context->cookie->paypal_pSc)) {
                         $payment_option = new PaymentOption();
                         $action_text = $this->l('Pay with paypal plus shortcut');
@@ -1139,15 +1122,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 Media::addJsDefL('scPaypalCheckedMsg', $messageForCustomer);
             }
 
-            if ($this->paypal_method == 'PPP') {
-                $method->assignJSvarsPaypalPlus();
-                $this->context->controller->registerJavascript($this->name . '-plus-minjs', 'https://www.paypalobjects.com/webstatic/ppplus/ppplus.min.js', ['server' => 'remote']);
-                $this->context->controller->registerJavascript($this->name . '-plus-payment-js', 'modules/' . $this->name . '/views/js/payment_ppp.js');
-                $this->context->controller->addJqueryPlugin('fancybox');
-                $resources[] = _MODULE_DIR_ . $this->name . '/views/js/payment_ppp.js' . '?v=' . $this->version;
-                $resources[] = 'https://www.paypalobjects.com/webstatic/ppplus/ppplus.min.js' . '?v=' . $this->version;
-            }
-
             if ($this->paypal_method == 'MB') {
                 $method->assignJSvarsPaypalMB();
                 $this->context->controller->registerJavascript($this->name . '-plusdcc-minjs', 'https://www.paypalobjects.com/webstatic/ppplusdcc/ppplusdcc.min.js', ['server' => 'remote']);
@@ -1160,9 +1134,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 return;
             }
 
-            if ($this->paypal_method == 'PPP') {
-                $resources[] = 'https://www.paypalobjects.com/webstatic/ppplus/ppplus.min.js' . '?v=' . $this->version;
-            }
             if ($this->paypal_method == 'MB') {
                 $resources[] = 'https://www.paypalobjects.com/webstatic/ppplusdcc/ppplusdcc.min.js' . '?v=' . $this->version;
             }
