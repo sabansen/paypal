@@ -317,10 +317,9 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
         if ($this->initAcdcFunctionality()->isAvailable()) {
             $this->fields_form['form']['form']['input'][] = [
                 'type' => 'switch',
-                'label' => $this->l('ACDC'),
+                'label' => $this->l('Credit/Debit card'),
                 'name' => PaypalConfigurations::ACDC_OPTION,
                 'is_bool' => true,
-                'hint' => $this->l(''),
                 'values' => [
                     [
                         'id' => PaypalConfigurations::ACDC_OPTION . '_on',

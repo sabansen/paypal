@@ -41,26 +41,39 @@
 {assign var=validationController value=Context::getContext()->link->getModuleLink('paypal', 'pppValidation')}
 
 <script>
-    function waitPaypalApmSDKIsLoaded() {
-        if (typeof totPaypalApmSdkButtons === 'undefined' || typeof ApmButton === 'undefined') {
-            setTimeout(waitPaypalApmSDKIsLoaded, 200);
-            return;
-        }
+  setTimeout(
+      function() {
+          var apmMethodCollection = {$methodCollection|json_encode nofilter};
+          var skdNameSpace = '{$sdkNameSpace|escape:'htmlall':'UTF-8'}';
 
-        for (var key in apmMethodCollection) {
-            var method = apmMethodCollection[key];
-            console.log(method);
-            var apmObj = new ApmButton({
-                method: method,
-                button: '#paypal-apm-'+method,
-                controller: '{$scInitController nofilter}',
-                validationController: '{$validationController nofilter}'
-            });
-            apmObj.initButton();
-        }
-    }
+          function waitPaypalApmSDKIsLoaded() {
+              if (window[skdNameSpace] === undefined || typeof ApmButton === 'undefined') {
+                  setTimeout(waitPaypalApmSDKIsLoaded, 200);
+                  return;
+              }
 
-    waitPaypalApmSDKIsLoaded();
+              for (var key in apmMethodCollection) {
+                  var method = apmMethodCollection[key];
+
+                  var apmObj = new ApmButton({
+                      method: method,
+                      button: '#paypal-apm-'+method,
+                      controller: '{$scInitController nofilter}',
+                      validationController: '{$validationController nofilter}',
+                      paypal: window[skdNameSpace]
+                  });
+                  apmObj.initButton();
+                  apmObj.hideElementTillPaymentOptionChecked(
+                      '[data-module-name="paypal_' + method + '"]',
+                      '#payment-confirmation'
+                  )
+              }
+          }
+
+          waitPaypalApmSDKIsLoaded();
+      },
+      0
+  );
 </script>
 
 <!-- End apm. Module Paypal -->

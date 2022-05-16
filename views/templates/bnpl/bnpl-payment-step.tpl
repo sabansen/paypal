@@ -67,9 +67,17 @@
 
     if (typeof BNPL != "undefined") {
         BNPL.disableTillConsenting();
+        BNPL.hideElementTillPaymentOptionChecked(
+            '[data-module-name="paypal_bnpl"]',
+            '#payment-confirmation'
+        );
     } else {
         document.addEventListener('paypal-after-init-bnpl-button', function (event) {
             BNPL.disableTillConsenting();
+            BNPL.hideElementTillPaymentOptionChecked(
+                '[data-module-name="paypal_bnpl"]',
+                '#payment-confirmation'
+            );
         })
     }
   </script>

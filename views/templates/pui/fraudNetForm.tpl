@@ -80,7 +80,7 @@
 
   <div class="form-group row">
     <div class="col-lg-2">
-      <label class="form-label" for="paypal_pui_email">{l s='Email' mod='paypal'}</label>
+      <label class="form-label" for="paypal_pui_email">{l s='E-Mail' mod='paypal'}</label>
     </div>
 
     <div class="col-lg-6">
@@ -104,12 +104,51 @@
               required
               class="form-control"
               type="date"
+              data-date={l s='DD.MM.YYYY' mod='paypal'}
               max="{$currentDate nofilter}"
               name="paypal_pui_birhday"
               id="paypal_pui_birhday"
               {literal}pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"{/literal}
-              value="{if isset($userData)}{$userData->getBirth()}{/if}">
+              value="{if isset($userData)}{$userData->getBirth()}{/if}"
+              >
     </div>
+
+    <style>
+      input#paypal_pui_birhday {
+        position: relative;
+        padding: 1.1rem;
+      }
+
+      input#paypal_pui_birhday:before {
+        position: absolute;
+        top: .5rem; left: 1rem;
+        content: attr(data-date);
+        display: inline-block;
+      }
+
+      input#paypal_pui_birhday::-webkit-datetime-edit, input#paypal_pui_birhday::-webkit-inner-spin-button, input#paypal_pui_birhday::-webkit-clear-button {
+        display: none;
+      }
+
+      input#paypal_pui_birhday::-webkit-calendar-picker-indicator {
+        position: absolute;
+        top: .5rem;
+        right: 0;
+        opacity: 1;
+      }
+    </style>
+
+    <script>
+        document.querySelector("input#paypal_pui_birhday").addEventListener("change", function() {
+            var dateArray = this.value.split('-');
+
+            if (dateArray.length != 3) {
+                return;
+            }
+
+            this.setAttribute("data-date", [dateArray[2], dateArray[1], dateArray[0]].join('.'));
+        })
+    </script>
   </div>
 
   <div class="form-group row">
@@ -121,10 +160,11 @@
       <input
               required
               class="form-control"
-              type="text"
+              type="tel"
               name="paypal_pui_phone"
               id="paypal_pui_phone"
-              placeholder="{l s='Example: 6912345678' mod='paypal'}"
+              placeholder="{l s='Example: 030123456789' mod='paypal'}"
+              {literal}pattern="[0-9]{1,14}?"{/literal}
               value="{if isset($userData)}{$userData->getPhone()}{/if}">
     </div>
   </div>
@@ -148,11 +188,19 @@
             document.querySelector('[pui-form] button'),
             document.getElementById('conditions_to_approve[terms-and-conditions]')
         );
+        PaypalTools.hideElementTillPaymentOptionChecked(
+            '[data-module-name="paypal_pui"]',
+            '#payment-confirmation'
+        );
     } else {
         document.addEventListener('paypal-tools-loaded', function() {
             PaypalTools.disableTillConsenting(
                 document.querySelector('[pui-form] button'),
                 document.getElementById('conditions_to_approve[terms-and-conditions]')
+            );
+            PaypalTools.hideElementTillPaymentOptionChecked(
+                '[data-module-name="paypal_pui"]',
+                '#payment-confirmation'
             );
         });
     }

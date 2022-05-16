@@ -193,6 +193,10 @@ const Shortcut = {
       this.button,
       document.getElementById('conditions_to_approve[terms-and-conditions]')
     );
+  },
+
+  hideElementTillPaymentOptionChecked(paymentOptionSelector, hideElementSelector) {
+    Tools.hideElementTillPaymentOptionChecked(paymentOptionSelector, hideElementSelector);
   }
 
 };

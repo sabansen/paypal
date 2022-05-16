@@ -35,6 +35,7 @@ use PaypalAddons\classes\ACDC\AcdcFunctionality;
 use PaypalAddons\classes\ACDC\AcdcPaymentMethod;
 use PaypalAddons\classes\APM\ApmCollection;
 use PaypalAddons\classes\APM\ApmFunctionality;
+use PaypalAddons\classes\Constants\APM;
 use PaypalAddons\classes\Constants\WebHookConf;
 use PaypalAddons\classes\InstallmentBanner\BannerManager;
 use PaypalAddons\classes\InstallmentBanner\BNPL\BnplAvailabilityManager;
@@ -782,24 +783,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
             case 'PPP':
                 if ($method->isConfigured()) {
                     $payments_options[] = $this->renderPuiOption($params);
-                    $payment_option = new PaymentOption();
-                    $action_text = $this->l('Pay with PayPal Plus');
-                    if (Configuration::get('PAYPAL_API_ADVANTAGES')) {
-                        $action_text .= ' | ' . $this->l('It\'s simple, fast and secure');
-                    }
-                    $payment_option->setCallToActionText($action_text);
-                    $payment_option->setModuleName('paypal_plus');
-                    try {
-                        $this->context->smarty->assign('path', $this->_path);
-                        $payment_option->setAdditionalInformation(
-                            $this->context->smarty
-                                ->assign('showAdvantage', Configuration::get('PAYPAL_API_ADVANTAGES'))
-                                ->fetch('module:paypal/views/templates/front/payment_ppp.tpl')
-                        );
-                    } catch (Exception $e) {
-                        exit($e);
-                    }
-                    $payments_options[] = $payment_option;
+
                     if ((Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART')) && isset($this->context->cookie->paypal_pSc)) {
                         $payment_option = new PaymentOption();
                         $action_text = $this->l('Pay with paypal plus shortcut');
@@ -853,7 +837,11 @@ class PayPal extends \PaymentModule implements WidgetInterface
             }
 
             if ($this->initApmFunctionality()->isEnabled() && $this->initApmFunctionality()->isAvailable()) {
-                $payments_options[] = $this->buildApmPaymentOption($params);
+                $payments_options = array_merge($payments_options, $this->buildApmPaymentOptions($params));
+            }
+
+            if ($this->initAcdcFunctionality()->isAvailable() && $this->initAcdcFunctionality()->isEnabled()) {
+                $payments_options[] = $this->buildAcdcPaymentOption($params);
             }
         }
 
@@ -869,10 +857,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
                     $paymentOption->setAdditionalInformation($additionalInformantion);
                 }
             }
-        }
-
-        if ($this->initAcdcFunctionality()->isAvailable() && $this->initAcdcFunctionality()->isEnabled()) {
-            $payments_options[] = $this->buildAcdcPaymentOption($params);
         }
 
         return $payments_options;
@@ -929,27 +913,46 @@ class PayPal extends \PaymentModule implements WidgetInterface
         return new ApmFunctionality();
     }
 
-    protected function buildApmPaymentOption($params)
+    protected function buildApmPaymentOptions($params)
     {
-        $paymentOption = new PaymentOption();
-        $action_text = $this->l('Pay with alternative payment method'); // todo: specify message
-        $paymentOption->setCallToActionText($action_text);
-        $paymentOption->setAction(
-            sprintf(
-                'javascript:alert(\'%s\');',
-                $this->l('Should use the alternative payment button') // todo: specify message
-            )
-        );
-        $paymentOption->setModuleName('paypal_apm');
-        $paymentOption->setAdditionalInformation($this->initApmCollection()->render());
-        $paymentOption->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/paypal_logo.png'));
+        $paymentOptions = [];
+        $optionsMap = [
+            [
+                'method' => APM::GIROPAY,
+                'label' => $this->l('giropay'),
+            ],
+            [
+                'method' => APM::SOFORT,
+                'label' => $this->l('Sofort'),
+            ],
+            [
+                'method' => APM::SEPA,
+                'label' => $this->l('SEPA'),
+            ],
+        ];
 
-        return $paymentOption;
+        foreach ($optionsMap as $optionMap) {
+            $paymentOption = new PaymentOption();
+            $paymentOption->setCallToActionText($optionMap['label']);
+            $paymentOption->setAction(
+                sprintf(
+                    'javascript:alert(\'%s\');',
+                    $this->l('Should use the alternative payment button') // todo: specify message
+                )
+            );
+            $paymentOption->setModuleName('paypal_' . $optionMap['method']);
+            $paymentOption->setAdditionalInformation($this->initApmCollection([$optionMap['method']])->render());
+            $paymentOption->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/paypal_logo.png'));
+
+            $paymentOptions[] = $paymentOption;
+        }
+
+        return $paymentOptions;
     }
 
-    protected function initApmCollection()
+    protected function initApmCollection($method = null)
     {
-        return new ApmCollection();
+        return new ApmCollection($method);
     }
 
     protected function initAcdcFunctionality()
@@ -960,7 +963,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
     protected function buildAcdcPaymentOption($params)
     {
         $paymentOption = new PaymentOption();
-        $paymentOption->setCallToActionText($this->l('ACDC'));
+        $paymentOption->setCallToActionText($this->l('Credit/Debit card'));
         $paymentOption->setAction(
             sprintf(
                 'javascript:alert(\'%s\');',
@@ -982,14 +985,14 @@ class PayPal extends \PaymentModule implements WidgetInterface
     protected function buildPaypalWallet($params)
     {
         $paymentOption = new PaymentOption();
-        $paymentOption->setCallToActionText($this->l('PayPal wallet'));
+        $paymentOption->setCallToActionText($this->l('PayPal'));
         $paymentOption->setAction(
             sprintf(
                 'javascript:alert(\'%s\');',
                 $this->l('Should use the PayPal wallet button ') // todo: specify message
             )
         );
-        $paymentOption->setModuleName('paypal_pp_wallet');
+        $paymentOption->setModuleName($this->name);
         $paymentOption->setAdditionalInformation($this->getShortcutPaymentStep()->render());
         $paymentOption->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/paypal_logo.png'));
 
@@ -1119,15 +1122,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 Media::addJsDefL('scPaypalCheckedMsg', $messageForCustomer);
             }
 
-            if ($this->paypal_method == 'PPP') {
-                $method->assignJSvarsPaypalPlus();
-                $this->context->controller->registerJavascript($this->name . '-plus-minjs', 'https://www.paypalobjects.com/webstatic/ppplus/ppplus.min.js', ['server' => 'remote']);
-                $this->context->controller->registerJavascript($this->name . '-plus-payment-js', 'modules/' . $this->name . '/views/js/payment_ppp.js');
-                $this->context->controller->addJqueryPlugin('fancybox');
-                $resources[] = _MODULE_DIR_ . $this->name . '/views/js/payment_ppp.js' . '?v=' . $this->version;
-                $resources[] = 'https://www.paypalobjects.com/webstatic/ppplus/ppplus.min.js' . '?v=' . $this->version;
-            }
-
             if ($this->paypal_method == 'MB') {
                 $method->assignJSvarsPaypalMB();
                 $this->context->controller->registerJavascript($this->name . '-plusdcc-minjs', 'https://www.paypalobjects.com/webstatic/ppplusdcc/ppplusdcc.min.js', ['server' => 'remote']);
@@ -1140,9 +1134,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 return;
             }
 
-            if ($this->paypal_method == 'PPP') {
-                $resources[] = 'https://www.paypalobjects.com/webstatic/ppplus/ppplus.min.js' . '?v=' . $this->version;
-            }
             if ($this->paypal_method == 'MB') {
                 $resources[] = 'https://www.paypalobjects.com/webstatic/ppplusdcc/ppplusdcc.min.js' . '?v=' . $this->version;
             }

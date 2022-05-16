@@ -131,6 +131,7 @@
         messages['CVV_IS_EMPTY'] = '{l s='Please enter a valid cvv' mod='paypal'}';
         messages['NUMBER_IS_EMPTY'] = '{l s='Please enter a valid number' mod='paypal'}';
         messages['DATE_IS_EMPTY'] = '{l s='Please enter a valid date' mod='paypal'}';
+        messages['3DS_FAILED'] = '{l s='3DS verification is failed' mod='paypal'}';
         acdcObj = new ACDC({
             button: '#paypal-acdc-button-container',
             controller: '{$scInitController nofilter}',
@@ -139,6 +140,10 @@
         });
         acdcObj.initButton();
         acdcObj.initHostedFields();
+        acdcObj.hideElementTillPaymentOptionChecked(
+            '[data-module-name="paypal_acdc"]',
+            '#payment-confirmation'
+        );
     }
 
     waitPaypalAcdcSDKIsLoaded();
