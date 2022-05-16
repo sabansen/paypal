@@ -104,12 +104,51 @@
               required
               class="form-control"
               type="date"
+              data-date="TT.MM.JJJJ"
               max="{$currentDate nofilter}"
               name="paypal_pui_birhday"
               id="paypal_pui_birhday"
               {literal}pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"{/literal}
-              value="{if isset($userData)}{$userData->getBirth()}{/if}">
+              value="{if isset($userData)}{$userData->getBirth()}{/if}"
+              >
     </div>
+
+    <style>
+      input#paypal_pui_birhday {
+        position: relative;
+        padding: 1.1rem;
+      }
+
+      input#paypal_pui_birhday:before {
+        position: absolute;
+        top: .5rem; left: 1rem;
+        content: attr(data-date);
+        display: inline-block;
+      }
+
+      input#paypal_pui_birhday::-webkit-datetime-edit, input#paypal_pui_birhday::-webkit-inner-spin-button, input#paypal_pui_birhday::-webkit-clear-button {
+        display: none;
+      }
+
+      input#paypal_pui_birhday::-webkit-calendar-picker-indicator {
+        position: absolute;
+        top: .5rem;
+        right: 0;
+        opacity: 1;
+      }
+    </style>
+
+    <script>
+        document.querySelector("input#paypal_pui_birhday").addEventListener("change", function() {
+            var dateArray = this.value.split('-');
+
+            if (dateArray.length != 3) {
+                return;
+            }
+
+            this.setAttribute("data-date", [dateArray[2], dateArray[1], dateArray[0]].join('.'));
+        })
+    </script>
   </div>
 
   <div class="form-group row">
