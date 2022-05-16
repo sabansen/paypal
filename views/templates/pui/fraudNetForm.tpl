@@ -188,11 +188,19 @@
             document.querySelector('[pui-form] button'),
             document.getElementById('conditions_to_approve[terms-and-conditions]')
         );
+        PaypalTools.hideElementTillPaymentOptionChecked(
+            '[data-module-name="paypal_pui"]',
+            '#payment-confirmation'
+        );
     } else {
         document.addEventListener('paypal-tools-loaded', function() {
             PaypalTools.disableTillConsenting(
                 document.querySelector('[pui-form] button'),
                 document.getElementById('conditions_to_approve[terms-and-conditions]')
+            );
+            PaypalTools.hideElementTillPaymentOptionChecked(
+                '[data-module-name="paypal_pui"]',
+                '#payment-confirmation'
             );
         });
     }
