@@ -160,10 +160,11 @@
       <input
               required
               class="form-control"
-              type="text"
+              type="tel"
               name="paypal_pui_phone"
               id="paypal_pui_phone"
-              placeholder="{l s='Example: 6912345678' mod='paypal'}"
+              placeholder="{l s='Example: 030123456789' mod='paypal'}"
+              {literal}pattern="[0-9]{1,14}?"{/literal}
               value="{if isset($userData)}{$userData->getPhone()}{/if}">
     </div>
   </div>
