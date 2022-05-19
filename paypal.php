@@ -2923,8 +2923,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
 
         $addressDelivery = new Address($this->context->cart->id_address_delivery);
-        $isoCountry = Tools::strtoupper(Country::getIsoById($addressDelivery->id_country));
-        $isoCurrency = Tools::strtoupper($this->context->currency->iso_code);
+        $isoCountry = Tools::strtoupper((string) Country::getIsoById($addressDelivery->id_country));
+        $isoCurrency = Tools::strtoupper((string) $this->context->currency->iso_code);
 
         if (empty($isoCountry) || empty($isoCurrency)) {
             return $map;

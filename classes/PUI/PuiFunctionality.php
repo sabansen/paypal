@@ -26,7 +26,6 @@
 
 namespace PaypalAddons\classes\PUI;
 
-
 use Configuration;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\Constants\PUI;
@@ -53,22 +52,26 @@ class PuiFunctionality
 
         if ($sellerStatus->isSuccess() == false) {
             Configuration::updateValue(PUI::CONFIGURATION_IS_AVAILABLE, PUI::IS_UNAVAILABLE);
+
             return false;
         }
 
         if (empty($sellerStatus->getCapabilities())) {
             Configuration::updateValue(PUI::CONFIGURATION_IS_AVAILABLE, PUI::IS_UNAVAILABLE);
+
             return false;
         }
 
         foreach ($sellerStatus->getCapabilities() as $capability) {
             if (Tools::strtoupper($capability) == 'PAY_UPON_INVOICE') {
                 Configuration::updateValue(PUI::CONFIGURATION_IS_AVAILABLE, PUI::IS_AVAILABLE);
+
                 return true;
             }
         }
 
         Configuration::updateValue(PUI::CONFIGURATION_IS_AVAILABLE, PUI::IS_UNAVAILABLE);
+
         return false;
     }
 }

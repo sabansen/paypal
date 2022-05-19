@@ -28,8 +28,6 @@ namespace PaypalAddons\classes\PUI;
 
 use Context;
 use PaypalAddons\classes\PuiMethodInterface;
-use Symfony\Component\VarDumper\VarDumper;
-use Tools;
 
 class SignUpLinkButton
 {
