@@ -50,6 +50,7 @@ use PaypalAddons\classes\InstallmentBanner\ConfigurationMap as InstallmentConfig
 use PaypalAddons\classes\PaypalPaymentMode;
 use PaypalAddons\classes\PUI\FraudNetForm;
 use PaypalAddons\classes\PUI\FraudSessionId;
+use PaypalAddons\classes\PUI\PuiFunctionality;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Shortcut\ShortcutPaymentStep;
 use PaypalAddons\classes\Shortcut\ShortcutSignup;
@@ -782,7 +783,9 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 break;
             case 'PPP':
                 if ($method->isConfigured()) {
-                    $payments_options[] = $this->renderPuiOption($params);
+                    if ($this->initPuiFunctionality()->isAvailable(false)) {
+                        $payments_options[] = $this->renderPuiOption($params);
+                    }
 
                     if ((Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART')) && isset($this->context->cookie->paypal_pSc)) {
                         $payment_option = new PaymentOption();
@@ -2917,5 +2920,10 @@ class PayPal extends \PaymentModule implements WidgetInterface
     public function getShortcutPaymentStep()
     {
         return new ShortcutPaymentStep();
+    }
+
+    protected function initPuiFunctionality()
+    {
+        return new PuiFunctionality();
     }
 }
