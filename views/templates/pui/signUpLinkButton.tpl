@@ -47,7 +47,7 @@
 
 {if isset($isPuiAvailable) && $isPuiAvailable}
   <div class="alert alert-success pp__mt-3">
-      {l s='Pay upon invoice feature is availabe' mod='paypal'}
+      {l s='Pay upon invoice feature is available' mod='paypal'}
   </div>
 {/if}
 
