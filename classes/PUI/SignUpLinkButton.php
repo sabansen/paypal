@@ -28,6 +28,7 @@ namespace PaypalAddons\classes\PUI;
 
 use Context;
 use PaypalAddons\classes\PuiMethodInterface;
+use Symfony\Component\VarDumper\VarDumper;
 use Tools;
 
 class SignUpLinkButton
@@ -36,10 +37,13 @@ class SignUpLinkButton
 
     protected $method;
 
+    protected $puiFunctionality;
+
     public function __construct(PuiMethodInterface $method)
     {
         $this->context = Context::getContext();
         $this->method = $method;
+        $this->puiFunctionality = new PuiFunctionality();
     }
 
     public function render()
@@ -72,22 +76,6 @@ class SignUpLinkButton
 
     protected function isPuiAvailable()
     {
-        $sellerStatus = $this->method->getSellerStatus();
-
-        if ($sellerStatus->isSuccess() == false) {
-            return false;
-        }
-
-        if (empty($sellerStatus->getCapabilities())) {
-            return false;
-        }
-
-        foreach ($sellerStatus->getCapabilities() as $capability) {
-            if (Tools::strtoupper($capability) == 'PAY_UPON_INVOICE') {
-                return true;
-            }
-        }
-
-        return false;
+        return $this->puiFunctionality->isAvailable();
     }
 }

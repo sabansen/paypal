@@ -29,4 +29,10 @@ namespace PaypalAddons\classes\Constants;
 class PUI
 {
     const PARTNER_REFERRAL_ACTION_URL = 'PAYPAL_PARTNER_REFERRAL_ACTION_URL';
+
+    const CONFIGURATION_IS_AVAILABLE = 'PAYPAL_CONFIGURATION_PUI_IS_AVAILABLE';
+
+    const IS_AVAILABLE = 1;
+
+    const IS_UNAVAILABLE = 2;
 }
