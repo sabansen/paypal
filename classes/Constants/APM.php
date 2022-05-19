@@ -45,4 +45,12 @@ class APM
     const P24 = 'p24';
 
     const SOFORT = 'sofort';
+
+    const BOLETOBANCARIO = 'boletobancario';
+
+    const TRUSTLY = 'trustly';
+
+    const MULTIBANCO = 'multibanco';
+
+    const OXXO = 'oxxo';
 }

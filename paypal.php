@@ -919,20 +919,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
     protected function buildApmPaymentOptions($params)
     {
         $paymentOptions = [];
-        $optionsMap = [
-            [
-                'method' => APM::GIROPAY,
-                'label' => $this->l('giropay'),
-            ],
-            [
-                'method' => APM::SOFORT,
-                'label' => $this->l('Sofort'),
-            ],
-            [
-                'method' => APM::SEPA,
-                'label' => $this->l('SEPA'),
-            ],
-        ];
+        $optionsMap = $this->buildOptionsMapAccordingToContext();
 
         foreach ($optionsMap as $optionMap) {
             $paymentOption = new PaymentOption();
@@ -2925,5 +2912,157 @@ class PayPal extends \PaymentModule implements WidgetInterface
     protected function initPuiFunctionality()
     {
         return new PuiFunctionality();
+    }
+
+    protected function buildOptionsMapAccordingToContext()
+    {
+        $map = [];
+
+        if (empty($this->context->cart->id_address_delivery)) {
+            return $map;
+        }
+
+        $addressDelivery = new Address($this->context->cart->id_address_delivery);
+        $isoCountry = Tools::strtoupper(Country::getIsoById($addressDelivery->id_country));
+        $isoCurrency = Tools::strtoupper($this->context->currency->iso_code);
+
+        if (empty($isoCountry) || empty($isoCurrency)) {
+            return $map;
+        }
+
+        if ($isoCountry == 'BE' && $isoCurrency == 'EUR') {
+            $map[] = [
+                'method' => APM::BANCONTACT,
+                'label' => $this->l('Bancontact'),
+            ];
+        }
+
+        if ($isoCountry == 'BR' && $isoCurrency == 'BRL') {
+            $map[] = [
+                'method' => APM::BOLETOBANCARIO,
+                'label' => $this->l('Boleto Bancario'),
+            ];
+        }
+
+        if ($isoCountry == 'PL' && $isoCurrency == 'PLN') {
+            $map[] = [
+                'method' => APM::BLIK,
+                'label' => $this->l('BLIK'),
+            ];
+
+            $map[] = [
+                'method' => APM::P24,
+                'label' => $this->l('Przelewy24'),
+            ];
+        }
+
+        if ($isoCountry == 'AT' && $isoCurrency == 'EUR') {
+            $map[] = [
+                'method' => APM::EPS,
+                'label' => $this->l('eps'),
+            ];
+
+            $map[] = [
+                'method' => APM::SOFORT,
+                'label' => $this->l('Sofort'),
+            ];
+        }
+
+        if ($isoCountry == 'DE' && $isoCurrency == 'EUR') {
+            $map[] = [
+                'method' => APM::GIROPAY,
+                'label' => $this->l('giropay'),
+            ];
+
+            $map[] = [
+                'method' => APM::SOFORT,
+                'label' => $this->l('Sofort'),
+            ];
+
+            $map[] = [
+                'method' => APM::SEPA,
+                'label' => $this->l('SEPA'),
+            ];
+        }
+
+        if ($isoCountry == 'NL' && $isoCurrency == 'EUR') {
+            $map[] = [
+                'method' => APM::IDEAL,
+                'label' => $this->l('iDEAL'),
+            ];
+
+            $map[] = [
+                'method' => APM::SOFORT,
+                'label' => $this->l('Sofort'),
+            ];
+
+            $map[] = [
+                'method' => APM::TRUSTLY,
+                'label' => $this->l('Trustly'),
+            ];
+        }
+
+        if ($isoCountry == 'PT' && $isoCurrency == 'EUR') {
+            $map[] = [
+                'method' => APM::MULTIBANCO,
+                'label' => $this->l('Multibanco'),
+            ];
+        }
+
+        if ($isoCountry == 'IT' && $isoCurrency == 'EUR') {
+            $map[] = [
+                'method' => APM::MYBANK,
+                'label' => $this->l('MyBank'),
+            ];
+
+            $map[] = [
+                'method' => APM::SOFORT,
+                'label' => $this->l('Sofort'),
+            ];
+        }
+
+        if ($isoCountry == 'MX' && $isoCurrency == 'MXN') {
+            $map[] = [
+                'method' => APM::OXXO,
+                'label' => $this->l('OXXO'),
+            ];
+        }
+
+        if ($isoCountry == 'GB' && $isoCurrency == 'GBP') {
+            $map[] = [
+                'method' => APM::SOFORT,
+                'label' => $this->l('Sofort'),
+            ];
+        }
+
+        if ($isoCountry == 'ES' && $isoCurrency == 'EUR') {
+            $map[] = [
+                'method' => APM::SOFORT,
+                'label' => $this->l('Sofort'),
+            ];
+        }
+
+        if ($isoCountry == 'US' && $isoCurrency == 'EUR') {
+            $map[] = [
+                'method' => APM::SOFORT,
+                'label' => $this->l('Sofort'),
+            ];
+        }
+
+        if (in_array($isoCountry, ['EE', 'FI', 'SE']) && $isoCurrency == 'EUR') {
+            $map[] = [
+                'method' => APM::TRUSTLY,
+                'label' => $this->l('Trustly'),
+            ];
+        }
+
+        if ($isoCountry == 'SE' && $isoCurrency == 'SEK') {
+            $map[] = [
+                'method' => APM::TRUSTLY,
+                'label' => $this->l('Trustly'),
+            ];
+        }
+
+        return $map;
     }
 }
