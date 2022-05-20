@@ -103,6 +103,26 @@ ApmButton.prototype.hideElementTillPaymentOptionChecked = function(paymentOption
   Tools.hideElementTillPaymentOptionChecked(paymentOptionSelector, hideElementSelector);
 };
 
+ApmButton.prototype.addMarkTo = function(element, styles = {}) {
+  if (element instanceof Element == false) {
+    return;
+  }
+
+  const markContainer = document.createElement('span');
+
+  for (let key in styles) {
+    markContainer.style[key] = styles[key];
+  }
+
+  markContainer.setAttribute('paypal-mark-container', '');
+  element.appendChild(markContainer);
+
+  const mark = this.paypal.Marks({
+    fundingSource: this.method
+  });
+  mark.render(markContainer);
+};
+
 window.ApmButton = ApmButton;
 
 
