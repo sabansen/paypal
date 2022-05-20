@@ -934,7 +934,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
             );
             $paymentOption->setModuleName('paypal_' . $optionMap['method']);
             $paymentOption->setAdditionalInformation($this->initApmCollection([$optionMap['method']])->render());
-            $paymentOption->setLogo(Media::getMediaPath(_PS_MODULE_DIR_ . $this->name . '/views/img/paypal_logo.png'));
 
             $paymentOptions[] = $paymentOption;
         }

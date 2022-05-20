@@ -92,7 +92,10 @@ class ApmCollection
     protected function getJS()
     {
         $JSscripts = [];
-        $srcLib = $this->method->getUrlJsSdkLib() . '&enable-funding=' . implode(',', $this->methodCollection);
+        $srcLib = $this->method->getUrlJsSdkLib([
+            'enable-funding' => implode(',', $this->methodCollection),
+            'components' => 'buttons,marks',
+        ]);
 
         if ($this->method->isSandbox()) {
             $buyerCountry = $this->getBuyerCountry();

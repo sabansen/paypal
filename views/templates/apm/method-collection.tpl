@@ -66,7 +66,13 @@
                   apmObj.hideElementTillPaymentOptionChecked(
                       '[data-module-name="paypal_' + method + '"]',
                       '#payment-confirmation'
-                  )
+                  );
+                  apmObj.addMarkTo(
+                      document.querySelector('input[data-module-name="paypal_'+method+'"]').closest('.payment-option'),
+                      {
+                          display: "table-cell"
+                      }
+                  );
               }
           }
 
