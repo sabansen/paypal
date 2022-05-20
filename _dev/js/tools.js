@@ -22,6 +22,7 @@
  *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  */
+import intlTelInput from 'intl-tel-input';
 
 export const Tools = {
   // Show error message
@@ -139,7 +140,15 @@ export const Tools = {
         hideElement.style.visibility = 'initial';
       }
     })
-  }
+  },
+
+  initPhoneInput(input, options = {}) {
+    if (false == input instanceof Element) {
+      return false;
+    }
+
+    return intlTelInput(input, options);
+  },
 };
 
 window.PaypalTools = Tools;
