@@ -783,8 +783,10 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 break;
             case 'PPP':
                 if ($method->isConfigured()) {
-                    if ($this->initPuiFunctionality()->isAvailable(false)) {
-                        $payments_options[] = $this->renderPuiOption($params);
+                    if ($this->getWebhookOption()->isAvailable() && $this->getWebhookOption()->isEnable()) {
+                        if ($this->initPuiFunctionality()->isAvailable(false)) {
+                            $payments_options[] = $this->renderPuiOption($params);
+                        }
                     }
 
                     if ((Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART')) && isset($this->context->cookie->paypal_pSc)) {
