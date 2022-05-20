@@ -22,6 +22,10 @@
 *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
 *
 *}
+{assign var='baseUrl' value=Context::getContext()->shop->getBaseURL()}
+
+<link rel="stylesheet" href="{$baseUrl nofilter}modules/paypal/views/intl-tel/css/intlTelInput.css">
+
 {include file = "{$psPaypalDir}/views/templates/_partials/javascript.tpl" assign=javascriptBlock}
 {$javascriptBlock nofilter}
 {assign var='currentDate' value=date('Y-m-d')}
@@ -162,12 +166,11 @@
               class="form-control"
               type="tel"
               name="paypal_pui_phone"
-              id="paypal_pui_phone"
-              placeholder="{l s='Example: 030123456789' mod='paypal'}"
-              {literal}pattern="[0-9]{1,14}?"{/literal}
-              value="{if isset($userData)}{$userData->getPhone()}{/if}">
+              id="paypal_pui_phone">
     </div>
   </div>
+
+  <div pui-form-errors></div>
 
   <div class="alert alert-info">
       {{l s='By clicking on the button, you agree to the [a @href1@]terms of payment[/a] and [a @href2@]performance of a risk check[/a] from the payment partner, Ratepay.' mod='paypal'}|paypalreplace:['@href1@' => {'https://www.ratepay.com/legal-payment-terms'}, '@target@' => {'target="blank"'}, '@href2@' => {'https://www.ratepay.com/legal-payment-dataprivacy'}, '@target@' => {'target="blank"'}] nofilter}
@@ -183,25 +186,41 @@
 </form>
 
 <script>
+  function paypalPuiInit() {
+      PaypalTools.disableTillConsenting(
+          document.querySelector('[pui-form] button'),
+          document.getElementById('conditions_to_approve[terms-and-conditions]')
+      );
+      PaypalTools.hideElementTillPaymentOptionChecked(
+          '[data-module-name="paypal_pui"]',
+          '#payment-confirmation'
+      );
+      var paypalPuiPhone = PaypalTools.initPhoneInput(
+          document.querySelector('#paypal_pui_phone'),
+          {
+              onlyCountries: ['DE'],
+              utilsScript: "{$baseUrl nofilter}modules/paypal/views/intl-tel/js/utils.js",
+              separateDialCode: true
+          }
+      );
+      document.querySelector('form[pui-form]').addEventListener('submit', function(e) {
+          if (paypalPuiPhone.getValidationError() == 0) {
+              return;
+          }
+
+          e.preventDefault();
+          e.stopPropagation();
+
+          document.querySelector('[pui-form-errors]').innerHTML = '';
+          document.querySelector('[pui-form-errors]').appendChild(PaypalTools.getAlert('Invalid phone', 'danger'));
+      });
+  }
+
     if (typeof PaypalTools != 'undefined') {
-        PaypalTools.disableTillConsenting(
-            document.querySelector('[pui-form] button'),
-            document.getElementById('conditions_to_approve[terms-and-conditions]')
-        );
-        PaypalTools.hideElementTillPaymentOptionChecked(
-            '[data-module-name="paypal_pui"]',
-            '#payment-confirmation'
-        );
+        paypalPuiInit();
     } else {
         document.addEventListener('paypal-tools-loaded', function() {
-            PaypalTools.disableTillConsenting(
-                document.querySelector('[pui-form] button'),
-                document.getElementById('conditions_to_approve[terms-and-conditions]')
-            );
-            PaypalTools.hideElementTillPaymentOptionChecked(
-                '[data-module-name="paypal_pui"]',
-                '#payment-confirmation'
-            );
+            paypalPuiInit();
         });
     }
 </script>
