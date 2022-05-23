@@ -112,13 +112,10 @@ class ServicePaypalOrder
             ->select('po.id_paypal_order')
             ->from('paypal_order', 'po')
             ->leftJoin('paypal_capture', 'pc', 'po.id_paypal_order = pc.id_paypal_order')
-            ->where(implode(
-                ' OR ',
-                [
+            ->where(implode(' OR ', [
                     'po.id_transaction = "' . pSQL($transactionId) . '"',
                     'pc.id_capture = "' . pSQL($transactionId) . '"',
-                ])
-            );
+                ]));
         $idPaypalOrder = (int) Db::getInstance()->getValue($query);
 
         if ($idPaypalOrder) {
