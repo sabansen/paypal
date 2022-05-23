@@ -20,8 +20,8 @@
  *
  *  @author 2007-2022 PayPal
  *  @author 202 ecommerce <tech@202-ecommerce.com>
- *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ *  @copyright PayPal
  */
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -2935,6 +2935,11 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $map[] = [
                 'method' => APM::BANCONTACT,
                 'label' => $this->l('Bancontact'),
+            ];
+
+            $map[] = [
+                'method' => APM::SOFORT,
+                'label' => $this->l('Sofort'),
             ];
         }
 

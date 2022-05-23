@@ -20,8 +20,8 @@
  *
  *  @author 2007-2022 PayPal
  *  @author 202 ecommerce <tech@202-ecommerce.com>
- *  @copyright PayPal
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ *  @copyright PayPal
  */
 
 namespace PaypalAddons\services;
@@ -112,13 +112,10 @@ class ServicePaypalOrder
             ->select('po.id_paypal_order')
             ->from('paypal_order', 'po')
             ->leftJoin('paypal_capture', 'pc', 'po.id_paypal_order = pc.id_paypal_order')
-            ->where(implode(
-                ' OR ',
-                [
+            ->where(implode(' OR ', [
                     'po.id_transaction = "' . pSQL($transactionId) . '"',
                     'pc.id_capture = "' . pSQL($transactionId) . '"',
-                ])
-            );
+                ]));
         $idPaypalOrder = (int) Db::getInstance()->getValue($query);
 
         if ($idPaypalOrder) {

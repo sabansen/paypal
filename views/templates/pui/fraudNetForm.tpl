@@ -22,7 +22,7 @@
 *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
 *
 *}
-{assign var='baseUrl' value=Context::getContext()->shop->getBaseURL()}
+{assign var='baseUrl' value=Context::getContext()->shop->getBaseURL(true)}
 
 <link rel="stylesheet" href="{$baseUrl nofilter}modules/paypal/views/intl-tel/css/intlTelInput.css">
 
