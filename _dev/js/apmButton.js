@@ -37,6 +37,8 @@ const ApmButton = function(conf) {
     this.validationController = typeof conf['validationController'] != 'undefined' ? conf['validationController'] : null;
 
     this.paypal = conf['paypal'] === undefined ? null : conf['paypal'];
+
+    this.messages = conf['messages'] === undefined ? [] : conf['messages'];
 };
 
 ApmButton.prototype.initButton = function() {
@@ -44,7 +46,7 @@ ApmButton.prototype.initButton = function() {
     return;
   }
 
-  this.paypal.Buttons({
+  let paypalButton = this.paypal.Buttons({
     fundingSource: this.method,
 
     createOrder: function(data, actions) {
@@ -55,7 +57,23 @@ ApmButton.prototype.initButton = function() {
       this.sendData(data);
     }.bind(this),
 
-  }).render(this.button);
+  });
+
+  if (paypalButton.isEligible() == false) {
+    let buttonContainer = this.button instanceof Element ? this.button : document.querySelector(this.button);
+
+    if (buttonContainer instanceof Element) {
+      buttonContainer.appendChild(
+        Tools.getAlert(
+          this.messages['NOT_ELIGIBLE'] === undefined ? 'Payment method is not eligible' : this.messages['NOT_ELIGIBLE'],
+          'danger')
+      );
+    }
+
+    return;
+  }
+
+  render(this.button);
 
   Tools.disableTillConsenting(
     document.querySelector(this.button),
@@ -120,7 +138,10 @@ ApmButton.prototype.addMarkTo = function(element, styles = {}) {
   const mark = this.paypal.Marks({
     fundingSource: this.method
   });
-  mark.render(markContainer);
+
+  if (mark.isEligible()) {
+    mark.render(markContainer);
+  }
 };
 
 window.ApmButton = ApmButton;

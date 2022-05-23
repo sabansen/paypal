@@ -2936,6 +2936,11 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 'method' => APM::BANCONTACT,
                 'label' => $this->l('Bancontact'),
             ];
+
+            $map[] = [
+                'method' => APM::SOFORT,
+                'label' => $this->l('Sofort'),
+            ];
         }
 
         if ($isoCountry == 'BR' && $isoCurrency == 'BRL') {
