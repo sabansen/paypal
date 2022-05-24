@@ -73,7 +73,7 @@ ApmButton.prototype.initButton = function() {
     return;
   }
 
-  render(this.button);
+  paypalButton.render(this.button);
 
   Tools.disableTillConsenting(
     document.querySelector(this.button),
