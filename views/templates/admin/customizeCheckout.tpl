@@ -44,6 +44,10 @@
         {$formBehavior nofilter} {* the variable contains html code *}
     {/if}
 
+    {if isset($formTrackingParameters)}
+        {$formTrackingParameters nofilter} {* the variable contains html code *}
+    {/if}
+
     {if isset($formAdvanced)}
         {$formAdvanced nofilter} {* the variable contains html code *}
     {/if}
