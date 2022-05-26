@@ -30,6 +30,7 @@ use Configuration;
 use Exception;
 use PaypalAddons\classes\Constants\TrackingParameters as Map;
 use PrestaShopLogger;
+use Symfony\Component\VarDumper\VarDumper;
 
 class TrackingParameters
 {
@@ -82,5 +83,45 @@ class TrackingParameters
 
             return false;
         }
+    }
+
+    public function getStatus()
+    {
+        $status = Configuration::get(Map::STATUS);
+
+        if ($status) {
+            return $status;
+        }
+
+        return Map::STATUS_SHIPPED;
+    }
+
+    public function setStatus($status)
+    {
+        if ($this->isStatusValid($status)) {
+            return Configuration::updateValue(Map::STATUS, $status);
+        }
+
+        return false;
+    }
+
+    public function getStatusList()
+    {
+        return Map::getPaypalStatusList();
+    }
+
+    public function isStatusValid($status)
+    {
+        if (false == is_string($status)) {
+            return false;
+        }
+
+        foreach ($this->getStatusList() as $paypalStatus) {
+            if ($paypalStatus['key'] == $status) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

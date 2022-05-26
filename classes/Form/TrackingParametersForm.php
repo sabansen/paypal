@@ -30,6 +30,7 @@ use Carrier;
 use Context;
 use Module;
 use PaypalAddons\services\TrackingParameters;
+use PaypalAddons\classes\Constants\TrackingParameters as TrackingParametersMap;
 use Tools;
 
 class TrackingParametersForm implements FormInterface
@@ -59,6 +60,16 @@ class TrackingParametersForm implements FormInterface
                 'name' => '',
                 'label' => $this->module->l('Carrier map', $this->className),
             ],
+            [
+                'type' => 'select',
+                'label' => $this->module->l('PayPal checkout', $this->className),
+                'name' => TrackingParametersMap::STATUS,
+                'options' => [
+                    'query' => $this->getPaypalStatusList(),
+                    'id' => 'id',
+                    'name' => 'name',
+                ],
+            ]
         ];
 
         $fields = [
@@ -83,7 +94,9 @@ class TrackingParametersForm implements FormInterface
      */
     public function getValues()
     {
-        $values = [];
+        $values = [
+            TrackingParametersMap::STATUS => $this->initTrackingParametersService()->getStatus(),
+        ];
 
         return $values;
     }
@@ -98,6 +111,7 @@ class TrackingParametersForm implements FormInterface
         }
 
         $carrierMap = [];
+        $service = $this->initTrackingParametersService();
 
         foreach (Tools::getValue('carrier_map', []) as $map) {
             if ($map == '0') {
@@ -113,7 +127,8 @@ class TrackingParametersForm implements FormInterface
             $carrierMap[$psCarrierRef] = $paypalCarrierKey;
         }
 
-        $this->initTrackingParametersService()->setCarrierMap($carrierMap);
+        $service->setCarrierMap($carrierMap);
+        $service->setStatus(Tools::getValue(TrackingParametersMap::STATUS));
 
         return true;
     }
@@ -132,5 +147,19 @@ class TrackingParametersForm implements FormInterface
             ->assign('mapService', $trackingParametersService)
             ->assign('carriers', $carriers)
             ->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/_partials/carrierMap.tpl');
+    }
+
+    protected function getPaypalStatusList()
+    {
+        $list = [];
+
+        foreach ($this->initTrackingParametersService()->getStatusList() as $status) {
+            $list[] = [
+                'id' => $status['key'],
+                'name' => $status['key'],
+            ];
+        }
+
+        return $list;
     }
 }

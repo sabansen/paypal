@@ -30,7 +30,11 @@ class TrackingParameters
 {
     const CARRIER_MAP = 'PAYPAL_TRACKING_CARRIER_MAP';
 
+    const STATUS = 'PAYPAL_TRACKING_STATUS';
+
     const CARRIER_OTHER = 'OTHER';
+
+    const STATUS_SHIPPED = 'SHIPPED';
 
     public static function getGermanCarriers()
     {
@@ -70,6 +74,78 @@ class TrackingParameters
             [
                 'key' => 'OTHER',
                 'name' => 'Other',
+            ],
+        ];
+    }
+
+    public static function getPaypalStatusList()
+    {
+        return [
+            [
+                'key' => 'CANCELLED',
+            ],
+            [
+                'key' => 'DELIVERED',
+            ],
+            [
+                'key' => 'LOCAL_PICKUP',
+            ],
+            [
+                'key' => 'ON_HOLD',
+            ],
+            [
+                'key' => 'SHIPPED',
+            ],
+            [
+                'key' => 'SHIPMENT_CREATED',
+            ],
+            [
+                'key' => 'DROPPED_OFF',
+            ],
+            [
+                'key' => 'IN_TRANSIT',
+            ],
+            [
+                'key' => 'RETURNED',
+            ],
+            [
+                'key' => 'LABEL_PRINTED',
+            ],
+            [
+                'key' => 'ERROR',
+            ],
+            [
+                'key' => 'UNCONFIRMED',
+            ],
+            [
+                'key' => 'PICKUP_FAILED',
+            ],
+            [
+                'key' => 'DELIVERY_DELAYED',
+            ],
+            [
+                'key' => 'DELIVERY_SCHEDULED',
+            ],
+            [
+                'key' => 'DELIVERY_FAILED',
+            ],
+            [
+                'key' => 'INRETURN',
+            ],
+            [
+                'key' => 'IN_PROCESS',
+            ],
+            [
+                'key' => 'NEW',
+            ],
+            [
+                'key' => 'VOID',
+            ],
+            [
+                'key' => 'PROCESSED',
+            ],
+            [
+                'key' => 'NOT_SHIPPED',
             ],
         ];
     }
