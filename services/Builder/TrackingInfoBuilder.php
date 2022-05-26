@@ -27,6 +27,7 @@
 namespace PaypalAddons\services\Builder;
 
 use Carrier;
+use Hook;
 use Order;
 use PaypalAddons\services\ServicePaypalOrder;
 use PaypalAddons\services\TrackingParameters;
@@ -67,6 +68,8 @@ class TrackingInfoBuilder implements BuilderInterface
         } else {
             $output['carrier'] = \PaypalAddons\classes\Constants\TrackingParameters::CARRIER_OTHER;
         }
+
+        Hook::exec('actionAfterPaypalTrackingInfoBuild', ['info' => &$output]);
 
         return $output;
     }
