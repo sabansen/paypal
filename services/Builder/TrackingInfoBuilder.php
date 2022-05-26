@@ -69,7 +69,7 @@ class TrackingInfoBuilder implements BuilderInterface
             $output['carrier'] = \PaypalAddons\classes\Constants\TrackingParameters::CARRIER_OTHER;
         }
 
-        Hook::exec('actionAfterPaypalTrackingInfoBuild', ['info' => &$output]);
+        Hook::exec('actionAfterPaypalTrackingInfoBuild', ['id_order' => $this->paypalOrder->id_order, 'info' => &$output]);
 
         return $output;
     }
