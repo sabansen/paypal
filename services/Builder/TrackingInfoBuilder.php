@@ -31,6 +31,7 @@ use Hook;
 use Order;
 use PaypalAddons\services\ServicePaypalOrder;
 use PaypalAddons\services\TrackingParameters;
+use Validate;
 
 class TrackingInfoBuilder implements BuilderInterface
 {
@@ -57,7 +58,7 @@ class TrackingInfoBuilder implements BuilderInterface
 
         $transactionId = $this->paypalOrder->id_transaction;
         $carrier = $this->getCarrier();
-        $trackingNumber = $this->getTrackingNumber($carrier);
+        $trackingNumber = $this->getTrackingNumber();
 
         $output['transaction_id'] = $transactionId;
         $output['tracking_number'] = $trackingNumber;
@@ -74,53 +75,37 @@ class TrackingInfoBuilder implements BuilderInterface
         return $output;
     }
 
-    protected function getTrackingNumber(Carrier $carrier)
+    protected function getTrackingNumber()
     {
-        $orders = $this->paypalOrderService->getPsOrders($this->paypalOrder);
+        $order = new Order($this->paypalOrder->id_order);
 
-        if (empty($orders)) {
+        if (false == Validate::isLoadedObject($order)) {
             return '';
         }
-        /** @var Order $order */
-        foreach ($orders as $order) {
-            $shipping = $order->getShipping();
 
-            if (empty($shipping[0]['tracking_number'])) {
-                continue;
-            }
+        $shipping = $order->getShipping();
 
-            if (empty($shipping[0]['id_carrier'])) {
-                continue;
-            }
-
-            if ($carrier->id != $shipping[0]['id_carrier']) {
-                continue;
-            }
-
-            return $shipping[0]['tracking_number'];
+        if (empty($shipping[0]['tracking_number'])) {
+            return '';
         }
 
-        return '';
+        return $shipping[0]['tracking_number'];
     }
 
     protected function getCarrier()
     {
-        $orders = $this->paypalOrderService->getPsOrders($this->paypalOrder);
+        $order = new Order($this->paypalOrder->id_order);
 
-        if (empty($orders)) {
+        if (false == Validate::isLoadedObject($order)) {
             return new Carrier();
         }
-        /** @var Order $order */
-        foreach ($orders as $order) {
-            $shipping = $order->getShipping();
 
-            if (empty($shipping[0]['id_carrier'])) {
-                continue;
-            }
+        $shipping = $order->getShipping();
 
-            return new Carrier((int) $shipping[0]['id_carrier']);
+        if (empty($shipping[0]['id_carrier'])) {
+            return new Carrier();
         }
 
-        return new Carrier();
+        return new Carrier((int) $shipping[0]['id_carrier']);
     }
 }

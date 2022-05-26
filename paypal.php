@@ -234,6 +234,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
         'displayOrderPreview',
         'displayNavFullWidth',
         'actionLocalizationPageSave',
+        'actionAdminOrdersTrackingNumberUpdate',
         ShortcutConfiguration::HOOK_REASSURANCE,
         ShortcutConfiguration::HOOK_AFTER_PRODUCT_ADDITIONAL_INFO,
         ShortcutConfiguration::HOOK_AFTER_PRODUCT_THUMBS,
@@ -3070,5 +3071,48 @@ class PayPal extends \PaymentModule implements WidgetInterface
         }
 
         return $map;
+    }
+
+    public function hookActionAdminOrdersTrackingNumberUpdate($params)
+    {
+        if (empty($params['order']) || Validate::isLoadedObject($params['order']) == false) {
+            return;
+        }
+
+        /** @var $paypalOrder PaypalOrder */
+        $paypalOrder = PaypalOrder::loadByOrderId($params['order']->id);
+
+        if ($paypalOrder->payment_tool != 'PAY_UPON_INVOICE') {
+            return;
+        }
+
+        $method = AbstractMethodPaypal::load($this->paypal_method);
+        $response = $method->addOrderTrackingInfo($paypalOrder);
+
+        if ($response->isSuccess()) {
+            ProcessLoggerHandler::openLogger();
+            ProcessLoggerHandler::logInfo(
+                'Added tracking info',
+                $paypalOrder->id_transaction,
+                $paypalOrder->id_order,
+                $paypalOrder->id_cart,
+                $this->context->shop->id,
+                $paypalOrder->payment_tool,
+                $paypalOrder->sandbox
+            );
+            ProcessLoggerHandler::closeLogger();
+        } else {
+            ProcessLoggerHandler::openLogger();
+            ProcessLoggerHandler::logInfo(
+                'Adding tracking info is failed. Error message: ' . $response->getError()->getMessage(),
+                $paypalOrder->id_transaction,
+                $paypalOrder->id_order,
+                $paypalOrder->id_cart,
+                $this->context->shop->id,
+                $paypalOrder->payment_tool,
+                $paypalOrder->sandbox
+            );
+            ProcessLoggerHandler::closeLogger();
+        }
     }
 }
