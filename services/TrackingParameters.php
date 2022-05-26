@@ -30,7 +30,6 @@ use Configuration;
 use Exception;
 use PaypalAddons\classes\Constants\TrackingParameters as Map;
 use PrestaShopLogger;
-use Symfony\Component\VarDumper\VarDumper;
 
 class TrackingParameters
 {

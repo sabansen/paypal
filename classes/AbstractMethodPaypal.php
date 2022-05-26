@@ -527,6 +527,16 @@ abstract class AbstractMethodPaypal extends AbstractMethod
         return $this->getStatusMapping()->getAcceptedStatus();
     }
 
+    public function updateOrderTrackingInfo(\PaypalOrder $paypalOrder)
+    {
+        return $this->paypalApiManager->getUpdateTrackingInfoRequest($paypalOrder)->execute();
+    }
+
+    public function addOrderTrackingInfo(\PaypalOrder $paypalOrder)
+    {
+        return $this->paypalApiManager->getAddTrackingInfoRequest($paypalOrder)->execute();
+    }
+
     protected function getWebhookOption()
     {
         return new WebhookOption();

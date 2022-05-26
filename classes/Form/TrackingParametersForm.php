@@ -29,8 +29,8 @@ namespace PaypalAddons\classes\Form;
 use Carrier;
 use Context;
 use Module;
-use PaypalAddons\services\TrackingParameters;
 use PaypalAddons\classes\Constants\TrackingParameters as TrackingParametersMap;
+use PaypalAddons\services\TrackingParameters;
 use Tools;
 
 class TrackingParametersForm implements FormInterface
@@ -69,7 +69,7 @@ class TrackingParametersForm implements FormInterface
                     'id' => 'id',
                     'name' => 'name',
                 ],
-            ]
+            ],
         ];
 
         $fields = [
