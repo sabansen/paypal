@@ -26,7 +26,6 @@
 
 namespace PaypalAddons\services\Builder;
 
-
 use Address;
 use Context;
 use Country;
@@ -87,6 +86,7 @@ class ConfirmPaymentSourceBuilder implements BuilderInterface
         }
 
         $address = new Address($this->context->cart->id_address_delivery);
+
         return Tools::strtoupper(Country::getIsoById($address->id_country));
     }
 }

@@ -29,13 +29,10 @@ namespace PaypalAddons\classes\API\Request;
 use PaypalAddons\classes\AbstractMethodPaypal;
 use PaypalAddons\classes\API\ExtensionSDK\ConfirmPaymentSource;
 use PaypalAddons\classes\API\Response\Error;
-use PaypalAddons\classes\API\Response\PaypalResponseAccessToken;
 use PaypalAddons\classes\API\Response\Response;
 use PaypalAddons\services\Builder\ConfirmPaymentSourceBuilder;
-use PayPalCheckoutSdk\Core\AccessTokenRequest;
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
 use PayPalHttp\HttpException;
-use Symfony\Component\VarDumper\VarDumper;
 
 class PaypalConfirmPaymentSourceRequest extends RequestAbstract
 {
