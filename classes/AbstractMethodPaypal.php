@@ -132,6 +132,23 @@ abstract class AbstractMethodPaypal extends AbstractMethod
     }
 
     /**
+     * @return \PaypalAddons\classes\API\Response\ResponseOrderCreate
+     *
+     * @throws Exception
+     */
+    public function initApm($method)
+    {
+        $response = $this->init();
+        $confirmation = $this->paypalApiManager->getConfirmPaymentSourceRequest($response->getPaymentId(), $method)->execute();
+
+        if ($confirmation->isSuccess() == false) {
+            throw new \Exception($response->getError()->getMessage());
+        }
+
+        return $response;
+    }
+
+    /**
      * @see AbstractMethodPaypal::validation()
      *
      * @throws Exception

@@ -28,6 +28,7 @@ namespace PaypalAddons\services\Builder;
 
 use Configuration;
 use Context;
+use Customer;
 use Group;
 use Module;
 use Paypal;
@@ -133,9 +134,10 @@ class OrderCreateBody implements BuilderInterface
         }
 
         $this->useTax = (int) Configuration::get('PS_TAX') == 1;
+        $customer = new Customer($this->context->cart->id_customer);
 
         if (version_compare(_PS_VERSION_, '1.7.6', '<')) {
-            $this->useTax = (Group::getPriceDisplayMethod($this->context->customer->id_default_group) == PS_TAX_INC) && $this->useTax;
+            $this->useTax = (Group::getPriceDisplayMethod($customer->id_default_group) == PS_TAX_INC) && $this->useTax;
         }
 
         return $this->useTax;
@@ -197,16 +199,17 @@ class OrderCreateBody implements BuilderInterface
     protected function getPayer()
     {
         $payer = [];
+        $customer = new Customer($this->context->cart->id_customer);
 
-        if (\Validate::isLoadedObject($this->context->customer) == false) {
+        if (\Validate::isLoadedObject($customer) == false) {
             return $payer;
         }
 
         $payer['name'] = [
-            'given_name' => $this->formatter->formatPaypalString($this->context->customer->firstname),
-            'surname' => $this->formatter->formatPaypalString($this->context->customer->lastname),
+            'given_name' => $this->formatter->formatPaypalString($customer->firstname),
+            'surname' => $this->formatter->formatPaypalString($customer->lastname),
         ];
-        $payer['email'] = $this->context->customer->email;
+        $payer['email'] = $customer->email;
 
         if ($this->context->cart->isVirtualCart() === false) {
             $payer['address'] = $this->getAddress();

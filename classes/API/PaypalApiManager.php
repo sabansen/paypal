@@ -32,6 +32,7 @@ use PaypalAddons\classes\API\Request\PaypalAcdcGenerateTokenRequest;
 use PaypalAddons\classes\API\Request\PaypalAddTrackingInfoRequest;
 use PaypalAddons\classes\API\Request\PaypalAuthorizationVoidRequest;
 use PaypalAddons\classes\API\Request\PaypalCaptureAuthorizeRequest;
+use PaypalAddons\classes\API\Request\PaypalConfirmPaymentSourceRequest;
 use PaypalAddons\classes\API\Request\PaypalGetSellerStatusRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderAuthorizeRequest;
 use PaypalAddons\classes\API\Request\PaypalOrderCaptureRequest;
@@ -136,5 +137,10 @@ class PaypalApiManager implements PaypalApiManagerInterface
     public function getAddTrackingInfoRequest(\PaypalOrder $paypalOrder)
     {
         return new PaypalAddTrackingInfoRequest($this->client, $this->method, $paypalOrder);
+    }
+
+    public function getConfirmPaymentSourceRequest($paypalOrderId, $apmMethod)
+    {
+        return new PaypalConfirmPaymentSourceRequest($this->client, $this->method, $paypalOrderId, $apmMethod);
     }
 }
