@@ -147,6 +147,10 @@ export const Tools = {
       return false;
     }
 
+    input.addEventListener('input', function(e) {
+      e.target.value = e.target.value.replace('+', '')
+    });
+
     return intlTelInput(input, options);
   },
 };
