@@ -35,6 +35,9 @@ use PaypalAddons\classes\Form\Field\InputChain;
 use PaypalAddons\classes\Form\Field\Select;
 use PaypalAddons\classes\Form\Field\SelectOption;
 use PaypalAddons\classes\Form\Field\TextInput;
+use PaypalAddons\classes\Form\FormInterface;
+use PaypalAddons\classes\Form\TrackingParametersForm;
+use PaypalAddons\classes\PUI\PuiFunctionality;
 use PaypalAddons\classes\Shortcut\Form\Definition\CustomizeButtonStyleSectionDefinition;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Shortcut\ShortcutPreview;
@@ -49,6 +52,8 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
     protected $headerToolBar = true;
 
     protected $advancedFormErrors = [];
+
+    protected $forms = [];
 
     public function __construct()
     {
@@ -99,6 +104,8 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             ShortcutConfiguration::STYLE_HEIGHT_SIGNUP,
             ShortcutConfiguration::STYLE_WIDTH_SIGNUP,
         ];
+
+        $this->forms['trackingParameters'] = new TrackingParametersForm();
     }
 
     public function initContent()
@@ -118,6 +125,12 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
 
         $this->initForm();
         $this->context->smarty->assign('formBehavior', $this->renderForm());
+
+        if ($this->method == 'PPP' && $this->initPuiFunctionality()->isAvailable(false)) {
+            $this->clearFieldsForm();
+            $this->initTrackingParametersForm();
+            $this->context->smarty->assign('formTrackingParameters', $this->renderForm());
+        }
 
         $this->clearFieldsForm();
         $this->initAdvancedForm();
@@ -780,6 +793,12 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
             }
         }
 
+        foreach ($this->forms as $form) {
+            if ($form instanceof FormInterface) {
+                $form->save();
+            }
+        }
+
         return $result;
     }
 
@@ -1188,5 +1207,24 @@ class AdminPayPalCustomizeCheckoutController extends AdminPayPalController
         $select->setValue(Configuration::get($name));
 
         return $select->render();
+    }
+
+    protected function initPuiFunctionality()
+    {
+        return new PuiFunctionality();
+    }
+
+    protected function initTrackingParametersForm()
+    {
+        if (empty($this->forms['trackingParameters'])) {
+            return;
+        }
+
+        if (false == $this->forms['trackingParameters'] instanceof FormInterface) {
+            return;
+        }
+
+        $this->fields_form['form']['form'] = $this->forms['trackingParameters']->getFields();
+        $this->tpl_form_vars = array_merge($this->tpl_form_vars, $this->forms['trackingParameters']->getValues());
     }
 }
