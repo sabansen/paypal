@@ -56,6 +56,14 @@ class TrackingParametersForm implements FormInterface
         $input = [
             [
                 'type' => 'html',
+                'html_content' => $this->module->displayInformation(
+                    $this->module->l('Configure tracking settings to apply for PayPal seller protection', $this->className),
+                    false
+                ),
+                'name' => '',
+            ],
+            [
+                'type' => 'html',
                 'html_content' => $this->getCarrierMapHtml(),
                 'name' => '',
                 'label' => $this->module->l('Carrier map', $this->className),

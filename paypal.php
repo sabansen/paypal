@@ -784,12 +784,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 break;
             case 'PPP':
                 if ($method->isConfigured()) {
-                    if ($this->getWebhookOption()->isAvailable() && $this->getWebhookOption()->isEnable()) {
-                        if ($this->initPuiFunctionality()->isAvailable(false)) {
-                            $payments_options[] = $this->renderPuiOption($params);
-                        }
-                    }
-
                     if ((Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT') || Configuration::get('PAYPAL_EXPRESS_CHECKOUT_SHORTCUT_CART')) && isset($this->context->cookie->paypal_pSc)) {
                         $payment_option = new PaymentOption();
                         $action_text = $this->l('Pay with paypal plus shortcut');
@@ -842,12 +836,20 @@ class PayPal extends \PaymentModule implements WidgetInterface
                 $payments_options[] = $this->buildVenmoPaymentOption($params);
             }
 
+            if ($this->initAcdcFunctionality()->isAvailable() && $this->initAcdcFunctionality()->isEnabled()) {
+                $payments_options[] = $this->buildAcdcPaymentOption($params);
+            }
+
             if ($this->initApmFunctionality()->isEnabled() && $this->initApmFunctionality()->isAvailable()) {
                 $payments_options = array_merge($payments_options, $this->buildApmPaymentOptions($params));
             }
 
-            if ($this->initAcdcFunctionality()->isAvailable() && $this->initAcdcFunctionality()->isEnabled()) {
-                $payments_options[] = $this->buildAcdcPaymentOption($params);
+            if ($this->paypal_method == 'PPP') {
+                if ($this->getWebhookOption()->isAvailable() && $this->getWebhookOption()->isEnable()) {
+                    if ($this->initPuiFunctionality()->isAvailable(false)) {
+                        $payments_options[] = $this->renderPuiOption($params);
+                    }
+                }
             }
         }
 

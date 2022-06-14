@@ -570,3 +570,4 @@ $_MODULE['<{paypal}prestashop>bnpl-payment-step_f9952e95d55801d9b0742431aefc1d3e
 $_MODULE['<{paypal}prestashop>fraudnetform_47db1ba441495e69ca49fb97801b3d0b'] = 'Mit Klicken auf den Button akzeptieren Sie die  [a @href1@]  Ratepay Zahlungsbedingungen [/a] und erklären sich mit der Durchführung einer [a @href2@]Risikoprüfung durch Ratepay[/a] , unseren Partner, einverstanden.';
 $_MODULE['<{paypal}prestashop>fraudnetform_a4748e9d870cfb912423f022bfe49f8a'] = 'Sie akzeptieren auch PayPal’s  [a @href1@] Datenschutzerklärung [/a].';
 $_MODULE['<{paypal}prestashop>fraudnetform_8e21dd5dca608a0dcedf9423ce106849'] = 'Falls Ihre Transaktion erfolgreich per Kauf auf Rechnung abgewickelt werden kann, wird der Kaufpreis an Ratepay abgetreten und Sie dürfen nur an Ratepay überweisen, nicht an den Händler.';
+$_MODULE['<{paypal}prestashop>signuplinkbutton_e938ac5a88e031ddad5adc00421ec5ce'] = 'Sie haben Ihr PayPal-Konto erfolgreich verknüpft';
