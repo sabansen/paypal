@@ -559,7 +559,7 @@ $_MODULE['<{paypal}prestashop>bnplpagedisplayingsetting_0fcaf0531dd6d6a53f7bde67
 $_MODULE['<{paypal}prestashop>bnplpagedisplayingsetting_b29281296165d65c9c816c2ed17e5109'] = 'Anmelden Schritt in der Kasse';
 $_MODULE['<{paypal}prestashop>forminstallment_e78a577e6891286e36f49c540c757d06'] = 'Aktivieren Sie \"4x bezahlen\" in Ihrer Kasse';
 $_MODULE['<{paypal}prestashop>forminstallment_9871fad8feec04bf651c960e6538814b'] = 'Die Funktion \"4x bezahlen\" ist aktiv auf';
-
+$_MODULE['<{paypal}prestashop>trackingparametersform_4aad3a66be9b84337676e1eb9745dceb'] = 'Konfigurieren Sie Ihre Tracking-Einstellungen für den PayPal Verkäufer-Schutz';
 $_MODULE['<{paypal}prestashop>paypal_d9477f0fb4bf73e4e174c1b8591cc9ef'] = 'Verwenden Sie die Schaltfläche \"Zahlen in X Zeiten\".';
 $_MODULE['<{paypal}prestashop>forminstallment_381805411dac8b454d0de986ef0eaf3d'] = 'Aktivieren Sie in Ihrer Kasse die Option \"Später Bezahlen\".';
 $_MODULE['<{paypal}prestashop>forminstallment_4d312c672b84eeb1b903e5cda7c65fb9'] = 'Die Option \"Später Bezahlen\" ist aktiv auf';
