@@ -309,7 +309,7 @@ class MethodPPP extends AbstractMethodPaypal implements PuiMethodInterface
 
     public function getPaypalPartnerId()
     {
-        return getenv('PLATEFORM') == 'PSREAD' ? 'PrestaShop_Cart_Ready_PPP' : 'PrestaShop_Cart_PPP';
+        return getenv('PLATEFORM') == 'PSREAD' ? 'PrestaShop_Cart_Ready_PPP' : 'PRESTASHOP_Cart_SPB';
     }
 
     public function getShortCut()
