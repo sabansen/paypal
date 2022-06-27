@@ -846,7 +846,7 @@ class PayPal extends \PaymentModule implements WidgetInterface
 
             if ($this->paypal_method == 'PPP') {
                 if ($this->getWebhookOption()->isAvailable() && $this->getWebhookOption()->isEnable()) {
-                    if ($this->initPuiFunctionality()->isAvailable(false)) {
+                    if ($this->initPuiFunctionality()->isAvailable(false) && $this->initPuiFunctionality()->isEligibleContext($this->context)) {
                         $payments_options[] = $this->renderPuiOption($params);
                     }
                 }
