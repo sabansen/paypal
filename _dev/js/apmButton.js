@@ -26,7 +26,7 @@
 
 import {Tools} from './tools.js';
 
-const ApmButton = function(conf) {
+export const ApmButton = function(conf) {
 
     this.method = typeof conf['method'] != 'undefined' ? conf['method'] : null;
 

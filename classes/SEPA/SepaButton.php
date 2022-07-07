@@ -24,17 +24,13 @@
  *  @copyright PayPal
  */
 
-namespace PaypalAddons\classes\APM;
+namespace PaypalAddons\classes\SEPA;
 
-use Configuration;
 use Context;
-use Country;
 use Module;
 use PaypalAddons\classes\AbstractMethodPaypal;
-use PaypalAddons\classes\Constants\APM;
-use Tools;
 
-class ApmCollection
+class SepaButton
 {
     /** @var Context */
     protected $context;
@@ -45,25 +41,11 @@ class ApmCollection
     /** @var AbstractMethodPaypal */
     protected $method;
 
-    /** @var string */
-    protected $id;
-
-    /** @var string */
-    protected $methodCollection;
-
-    public function __construct($methodCollection = null)
+    public function __construct()
     {
         $this->context = Context::getContext();
         $this->module = Module::getInstanceByName('paypal');
         $this->method = AbstractMethodPaypal::load($this->getMethodType());
-
-        if (is_null($methodCollection)) {
-            $this->methodCollection = $this->initDefaultCollection();
-        } else {
-            $this->methodCollection = $methodCollection;
-        }
-
-        $this->setId(uniqid());
     }
 
     /**
@@ -93,16 +75,12 @@ class ApmCollection
     {
         $JSscripts = [];
         $srcLib = $this->method->getUrlJsSdkLib([
-            'enable-funding' => implode(',', $this->methodCollection),
+            'enable-funding' => 'sepa',
             'components' => 'buttons,marks',
         ]);
 
         if ($this->method->isSandbox()) {
-            $buyerCountry = $this->getBuyerCountry();
-
-            if (false == empty($buyerCountry)) {
-                $srcLib .= '&buyer-country=' . $buyerCountry;
-            }
+            $srcLib .= '&buyer-country=DE';
         }
 
         $JSscripts[$this->getSdkNameSpace()] = [
@@ -110,8 +88,8 @@ class ApmCollection
             'data-namespace' => $this->getSdkNameSpace(),
             'data-partner-attribution-id' => $this->getPartnerId(),
         ];
-        $JSscripts['apmButton'] = [
-            'src' => __PS_BASE_URI__ . 'modules/' . $this->module->name . '/views/js/apmButton.js?v=' . $this->module->version,
+        $JSscripts['sepaButton'] = [
+            'src' => __PS_BASE_URI__ . 'modules/' . $this->module->name . '/views/js/sepaButton.js?v=' . $this->module->version,
         ];
 
         return $JSscripts;
@@ -119,12 +97,12 @@ class ApmCollection
 
     protected function getSdkNameSpace()
     {
-        return 'totPaypalApmSdkButtons_' . md5(implode('', $this->methodCollection));
+        return 'totPaypalSepaSdkButtons';
     }
 
     protected function getPartnerId()
     {
-        return 'PRESTASHOP_Cart_SPB';
+        return $this->method->getPaypalPartnerId();
     }
 
     /**
@@ -140,7 +118,7 @@ class ApmCollection
      */
     protected function getTemplatePath()
     {
-        return 'module:paypal/views/templates/apm/method-collection.tpl';
+        return 'module:paypal/views/templates/sepa/button.tpl';
     }
 
     /**
@@ -150,53 +128,7 @@ class ApmCollection
     {
         return [
             'psPaypalDir' => _PS_MODULE_DIR_ . 'paypal',
-            'methodCollection' => $this->methodCollection,
             'sdkNameSpace' => $this->getSdkNameSpace(),
-        ];
-    }
-
-    /**
-     * @return int
-     */
-    protected function getId()
-    {
-        return (string) $this->id;
-    }
-
-    /**
-     * @param string $id
-     *
-     * @return self
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    protected function getBuyerCountry()
-    {
-        $buyerCountry = Tools::strtoupper(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
-        // https://developer.paypal.com/docs/regional/th/checkout/reference/customize-sdk/
-        // According a documentation the available countries are following 'US', 'CA', 'GB', 'DE', 'FR'
-        // But an error was occurring using 'US', 'CA', 'GB' during the test
-        if (in_array($buyerCountry, ['DE', 'FR'])) {
-            return $buyerCountry;
-        }
-
-        return '';
-    }
-
-    protected function getNameSpace()
-    {
-    }
-
-    protected function initDefaultCollection()
-    {
-        return [
-            APM::GIROPAY,
-            APM::SOFORT,
         ];
     }
 }

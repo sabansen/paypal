@@ -51,6 +51,7 @@ use PaypalAddons\classes\PaypalPaymentMode;
 use PaypalAddons\classes\PUI\FraudNetForm;
 use PaypalAddons\classes\PUI\FraudSessionId;
 use PaypalAddons\classes\PUI\PuiFunctionality;
+use PaypalAddons\classes\SEPA\SepaButton;
 use PaypalAddons\classes\Shortcut\ShortcutConfiguration;
 use PaypalAddons\classes\Shortcut\ShortcutPaymentStep;
 use PaypalAddons\classes\Shortcut\ShortcutSignup;
@@ -845,6 +846,8 @@ class PayPal extends \PaymentModule implements WidgetInterface
             }
 
             if ($this->paypal_method == 'PPP') {
+                $payments_options[] = $this->renderSepaOption($params);
+
                 if ($this->getWebhookOption()->isAvailable() && $this->getWebhookOption()->isEnable()) {
                     if ($this->initPuiFunctionality()->isAvailable(false) && $this->initPuiFunctionality()->isEligibleContext($this->context)) {
                         $payments_options[] = $this->renderPuiOption($params);
@@ -891,6 +894,27 @@ class PayPal extends \PaymentModule implements WidgetInterface
     protected function initVenmoButton()
     {
         return new VenmoButton();
+    }
+
+    protected function renderSepaOption($params)
+    {
+        $paymentOption = new PaymentOption();
+        $paymentOption->setModuleName('paypal_sepa');
+        $paymentOption->setCallToActionText($this->l('SEPA'));
+        $paymentOption->setAction(
+            sprintf(
+                'javascript:alert(\'%s\');',
+                $this->l('Should use the SEPS payment button')
+            )
+        );
+        $paymentOption->setAdditionalInformation($this->initSepaButton()->render());
+
+        return $paymentOption;
+    }
+
+    protected function initSepaButton()
+    {
+        return new SepaButton();
     }
 
     public function renderPuiOption($params)
@@ -2986,11 +3010,6 @@ class PayPal extends \PaymentModule implements WidgetInterface
             $map[] = [
                 'method' => APM::SOFORT,
                 'label' => $this->l('Sofort'),
-            ];
-
-            $map[] = [
-                'method' => APM::SEPA,
-                'label' => $this->l('SEPA'),
             ];
         }
 
