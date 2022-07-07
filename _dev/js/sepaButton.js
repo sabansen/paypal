@@ -1,5 +1,4 @@
-<?php
-/**
+/*
  * 2007-2022 PayPal
  *
  *  NOTICE OF LICENSE
@@ -24,31 +23,33 @@
  *  @copyright PayPal
  */
 
-namespace PaypalAddons\classes\Constants;
+import {ApmButton} from './apmButton.js';
 
-class APM
-{
-    const BANCONTACT = 'bancontact';
+export const SepaButton = function (conf) {
+  ApmButton.call(this, conf);
+};
+SepaButton.prototype = Object.create(ApmButton.prototype);
 
-    const BLIK = 'blik';
+SepaButton.prototype.getIdOrder = function() {
+  let url = new URL(this.controller);
+  url.searchParams.append('ajax', '1');
+  url.searchParams.append('action', 'CreateOrder');
 
-    const EPS = 'eps';
+  return fetch(url.toString(), {
+    method: 'post',
+    headers: {
+      'content-type': 'application/json;charset=utf-8'
+    },
+    body: JSON.stringify({page: 'cart'})
+  }).then(function(res) {
+    return res.json();
+  }).then(function(data) {
+    if (data.success) {
+      return data.idOrder;
+    }
+  });
+};
 
-    const GIROPAY = 'giropay';
 
-    const IDEAL = 'ideal';
+window.SepaButton = SepaButton;
 
-    const MYBANK = 'mybank';
-
-    const P24 = 'p24';
-
-    const SOFORT = 'sofort';
-
-    const BOLETOBANCARIO = 'boletobancario';
-
-    const TRUSTLY = 'trustly';
-
-    const MULTIBANCO = 'multibanco';
-
-    const OXXO = 'oxxo';
-}

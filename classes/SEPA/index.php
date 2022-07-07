@@ -23,32 +23,12 @@
  *  @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  *  @copyright PayPal
  */
+header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
 
-namespace PaypalAddons\classes\Constants;
+header('Cache-Control: no-store, no-cache, must-revalidate');
+header('Cache-Control: post-check=0, pre-check=0', false);
+header('Pragma: no-cache');
 
-class APM
-{
-    const BANCONTACT = 'bancontact';
-
-    const BLIK = 'blik';
-
-    const EPS = 'eps';
-
-    const GIROPAY = 'giropay';
-
-    const IDEAL = 'ideal';
-
-    const MYBANK = 'mybank';
-
-    const P24 = 'p24';
-
-    const SOFORT = 'sofort';
-
-    const BOLETOBANCARIO = 'boletobancario';
-
-    const TRUSTLY = 'trustly';
-
-    const MULTIBANCO = 'multibanco';
-
-    const OXXO = 'oxxo';
-}
+header('Location: ../');
+exit;
