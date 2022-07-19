@@ -67,7 +67,11 @@ class StatusMapping
     public function getAcceptedStatus()
     {
         if ($this->isCustomize()) {
-            return (int) Configuration::get('PAYPAL_OS_ACCEPTED_TWO');
+            if ($this->isModeSale()) {
+                return (int) Configuration::get('PAYPAL_OS_ACCEPTED_TWO');
+            }
+
+            return (int) Configuration::get('PAYPAL_OS_ACCEPTED');
         }
 
         return (int) Configuration::get('PS_OS_PAYMENT');
