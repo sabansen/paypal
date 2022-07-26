@@ -32,7 +32,7 @@ if (!defined('_PS_VERSION_')) {
  *
  * @return bool
  */
-function upgrade_module_5_6_0($module)
+function upgrade_module_5_7_0($module)
 {
     $module->resetHooks();
 
